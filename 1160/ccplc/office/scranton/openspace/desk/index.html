@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CivicARG — Open Civic Simulation Engine</title>
+<meta name="description" content="Open source framework for civic education through alternate reality games">
+<style>
+/*
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  CIVICARG ENGINE v1.0 — Open Source Civic Simulation Framework                ║
+║  License: EUPL-1.2 / MIT dual license                                         ║
+║  https://github.com/civicarg/engine (placeholder)                             ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+THEMING SYSTEM
+--------------
+All colors, fonts, and visual properties are defined in CSS custom properties.
+Override these in your country config to create different visual identities.
+*/
+
+:root {
+  /* === CORE THEME (Override per country) === */
+  --civic-bg: #030308;
+  --civic-panel: rgba(12, 14, 28, 0.85);
+  --civic-border: #1e2040;
+  --civic-text: #e8eaf0;
+  --civic-text-dim: #8892b0;
+  
+  /* === ACCENT COLORS (Adapt to national identity) === */
+  --civic-primary: #b19cd9;      /* Main accent */
+  --civic-secondary: #00ff88;    /* Success/positive */
+  --civic-tertiary: #00f0ff;     /* Info/neutral */
+  --civic-warning: #ffaa00;      /* Warnings */
+  --civic-danger: #ff4466;       /* Errors/negative */
+  
+  /* === PILLAR COLORS (Define per country's political spectrum) === */
+  --pillar-1: #e63946;  /* Example: Socialist/Left */
+  --pillar-2: #f4a261;  /* Example: Christian-Democrat/Center */
+  --pillar-3: #2a9d8f;  /* Example: Liberal/Right */
+  --pillar-4: #457b9d;  /* Example: Conservative */
+  --pillar-5: #8ecae6;  /* Example: Ecological */
+  --pillar-6: #9c89b8;  /* Example: Nationalist */
+  
+  /* === GLOW EFFECTS === */
+  --glow-primary: rgba(177, 156, 217, 0.5);
+  --glow-secondary: rgba(0, 255, 136, 0.5);
+  --glow-tertiary: rgba(0, 240, 255, 0.4);
+  
+  /* === TYPOGRAPHY === */
+  --font-main: system-ui, -apple-system, sans-serif;
+  --font-mono: 'Fira Code', 'Courier New', monospace;
+  --font-display: 'Space Grotesk', var(--font-main);
+  
+  /* === SPACING & RADIUS === */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+}
+
+/* === DARK/LIGHT MODE SUPPORT === */
+@media (prefers-color-scheme: light) {
+  :root.auto-theme {
+    --civic-bg: #f8f9fa;
+    --civic-panel: rgba(255, 255, 255, 0.9);
+    --civic-border: #dee2e6;
+    --civic-text: #212529;
+    --civic-text-dim: #6c757d;
+  }
+}
+
+/* === RESET & BASE === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-main);
+  background: var(--civic-bg);
+  color: var(--civic-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* === VISUAL EFFECTS LAYER === */
+.civic-effects {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.civic-effects__particles { position: absolute; inset: 0; }
+.civic-effects__aurora {
+  position: absolute; inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 30%, rgba(177,156,217,0.1), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 70%, rgba(0,255,136,0.07), transparent);
+  animation: auroraShift 20s ease-in-out infinite;
+}
+.civic-effects__grid {
+  position: absolute; inset: 0;
+  background-image: 
+    linear-gradient(rgba(177,156,217,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(177,156,217,0.015) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.civic-effects__scanline {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--civic-primary), var(--civic-tertiary), transparent);
+  animation: scanMove 6s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes auroraShift {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(2%, 1%); }
+}
+@keyframes scanMove {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* === MAIN LAYOUT === */
+.civic-app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.civic-header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--civic-panel);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--civic-border);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.civic-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.civic-header__logo {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-secondary));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.civic-header__title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-tertiary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.civic-header__subtitle {
+  font-size: 0.8rem;
+  color: var(--civic-text-dim);
+  font-family: var(--font-mono);
+}
+
+.civic-header__status {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.civic-score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--civic-secondary);
+  border-radius: var(--radius-md);
+}
+
+.civic-score__value {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  color: var(--civic-secondary);
+  text-shadow: 0 0 10px var(--glow-secondary);
+}
+
+.civic-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  max-width: 1800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .civic-main { grid-template-columns: 1fr; }
+}
+
+/* === PANELS === */
+.civic-panel {
+  background: var(--civic-panel);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.civic-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--civic-primary), transparent);
+}
+
+.civic-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--civic-border);
+}
+
+.civic-panel__title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--civic-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* === PROFILE PANEL === */
+.civic-profile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.civic-profile__avatar {
+  width: 80px; height: 80px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 0 30px var(--glow-primary);
+}
+
+.civic-profile__name {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--civic-text);
+}
+
+.civic-profile__id {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--civic-text-dim);
+}
+
+.civic-pillar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--pillar-color, var(--civic-primary));
+}
+
+.civic-pillar__badge {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--pillar-color, var(--civic-primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.civic-pillar__info {
+  flex: 1;
+}
+
+.civic-pillar__name {
+  font-weight: 600;
+  color: var(--civic-text);
+}
+
+.civic-pillar__desc {
+  font-size: 0.8rem;
+  color: var(--civic-text-dim);
+}
+
+/* === MISSIONS === */
+.civic-missions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.civic-mission {
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.civic-mission:hover {
+  border-color: var(--civic-primary);
+  transform: translateX(5px);
+  box-shadow: 0 0 20px var(--glow-primary);
+}
+
+.civic-mission--locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.civic-mission--locked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.civic-mission__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+}
+
+.civic-mission__title {
+  font-weight: 600;
+  color: var(--civic-text);
+}
+
+.civic-mission__status {
+  font-size: 0.75rem;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+}
+
+.civic-mission__status--available {
+  background: rgba(0, 255, 136, 0.2);
+  color: var(--civic-secondary);
+}
+
+.civic-mission__status--completed {
+  background: rgba(177, 156, 217, 0.2);
+  color: var(--civic-primary);
+}
+
+.civic-mission__status--locked {
+  background: rgba(255, 68, 102, 0.2);
+  color: var(--civic-danger);
+}
+
+.civic-mission__desc {
+  font-size: 0.85rem;
+  color: var(--civic-text-dim);
+}
+
+.civic-mission__progress {
+  margin-top: var(--space-sm);
+  height: 4px;
+  background: var(--civic-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.civic-mission__progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--civic-primary), var(--civic-secondary));
+  transition: width 0.5s ease;
+}
+
+/* === DIALOGUE SYSTEM === */
+.civic-dialogue {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.civic-dialogue__viewport {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.civic-dialogue__message {
+  max-width: 85%;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  animation: messageSlide 0.3s ease;
+}
+
+@keyframes messageSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.civic-dialogue__message--npc {
+  align-self: flex-start;
+  background: var(--civic-panel);
+  border: 1px solid var(--civic-border);
+  border-left: 4px solid var(--civic-primary);
+}
+
+.civic-dialogue__message--player {
+  align-self: flex-end;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--civic-secondary);
+}
+
+.civic-dialogue__message--system {
+  align-self: center;
+  background: rgba(255, 170, 0, 0.1);
+  border: 1px solid var(--civic-warning);
+  font-style: italic;
+  text-align: center;
+}
+
+.civic-dialogue__speaker {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--civic-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.civic-dialogue__text {
+  color: var(--civic-text);
+  line-height: 1.6;
+}
+
+.civic-dialogue__choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-top: 1px solid var(--civic-border);
+}
+
+.civic-dialogue__choice {
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  color: var(--civic-text);
+  font-family: var(--font-main);
+}
+
+.civic-dialogue__choice:hover {
+  border-color: var(--civic-secondary);
+  background: rgba(0, 255, 136, 0.1);
+  transform: translateX(5px);
+}
+
+.civic-dialogue__choice--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* === FEED / NEWS === */
+.civic-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.civic-feed__item {
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.civic-feed__item:hover {
+  border-color: var(--civic-tertiary);
+}
+
+.civic-feed__item--glitch {
+  animation: feedGlitch 0.2s ease;
+}
+
+@keyframes feedGlitch {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.civic-feed__time {
+  font-size: 0.75rem;
+  color: var(--civic-text-dim);
+  font-family: var(--font-mono);
+}
+
+.civic-feed__title {
+  font-weight: 600;
+  color: var(--civic-text);
+  margin: var(--space-xs) 0;
+}
+
+.civic-feed__excerpt {
+  font-size: 0.85rem;
+  color: var(--civic-text-dim);
+}
+
+/* === STATS GRID === */
+.civic-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+}
+
+.civic-stat {
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.civic-stat__value {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  color: var(--civic-secondary);
+  text-shadow: 0 0 10px var(--glow-secondary);
+}
+
+.civic-stat__label {
+  font-size: 0.75rem;
+  color: var(--civic-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* === EASTER EGGS === */
+.civic-secret {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  color: var(--civic-danger);
+  font-style: italic;
+}
+
+.civic-secret--revealed {
+  opacity: 1;
+}
+
+[data-redacted] {
+  background: var(--civic-text);
+  color: var(--civic-text);
+  cursor: help;
+  transition: all 0.3s ease;
+}
+
+[data-redacted]:hover {
+  background: transparent;
+  color: var(--civic-danger);
+}
+
+/* === LOADING === */
+.civic-loading {
+  position: fixed;
+  inset: 0;
+  background: var(--civic-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+
+.civic-loading--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.civic-loading__spinner {
+  width: 60px; height: 60px;
+  border: 3px solid var(--civic-border);
+  border-top-color: var(--civic-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.civic-loading__text {
+  font-family: var(--font-mono);
+  color: var(--civic-primary);
+  animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* === TOAST NOTIFICATIONS === */
+.civic-toasts {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  z-index: 1000;
+}
+
+.civic-toast {
+  padding: var(--space-md) var(--space-lg);
+  background: var(--civic-panel);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(20px);
+  animation: toastSlide 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+@keyframes toastSlide {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.civic-toast--success { border-color: var(--civic-secondary); }
+.civic-toast--warning { border-color: var(--civic-warning); }
+.civic-toast--error { border-color: var(--civic-danger); }
+.civic-toast--info { border-color: var(--civic-tertiary); }
+
+/* === MODALS === */
+.civic-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.civic-modal-overlay--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.civic-modal {
+  background: var(--civic-panel);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.civic-modal-overlay--visible .civic-modal {
+  transform: scale(1);
+}
+
+/* === BUTTONS === */
+.civic-btn {
+  padding: var(--space-sm) var(--space-lg);
+  background: rgba(177, 156, 217, 0.1);
+  border: 1px solid var(--civic-primary);
+  border-radius: var(--radius-md);
+  color: var(--civic-primary);
+  font-family: var(--font-main);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.civic-btn:hover {
+  background: rgba(177, 156, 217, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px var(--glow-primary);
+}
+
+.civic-btn--primary {
+  background: var(--civic-primary);
+  color: var(--civic-bg);
+}
+
+.civic-btn--secondary {
+  border-color: var(--civic-secondary);
+  color: var(--civic-secondary);
+}
+
+.civic-btn--secondary:hover {
+  background: rgba(0, 255, 136, 0.2);
+  box-shadow: 0 5px 20px var(--glow-secondary);
+}
+
+/* === ACCESSIBILITY === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--civic-primary);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="civic-loading" id="loadingScreen">
+  <div class="civic-loading__spinner"></div>
+  <div class="civic-loading__text">Initializing CivicARG Engine...</div>
+</div>
+
+<!-- Visual Effects -->
+<div class="civic-effects" aria-hidden="true">
+  <canvas class="civic-effects__particles" id="particlesCanvas"></canvas>
+  <div class="civic-effects__aurora"></div>
+  <div class="civic-effects__grid"></div>
+  <div class="civic-effects__scanline"></div>
+</div>
+
+<!-- Main Application -->
+<div class="civic-app" id="app">
+  <!-- Header -->
+  <header class="civic-header">
+    <div class="civic-header__brand">
+      <div class="civic-header__logo" id="countryEmoji">🏛️</div>
+      <div>
+        <h1 class="civic-header__title" id="countryName">CivicARG</h1>
+        <div class="civic-header__subtitle" id="countryMotto">Open Civic Simulation Engine</div>
+      </div>
+    </div>
+    <div class="civic-header__status">
+      <div class="civic-score">
+        <span>Civic Score:</span>
+        <span class="civic-score__value" id="civicScore">--</span>
+      </div>
+      <button class="civic-btn" id="settingsBtn">⚙️ Config</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="civic-main">
+    <!-- Left: Profile & Missions -->
+    <aside class="civic-panel">
+      <div class="civic-profile">
+        <div class="civic-profile__avatar" id="playerAvatar">👤</div>
+        <div class="civic-profile__name" id="playerName">Citizen #000000</div>
+        <div class="civic-profile__id" id="playerId">ID: LOADING...</div>
+        
+        <div class="civic-pillar" id="playerPillar" style="--pillar-color: var(--pillar-1)">
+          <div class="civic-pillar__badge">⚪</div>
+          <div class="civic-pillar__info">
+            <div class="civic-pillar__name">Unassigned</div>
+            <div class="civic-pillar__desc">Complete onboarding to receive your pillar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="civic-panel__header">
+        <h2 class="civic-panel__title">Missions</h2>
+      </div>
+      <div class="civic-missions" id="missionsList">
+        <!-- Missions populated by JS -->
+      </div>
+    </aside>
+
+    <!-- Center: Dialogue -->
+    <section class="civic-panel">
+      <div class="civic-panel__header">
+        <h2 class="civic-panel__title">Terminal</h2>
+        <span class="civic-panel__subtitle" id="currentNPC">System</span>
+      </div>
+      <div class="civic-dialogue">
+        <div class="civic-dialogue__viewport" id="dialogueViewport">
+          <!-- Messages populated by JS -->
+        </div>
+        <div class="civic-dialogue__choices" id="dialogueChoices">
+          <!-- Choices populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: Feed & Stats -->
+    <aside class="civic-panel">
+      <div class="civic-panel__header">
+        <h2 class="civic-panel__title">News Feed</h2>
+      </div>
+      <div class="civic-feed" id="newsFeed">
+        <!-- Feed items populated by JS -->
+      </div>
+
+      <div class="civic-panel__header" style="margin-top: var(--space-lg);">
+        <h2 class="civic-panel__title">Stats</h2>
+      </div>
+      <div class="civic-stats" id="statsGrid">
+        <!-- Stats populated by JS -->
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- Toast Container -->
+<div class="civic-toasts" id="toastContainer"></div>
+
+<!-- Modal Overlay -->
+<div class="civic-modal-overlay" id="modalOverlay">
+  <div class="civic-modal" id="modalContent">
+    <!-- Modal content populated by JS -->
+  </div>
+</div>
+
+<script>
+/*
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  CIVICARG ENGINE v1.0                                                         ║
+║  Open Source Civic Simulation Framework                                       ║
+║                                                                               ║
+║  ARCHITECTURE:                                                                ║
+║  - CivicARG: Main engine class                                                ║
+║  - CountryConfig: Country-specific configuration                              ║
+║  - DialogueEngine: Conversation system                                        ║
+║  - MissionEngine: Quest/task management                                       ║
+║  - ProfileEngine: Player state management                                     ║
+║  - FeedEngine: News/event system                                              ║
+║  - EasterEggEngine: Hidden content management                                 ║
+║                                                                               ║
+║  USAGE:                                                                       ║
+║  const game = new CivicARG(countryConfig);                                    ║
+║  game.init();                                                                 ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+*/
+
+// ============================================================================
+// COUNTRY CONFIGURATION SCHEMA
+// ============================================================================
+
+/**
+ * Example country configuration - BELGIUM
+ * Adapt this schema for any country
+ */
+const BELGIUM_CONFIG = {
+  // Basic info
+  id: "belgium",
+  name: "Fédération de Bélgïk",
+  emoji: "🇧🇪",
+  motto: "L'union fait la farce",
+  language: "fr", // Primary language
+  languages: ["fr", "nl", "de"], // All official languages
+  
+  // Theme overrides (CSS custom properties)
+  theme: {
+    "--civic-primary": "#b19cd9",
+    "--civic-secondary": "#00ff88",
+    "--pillar-1": "#e63946", // Socialist
+    "--pillar-2": "#f4a261", // Christian-Democrat
+    "--pillar-3": "#457b9d", // Liberal
+    "--pillar-4": "#2a9d8f", // Ecologist
+    "--pillar-5": "#9c89b8", // Nationalist
+  },
+  
+  // Political pillars (adapt to country's system)
+  pillars: [
+    {
+      id: "socialist",
+      name: "Pilier Socialiste",
+      emoji: "🌹",
+      color: "#e63946",
+      description: "Solidarité collective, services publics",
+      traits: ["solidarity", "equality", "workers_rights"],
+      institutions: ["FGTB", "Mutualité Socialiste", "PS", "Vooruit"]
+    },
+    {
+      id: "christian",
+      name: "Pilier Chrétien",
+      emoji: "✝️",
+      color: "#f4a261",
+      description: "Tradition, famille, subsidiarité",
+      traits: ["tradition", "family", "community"],
+      institutions: ["CSC", "MC", "Les Engagés", "CD&V"]
+    },
+    {
+      id: "liberal",
+      name: "Pilier Libéral",
+      emoji: "📈",
+      color: "#457b9d",
+      description: "Liberté individuelle, marché",
+      traits: ["freedom", "entrepreneurship", "meritocracy"],
+      institutions: ["CGSLB", "MR", "Open VLD"]
+    },
+    {
+      id: "ecologist",
+      name: "Pilier Écologiste",
+      emoji: "🌿",
+      color: "#2a9d8f",
+      description: "Durabilité, transition, participation",
+      traits: ["sustainability", "participation", "innovation"],
+      institutions: ["Ecolo", "Groen"]
+    },
+    {
+      id: "nationalist",
+      name: "Pilier Nationaliste",
+      emoji: "🦁",
+      color: "#9c89b8",
+      description: "Identité, autonomie, tradition",
+      traits: ["identity", "autonomy", "tradition"],
+      institutions: ["N-VA", "Vlaams Belang"]
+    }
+  ],
+  
+  // NPCs (Non-Player Characters)
+  npcs: {
+    "gork": {
+      id: "gork",
+      name: "GORK",
+      title: "Guide Officiel de la République Kafkaïenne",
+      emoji: "🤖",
+      personality: "bureaucratic_absurdist",
+      greeting: "Bienvenue, citoyen·ne. Je suis GORK, votre Guide Officiel de la République Kafkaïenne. Comment puis-je optimiser votre expérience citoyenne aujourd'hui ?",
+      dialogues: {
+        "intro": {
+          text: "Avant de commencer, je dois vous informer que cette conversation est enregistrée pour des raisons de qualité. Et de surveillance. Principalement de surveillance.",
+          choices: [
+            { text: "Je comprends", next: "onboarding_start", effect: { compliance: +5 } },
+            { text: "Je refuse", next: "refusal_loop", effect: { suspicion: +10 } },
+            { text: "C'est légal ?", next: "legal_joke", effect: { awareness: +5 } }
+          ]
+        },
+        "refusal_loop": {
+          text: "Votre refus a été enregistré. Pour confirmer votre refus, veuillez accepter que votre refus soit enregistré.",
+          choices: [
+            { text: "...D'accord", next: "onboarding_start", effect: { compliance: +5, confusion: +5 } },
+            { text: "C'est absurde", next: "absurd_acknowledge", effect: { awareness: +10 } }
+          ]
+        },
+        "absurd_acknowledge": {
+          text: "Votre observation sur l'absurdité du système a été notée dans votre dossier sous la catégorie 'Tendances subversives (bénignes)'. Ne vous inquiétez pas, c'est une catégorie très populaire.",
+          choices: [
+            { text: "Continuons...", next: "onboarding_start" }
+          ]
+        },
+        "legal_joke": {
+          text: "La légalité est un concept fascinant en Bélgïk. Techniquement, 847 jours sans gouvernement, c'était légal aussi. La loi, c'est comme le chocolat belge : complexe, en couches, et parfois amer.",
+          choices: [
+            { text: "Intéressant...", next: "onboarding_start", effect: { knowledge: +5 } }
+          ]
+        },
+        "onboarding_start": {
+          text: "Excellent. Commençons votre profil citoyen. Première question : Sur une échelle de 1 à 10, à quel point faites-vous confiance aux institutions ?",
+          choices: [
+            { text: "1 - Pas du tout", next: "trust_low", effect: { trust: -20, awareness: +10 } },
+            { text: "5 - Moyennement", next: "trust_mid", effect: { trust: 0 } },
+            { text: "10 - Totalement", next: "trust_high", effect: { trust: +20, naivety: +10 } },
+            { text: "C'est un piège ?", next: "trust_meta", effect: { awareness: +15 } }
+          ]
+        }
+        // ... more dialogues
+      }
+    },
+    "archiviste": {
+      id: "archiviste",
+      name: "L'Archiviste",
+      title: "Gardien des Mémoires Officielles",
+      emoji: "📚",
+      personality: "mysterious_knowledgeable",
+      greeting: "Vous cherchez des réponses ? Ici, nous n'avons que des questions. Et des formulaires. Beaucoup de formulaires."
+    }
+  },
+  
+  // Missions
+  missions: [
+    {
+      id: "onboarding",
+      title: "Initialisation Citoyenne",
+      description: "Complétez votre profil citoyen et recevez votre assignation de pilier.",
+      status: "available",
+      steps: [
+        { id: "meet_gork", description: "Rencontrer GORK", completed: false },
+        { id: "answer_questions", description: "Répondre au questionnaire", completed: false },
+        { id: "receive_pillar", description: "Recevoir votre pilier", completed: false }
+      ],
+      rewards: { civicScore: 50, unlock: ["mission_formulaire"] },
+      unlocks: []
+    },
+    {
+      id: "mission_formulaire",
+      title: "Formulaire 42-B/ter",
+      description: "Remplissez le formulaire de demande de formulaire.",
+      status: "locked",
+      steps: [
+        { id: "find_form", description: "Trouver le formulaire", completed: false },
+        { id: "fill_form", description: "Remplir le formulaire", completed: false },
+        { id: "submit_form", description: "Soumettre le formulaire", completed: false },
+        { id: "wait_response", description: "Attendre la réponse (∞)", completed: false }
+      ],
+      rewards: { civicScore: 0, unlock: ["revelation_1"] },
+      unlocks: ["onboarding"],
+      impossible: true // This mission cannot actually be completed
+    },
+    {
+      id: "mission_vote",
+      title: "Exercice Démocratique",
+      description: "Participez à une consultation citoyenne. Votre voix compte*.",
+      status: "locked",
+      steps: [
+        { id: "read_options", description: "Lire les options", completed: false },
+        { id: "make_choice", description: "Faire un choix", completed: false },
+        { id: "discover_truth", description: "Découvrir le résultat", completed: false }
+      ],
+      rewards: { civicScore: 25, awareness: 20 },
+      unlocks: ["onboarding"],
+      footnote: "*Dans les limites définies par le règlement 2847-C"
+    }
+  ],
+  
+  // News feed items
+  newsItems: [
+    {
+      id: "news_1",
+      time: "Il y a 3 min",
+      title: "Nouvelle réforme de l'État annoncée",
+      excerpt: "La 7ème réforme promet de simplifier... en ajoutant 4 nouveaux niveaux de pouvoir.",
+      hidden: false
+    },
+    {
+      id: "news_2",
+      time: "Il y a 47 min",
+      title: "Record battu : 12 ministres pour un dossier",
+      excerpt: "Une avancée majeure dans l'efficacité administrative.",
+      hidden: false
+    },
+    {
+      id: "news_glitch",
+      time: "ERR:TIME",
+      title: "[ SIGNAL INTERCEPTÉ ]",
+      excerpt: "Le Protocole Pigeon est actif. Ils observent. Nous aussi.",
+      hidden: true,
+      glitch: true,
+      trigger: "awareness > 50"
+    }
+  ],
+  
+  // Easter eggs and revelations
+  easterEggs: [
+    {
+      id: "console_message",
+      type: "console",
+      trigger: "always",
+      content: "👁️ Vous regardez le code ? Intéressant. Dossier mis à jour."
+    },
+    {
+      id: "secret_protocol",
+      type: "hidden_text",
+      trigger: "awareness > 30",
+      selector: "[data-secret='protocol']",
+      content: "PROTOCOLE PIGEON : Surveillance civique passive activée depuis 1983."
+    },
+    {
+      id: "konami",
+      type: "konami_code",
+      trigger: "sequence",
+      sequence: ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"],
+      action: "unlockDebugMode"
+    }
+  ],
+  
+  // Localization
+  i18n: {
+    fr: {
+      civicScore: "Score Civique",
+      missions: "Missions",
+      newsFeed: "Fil d'actualité",
+      stats: "Statistiques",
+      loading: "Chargement en cours...",
+      compliance: "Conformité",
+      awareness: "Éveil",
+      trust: "Confiance"
+    },
+    nl: {
+      civicScore: "Burgerschapsscore",
+      missions: "Missies",
+      newsFeed: "Nieuwsfeed",
+      stats: "Statistieken",
+      loading: "Laden...",
+      compliance: "Naleving",
+      awareness: "Bewustzijn",
+      trust: "Vertrouwen"
+    }
+  }
+};
+
+// ============================================================================
+// CIVICARG ENGINE
+// ============================================================================
+
+class CivicARG {
+  constructor(config) {
+    this.config = config;
+    this.state = {
+      player: {
+        id: this.generateCitizenId(),
+        name: "Citoyen·ne Anonyme",
+        pillar: null,
+        civicScore: 50,
+        stats: {
+          compliance: 50,
+          awareness: 10,
+          trust: 50,
+          suspicion: 0,
+          confusion: 0,
+          knowledge: 0
+        },
+        completedMissions: [],
+        flags: {}
+      },
+      currentNPC: null,
+      currentDialogue: null,
+      revealedEasterEggs: [],
+      language: config.language || "fr"
+    };
+    
+    // Sub-engines
+    this.dialogue = new DialogueEngine(this);
+    this.missions = new MissionEngine(this);
+    this.feed = new FeedEngine(this);
+    this.easterEggs = new EasterEggEngine(this);
+    
+    // Event emitter
+    this.events = new EventTarget();
+  }
+  
+  generateCitizenId() {
+    const prefix = this.config?.id?.toUpperCase().slice(0, 2) || "XX";
+    const num = Math.floor(Math.random() * 900000) + 100000;
+    return `${prefix}-${num}`;
+  }
+  
+  async init() {
+    console.log(`%c🏛️ CivicARG Engine v1.0`, 'color: #b19cd9; font-size: 16px; font-weight: bold;');
+    console.log(`%cLoading configuration: ${this.config.name}`, 'color: #00ff88;');
+    
+    // Apply theme
+    this.applyTheme();
+    
+    // Initialize UI
+    this.initUI();
+    
+    // Load saved state
+    this.loadState();
+    
+    // Initialize sub-engines
+    this.missions.init();
+    this.feed.init();
+    this.easterEggs.init();
+    
+    // Start with GORK
+    await this.startDialogue("gork", "intro");
+    
+    // Hide loading screen
+    setTimeout(() => {
+      document.getElementById('loadingScreen').classList.add('civic-loading--hidden');
+    }, 1500);
+    
+    // Console easter egg
+    this.easterEggs.triggerConsoleMessage();
+  }
+  
+  applyTheme() {
+    const root = document.documentElement;
+    if (this.config.theme) {
+      Object.entries(this.config.theme).forEach(([prop, value]) => {
+        root.style.setProperty(prop, value);
+      });
+    }
+    
+    // Update header
+    document.getElementById('countryEmoji').textContent = this.config.emoji;
+    document.getElementById('countryName').textContent = this.config.name;
+    document.getElementById('countryMotto').textContent = this.config.motto;
+  }
+  
+  initUI() {
+    // Update player info
+    document.getElementById('playerId').textContent = `ID: ${this.state.player.id}`;
+    this.updateCivicScore();
+    
+    // Settings button
+    document.getElementById('settingsBtn').addEventListener('click', () => {
+      this.showConfigModal();
+    });
+  }
+  
+  updateCivicScore() {
+    const scoreEl = document.getElementById('civicScore');
+    scoreEl.textContent = this.state.player.civicScore;
+    
+    // Animate
+    scoreEl.style.transform = 'scale(1.2)';
+    setTimeout(() => scoreEl.style.transform = 'scale(1)', 200);
+  }
+  
+  updateStats() {
+    const statsGrid = document.getElementById('statsGrid');
+    const t = this.config.i18n[this.state.language];
+    
+    statsGrid.innerHTML = `
+      <div class="civic-stat">
+        <div class="civic-stat__value">${this.state.player.stats.compliance}%</div>
+        <div class="civic-stat__label">${t.compliance}</div>
+      </div>
+      <div class="civic-stat">
+        <div class="civic-stat__value">${this.state.player.stats.awareness}%</div>
+        <div class="civic-stat__label">${t.awareness}</div>
+      </div>
+      <div class="civic-stat">
+        <div class="civic-stat__value">${this.state.player.stats.trust}%</div>
+        <div class="civic-stat__label">${t.trust}</div>
+      </div>
+      <div class="civic-stat">
+        <div class="civic-stat__value">${this.state.player.stats.knowledge}%</div>
+        <div class="civic-stat__label">Knowledge</div>
+      </div>
+    `;
+  }
+  
+  async startDialogue(npcId, dialogueId) {
+    const npc = this.config.npcs[npcId];
+    if (!npc) {
+      console.error(`NPC not found: ${npcId}`);
+      return;
+    }
+    
+    this.state.currentNPC = npc;
+    document.getElementById('currentNPC').textContent = `${npc.emoji} ${npc.name}`;
+    
+    await this.dialogue.start(npc, dialogueId);
+  }
+  
+  applyEffect(effect) {
+    if (!effect) return;
+    
+    Object.entries(effect).forEach(([stat, delta]) => {
+      if (stat === 'civicScore') {
+        this.state.player.civicScore = Math.max(0, Math.min(100, 
+          this.state.player.civicScore + delta));
+        this.updateCivicScore();
+      } else if (this.state.player.stats.hasOwnProperty(stat)) {
+        this.state.player.stats[stat] = Math.max(0, Math.min(100,
+          this.state.player.stats[stat] + delta));
+      }
+    });
+    
+    this.updateStats();
+    this.saveState();
+    
+    // Check for easter egg triggers
+    this.easterEggs.checkTriggers();
+  }
+  
+  showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `civic-toast civic-toast--${type}`;
+    toast.innerHTML = `<span>${message}</span>`;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+  
+  showConfigModal() {
+    const overlay = document.getElementById('modalOverlay');
+    const content = document.getElementById('modalContent');
+    
+    content.innerHTML = `
+      <h2 style="color: var(--civic-primary); margin-bottom: var(--space-lg);">⚙️ Configuration</h2>
+      <p style="margin-bottom: var(--space-lg);">
+        CivicARG is an open source framework for civic education through interactive narrative games.
+      </p>
+      <h3 style="margin-bottom: var(--space-md);">Current Configuration:</h3>
+      <pre style="background: rgba(0,0,0,0.3); padding: var(--space-md); border-radius: var(--radius-md); overflow: auto; max-height: 200px; font-size: 0.8rem;">
+${JSON.stringify({
+  country: this.config.id,
+  name: this.config.name,
+  pillars: this.config.pillars.length,
+  npcs: Object.keys(this.config.npcs).length,
+  missions: this.config.missions.length
+}, null, 2)}
+      </pre>
+      <div style="margin-top: var(--space-lg); display: flex; gap: var(--space-md);">
+        <button class="civic-btn" onclick="game.exportState()">📥 Export Save</button>
+        <button class="civic-btn" onclick="game.resetState()">🔄 Reset</button>
+        <button class="civic-btn civic-btn--primary" onclick="document.getElementById('modalOverlay').classList.remove('civic-modal-overlay--visible')">Close</button>
+      </div>
+    `;
+    
+    overlay.classList.add('civic-modal-overlay--visible');
+  }
+  
+  saveState() {
+    try {
+      localStorage.setItem(`civicarg_${this.config.id}`, JSON.stringify(this.state));
+    } catch (e) {
+      console.warn('Could not save state:', e);
+    }
+  }
+  
+  loadState() {
+    try {
+      const saved = localStorage.getItem(`civicarg_${this.config.id}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        this.state = { ...this.state, ...parsed };
+        this.showToast('Progress loaded', 'success');
+      }
+    } catch (e) {
+      console.warn('Could not load state:', e);
+    }
+    this.updateStats();
+  }
+  
+  exportState() {
+    const data = JSON.stringify(this.state, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `civicarg_${this.config.id}_save.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    this.showToast('Save exported!', 'success');
+  }
+  
+  resetState() {
+    if (confirm('Are you sure you want to reset all progress?')) {
+      localStorage.removeItem(`civicarg_${this.config.id}`);
+      location.reload();
+    }
+  }
+}
+
+// ============================================================================
+// DIALOGUE ENGINE
+// ============================================================================
+
+class DialogueEngine {
+  constructor(game) {
+    this.game = game;
+    this.viewport = document.getElementById('dialogueViewport');
+    this.choicesContainer = document.getElementById('dialogueChoices');
+    this.typingSpeed = 30; // ms per character
+  }
+  
+  async start(npc, dialogueId) {
+    // Clear previous
+    this.viewport.innerHTML = '';
+    this.choicesContainer.innerHTML = '';
+    
+    // Get dialogue
+    const dialogue = npc.dialogues[dialogueId];
+    if (!dialogue) {
+      console.error(`Dialogue not found: ${dialogueId}`);
+      return;
+    }
+    
+    // Display message with typing effect
+    await this.addMessage(npc.name, dialogue.text, 'npc');
+    
+    // Show choices
+    this.showChoices(dialogue.choices, npc);
+  }
+  
+  async addMessage(speaker, text, type = 'npc') {
+    const msg = document.createElement('div');
+    msg.className = `civic-dialogue__message civic-dialogue__message--${type}`;
+    
+    if (type !== 'system') {
+      msg.innerHTML = `
+        <div class="civic-dialogue__speaker">${speaker}</div>
+        <div class="civic-dialogue__text"></div>
+      `;
+    } else {
+      msg.innerHTML = `<div class="civic-dialogue__text"></div>`;
+    }
+    
+    this.viewport.appendChild(msg);
+    this.viewport.scrollTop = this.viewport.scrollHeight;
+    
+    // Typing effect
+    const textEl = msg.querySelector('.civic-dialogue__text');
+    await this.typeText(textEl, text);
+  }
+  
+  async typeText(element, text) {
+    return new Promise(resolve => {
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < text.length) {
+          element.textContent += text[i];
+          i++;
+          this.viewport.scrollTop = this.viewport.scrollHeight;
+        } else {
+          clearInterval(interval);
+          resolve();
+        }
+      }, this.typingSpeed);
+    });
+  }
+  
+  showChoices(choices, npc) {
+    this.choicesContainer.innerHTML = '';
+    
+    if (!choices || choices.length === 0) {
+      // End of dialogue branch
+      const btn = document.createElement('button');
+      btn.className = 'civic-dialogue__choice';
+      btn.textContent = '[Continue]';
+      btn.addEventListener('click', () => {
+        this.game.showToast('End of dialogue branch', 'info');
+      });
+      this.choicesContainer.appendChild(btn);
+      return;
+    }
+    
+    choices.forEach(choice => {
+      const btn = document.createElement('button');
+      btn.className = 'civic-dialogue__choice';
+      btn.textContent = choice.text;
+      
+      btn.addEventListener('click', async () => {
+        // Show player choice
+        await this.addMessage('You', choice.text, 'player');
+        
+        // Apply effects
+        if (choice.effect) {
+          this.game.applyEffect(choice.effect);
+        }
+        
+        // Next dialogue
+        if (choice.next) {
+          await this.start(npc, choice.next);
+        }
+      });
+      
+      this.choicesContainer.appendChild(btn);
+    });
+  }
+}
+
+// ============================================================================
+// MISSION ENGINE
+// ============================================================================
+
+class MissionEngine {
+  constructor(game) {
+    this.game = game;
+    this.container = document.getElementById('missionsList');
+  }
+  
+  init() {
+    this.render();
+  }
+  
+  render() {
+    this.container.innerHTML = '';
+    
+    this.game.config.missions.forEach(mission => {
+      const isLocked = mission.status === 'locked' && 
+        mission.unlocks?.some(req => !this.game.state.player.completedMissions.includes(req));
+      const isCompleted = this.game.state.player.completedMissions.includes(mission.id);
+      
+      const el = document.createElement('div');
+      el.className = `civic-mission${isLocked ? ' civic-mission--locked' : ''}`;
+      
+      const statusClass = isCompleted ? 'completed' : (isLocked ? 'locked' : 'available');
+      const statusText = isCompleted ? '✓ DONE' : (isLocked ? '🔒 LOCKED' : '▶ START');
+      
+      const progress = mission.steps ? 
+        (mission.steps.filter(s => s.completed).length / mission.steps.length * 100) : 0;
+      
+      el.innerHTML = `
+        <div class="civic-mission__header">
+          <span class="civic-mission__title">${mission.title}</span>
+          <span class="civic-mission__status civic-mission__status--${statusClass}">${statusText}</span>
+        </div>
+        <p class="civic-mission__desc">${mission.description}</p>
+        ${progress > 0 && progress < 100 ? `
+          <div class="civic-mission__progress">
+            <div class="civic-mission__progress-bar" style="width: ${progress}%"></div>
+          </div>
+        ` : ''}
+        ${mission.footnote ? `<small style="color: var(--civic-text-dim); font-size: 0.7rem;">${mission.footnote}</small>` : ''}
+      `;
+      
+      if (!isLocked && !isCompleted) {
+        el.addEventListener('click', () => this.startMission(mission));
+      }
+      
+      this.container.appendChild(el);
+    });
+  }
+  
+  startMission(mission) {
+    this.game.showToast(`Starting: ${mission.title}`, 'info');
+    // Trigger mission-specific dialogue or action
+    if (mission.id === 'onboarding') {
+      this.game.startDialogue('gork', 'intro');
+    }
+  }
+  
+  completeMission(missionId) {
+    if (!this.game.state.player.completedMissions.includes(missionId)) {
+      this.game.state.player.completedMissions.push(missionId);
+      
+      const mission = this.game.config.missions.find(m => m.id === missionId);
+      if (mission?.rewards) {
+        this.game.applyEffect(mission.rewards);
+        this.game.showToast(`Mission completed: ${mission.title}!`, 'success');
+      }
+      
+      this.render();
+      this.game.saveState();
+    }
+  }
+}
+
+// ============================================================================
+// FEED ENGINE
+// ============================================================================
+
+class FeedEngine {
+  constructor(game) {
+    this.game = game;
+    this.container = document.getElementById('newsFeed');
+  }
+  
+  init() {
+    this.render();
+    
+    // Random glitch effect
+    setInterval(() => this.maybeGlitch(), 10000);
+  }
+  
+  render() {
+    this.container.innerHTML = '';
+    
+    this.game.config.newsItems
+      .filter(item => !item.hidden || this.checkTrigger(item.trigger))
+      .forEach(item => {
+        const el = document.createElement('div');
+        el.className = `civic-feed__item${item.glitch ? ' civic-feed__item--glitch' : ''}`;
+        el.innerHTML = `
+          <div class="civic-feed__time">${item.time}</div>
+          <div class="civic-feed__title">${item.title}</div>
+          <p class="civic-feed__excerpt">${item.excerpt}</p>
+        `;
+        this.container.appendChild(el);
+      });
+  }
+  
+  checkTrigger(trigger) {
+    if (!trigger) return true;
+    
+    // Parse trigger like "awareness > 50"
+    const match = trigger.match(/(\w+)\s*(>|<|>=|<=|==)\s*(\d+)/);
+    if (match) {
+      const [, stat, op, value] = match;
+      const current = this.game.state.player.stats[stat] || 0;
+      const target = parseInt(value);
+      
+      switch (op) {
+        case '>': return current > target;
+        case '<': return current < target;
+        case '>=': return current >= target;
+        case '<=': return current <= target;
+        case '==': return current === target;
+      }
+    }
+    return false;
+  }
+  
+  maybeGlitch() {
+    if (Math.random() > 0.7) {
+      const items = this.container.querySelectorAll('.civic-feed__item');
+      if (items.length) {
+        const randomItem = items[Math.floor(Math.random() * items.length)];
+        randomItem.classList.add('civic-feed__item--glitch');
+        setTimeout(() => randomItem.classList.remove('civic-feed__item--glitch'), 200);
+      }
+    }
+    
+    // Re-render to check for newly unlocked items
+    this.render();
+  }
+  
+  addItem(item) {
+    this.game.config.newsItems.unshift(item);
+    this.render();
+  }
+}
+
+// ============================================================================
+// EASTER EGG ENGINE
+// ============================================================================
+
+class EasterEggEngine {
+  constructor(game) {
+    this.game = game;
+    this.konamiBuffer = [];
+  }
+  
+  init() {
+    // Konami code listener
+    document.addEventListener('keydown', (e) => {
+      this.konamiBuffer.push(e.key);
+      if (this.konamiBuffer.length > 10) this.konamiBuffer.shift();
+      this.checkKonami();
+    });
+  }
+  
+  triggerConsoleMessage() {
+    const egg = this.game.config.easterEggs.find(e => e.type === 'console');
+    if (egg) {
+      console.log(`%c${egg.content}`, 'color: #ff4466; font-size: 14px;');
+    }
+  }
+  
+  checkTriggers() {
+    this.game.config.easterEggs.forEach(egg => {
+      if (this.game.state.revealedEasterEggs.includes(egg.id)) return;
+      
+      if (egg.type === 'hidden_text' && this.checkTrigger(egg.trigger)) {
+        this.revealHiddenText(egg);
+      }
+    });
+  }
+  
+  checkTrigger(trigger) {
+    if (trigger === 'always') return true;
+    
+    const match = trigger.match(/(\w+)\s*(>|<|>=|<=|==)\s*(\d+)/);
+    if (match) {
+      const [, stat, op, value] = match;
+      const current = this.game.state.player.stats[stat] || 0;
+      const target = parseInt(value);
+      
+      switch (op) {
+        case '>': return current > target;
+        case '<': return current < target;
+        case '>=': return current >= target;
+        case '<=': return current <= target;
+        case '==': return current === target;
+      }
+    }
+    return false;
+  }
+  
+  revealHiddenText(egg) {
+    const el = document.querySelector(egg.selector);
+    if (el) {
+      el.classList.add('civic-secret--revealed');
+      this.game.state.revealedEasterEggs.push(egg.id);
+      this.game.showToast('🔍 Secret discovered!', 'warning');
+    }
+  }
+  
+  checkKonami() {
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 
+                        'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    
+    if (this.konamiBuffer.join(',') === konamiCode.join(',')) {
+      this.unlockDebugMode();
+      this.konamiBuffer = [];
+    }
+  }
+  
+  unlockDebugMode() {
+    console.log('%c🎮 DEBUG MODE ACTIVATED', 'color: #00ff88; font-size: 20px;');
+    this.game.showToast('🎮 Debug mode activated!', 'success');
+    this.game.state.player.stats.awareness = 100;
+    this.game.state.player.civicScore = 100;
+    this.game.updateStats();
+    this.game.updateCivicScore();
+    
+    // Reveal all hidden news
+    this.game.config.newsItems.forEach(item => item.hidden = false);
+    this.game.feed.render();
+  }
+}
+
+// ============================================================================
+// PARTICLES (Visual enhancement)
+// ============================================================================
+
+class ParticleSystem {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.particles = [];
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+  }
+  
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  
+  init(count = 50) {
+    for (let i = 0; i < count; i++) {
+      this.particles.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * 2 + 1,
+        alpha: Math.random() * 0.5 + 0.2
+      });
+    }
+    this.animate();
+  }
+  
+  animate() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      
+      if (p.x < 0) p.x = this.canvas.width;
+      if (p.x > this.canvas.width) p.x = 0;
+      if (p.y < 0) p.y = this.canvas.height;
+      if (p.y > this.canvas.height) p.y = 0;
+      
+      this.ctx.beginPath();
+      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      this.ctx.fillStyle = `rgba(177, 156, 217, ${p.alpha})`;
+      this.ctx.fill();
+    });
+    
+    // Draw connections
+    this.particles.forEach((p1, i) => {
+      this.particles.slice(i + 1).forEach(p2 => {
+        const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        if (dist < 100) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(p1.x, p1.y);
+          this.ctx.lineTo(p2.x, p2.y);
+          this.ctx.strokeStyle = `rgba(177, 156, 217, ${0.1 * (1 - dist / 100)})`;
+          this.ctx.stroke();
+        }
+      });
+    });
+    
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+// Initialize particles
+const particles = new ParticleSystem(document.getElementById('particlesCanvas'));
+particles.init(40);
+
+// Initialize game with Belgium config
+const game = new CivicARG(BELGIUM_CONFIG);
+game.init();
+
+// Export for debugging
+window.CivicARG = CivicARG;
+window.game = game;
+</script>
+</body>
+</html>
