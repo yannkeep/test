@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BELGILEAKS — Documents Déclassifiés</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --bg: #050505;
+            --bg-card: #0a0a0a;
+            --bg-doc: #0d0d0d;
+            --green: #00ff41;
+            --green-dark: #00aa2a;
+            --green-glow: rgba(0,255,65,0.3);
+            --red: #ff0033;
+            --red-glow: rgba(255,0,51,0.3);
+            --yellow: #ffcc00;
+            --white: #ffffff;
+            --gray: #888888;
+            --gray-dark: #333333;
+            --lilas: #9966ff;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body { font-family:'Inter',sans-serif; background:var(--black); color:var(--white); line-height:1.6; }
+        ::selection { background:var(--green); color:var(--black); }
+
+        /* HEADER */
+        header { background:var(--black); border-bottom:1px solid var(--green); padding:1rem 2rem; position:sticky; top:0; z-index:1000; }
+        .header-content { max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+        .logo { font-family:'JetBrains Mono',monospace; font-size:1.5rem; font-weight:700; color:var(--green); text-decoration:none; text-shadow:0 0 20px var(--green-glow); }
+        .nav-links { display:flex; gap:1.5rem; list-style:none; flex-wrap:wrap; }
+        .nav-links a { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--gray); text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:color 0.2s; }
+        .nav-links a:hover { color:var(--green); }
+
+        /* HERO */
+        .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:4rem 2rem; position:relative; }
+        .hero::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.02) 2px,rgba(0,255,65,0.02) 4px); pointer-events:none; }
+        .hero-content { max-width:1000px; margin:0 auto; position:relative; z-index:1; }
+        .classified { display:inline-block; border:3px solid var(--red); color:var(--red); font-family:'Courier Prime',monospace; font-size:1rem; font-weight:700; padding:0.5rem 1.5rem; transform:rotate(-2deg); margin-bottom:2rem; text-transform:uppercase; letter-spacing:3px; box-shadow:0 0 30px var(--red-glow); }
+        .hero-title { font-family:'JetBrains Mono',monospace; font-size:clamp(2.5rem,8vw,5rem); font-weight:700; color:var(--green); text-shadow:0 0 50px var(--green-glow); margin-bottom:1.5rem; line-height:1.1; }
+        .hero-sub { font-size:1.1rem; color:var(--gray); max-width:700px; margin-bottom:2rem; }
+        .hero-sub strong { color:var(--white); }
+
+        /* TERMINAL */
+        .terminal { background:var(--bg-doc); border:1px solid var(--green-dark); padding:1.5rem; font-family:'JetBrains Mono',monospace; font-size:0.85rem; margin-bottom:2rem; }
+        .terminal-header { display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--gray-dark); }
+        .dot { width:12px; height:12px; border-radius:50%; }
+        .dot.r { background:#ff5f56; } .dot.y { background:#ffbd2e; } .dot.g { background:#27ca40; }
+        .terminal-title { margin-left:0.5rem; color:var(--gray); font-size:0.75rem; }
+        .line { margin-bottom:0.5rem; color:var(--green); }
+        .line .p { color:var(--gray); }
+        .line .c { color:var(--white); }
+        .out { color:var(--gray); padding-left:1rem; border-left:2px solid var(--gray-dark); margin:0.5rem 0; }
+        .out .err { color:var(--red); }
+        .out .warn { color:var(--yellow); }
+        .out .ok { color:var(--green); }
+
+        /* BUTTONS */
+        .cta { display:flex; gap:1rem; flex-wrap:wrap; }
+        .btn { font-family:'JetBrains Mono',monospace; font-size:0.85rem; padding:1rem 2rem; text-decoration:none; text-transform:uppercase; letter-spacing:1px; transition:all 0.3s; cursor:pointer; border:none; }
+        .btn-p { background:var(--green); color:var(--black); }
+        .btn-p:hover { box-shadow:0 0 30px var(--green-glow); }
+        .btn-g { background:transparent; color:var(--green); border:1px solid var(--green); }
+        .btn-g:hover { background:var(--green); color:var(--black); }
+
+        /* STATS BAR */
+        .stats { display:grid; grid-template-columns:repeat(4,1fr); background:var(--bg-card); border-top:1px solid var(--gray-dark); border-bottom:1px solid var(--gray-dark); }
+        @media(max-width:900px) { .stats { grid-template-columns:repeat(2,1fr); } }
+        .stat { padding:2rem; text-align:center; border-right:1px solid var(--gray-dark); position:relative; }
+        .stat:last-child { border-right:none; }
+        .stat::before { content:'●'; position:absolute; top:1rem; right:1rem; color:var(--red); font-size:0.5rem; animation:blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+        .stat-v { font-family:'JetBrains Mono',monospace; font-size:2.5rem; font-weight:700; color:var(--red); line-height:1; text-shadow:0 0 20px var(--red-glow); }
+        .stat-l { font-size:0.7rem; color:var(--gray); text-transform:uppercase; letter-spacing:1px; margin-top:0.5rem; }
+
+        /* SECTIONS */
+        section { padding:4rem 2rem; border-bottom:1px solid var(--gray-dark); }
+        .container { max-width:1200px; margin:0 auto; }
+        .leak-h { display:flex; align-items:flex-start; gap:1.5rem; margin-bottom:3rem; flex-wrap:wrap; }
+        .leak-n { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--black); background:var(--red); padding:0.5rem 1rem; font-weight:700; letter-spacing:1px; white-space:nowrap; }
+        .leak-t h2 { font-family:'JetBrains Mono',monospace; font-size:clamp(1.5rem,4vw,2.5rem); font-weight:700; color:var(--white); margin-bottom:0.5rem; }
+        .leak-t p { color:var(--gray); font-size:1rem; }
+
+        /* DOC CARDS */
+        .docs { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.5rem; }
+        .doc { background:var(--bg-doc); border:1px solid var(--gray-dark); position:relative; transition:all 0.3s; }
+        .doc:hover { border-color:var(--green); box-shadow:0 0 30px var(--green-glow); }
+        .doc::before { content:'DOCUMENT'; position:absolute; top:-1px; right:1rem; font-family:'JetBrains Mono',monospace; font-size:0.6rem; background:var(--gray-dark); color:var(--gray); padding:0.25rem 0.5rem; letter-spacing:1px; }
+        .doc.crit::before { content:'CRITIQUE'; background:var(--red); color:var(--white); }
+        .doc.verif::before { content:'VÉRIFIÉ'; background:var(--green-dark); color:var(--black); }
+        .doc-h { padding:1.5rem; border-bottom:1px solid var(--gray-dark); }
+        .doc-ref { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--gray); margin-bottom:0.5rem; }
+        .doc-stat { font-family:'JetBrains Mono',monospace; font-size:2.5rem; font-weight:700; color:var(--red); line-height:1; }
+        .doc-stat.grn { color:var(--green); }
+        .doc-stat.ylw { color:var(--yellow); }
+        .doc-lbl { font-size:1rem; color:var(--white); margin-top:0.25rem; }
+        .doc-b { padding:1.5rem; }
+        .doc-c { color:var(--gray); font-size:0.9rem; line-height:1.7; margin-bottom:1rem; }
+        .doc-c strong { color:var(--white); }
+        .doc-s { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--green); display:flex; align-items:center; gap:0.5rem; }
+        .doc-s::before { content:'▸'; }
+
+        /* EVIDENCE BOX */
+        .evidence { background:var(--black); border:1px solid var(--yellow); border-left-width:4px; padding:1.5rem; margin:2rem 0; }
+        .ev-h { display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem; }
+        .ev-tag { font-family:'JetBrains Mono',monospace; font-size:0.65rem; background:var(--yellow); color:var(--black); padding:0.25rem 0.5rem; font-weight:700; letter-spacing:1px; }
+        .ev-title { font-family:'JetBrains Mono',monospace; font-size:1rem; color:var(--yellow); }
+        .ev-c { color:var(--gray); font-size:0.95rem; line-height:1.7; }
+        .ev-c strong { color:var(--white); }
+
+        /* QUOTE */
+        .quote { background:var(--bg-card); border-left:4px solid var(--lilas); padding:2rem; margin:2rem 0; }
+        .quote p { font-size:1.2rem; font-style:italic; color:var(--white); margin-bottom:1rem; line-height:1.7; }
+        .quote cite { font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--lilas); font-style:normal; }
+
+        /* TIMELINE */
+        .tl { position:relative; padding-left:3rem; margin:2rem 0; }
+        .tl::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--red); }
+        .tl-item { position:relative; padding-bottom:2rem; }
+        .tl-item::before { content:''; position:absolute; left:-3rem; top:0.25rem; width:14px; height:14px; background:var(--black); border:2px solid var(--red); border-radius:50%; }
+        .tl-date { font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--red); margin-bottom:0.5rem; }
+        .tl-c { color:var(--gray); }
+        .tl-c strong { color:var(--white); }
+
+        /* PILLAR GRID */
+        .pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:0; border:1px solid var(--gray-dark); margin:2rem 0; }
+        @media(max-width:900px) { .pillars { grid-template-columns:1fr; } }
+        .pillar { padding:1.5rem; border-right:1px solid var(--gray-dark); }
+        .pillar:last-child { border-right:none; }
+        .pillar-h { display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--gray-dark); }
+        .pillar-c { width:12px; height:12px; }
+        .pillar-c.orange { background:#ff6600; }
+        .pillar-c.red { background:var(--red); }
+        .pillar-c.blue { background:#0066ff; }
+        .pillar-n { font-family:'JetBrains Mono',monospace; font-size:0.9rem; font-weight:700; }
+        .pillar ul { list-style:none; font-size:0.85rem; color:var(--gray); }
+        .pillar li { padding:0.4rem 0; border-bottom:1px dotted var(--gray-dark); }
+
+        /* SOURCES */
+        .sources { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; margin-top:2rem; }
+        .src-card { background:var(--bg-doc); border:1px solid var(--gray-dark); padding:1.25rem; }
+        .src-card h4 { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--green); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.75rem; }
+        .src-card p { font-size:0.85rem; color:var(--gray); line-height:1.6; }
+
+        /* FOOTER */
+        footer { background:var(--black); border-top:1px solid var(--green); padding:3rem 2rem; }
+        .footer-c { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; }
+        .footer-brand { display:flex; flex-direction:column; gap:0.5rem; }
+        .footer-logo { font-family:'JetBrains Mono',monospace; font-size:1.25rem; font-weight:700; color:var(--green); }
+        .footer-tag { font-size:0.75rem; color:var(--gray); }
+        .footer-links { display:flex; gap:2rem; flex-wrap:wrap; }
+        .footer-links a { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--gray); text-decoration:none; transition:color 0.2s; }
+        .footer-links a:hover { color:var(--green); }
+        .footer-disc { width:100%; margin-top:2rem; padding-top:2rem; border-top:1px solid var(--gray-dark); font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--gray); text-align:center; }
+        .footer-disc .w { color:var(--yellow); }
+
+        /* PARTICLES */
+        #particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">◈ BELGILEAKS</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#leak-001">Kern</a></li>
+                    <li><a href="#leak-002">Caste</a></li>
+                    <li><a href="#leak-003">Omerta</a></li>
+                    <li><a href="#leak-004">Broyés</a></li>
+                    <li><a href="#leak-005">Piliers</a></li>
+                    <li><a href="#sources">Sources</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="classified">⚠ Documents Déclassifiés</div>
+            <h1 class="hero-title">BELGILEAKS</h1>
+            <p class="hero-sub">
+                <strong>Fuites de données</strong> sur le système politique belge. 
+                Sources vérifiées. CRISP, RTBF, UCLouvain, La Libre. 
+                Ce que les médias ne mettent jamais bout à bout.
+                <br><strong>#!BiM — Bénéficiaires d'Intelligence Mutante</strong>
+            </p>
+
+            <div class="terminal">
+                <div class="terminal-header">
+                    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+                    <span class="terminal-title">belgileaks@system:~</span>
+                </div>
+                <div class="line"><span class="p">$</span> <span class="c">cat /system/transparency_rank.txt</span></div>
+                <div class="out"><span class="err">BELGIQUE: 119e / 136 pays</span><br>POSITION: Derrière Kazakhstan, Arabie Saoudite<br>STATUS: <span class="err">CRITIQUE</span></div>
+                <div class="line"><span class="p">$</span> <span class="c">count /mandataires/*</span></div>
+                <div class="out"><span class="ok">31 806 mandataires politiques</span><br>RATIO: 1 mandataire / km²</div>
+                <div class="line"><span class="p">$</span> <span class="c">status /kern/legal_basis</span></div>
+                <div class="out"><span class="err">ERROR: FILE NOT FOUND</span><br><span class="warn">Le Kern n'a AUCUNE existence légale.</span></div>
+            </div>
+
+            <div class="cta">
+                <a href="#leak-001" class="btn btn-p">Accéder aux documents</a>
+                <a href="#sources" class="btn btn-g">Vérifier les sources</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats">
+        <div class="stat"><div class="stat-v">119<sup style="font-size:0.5em">e</sup></div><div class="stat-l">Classement transparence</div></div>
+        <div class="stat"><div class="stat-v">31 806</div><div class="stat-l">Mandataires</div></div>
+        <div class="stat"><div class="stat-v">500K</div><div class="stat-l">Malades longue durée</div></div>
+        <div class="stat"><div class="stat-v">75M€</div><div class="stat-l">Subsides partis/an</div></div>
+    </div>
+
+    <!-- LEAK 001 -->
+    <section id="leak-001">
+        <div class="container">
+            <div class="leak-h">
+                <span class="leak-n">LEAK #001</span>
+                <div class="leak-t">
+                    <h2>LE KERN : GOUVERNEMENT FANTÔME</h2>
+                    <p>Comment un organe sans existence légale dirige la Belgique</p>
+                </div>
+            </div>
+
+            <div class="docs">
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-001-A • STATUT LÉGAL</div>
+                        <div class="doc-stat">0</div>
+                        <div class="doc-lbl">Existence légale</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">Le "Kern" — les bureaux de partis où se prennent les vraies décisions — n'a <strong>aucune existence légale</strong>. Aucune obligation de transparence. Aucun compte à rendre. C'est là que le pays est réellement dirigé.</p>
+                        <span class="doc-s">Wikipedia, analyses institutionnelles</span>
+                    </div>
+                </div>
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-001-B • DISCIPLINE DE VOTE</div>
+                        <div class="doc-stat">4</div>
+                        <div class="doc-lbl">Mécanismes de contrôle</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c"><strong>1.</strong> Convergence naturelle<br><strong>2.</strong> Socialisation<br><strong>3.</strong> Persuasion par avantages<br><strong>4.</strong> <strong>Coercition : menaces d'exclusion ou retrait d'investiture</strong></p>
+                        <span class="doc-s">Cairn.info, CRISP asbl</span>
+                    </div>
+                </div>
+                <div class="doc verif">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-001-C • FINANCEMENT</div>
+                        <div class="doc-stat">75%</div>
+                        <div class="doc-lbl">Revenus = argent public</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c"><strong>75 millions €/an</strong> de financement public. <strong>75% des revenus totaux</strong> des partis. Deux fois plus qu'en Allemagne. Au-delà de 80% = "branche de l'État".</p>
+                        <span class="doc-s">CRISP, Weneedtotalk</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote">
+                <p>"Les véritables dirigeants du pays sont les présidents de partis, choisis exclusivement par leur propre parti. Le vote d'un adhérent de parti compte plus que celui d'un électeur."</p>
+                <cite>— Observateur cité par le CRISP asbl</cite>
+            </div>
+
+            <div class="evidence">
+                <div class="ev-h">
+                    <span class="ev-tag">Preuve</span>
+                    <span class="ev-title">Confection des listes électorales</span>
+                </div>
+                <p class="ev-c">Les partis "confectionnent" les listes <strong>sans aucune régulation légale</strong>. Cette absence de règles crée un "secret" autour des processus internes, permettant un contrôle discrétionnaire sur l'ordre des candidats. <strong>Tu votes pour qui ils ont décidé.</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEAK 002 -->
+    <section id="leak-002" style="background:var(--bg-card);">
+        <div class="container">
+            <div class="leak-h">
+                <span class="leak-n">LEAK #002</span>
+                <div class="leak-t">
+                    <h2>LA CASTE : 31 806 MANDATAIRES</h2>
+                    <p>Un mandataire politique par kilomètre carré</p>
+                </div>
+            </div>
+
+            <div class="docs">
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-002-A • DENSITÉ</div>
+                        <div class="doc-stat">31 806</div>
+                        <div class="doc-lbl">Mandataires politiques</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">Étude UCLouvain : <strong>31 806 mandataires</strong> pour 30 689 km². Littéralement <strong>"1 mandataire par km²"</strong>. Multiplication des niveaux de pouvoir.</p>
+                        <span class="doc-s">UCLouvain, RTBF</span>
+                    </div>
+                </div>
+                <div class="doc verif">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-002-B • MILLEFEUILLE</div>
+                        <div class="doc-stat grn">7</div>
+                        <div class="doc-lbl">Parlements</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">Chambre, Sénat, Parlement flamand, wallon, bruxellois, Communauté française, Communauté germanophone. <strong>Aucune hiérarchie des normes</strong> entre lois, décrets et ordonnances.</p>
+                        <span class="doc-s">Belgium.be, Wikipedia</span>
+                    </div>
+                </div>
+                <div class="doc verif">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-002-C • COMMUNES</div>
+                        <div class="doc-stat grn">581</div>
+                        <div class="doc-lbl">Communes (3 régimes)</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">1831 : 2 739 communes. Aujourd'hui : 581. Trois cadres juridiques différents. Budget wallon 2024 : <strong>7,21 milliards €</strong>. Crise des pensions qui phagocyte les finances.</p>
+                        <span class="doc-s">DHnet, La Libre, Belgium.be</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEAK 003 -->
+    <section id="leak-003">
+        <div class="container">
+            <div class="leak-h">
+                <span class="leak-n">LEAK #003</span>
+                <div class="leak-t">
+                    <h2>L'OMERTA : 119e SUR 136 PAYS</h2>
+                    <p>Classement mondial de la transparence : derrière le Kazakhstan</p>
+                </div>
+            </div>
+
+            <div class="docs">
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-003-A • CLASSEMENT</div>
+                        <div class="doc-stat">119<sup style="font-size:0.5em">e</sup></div>
+                        <div class="doc-lbl">Sur 136 pays</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">Au classement du droit à l'information : <strong>119e sur 136</strong>. Derrière le <strong>Kazakhstan</strong> (117e). Derrière l'<strong>Arabie Saoudite</strong> (118e).</p>
+                        <span class="doc-s">RTBF, classement international</span>
+                    </div>
+                </div>
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-003-B • DE WEVER</div>
+                        <div class="doc-stat">0</div>
+                        <div class="doc-lbl">Conf. de presse en 3 mois</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">Gouvernement De Wever formé en février 2025 après <strong>239 jours de négociations</strong>. Résultat : <strong>0 conférence de presse en 3 mois</strong>. Aucune mesure de transparence dans l'accord.</p>
+                        <span class="doc-s">La Libre, Wikipedia</span>
+                    </div>
+                </div>
+                <div class="doc verif">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-003-C • STREAMING</div>
+                        <div class="doc-stat ylw">10-20%</div>
+                        <div class="doc-lbl">Communes wallonnes qui streament</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">Le niveau de pouvoir <strong>le plus proche des citoyens reste le plus fermé</strong>. 10-20% en Wallonie, 37-53% à Bruxelles. Paradoxe total.</p>
+                        <span class="doc-s">UVCW, Parlement wallon</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evidence">
+                <div class="ev-h">
+                    <span class="ev-tag">Chronologie</span>
+                    <span class="ev-title">Mai 2024 : Le vote de la honte</span>
+                </div>
+                <div class="tl">
+                    <div class="tl-item">
+                        <div class="tl-date">MAI 2024</div>
+                        <div class="tl-c"><strong>PS, MR, Ecolo, CD&V, Vooruit, Open VLD</strong> votent CONTRE une Commission d'accès aux documents administratifs contraignante au niveau fédéral.</div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-date">DEPUIS 2019</div>
+                        <div class="tl-c">Toutes les régions ont adopté la CADA. <strong>Sauf le niveau fédéral.</strong></div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-date">AFFAIRE VANDENBROUCKE</div>
+                        <div class="tl-c">Le ministre de la Santé qui a <strong>bloqué personnellement la réforme</strong> pour protéger ses secrets — puis <strong>reconduit au gouvernement suivant</strong>.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEAK 004 -->
+    <section id="leak-004" style="background:var(--bg-card);">
+        <div class="container">
+            <div class="leak-h">
+                <span class="leak-n">LEAK #004</span>
+                <div class="leak-t">
+                    <h2>LES BROYÉS : 500 000 MALADES</h2>
+                    <p>L'épidémie sociale qu'on ne veut pas voir</p>
+                </div>
+            </div>
+
+            <div class="docs">
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-004-A • MALADES</div>
+                        <div class="doc-stat">500K+</div>
+                        <div class="doc-lbl">Personnes (2023)</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c"><strong>500 000+ personnes</strong> en congé maladie depuis plus d'un an. <strong>+20% entre 2019-2023</strong>. Dépasse le nombre de chômeurs (300 000 en 2022).</p>
+                        <span class="doc-s">Statistiques INAMI</span>
+                    </div>
+                </div>
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-004-B • COÛT</div>
+                        <div class="doc-stat">9 Mrd€</div>
+                        <div class="doc-lbl">Indemnités/an</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c"><strong>9 milliards €/an</strong> en indemnités. Situation jugée <strong>"insoutenable"</strong>. Réformes depuis 2019 pour réduire les droits sociaux.</p>
+                        <span class="doc-s">Analyse des réformes</span>
+                    </div>
+                </div>
+                <div class="doc verif">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-004-C • PROFIL</div>
+                        <div class="doc-stat ylw">69%</div>
+                        <div class="doc-lbl">Femmes (burn-out)</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">63% ont +50 ans. 59% sont des femmes. 69% des burn-out/dépressions = femmes. 1/3 troubles mentaux, 1/3 musculo-squelettiques. <strong>Épidémie sociale, pas médicale.</strong></p>
+                        <span class="doc-s">Statistiques INAMI</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evidence">
+                <div class="ev-h">
+                    <span class="ev-tag">Alerte</span>
+                    <span class="ev-title">Droits sociaux remis en question</span>
+                </div>
+                <p class="ev-c">Face aux coûts, les droits sociaux ont été <strong>remis en question dans un contexte d'austérité</strong>. Depuis 2019, les réformes modifient le régime d'incapacité. <strong>On te rend malade, puis on te culpabilise.</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEAK 005 -->
+    <section id="leak-005">
+        <div class="container">
+            <div class="leak-h">
+                <span class="leak-n">LEAK #005</span>
+                <div class="leak-t">
+                    <h2>LES PILIERS : DU BERCEAU AU TOMBEAU</h2>
+                    <p>Une société compartimentée qui persiste</p>
+                </div>
+            </div>
+
+            <p style="color:var(--gray);margin-bottom:2rem;font-size:1.1rem;">Tu nais dans un pilier. Tu vis dans un pilier. Tu meurs dans un pilier. Catholique, socialiste ou libéral — chacun avec ses écoles, hôpitaux, syndicats, mutuelles, journaux, partis. <strong style="color:var(--white);">Cloisonnement total.</strong></p>
+
+            <div class="pillars">
+                <div class="pillar">
+                    <div class="pillar-h"><span class="pillar-c orange"></span><span class="pillar-n">CATHOLIQUE</span></div>
+                    <ul>
+                        <li><strong>Syndicat:</strong> ACV/CSC (~1,7M)</li>
+                        <li><strong>Mutuelle:</strong> MC/CM</li>
+                        <li><strong>Enseignement:</strong> Libre confessionnel</li>
+                        <li><strong>Patronat:</strong> Boerenbond</li>
+                        <li><strong>Partis:</strong> CD&V, Les Engagés</li>
+                    </ul>
+                </div>
+                <div class="pillar">
+                    <div class="pillar-h"><span class="pillar-c red"></span><span class="pillar-n">SOCIALISTE</span></div>
+                    <ul>
+                        <li><strong>Syndicat:</strong> FGTB/ABVV</li>
+                        <li><strong>Mutuelle:</strong> Solidaris</li>
+                        <li><strong>Mouvement:</strong> MOC, PAC</li>
+                        <li><strong>Presse:</strong> Le Peuple (hist.)</li>
+                        <li><strong>Partis:</strong> PS, Vooruit</li>
+                    </ul>
+                </div>
+                <div class="pillar">
+                    <div class="pillar-h"><span class="pillar-c blue"></span><span class="pillar-n">LIBÉRAL</span></div>
+                    <ul>
+                        <li><strong>Syndicat:</strong> ACLVB/CGSLB</li>
+                        <li><strong>Mutuelle:</strong> Mut. Libérales</li>
+                        <li><strong>Patronat:</strong> FEB, VOKA, UCM</li>
+                        <li><strong>Enseignement:</strong> Officiel neutre</li>
+                        <li><strong>Partis:</strong> MR, Open VLD</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="quote">
+                <p>"Il existe extraordinairement peu d'interactions sociales entre catholiques, libéraux et socialistes ; on trouve souvent un syndicat catholique, un libéral et un socialiste, chacun ne s'occupant que de ses adhérents."</p>
+                <cite>— Sociologue Seebohm Rowntree, 1911. Toujours d'actualité.</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEAK 006 -->
+    <section style="background:var(--bg-card);">
+        <div class="container">
+            <div class="leak-h">
+                <span class="leak-n">LEAK #006</span>
+                <div class="leak-t">
+                    <h2>FAILLES DE SÉCURITÉ : ESPIONNAGE</h2>
+                    <p>Les lacunes du dispositif d'intelligence économique</p>
+                </div>
+            </div>
+
+            <div class="docs">
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-006-A • ALERTE VSSE</div>
+                        <div class="doc-stat" style="font-size:1.5rem;">🇨🇳</div>
+                        <div class="doc-lbl">Menace espionnage chinois</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">La <strong>VSSE</strong> alerte sur l'espionnage chinois ciblant la <strong>propriété intellectuelle des entreprises belges</strong>. Le "Meldpunt" du SPF Économie existe mais reste très marginal.</p>
+                        <span class="doc-s">SPF Économie, VSSE</span>
+                    </div>
+                </div>
+                <div class="doc crit">
+                    <div class="doc-h">
+                        <div class="doc-ref">DOC-006-B • LACUNES</div>
+                        <div class="doc-stat" style="font-size:1.5rem;">⚠️</div>
+                        <div class="doc-lbl">Pas d'instance nationale unique</div>
+                    </div>
+                    <div class="doc-b">
+                        <p class="doc-c">Fragmentation institutionnelle = <strong>lacunes structurelles</strong>. Absence d'instance nationale unique d'IE (contrairement au SISSE français). Informations partagées tardivement entre services.</p>
+                        <span class="doc-s">Analyse IE belge</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOURCES -->
+    <section id="sources">
+        <div class="container">
+            <div class="leak-h">
+                <span class="leak-n" style="background:var(--green);color:var(--black);">SOURCES</span>
+                <div class="leak-t">
+                    <h2>VÉRIFICATION DES DOCUMENTS</h2>
+                    <p>Toutes nos sources sont publiques et vérifiables</p>
+                </div>
+            </div>
+
+            <div class="sources">
+                <div class="src-card">
+                    <h4>Institutionnel</h4>
+                    <p>CRISP asbl • Belgium.be • Parlement wallon • Parlement flamand • Brussels Hoofdstedelijk Gewest • UVCW • Lachambre</p>
+                </div>
+                <div class="src-card">
+                    <h4>Médias</h4>
+                    <p>RTBF • La Libre Belgique • DHnet • L'Avenir • Lesengages • Pouvoirs-locaux</p>
+                </div>
+                <div class="src-card">
+                    <h4>Académique</h4>
+                    <p>UCLouvain • Cairn.info • Wikipedia (vérifié) • Small Wars Journal • Rights Studio</p>
+                </div>
+                <div class="src-card">
+                    <h4>Société civile</h4>
+                    <p>Transparencia • Cumuleo • Ligue des droits humains • Weneedtotalk • OIDP • Freedom House</p>
+                </div>
+            </div>
+
+            <div class="terminal" style="margin-top:2rem;">
+                <div class="terminal-header">
+                    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+                    <span class="terminal-title">belgileaks@verify:~</span>
+                </div>
+                <div class="line"><span class="p">$</span> <span class="c">verify --all-documents</span></div>
+                <div class="out">
+                    Checking DOC-001-A... <span class="ok">✓ VERIFIED</span><br>
+                    Checking DOC-001-B... <span class="ok">✓ VERIFIED</span><br>
+                    Checking DOC-002-A... <span class="ok">✓ VERIFIED</span><br>
+                    Checking DOC-003-A... <span class="ok">✓ VERIFIED</span><br>
+                    Checking DOC-004-A... <span class="ok">✓ VERIFIED</span><br>
+                    ...<br><br>
+                    <span class="ok">ALL DOCUMENTS VERIFIED</span><br>
+                    Sources: Public records, official institutions, academic research
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-c">
+            <div class="footer-brand">
+                <span class="footer-logo">◈ BELGILEAKS</span>
+                <span class="footer-tag">#!BiM • Bénéficiaires d'Intelligence Mutante</span>
+            </div>
+            <div class="footer-links">
+                <a href="#leak-001">Kern</a>
+                <a href="#leak-002">Caste</a>
+                <a href="#leak-003">Omerta</a>
+                <a href="#leak-004">Broyés</a>
+                <a href="#sources">Sources</a>
+            </div>
+        </div>
+        <div class="footer-disc">
+            <span class="w">⚠️ AVERTISSEMENT:</span> Toutes les données sont sourcées et vérifiables. Ce site est une initiative citoyenne. Vérifiez. Partagez. Exigez la transparence.
+        </div>
+    </footer>
+
+    <script>
+        class Particles {
+            constructor(c) {
+                this.c = c;
+                this.x = c.getContext('2d');
+                this.p = [];
+                this.init();
+            }
+            init() {
+                this.resize();
+                this.create();
+                this.animate();
+                window.addEventListener('resize', () => { this.resize(); this.p = []; this.create(); });
+            }
+            resize() {
+                this.c.width = window.innerWidth;
+                this.c.height = window.innerHeight;
+            }
+            create() {
+                const n = Math.floor((this.c.width * this.c.height) / 25000);
+                for (let i = 0; i < n; i++) {
+                    this.p.push({
+                        x: Math.random() * this.c.width,
+                        y: Math.random() * this.c.height,
+                        s: Math.random() * 1.5 + 0.5,
+                        sy: Math.random() * 0.5 + 0.2,
+                        o: Math.random() * 0.5 + 0.2
+                    });
+                }
+            }
+            animate() {
+                this.x.clearRect(0, 0, this.c.width, this.c.height);
+                this.p.forEach(p => {
+                    p.y += p.sy;
+                    if (p.y > this.c.height) { p.y = 0; p.x = Math.random() * this.c.width; }
+                    this.x.beginPath();
+                    this.x.arc(p.x, p.y, p.s, 0, Math.PI * 2);
+                    this.x.fillStyle = `rgba(0,255,65,${p.o})`;
+                    this.x.fill();
+                });
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) window.scrollTo({ top: t.offsetTop - 80, behavior: 'smooth' });
+            });
+        });
+        document.addEventListener('DOMContentLoaded', () => new Particles(document.getElementById('particles')));
+    </script>
+</body>
+</html>
