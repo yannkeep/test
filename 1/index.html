@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyse : Sécurité Sociale Belge</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,300;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: Warm Neutral & Minimalist -->
+    <!-- Primary Background: Stone-50 (#fafaf9) -->
+    <!-- Surface: White (#ffffff) -->
+    <!-- Text: Stone-800 (#292524) -->
+    <!-- Accents: Slate-600 (Data), Amber-600 (Warnings/Highlights), Emerald-600 (Positive) -->
+
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the context and the core question ("Autodestructeur ?").
+         2. Dashboard "Diagnostic Vital": High-level KPIs to give immediate context (Tax wedge, Debt, Employment rate).
+         3. The Mechanism (Chart.js): A comparative analysis of the "Tax Wedge" to explain the funding paradox (high cost vs. competitiveness).
+         4. The Time Bomb (Plotly): Projections of aging costs (Pensions/Health) to demonstrate long-term sustainability issues.
+         5. The Productivity Trap (Interactive Calculator): A custom JS interactive simulation allowing users to slide salary levels and see the gap (or lack thereof) between work income and transfers, visually explaining the "Unemployment Trap".
+         6. Political Matrix: A grid layout detailing responsibilities and structural blockages.
+         7. Conclusion/Synthesis: Summary of findings.
+         
+         WHY: This structure moves from the "What" (Data) to the "Why" (Mechanisms) and finally the "Who" (Politics), allowing the user to construct a mental model of the problem before assigning blame.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. KPI Cards: Quick numeric context. Goal: Inform.
+         2. Bar Chart (Chart.js): Comparison of Labor Costs (Belgium vs Neighbors). Goal: Compare.
+         3. Stacked Area Chart (Plotly): Evolution of social spending over time. Goal: Trend/Change.
+         4. Interactive Salary Simulation (DOM Manipulation): Visualizes the "Net vs Gross vs State Cost" dynamic. Goal: Engage/Understand Mechanics.
+         5. Interactive Accordion/Grid: Political responsibilities. Goal: Organize complex textual info.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9; /* stone-50 */
+            color: #292524; /* stone-800 */
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* Custom Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Constraints width for readability on large screens */
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px; /* Base height */
+            max-height: 500px;
+        }
+
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        /* Custom Scrollbar for inner elements */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #d6d3d1;
+            border-radius: 3px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e;
+        }
+
+        /* Smooth transitions */
+        .transition-all-300 {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        /* Simulating range input styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #d97706; /* amber-600 */
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e7e5e4; /* stone-200 */
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-amber-100 selection:text-amber-900">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-stone-900 tracking-tight">Analyse<span class="text-amber-600">SSB</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('intro')" class="text-stone-600 hover:text-stone-900 px-3 py-2 text-sm font-medium transition-colors">Diagnostic</button>
+                    <button onclick="scrollToSection('finance')" class="text-stone-600 hover:text-stone-900 px-3 py-2 text-sm font-medium transition-colors">Financement</button>
+                    <button onclick="scrollToSection('demography')" class="text-stone-600 hover:text-stone-900 px-3 py-2 text-sm font-medium transition-colors">Démographie</button>
+                    <button onclick="scrollToSection('traps')" class="text-stone-600 hover:text-stone-900 px-3 py-2 text-sm font-medium transition-colors">Mécanismes</button>
+                    <button onclick="scrollToSection('politics')" class="text-stone-600 hover:text-stone-900 px-3 py-2 text-sm font-medium transition-colors">Politique</button>
+                </div>
+                <!-- Mobile menu button placeholder (simplified for single file) -->
+                <div class="md:hidden text-stone-500">Menu</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-20">
+
+        <!-- Header / Intro Section -->
+        <section id="intro" class="text-center space-y-6 pt-8">
+            <div class="inline-block px-3 py-1 bg-amber-50 text-amber-800 text-xs font-semibold tracking-wide uppercase rounded-full border border-amber-100">Rapport de Synthèse</div>
+            <h1 class="text-4xl md:text-5xl font-bold text-stone-900 leading-tight">
+                Le système belge de sécurité sociale : <br/><span class="text-stone-500 italic">Autodestructeur ou simplement sous pression ?</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg text-stone-600 leading-relaxed">
+                Une analyse interactive des tensions structurelles qui pèsent sur le modèle social belge. Entre coût du travail élevé, vieillissement de la population et complexité institutionnelle, le système est-il à bout de souffle ?
+            </p>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-left">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
+                    <div class="text-sm text-stone-500 font-medium uppercase mb-1">Pression Fiscale</div>
+                    <div class="text-3xl font-bold text-stone-900">53.0%</div>
+                    <div class="text-sm text-amber-600 mt-2 font-medium">Tax Wedge (Coût travail)</div>
+                    <p class="text-xs text-stone-400 mt-2">Parmi les plus élevés de l'OCDE, freinant l'embauche.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
+                    <div class="text-sm text-stone-500 font-medium uppercase mb-1">Dette Publique</div>
+                    <div class="text-3xl font-bold text-stone-900">~105%</div>
+                    <div class="text-sm text-slate-600 mt-2 font-medium">du PIB (Estimation 2024)</div>
+                    <p class="text-xs text-stone-400 mt-2">Limite la marge de manœuvre pour renflouer le système.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
+                    <div class="text-sm text-stone-500 font-medium uppercase mb-1">Taux d'emploi</div>
+                    <div class="text-3xl font-bold text-stone-900">72.1%</div>
+                    <div class="text-sm text-emerald-600 mt-2 font-medium">Objectif: 80%</div>
+                    <p class="text-xs text-stone-400 mt-2">Base de financement trop étroite pour les dépenses futures.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Financial Paradox (Chart.js) -->
+        <section id="finance" class="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+            <div class="p-8">
+                <div class="max-w-3xl mb-8">
+                    <h2 class="text-2xl font-bold text-stone-900 mb-4">Le Paradoxe du Financement</h2>
+                    <p class="text-stone-600">
+                        Le cœur du problème "autodestructeur" réside dans le mode de financement. La sécurité sociale est majoritairement financée par des cotisations sur le travail. Pour maintenir les prestations, on taxe le travail, ce qui augmente son coût, réduit l'emploi, et donc... réduit la base de financement. Ce graphique compare le "coin fiscal" (différence entre coût employeur et salaire net) de la Belgique avec ses voisins.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                    <div class="lg:col-span-2">
+                        <div class="chart-container">
+                            <canvas id="taxWedgeChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-1 space-y-4">
+                        <div class="bg-stone-50 p-4 rounded-lg border border-stone-200">
+                            <h4 class="font-bold text-stone-800 mb-2">Analyse</h4>
+                            <p class="text-sm text-stone-600">
+                                La Belgique impose un coût sur le travail nettement supérieur à la moyenne européenne. Cela crée un <strong>handicap compétitif</strong> immédiat pour les entreprises et incite à l'automatisation ou à la délocalisation plutôt qu'à l'embauche.
+                            </p>
+                        </div>
+                        <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
+                            <h4 class="font-bold text-amber-800 mb-2">Conséquence</h4>
+                            <p class="text-sm text-amber-700">
+                                Effet pervers : Augmenter les cotisations pour combler le déficit risque de creuser davantage le déficit en détruisant de l'emploi.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Demographic Wall (Plotly) -->
+        <section id="demography">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-stone-900 mb-4">Le Mur Démographique</h2>
+                <p class="text-stone-600 max-w-4xl">
+                    Le système est un mécanisme de répartition (les actifs paient pour les inactifs). Avec le vieillissement de la population (Papy Boom), le ratio actifs/retraités se dégrade. Ci-dessous, la projection de l'évolution des coûts liés au vieillissement (Pensions et Soins de santé) en pourcentage du PIB. C'est ici que la notion de "contre-productivité" politique émerge : l'inaction face à une courbe prévisible.
+                </p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-stone-100">
+                <div class="chart-container" style="height: 450px;">
+                    <div id="agingChart" style="width: 100%; height: 100%;"></div>
+                </div>
+                <div class="mt-4 flex flex-wrap gap-4 text-sm text-stone-500 justify-center">
+                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-blue-500"></span> Pensions</span>
+                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-teal-500"></span> Soins de Santé</span>
+                    <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-stone-300"></span> Autres</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Interactive Trap Mechanism -->
+        <section id="traps" class="bg-stone-900 text-stone-50 rounded-2xl shadow-lg overflow-hidden relative">
+            <!-- Background decoration -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-stone-800 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+
+            <div class="p-8 relative z-10">
+                <div class="max-w-3xl mb-10">
+                    <h2 class="text-2xl font-bold text-white mb-2">Le "Piège à l'Emploi"</h2>
+                    <p class="text-stone-300">
+                        Un système est contre-productif s'il décourage ce qu'il est censé financer : le travail. Utilisez le simulateur ci-dessous pour comprendre le <strong>"Piège à l'emploi"</strong>. Si la différence entre les allocations (chômage/CPAS) et le salaire net est trop faible, l'incitant financier à travailler disparaît, surtout pour les bas salaires.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+                    <!-- Controls -->
+                    <div class="md:col-span-4 space-y-8 bg-stone-800/50 p-6 rounded-xl border border-stone-700">
+                        <div>
+                            <label class="block text-sm font-medium text-stone-300 mb-2">Salaire Brut Mensuel (Est.)</label>
+                            <input type="range" id="salarySlider" min="1800" max="4500" step="50" value="2100" class="w-full h-2 bg-stone-600 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between mt-2">
+                                <span class="text-xs text-stone-400">1800€</span>
+                                <span class="text-xl font-bold text-amber-500" id="salaryDisplay">2100€</span>
+                                <span class="text-xs text-stone-400">4500€</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-stone-300 mb-2">Situation Familiale</label>
+                            <select id="familyStatus" class="w-full bg-stone-700 border-none text-white rounded-md p-2 focus:ring-2 focus:ring-amber-500">
+                                <option value="single">Isolé</option>
+                                <option value="family">Chef de ménage</option>
+                            </select>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-stone-700">
+                             <div class="flex items-center justify-between mb-2">
+                                <span class="text-stone-300">Allocation Chômage Ref.</span>
+                                <span id="benefitDisplay" class="font-bold text-stone-100">1200€</span>
+                            </div>
+                            <p class="text-xs text-stone-500 italic">Valeur indicative moyenne pour la simulation.</p>
+                        </div>
+                    </div>
+
+                    <!-- Visualization -->
+                    <div class="md:col-span-8 flex flex-col justify-end pb-4">
+                        <div class="space-y-6">
+                            <!-- Coût Total -->
+                            <div class="relative pt-6">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-stone-400">Coût Total Employeur</span>
+                                    <span id="totalCostDisplay" class="text-stone-300">2625€</span>
+                                </div>
+                                <div class="w-full bg-stone-800 rounded-full h-12 relative overflow-hidden flex">
+                                    <div id="barNet" class="bg-emerald-500 h-full flex items-center justify-center text-xs font-bold text-emerald-950 transition-all-300" style="width: 50%">NET</div>
+                                    <div id="barTax" class="bg-stone-600 h-full flex items-center justify-center text-xs font-bold text-stone-300 transition-all-300" style="width: 30%">TAXES & ONSS</div>
+                                    <div id="barPatron" class="bg-stone-700 h-full flex items-center justify-center text-xs font-bold text-stone-400 transition-all-300" style="width: 20%">PATRONAL</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Comparison Line -->
+                            <div class="relative h-24 border-t border-stone-700 pt-4 mt-8">
+                                <div class="absolute left-0 top-0 h-full border-l border-dashed border-amber-500/50" style="left: 0%"></div>
+                                
+                                <!-- Benefit Level Marker -->
+                                <div id="benefitMarker" class="absolute top-0 h-full border-l-2 border-red-500 transition-all-300 z-10" style="left: 30%">
+                                    <div class="absolute -top-3 -left-16 bg-red-500 text-white text-xs px-2 py-1 rounded">Seuil Allocations</div>
+                                </div>
+
+                                <!-- Net Salary Marker -->
+                                <div id="netMarker" class="absolute top-8 h-12 w-1 bg-emerald-500 transition-all-300" style="left: 45%">
+                                    <div class="absolute top-12 -left-10 bg-emerald-900 text-emerald-100 text-xs px-2 py-1 rounded min-w-[80px] text-center">Votre Net</div>
+                                </div>
+                                
+                                <div id="trapWarning" class="hidden absolute top-20 left-0 w-full text-center">
+                                    <span class="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">⚠️ Risque de Piège à l'Emploi détecté</span>
+                                    <p class="text-xs text-stone-400 mt-1">Le gain financier au travail est faible (< 150€ diff).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Political Responsibilities -->
+        <section id="politics">
+            <h2 class="text-2xl font-bold text-stone-900 mb-6">Responsabilités & Complexité Politique</h2>
+            <p class="text-stone-600 mb-8 max-w-4xl">
+                La question "Quelles responsabilités ?" se heurte à la complexité institutionnelle belge (la "Llasagne"). La gestion est morcelée, diluant la responsabilité et rendant les réformes structurelles ardues.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1: Federal -->
+                <div class="bg-white border-l-4 border-blue-600 p-6 rounded-r-lg shadow-sm hover:bg-blue-50/30 transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-lg text-stone-800 group-hover:text-blue-700">L'État Fédéral</h3>
+                        <span class="text-2xl">🏛️</span>
+                    </div>
+                    <p class="text-sm text-stone-500 mt-2 font-semibold">Le Gestionnaire des Recettes</p>
+                    <p class="text-sm text-stone-600 mt-4 leading-relaxed">
+                        Responsable de la fixation des cotisations, du budget global de la Sécu et de la fiscalité. 
+                        <br/><br/>
+                        <strong>Critique :</strong> Tendance à reporter les réformes impopulaires (pensions) et à utiliser la Sécu comme "bouche-trou" budgétaire.
+                    </p>
+                </div>
+
+                <!-- Card 2: Regions -->
+                <div class="bg-white border-l-4 border-amber-500 p-6 rounded-r-lg shadow-sm hover:bg-amber-50/30 transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-lg text-stone-800 group-hover:text-amber-700">Régions & Communautés</h3>
+                        <span class="text-2xl">🏗️</span>
+                    </div>
+                    <p class="text-sm text-stone-500 mt-2 font-semibold">L'Activation & Soins</p>
+                    <p class="text-sm text-stone-600 mt-4 leading-relaxed">
+                        Compétentes pour la recherche d'emploi (Forem, Actiris, VDAB) et une partie des soins de santé/aide aux personnes.
+                        <br/><br/>
+                        <strong>Critique :</strong> Manque de coordination avec le fédéral. Disparités d'efficacité dans l'activation des chômeurs (Flandre vs Wallonie/Bruxelles).
+                    </p>
+                </div>
+
+                <!-- Card 3: Social Partners -->
+                <div class="bg-white border-l-4 border-stone-600 p-6 rounded-r-lg shadow-sm hover:bg-stone-100 transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start">
+                        <h3 class="font-bold text-lg text-stone-800 group-hover:text-stone-900">Partenaires Sociaux</h3>
+                        <span class="text-2xl">🤝</span>
+                    </div>
+                    <p class="text-sm text-stone-500 mt-2 font-semibold">La Cogestion</p>
+                    <p class="text-sm text-stone-600 mt-4 leading-relaxed">
+                        Syndicats et patronat gèrent conjointement les caisses. C'est le modèle "Bismarckien".
+                        <br/><br/>
+                        <strong>Critique :</strong> Conservatisme. Chaque camp défend ses acquis (indexation vs modération salariale), bloquant souvent les réformes de fond nécessaires ("immobilisme").
+                    </p>
+                </div>
+            </div>
+
+            <!-- Conclusion Box -->
+            <div class="mt-10 bg-stone-100 p-8 rounded-xl text-center">
+                <h3 class="text-xl font-bold text-stone-800 mb-3">Verdict : Autodestructeur ?</h3>
+                <p class="text-stone-600 max-w-3xl mx-auto">
+                    Le système n'est pas intentionnellement autodestructeur, mais il souffre d'un <strong>cercle vicieux</strong>. Le financement par le travail pénalise l'emploi, ce qui affaiblit le financement. Sans une réforme élargissant l'assiette fiscale (moins sur le travail, plus sur le capital/conso) et une activation plus efficace des inactifs, la "protection" sociale risque de devenir un poids insoutenable pour l'économie qui la supporte.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-stone-200 mt-12 py-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-stone-400 text-sm">
+                Prototype d'analyse interactive basé sur les données socio-économiques belges (OCDE, Bureau du Plan).
+                <br/>Conçu pour visualiser les enjeux structurels.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripting -->
+    <script>
+        // --- State Management ---
+        const state = {
+            salary: 2100,
+            familyStatus: 'single',
+            benefitRef: 1100
+        };
+
+        // --- Chart.js: Tax Wedge ---
+        const initTaxWedgeChart = () => {
+            const ctx = document.getElementById('taxWedgeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Belgique', 'Allemagne', 'France', 'Pays-Bas', 'Moyenne UE'],
+                    datasets: [{
+                        label: 'Coin Fiscal (Tax Wedge) en % du coût total',
+                        data: [53.0, 47.8, 47.0, 35.5, 41.2], // Approx 2023 OECD data for single worker
+                        backgroundColor: [
+                            'rgba(217, 119, 6, 0.8)', // Belgium Highlight (Amber)
+                            'rgba(168, 162, 158, 0.5)', 
+                            'rgba(168, 162, 158, 0.5)',
+                            'rgba(168, 162, 158, 0.5)',
+                            'rgba(71, 85, 105, 0.8)'  // Avg Highlight
+                        ],
+                        borderColor: [
+                            'rgba(217, 119, 6, 1)',
+                            'rgba(168, 162, 158, 1)',
+                            'rgba(168, 162, 158, 1)',
+                            'rgba(168, 162, 158, 1)',
+                            'rgba(71, 85, 105, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + '% du coût total employeur';
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Pression Fiscale sur le Travail (Comparaison OCDE)',
+                            font: { size: 16, family: "'Merriweather', serif" },
+                            color: '#292524'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 60,
+                            grid: { color: '#e7e5e4' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        };
+
+        // --- Plotly.js: Aging Costs ---
+        const initAgingChart = () => {
+            // Simulated Data based on Federal Planning Bureau trends
+            const years = [2020, 2025, 2030, 2035, 2040, 2045, 2050];
+            const pensions = [12.2, 13.0, 14.1, 15.0, 15.5, 15.6, 15.7]; // % GDP
+            const health = [8.0, 8.4, 8.9, 9.4, 9.9, 10.3, 10.6]; // % GDP
+
+            const trace1 = {
+                x: years,
+                y: pensions,
+                name: 'Pensions',
+                type: 'scatter',
+                mode: 'lines',
+                stackgroup: 'one',
+                line: {width: 0, color: '#3b82f6'}, // Blue
+                fillcolor: 'rgba(59, 130, 246, 0.6)'
+            };
+
+            const trace2 = {
+                x: years,
+                y: health,
+                name: 'Soins de Santé',
+                type: 'scatter',
+                mode: 'lines',
+                stackgroup: 'one',
+                line: {width: 0, color: '#14b8a6'}, // Teal
+                fillcolor: 'rgba(20, 184, 166, 0.6)'
+            };
+
+            const layout = {
+                title: {
+                    text: 'Coût du Vieillissement (% du PIB)',
+                    font: { family: 'Merriweather', size: 18, color: '#292524' }
+                },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                margin: { l: 40, r: 20, t: 40, b: 30 },
+                xaxis: { 
+                    title: 'Année', 
+                    showgrid: false,
+                    color: '#57534e'
+                },
+                yaxis: { 
+                    title: '% du PIB', 
+                    showgrid: true, 
+                    gridcolor: '#e7e5e4',
+                    color: '#57534e'
+                },
+                showlegend: false,
+                hovermode: 'x unified'
+            };
+
+            const config = { responsive: true, displayModeBar: false };
+
+            Plotly.newPlot('agingChart', [trace1, trace2], layout, config);
+        };
+
+        // --- Interactive Trap Logic ---
+        const updateTrapSimulation = () => {
+            const slider = document.getElementById('salarySlider');
+            const familySelect = document.getElementById('familyStatus');
+            const salaryDisplay = document.getElementById('salaryDisplay');
+            const benefitDisplay = document.getElementById('benefitDisplay');
+            
+            // Logic Values
+            const gross = parseInt(slider.value);
+            state.familyStatus = familySelect.value;
+            
+            // Simplified Tax Logic for Estimation (BE system is complex, this is illustrative)
+            // ONSS ~13.07% employee
+            // Tax ~ progressive 25-50%
+            // Patronal ~25% on top of gross
+            
+            const onss = gross * 0.1307;
+            const taxable = gross - onss;
+            
+            // Rough tax estimation
+            let taxRate = 0.25;
+            if (gross > 2500) taxRate = 0.30;
+            if (gross > 3500) taxRate = 0.35;
+            const tax = taxable * taxRate;
+            
+            const net = Math.floor(taxable - tax);
+            const patronal = Math.floor(gross * 0.25);
+            const totalCost = gross + patronal;
+
+            // Benefits Logic
+            let benefit = 0;
+            if (state.familyStatus === 'single') benefit = 1200; // rough avg unemployment
+            else benefit = 1600; // chef de menage
+            
+            // Update Text
+            salaryDisplay.innerText = `${gross}€`;
+            benefitDisplay.innerText = `${benefit}€`;
+            document.getElementById('totalCostDisplay').innerText = `${totalCost}€`;
+            
+            // Update Bars (Widths)
+            const maxCost = 6000; // scale reference
+            const netWidth = (net / totalCost) * 100;
+            const taxWidth = ((tax + onss) / totalCost) * 100;
+            const patronWidth = (patronal / totalCost) * 100;
+            
+            document.getElementById('barNet').style.width = `${netWidth}%`;
+            document.getElementById('barNet').innerText = `${net}€ NET`;
+            
+            document.getElementById('barTax').style.width = `${taxWidth}%`;
+            document.getElementById('barPatron').style.width = `${patronWidth}%`;
+
+            // Update Comparison Lines (Position relative to container width)
+            // We assume the container width maps to 'totalCost' for the bars, 
+            // but for the line comparison we need a fixed scale to make visual sense.
+            // Let's use a percentage of the max scale (6000).
+            
+            const benefitPos = (benefit / maxCost) * 100;
+            const netPos = (net / maxCost) * 100;
+            
+            // Since the bars above are 100% width = totalCost, we need to align the bottom markers visually.
+            // This is tricky in CSS alone. Let's simplify: 
+            // The bars represent proportion. The markers below represent absolute value on a fixed scale.
+            
+            // Actually, let's map the bottom markers to the same scale as the slider (1800-4500 Gross) roughly.
+            // To be accurate visually: 
+            // Let's set the benefit marker relative to the Net Marker's position.
+            // If Benefit is 1200 and Net is 1400, they should be close.
+            
+            // Re-approach: The bottom container is a fixed width abstract scale 0 -> 3500€ Net
+            const scaleMax = 3500;
+            const bPct = Math.min((benefit / scaleMax) * 100, 100);
+            const nPct = Math.min((net / scaleMax) * 100, 100);
+            
+            document.getElementById('benefitMarker').style.left = `${bPct}%`;
+            document.getElementById('netMarker').style.left = `${nPct}%`;
+            
+            // Trap Detection
+            const diff = net - benefit;
+            const warningEl = document.getElementById('trapWarning');
+            
+            if (diff < 200) {
+                warningEl.classList.remove('hidden');
+                document.getElementById('netMarker').classList.add('bg-amber-500');
+                document.getElementById('netMarker').classList.remove('bg-emerald-500');
+            } else {
+                warningEl.classList.add('hidden');
+                document.getElementById('netMarker').classList.add('bg-emerald-500');
+                document.getElementById('netMarker').classList.remove('bg-amber-500');
+            }
+        };
+
+        // --- Navigation ---
+        const scrollToSection = (id) => {
+            const el = document.getElementById(id);
+            const offset = 80; // header height
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = el.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initTaxWedgeChart();
+            initAgingChart();
+            
+            // Bind Trap Listeners
+            document.getElementById('salarySlider').addEventListener('input', updateTrapSimulation);
+            document.getElementById('familyStatus').addEventListener('change', updateTrapSimulation);
+            
+            // Initial run
+            updateTrapSimulation();
+        });
+
+    </script>
+</body>
+</html>
