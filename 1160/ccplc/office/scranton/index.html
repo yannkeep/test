@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIBLE DE BÉLGÏK — Document Confidentiel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0c;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a24;
+            --text-primary: #e8e6e3;
+            --text-secondary: #a09c97;
+            --text-muted: #6b6660;
+            --accent-gold: #c9a227;
+            --accent-red: #8b2635;
+            --accent-blue: #1e3a5f;
+            --accent-green: #2d4a3e;
+            --accent-orange: #b35c1e;
+            --border-color: #2a2a35;
+            --glow: rgba(201, 162, 39, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Libre Baskerville', Georgia, serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* Header */
+        .doc-header {
+            text-align: center;
+            padding: 80px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .classification {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            padding: 8px 20px;
+            border: 1px solid var(--accent-red);
+            display: inline-block;
+        }
+
+        .doc-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent-gold), #e8d78a, var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .doc-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .doc-meta {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Emblème */
+        .emblem {
+            width: 120px;
+            height: 120px;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .emblem svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Navigation */
+        .toc {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .toc h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 30px;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .toc a {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 10px 15px;
+            background: var(--bg-tertiary);
+            border-left: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .toc a:hover {
+            color: var(--text-primary);
+            border-left-color: var(--accent-gold);
+            background: rgba(201, 162, 39, 0.05);
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 80px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h2.section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent-gold);
+            display: inline-block;
+        }
+
+        h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            margin: 40px 0 20px 0;
+        }
+
+        h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin: 25px 0 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Blocs spéciaux */
+        .infobox {
+            background: var(--bg-secondary);
+            border-left: 3px solid var(--accent-gold);
+            padding: 25px 30px;
+            margin: 30px 0;
+        }
+
+        .infobox.red {
+            border-left-color: var(--accent-red);
+            background: rgba(139, 38, 53, 0.1);
+        }
+
+        .infobox.blue {
+            border-left-color: var(--accent-blue);
+            background: rgba(30, 58, 95, 0.1);
+        }
+
+        .infobox.green {
+            border-left-color: var(--accent-green);
+            background: rgba(45, 74, 62, 0.1);
+        }
+
+        .infobox.orange {
+            border-left-color: var(--accent-orange);
+            background: rgba(179, 92, 30, 0.1);
+        }
+
+        .infobox-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 15px;
+        }
+
+        .infobox.red .infobox-title { color: var(--accent-red); }
+        .infobox.blue .infobox-title { color: #4a7fb5; }
+        .infobox.green .infobox-title { color: #5a9178; }
+        .infobox.orange .infobox-title { color: var(--accent-orange); }
+
+        /* Tableaux */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 0.95rem;
+        }
+
+        th {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: var(--bg-tertiary);
+            color: var(--accent-gold);
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: rgba(201, 162, 39, 0.03);
+        }
+
+        /* Listes */
+        ul, ol {
+            margin: 20px 0 20px 30px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* Code / monospace */
+        code {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9em;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: var(--accent-gold);
+        }
+
+        pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            overflow-x: auto;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 25px 0;
+        }
+
+        /* Citations */
+        blockquote {
+            border-left: 3px solid var(--text-muted);
+            padding-left: 25px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        blockquote cite {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: normal;
+        }
+
+        /* Organigramme ASCII */
+        .orgchart {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--text-secondary);
+        }
+
+        .orgchart .highlight {
+            color: var(--accent-gold);
+        }
+
+        /* Piliers - badges colorés */
+        .pillar-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 2px;
+            margin-right: 8px;
+        }
+
+        .pillar-orange { background: #b35c1e; color: white; }
+        .pillar-red { background: #8b2635; color: white; }
+        .pillar-blue { background: #1e3a5f; color: white; }
+        .pillar-green { background: #2d4a3e; color: white; }
+        .pillar-brown { background: #4a3728; color: white; }
+        .pillar-transparent { background: transparent; border: 1px dashed var(--text-muted); color: var(--text-muted); }
+
+        /* Glitch effect */
+        .glitch {
+            position: relative;
+            animation: glitch-skew 4s infinite linear alternate-reverse;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            -webkit-text-fill-color: var(--text-primary);
+            background: none;
+        }
+
+        .glitch::after {
+            animation: glitch-anim2 3s infinite linear alternate-reverse;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            -webkit-text-fill-color: var(--text-primary);
+            background: none;
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { transform: translate(0); }
+            20% { transform: translate(2px, -2px); }
+            40% { transform: translate(2px, 2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(-2px, 2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            10% { transform: skew(0.5deg); }
+            20% { transform: skew(-0.5deg); }
+            30% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .doc-title {
+                font-size: 2.5rem;
+            }
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .classification {
+                border-color: black;
+                color: black;
+            }
+        }
+
+        /* Easter egg - sélection */
+        ::selection {
+            background: var(--accent-gold);
+            color: var(--bg-primary);
+        }
+
+        /* Annotations secrètes */
+        .redacted {
+            background: var(--text-primary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .redacted:hover {
+            background: transparent;
+            color: var(--accent-red);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            border-left: 2px solid var(--border-color);
+            margin: 30px 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+        }
+
+        .timeline-date {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+
+        .timeline-content {
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="doc-header">
+            <div class="classification">Document de Travail — Niveau Omega</div>
+            
+            <div class="emblem">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Pigeon stylisé dans un cercle -->
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#c9a227" stroke-width="1"/>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#c9a227" stroke-width="0.5"/>
+                    <!-- Pigeon simplifié -->
+                    <path d="M30 55 Q35 45 50 42 Q65 40 70 50 Q72 55 68 60 Q60 65 50 63 Q40 62 35 58 Q32 56 30 55 Z" fill="#c9a227" opacity="0.8"/>
+                    <circle cx="62" cy="48" r="2" fill="#0a0a0c"/>
+                    <!-- Couronne -->
+                    <path d="M35 38 L40 32 L45 38 L50 30 L55 38 L60 32 L65 38" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+                    <!-- Texte circulaire -->
+                    <path id="textPath" d="M50 10 A40 40 0 1 1 49.99 10" fill="none"/>
+                    <text font-family="'IBM Plex Mono', monospace" font-size="6" fill="#6b6660" letter-spacing="2">
+                        <textPath href="#textPath">FÉDÉRATION DE BÉLGÏK • L'UNION FAIT LA FARCE •</textPath>
+                    </text>
+                </svg>
+            </div>
+            
+            <h1 class="doc-title">BIBLE DE BÉLGÏK</h1>
+            <p class="doc-subtitle">Document fondateur pour l'ARG psychopolitique<br>« Le Protocole Pigeon »</p>
+            
+            <div class="doc-meta">
+                Version 1.0 — Janvier 2026<br>
+                Classification : INTERNE / CRÉATIF<br>
+                Dernière mise à jour : <span class="glitch" data-text="[EN COURS]">[EN COURS]</span>
+            </div>
+        </header>
+
+        <!-- TABLE DES MATIÈRES -->
+        <nav class="toc">
+            <h2>Navigation</h2>
+            <div class="toc-grid">
+                <a href="#section-1">01 — Genèse et Intentions</a>
+                <a href="#section-2">02 — Géographie et Territoire</a>
+                <a href="#section-3">03 — Structure Institutionnelle</a>
+                <a href="#section-4">04 — Les Six Piliers</a>
+                <a href="#section-5">05 — Histoire Officielle</a>
+                <a href="#section-6">06 — Économie et Entreprises</a>
+                <a href="#section-7">07 — Médias et Propagande</a>
+                <a href="#section-8">08 — Vie Quotidienne</a>
+                <a href="#section-9">09 — Le Poste de Travail Citoyen</a>
+                <a href="#section-10">10 — Couche ARG</a>
+                <a href="#section-11">11 — Personnages-Clés</a>
+                <a href="#section-12">12 — Lexique Bélgïkois</a>
+            </div>
+        </nav>
+
+        <!-- SECTION 1: GENÈSE -->
+        <section id="section-1">
+            <h2 class="section-title">01 — Genèse et Intentions</h2>
+            
+            <h3>Pourquoi Bélgïk ?</h3>
+            <p>Bélgïk est un miroir déformant de la Belgique réelle — assez proche pour être reconnaissable, assez décalé pour révéler l'absurde. L'objectif n'est pas la moquerie mais la <strong>satire révélatrice</strong> : en poussant les curseurs, on rend visible ce qui est normalisé.</p>
+            
+            <div class="infobox">
+                <div class="infobox-title">Principe fondateur</div>
+                <p style="margin-bottom:0">Tout ce qui existe dans Bélgïk existe (ou a existé, ou pourrait exister) en Belgique. La satire amplifie, elle n'invente pas. Chaque absurdité doit avoir une racine réelle documentée.</p>
+            </div>
+
+            <h3>Les trois couches du projet</h3>
+            <table>
+                <tr>
+                    <th>Couche</th>
+                    <th>Fonction</th>
+                    <th>Expérience joueur</th>
+                </tr>
+                <tr>
+                    <td><strong>Surface</strong><br>L'État de Bélgïk</td>
+                    <td>Worldbuilding satirique cohérent</td>
+                    <td>Immersion, humour de reconnaissance, sentiment d'étrangeté familière</td>
+                </tr>
+                <tr>
+                    <td><strong>Interface</strong><br>Poste de Travail Citoyen</td>
+                    <td>Simulation de bureaucratie gamifiée</td>
+                    <td>Frustration productive, micro-résistances, découverte de failles</td>
+                </tr>
+                <tr>
+                    <td><strong>Profondeur</strong><br>L'ARG proprement dit</td>
+                    <td>Narration émergente et puzzles</td>
+                    <td>Révélations, remise en question, agentivité retrouvée</td>
+                </tr>
+            </table>
+
+            <h3>Objectifs pédagogiques masqués</h3>
+            <p>Derrière le jeu, on travaille sur :</p>
+            <ul>
+                <li><strong>La reconnaissance des biais cognitifs</strong> — le joueur les vit avant de les nommer</li>
+                <li><strong>La compréhension des mécanismes de pouvoir</strong> — particratie, pilarisation, technocratie</li>
+                <li><strong>L'esprit critique envers les sources</strong> — qui parle ? pourquoi ? avec quels intérêts ?</li>
+                <li><strong>La distinction entre cynisme et lucidité</strong> — comprendre le système sans s'y résigner</li>
+            </ul>
+
+            <blockquote>
+                "L'objectif n'est pas d'être absolument libre (impossible), mais d'être plus conscient des influences et plus capable de choisir sa propre trajectoire mentale."
+                <cite>— Mission #0, Document fondateur</cite>
+            </blockquote>
+        </section>
+
+        <!-- SECTION 2: GÉOGRAPHIE -->
+        <section id="section-2">
+            <h2 class="section-title">02 — Géographie et Territoire</h2>
+
+            <h3>Vue d'ensemble</h3>
+            <p>La Fédération de Bélgïk occupe un territoire de 30 689 km² au cœur de l'Europe occidentale, coincée entre des voisins qui ont tous essayé de l'annexer au moins une fois. Sa géographie est le résultat de négociations où personne n'a obtenu ce qu'il voulait, ce qui est considéré comme un succès.</p>
+
+            <h3>Les Trois Régions</h3>
+            
+            <div class="infobox blue">
+                <div class="infobox-title">Flandrïa</div>
+                <p><strong>Capitale :</strong> Antwerpen-Supérieur<br>
+                <strong>Population :</strong> 6,7 millions<br>
+                <strong>Langue :</strong> Néerlandophone standard + 47 dialectes mutuellement incompréhensibles<br>
+                <strong>Caractère :</strong> Efficace, prospère, persuadée que le reste du pays lui doit de l'argent (ce qui est partiellement vrai). Culturellement tiraillée entre son identité propre et l'angoisse d'être confondue avec les Pays-Bas.<br>
+                <strong>Slogan officiel :</strong> « Wat we zelf doen, doen we beter » (Ce qu'on fait soi-même, on le fait mieux)</p>
+            </div>
+
+            <div class="infobox red">
+                <div class="infobox-title">Wallonïk</div>
+                <p><strong>Capitale :</strong> Namurium<br>
+                <strong>Population :</strong> 3,6 millions<br>
+                <strong>Langue :</strong> Francophone + variantes wallonnes en voie de patrimonialisation<br>
+                <strong>Caractère :</strong> Post-industrielle et nostalgique, oscillant entre fierté du passé sidérurgique et complexe d'infériorité économique. Spécialiste des projets de reconversion qui n'aboutissent pas tout à fait.<br>
+                <strong>Slogan officiel :</strong> « Wallonïk, terre d'accueil et de potentiel »</p>
+            </div>
+
+            <div class="infobox">
+                <div class="infobox-title">Bruxyllium</div>
+                <p><strong>Statut :</strong> Région-Capitale + siège des institutions européennes + zone de non-droit linguistique<br>
+                <strong>Population :</strong> 1,2 million (officiel) / ~1,8 million (réel, personne ne sait vraiment)<br>
+                <strong>Langues :</strong> Français, Néerlandais, Anglais européen, Arabe, Turc, Portugais, et 127 autres<br>
+                <strong>Caractère :</strong> Cosmopolite jusqu'à l'illisibilité. 19 communes qui fonctionnent comme 19 royaumes indépendants. Capitale d'un pays dont la moitié ne veut pas d'elle et d'une Europe qui ne sait pas où la mettre.<br>
+                <strong>Slogan officiel :</strong> « Bruxyllium, au cœur de tout, au centre de rien »</p>
+            </div>
+
+            <h3>Les Zones Spéciales</h3>
+            <ul>
+                <li><strong>La Communauté Germanopratique</strong> — 78 000 habitants, 0,7% de la population, 8% du budget des traductions officielles. Considérée comme la preuve vivante que Bélgïk prend les minorités au sérieux, ou qu'elle a perdu le contrôle de sa propre complexité.</li>
+                <li><strong>Les Communes à Facilités</strong> — Territoires quantiques où la langue officielle dépend de qui pose la question.</li>
+                <li><strong>Le Ring de Bruxyllium</strong> — Anneau autoroutier éternel, considéré par certains comme le véritable centre spirituel du pays.</li>
+            </ul>
+
+            <h3>Carte mentale des stéréotypes régionaux</h3>
+<pre class="orgchart">
+┌─────────────────────────────────────────────────────────────────┐
+│                        MER DU NORD                              │
+│                      (pas vraiment à nous)                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│    PAYS-BAS                              PAYS-BAS               │
+│   (ils sont                              (toujours               │
+│    partout)     ┌─────────────────┐      eux)                   │
+│                 │    FLANDRÏA     │                             │
+│                 │   "On travaille │                             │
+│                 │    pendant que  │                             │
+│                 │   vous dormez"  │                             │
+│   FRANCE        ├────────┬────────┤         ALLEMAGNE           │
+│  (ils nous      │BRUXYL- │ GERMA- │        (ils nous            │
+│  ignorent)      │ LIUM   │ NOPRA- │        ont oubliés)         │
+│                 │ "C'est │ TIQUE  │                             │
+│                 │compli- │ "On    │                             │
+│                 │  qué"  │ existe"│                             │
+│                 ├────────┴────────┤                             │
+│                 │    WALLONÏK     │                             │
+│                 │  "C'était mieux │                             │
+│                 │      avant"     │         LUXEMBOURG          │
+│                 │                 │        (plus riche que      │
+│                 └─────────────────┘         nous, et ça          │
+│                                             se voit)             │
+│                       FRANCE                                    │
+│                   (vraiment, ils                                │
+│                    nous ignorent)                               │
+└─────────────────────────────────────────────────────────────────┘
+</pre>
+        </section>
+
+        <!-- SECTION 3: STRUCTURE INSTITUTIONNELLE -->
+        <section id="section-3">
+            <h2 class="section-title">03 — Structure Institutionnelle</h2>
+
+            <h3>Le Mille-Feuilles Quantique</h3>
+            <p>La structure institutionnelle de Bélgïk est le résultat de six réformes de l'État, chacune conçue pour résoudre les problèmes créés par la précédente, et en créant de nouveaux. Le principe fondamental est <strong>l'équipollence des normes</strong> : aucun niveau de pouvoir n'est supérieur à un autre, ce qui garantit que personne ne peut trancher et que tout conflit devient éternel.</p>
+
+            <div class="infobox red">
+                <div class="infobox-title">Concept-clé : Le Flou Constructif</div>
+                <p style="margin-bottom:0">En Bélgïk, l'ambiguïté n'est pas un bug, c'est une feature. Une compétence mal définie permet à chaque niveau de revendiquer le mérite en cas de succès et de renvoyer la responsabilité en cas d'échec. Ce système, appelé « Flou Constructif », est enseigné dans les écoles d'administration comme un art.</p>
+            </div>
+
+            <h3>Organigramme officiel (simplifié)</h3>
+<pre class="orgchart">
+                    ┌──────────────────────┐
+                    │      LE ROI          │
+                    │  (règne mais ne      │
+                    │   gouverne pas,      │
+                    │   sauf quand il      │
+                    │   gouverne)          │
+                    └──────────┬───────────┘
+                               │
+        ┌──────────────────────┼──────────────────────┐
+        │                      │                      │
+        ▼                      ▼                      ▼
+┌───────────────┐    ┌─────────────────┐    ┌───────────────┐
+│   FÉDÉRAL     │    │    RÉGIONS      │    │ COMMUNAUTÉS   │
+│               │    │                 │    │               │
+│ • Défense     │    │ • Économie      │    │ • Éducation   │
+│ • Justice     │    │ • Environnement │    │ • Culture     │
+│ • SNCB*       │    │ • Logement      │    │ • Santé**     │
+│ • Rien***     │    │ • Routes****    │    │ • Langues     │
+└───────────────┘    └─────────────────┘    └───────────────┘
+        │                      │                      │
+        └──────────┬───────────┴──────────┬──────────┘
+                   │                      │
+                   ▼                      ▼
+            ┌─────────────┐        ┌─────────────┐
+            │  PROVINCES  │        │  COMMUNES   │
+            │ (personne   │        │ (le vrai    │
+            │ ne sait à   │        │  pouvoir    │
+            │ quoi elles  │        │  est là)    │
+            │ servent)    │        │             │
+            └─────────────┘        └─────────────┘
+
+* SNCB-NMBS-WTF : les trains, en théorie
+** Santé : répartie entre tous les niveaux selon une logique connue de personne
+*** Reste fédéral : ce dont personne ne veut
+**** Routes : sauf les autoroutes, sauf quand ça arrange
+</pre>
+
+            <h3>Les Sept Parlements</h3>
+            <p>Bélgïk compte sept assemblées parlementaires démocratiquement élues, ce qui garantit que pour chaque problème, au moins trois parlements peuvent s'estimer compétents et au moins deux peuvent affirmer que ce n'est pas leur responsabilité.</p>
+
+            <table>
+                <tr>
+                    <th>Parlement</th>
+                    <th>Membres</th>
+                    <th>Spécialité</th>
+                </tr>
+                <tr>
+                    <td>Chambre Fédérale</td>
+                    <td>150</td>
+                    <td>Voter ce que les présidents de parti ont décidé</td>
+                </tr>
+                <tr>
+                    <td>Sénat</td>
+                    <td>60</td>
+                    <td>Exister (fonction en cours de redéfinition depuis 1995)</td>
+                </tr>
+                <tr>
+                    <td>Parlement Flamand</td>
+                    <td>124</td>
+                    <td>Gouverner la Flandrïa ET la Communauté Flamingante (efficacité)</td>
+                </tr>
+                <tr>
+                    <td>Parlement Wallonïk</td>
+                    <td>75</td>
+                    <td>Gérer le territoire sans les gens (compétence Communauté)</td>
+                </tr>
+                <tr>
+                    <td>Parlement de la Fédération Wallonïk-Bruxyllium</td>
+                    <td>94</td>
+                    <td>Gérer les gens sans le territoire (inverse)</td>
+                </tr>
+                <tr>
+                    <td>Parlement Bruxyllois</td>
+                    <td>89</td>
+                    <td>Gouverner l'ingouvernable avec quotas linguistiques</td>
+                </tr>
+                <tr>
+                    <td>Parlement Germanopratique</td>
+                    <td>25</td>
+                    <td>Montrer que c'est possible de bien fonctionner</td>
+                </tr>
+            </table>
+
+            <h3>Le Gouvernement Fédéral</h3>
+            <p>En théorie, le gouvernement est formé après les élections par le parti ayant remporté le plus de voix. En pratique, il est négocié pendant 300 à 600 jours par les présidents de parti selon des critères incluant :</p>
+            <ul>
+                <li>L'équilibre linguistique (obligatoire)</li>
+                <li>L'équilibre de genre (obligatoire depuis peu)</li>
+                <li>L'équilibre des piliers (officieux mais crucial)</li>
+                <li>L'équilibre des ego (le plus compliqué)</li>
+                <li>La capacité à expliquer aux électeurs pourquoi leur vote n'a pas eu l'effet attendu</li>
+            </ul>
+
+            <div class="infobox orange">
+                <div class="infobox-title">Record actuel</div>
+                <p style="margin-bottom:0">Le gouvernement actuel est en affaires courantes depuis <strong>847 jours</strong>. Cela bat le record précédent de 541 jours établi en 2010-2011. Un « Gouvernement d'Affaires Courantes Permanentes » (GACP) a été proposé comme solution structurelle.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 4: LES SIX PILIERS -->
+        <section id="section-4">
+            <h2 class="section-title">04 — Les Six Piliers</h2>
+
+            <h3>Le système de Pilarisation 2.0</h3>
+            <p>Historiquement, les citoyens bélgïkois évoluaient « du berceau au tombeau » au sein de leur pilier : écoles, hôpitaux, syndicats, mutuelles, mouvements de jeunesse, et même pompes funèbres. Ce système a officiellement décliné dans les années 1960, mais sa version 2.0 — plus subtile, plus algorithmique — structure toujours la société.</p>
+
+            <div class="infobox green">
+                <div class="infobox-title">Attribution du Pilier</div>
+                <p style="margin-bottom:0">Depuis 2019, chaque citoyen se voit attribuer un « Pilier de Référence » à sa naissance, basé sur le code postal des parents, leur historique de vote (si disponible), et un algorithme propriétaire appelé PILAR-1. Ce pilier peut être contesté une fois à 18 ans, moyennant un formulaire de 47 pages et un délai de traitement de 18 mois.</p>
+            </div>
+
+            <h3>Les Six Piliers</h3>
+
+            <h4><span class="pillar-badge pillar-orange">Orangiste</span> Le Pilier Chrétien-Social</h4>
+            <p><strong>Couleur :</strong> Orange<br>
+            <strong>Base historique :</strong> Église catholique, démocratie chrétienne<br>
+            <strong>Organisations emblématiques :</strong> Mutualités Chrétiennes, MOC/ACW, enseignement libre confessionnel<br>
+            <strong>Profil-type :</strong> Famille nombreuse du Brabant Wallon ou de Flandre Occidentale, attachée aux « valeurs » (définition variable)<br>
+            <strong>Paradoxe interne :</strong> Le pilier le plus sécularisé prétend toujours incarner la tradition</p>
+
+            <h4><span class="pillar-badge pillar-red">Rougiste</span> Le Pilier Socialiste</h4>
+            <p><strong>Couleur :</strong> Rouge<br>
+            <strong>Base historique :</strong> Mouvement ouvrier, syndicats, coopératives<br>
+            <strong>Organisations emblématiques :</strong> FGTB, Mutualités Socialistes, maisons du peuple<br>
+            <strong>Profil-type :</strong> Famille du bassin industriel, nostalgique des luttes sociales, méfiant envers le patronat<br>
+            <strong>Paradoxe interne :</strong> Défend les travailleurs tout en gérant des institutions devenues des bureaucraties</p>
+
+            <h4><span class="pillar-badge pillar-blue">Bleuïste</span> Le Pilier Libéral</h4>
+            <p><strong>Couleur :</strong> Bleu<br>
+            <strong>Base historique :</strong> Bourgeoisie urbaine, franc-maçonnerie, anticléricalisme<br>
+            <strong>Organisations emblématiques :</strong> CGSLB, enseignement officiel laïque, cercles d'affaires<br>
+            <strong>Profil-type :</strong> Profession libérale, entrepreneur, allergique à la paperasse (sauf pour les autres)<br>
+            <strong>Paradoxe interne :</strong> Prône la liberté individuelle tout en ayant son propre réseau clientéliste</p>
+
+            <h4><span class="pillar-badge pillar-green">Verdoyant</span> Le Pilier Écologiste</h4>
+            <p><strong>Couleur :</strong> Vert<br>
+            <strong>Base historique :</strong> Mouvements environnementaux des années 1970-80<br>
+            <strong>Organisations emblématiques :</strong> Associations citoyennes, GASAP, repair cafés<br>
+            <strong>Profil-type :</strong> Urbain diplômé, consommateur responsable, inquiet pour l'avenir<br>
+            <strong>Paradoxe interne :</strong> Conteste le système tout en y participant de plus en plus</p>
+
+            <h4><span class="pillar-badge pillar-brown">Brunâtre</span> Le Pilier Populiste</h4>
+            <p><strong>Couleur :</strong> Brun (officieusement — le pilier refuse toute couleur officielle)<br>
+            <strong>Base historique :</strong> Ressentiment, déclassement perçu, rejet des élites<br>
+            <strong>Organisations emblématiques :</strong> Groupes Facebook, chaînes Telegram, « médias alternatifs »<br>
+            <strong>Profil-type :</strong> Variable — unit des profils très différents par le rejet commun du système<br>
+            <strong>Paradoxe interne :</strong> Dénonce les élites tout en vénérant ses propres figures d'autorité<br>
+            <strong>Statut officiel :</strong> Sous « cordon sanitaire » (= scotch symbolique)</p>
+
+            <h4><span class="pillar-badge pillar-transparent">Transparent</span> Le Pilier des Inclassables</h4>
+            <p><strong>Couleur :</strong> Aucune (transparent)<br>
+            <strong>Base historique :</strong> Création récente (2022) pour les citoyens refusant tout pilier<br>
+            <strong>Organisations emblématiques :</strong> Aucune par définition — ce qui pose des problèmes administratifs<br>
+            <strong>Profil-type :</strong> Citoyen affirmant son indépendance, ou simplement perdu dans le système<br>
+            <strong>Paradoxe interne :</strong> Refuser les piliers est devenu... un pilier<br>
+            <strong>Statut officiel :</strong> Suspect par défaut (« qui n'a rien à cacher ne refuse pas d'être classé »)</p>
+
+            <div class="infobox red">
+                <div class="infobox-title">Note ARG</div>
+                <p style="margin-bottom:0">Le Pilier Transparent est un point d'entrée narratif important. Les joueurs qui contestent leur pilier ou choisissent « Transparent » seront contactés par des entités mystérieuses affirmant représenter « ceux qui voient à travers le système »...</p>
+            </div>
+        </section>
+
+        <!-- SECTION 5: HISTOIRE -->
+        <section id="section-5">
+            <h2 class="section-title">05 — Histoire Officielle</h2>
+
+            <h3>Chronologie condensée</h3>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">1830</div>
+                    <div class="timeline-content"><strong>Indépendance</strong> — Bélgïk est créée par des puissances européennes qui avaient besoin d'un État-tampon. Les Bélgïkois découvrent leur nationalité dans le journal.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1831</div>
+                    <div class="timeline-content"><strong>Import du Roi</strong> — Ne trouvant pas de candidat local acceptable, on importe un prince allemand. La tradition perdurera.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1893</div>
+                    <div class="timeline-content"><strong>Suffrage plural</strong> — Le vote est accordé aux hommes, mais certains votes comptent plus que d'autres. Innovation démocratique.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1919</div>
+                    <div class="timeline-content"><strong>Suffrage universel masculin</strong> — Un homme, une voix. Les femmes attendront 1948.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1970</div>
+                    <div class="timeline-content"><strong>Première réforme de l'État</strong> — Début de la fédéralisation. Personne ne sait où ça mènera.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1980</div>
+                    <div class="timeline-content"><strong>Deuxième réforme</strong> — Création des Régions et Communautés. La complexité s'intensifie.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1988-89</div>
+                    <div class="timeline-content"><strong>Troisième réforme</strong> — Bruxyllium devient Région. Le mille-feuilles prend forme.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">1993</div>
+                    <div class="timeline-content"><strong>Quatrième réforme</strong> — La Constitution proclame officiellement Bélgïk « État fédéral ». Le Sénat commence à se demander à quoi il sert.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2001</div>
+                    <div class="timeline-content"><strong>Cinquième réforme</strong> — Refinancement des Communautés. Personne ne comprend les mécanismes.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2010-2011</div>
+                    <div class="timeline-content"><strong>541 jours sans gouvernement</strong> — Record mondial. Le pays continue de fonctionner, ce qui pose des questions existentielles.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2012-2014</div>
+                    <div class="timeline-content"><strong>Sixième réforme</strong> — La plus importante. Transfert massif de compétences. Le Sénat devient « assemblée des entités fédérées ».</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2019</div>
+                    <div class="timeline-content"><strong>Introduction du Score Citoyen</strong> — Officiellement « pour simplifier les démarches ». Officieusement <span class="redacted">pour le contrôle social</span>.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2024</div>
+                    <div class="timeline-content"><strong>Élections</strong> — 16 partis au Parlement. Nouveau record de fragmentation. Négociations en cours.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026</div>
+                    <div class="timeline-content"><strong>Aujourd'hui</strong> — 847 jours de négociations. Lancement discret du « Protocole Pigeon ». <span class="redacted">Vous êtes ici.</span></div>
+                </div>
+            </div>
+
+            <h3>L'Histoire Non-Officielle</h3>
+            <p>Selon certaines sources — dont la fiabilité n'a jamais été établie — plusieurs événements auraient été <span class="redacted">effacés des archives officielles</span>. Des documents fragmentaires mentionnent :</p>
+            <ul>
+                <li>Un « Septième Pilier » dissous en 1987 pour des raisons classifiées</li>
+                <li>Un projet de « Bélgïk unifiée » abandonné après l'incident de <span class="redacted">████████</span></li>
+                <li>L'existence d'un « Bureau de la Cohérence » chargé de réécrire l'histoire institutionnelle à chaque réforme</li>
+            </ul>
+            <p>Ces éléments font l'objet de spéculations sur Bélgïk Leaks, mais aucune preuve définitive n'existe. <em>Ou plutôt : les preuves qui existent ne sont pas définitives.</em></p>
+        </section>
+
+        <!-- SECTION 6: ÉCONOMIE -->
+        <section id="section-6">
+            <h2 class="section-title">06 — Économie et Entreprises</h2>
+
+            <h3>Données macroéconomiques</h3>
+            <table>
+                <tr>
+                    <th>Indicateur</th>
+                    <th>Valeur</th>
+                    <th>Commentaire</th>
+                </tr>
+                <tr>
+                    <td>PIB</td>
+                    <td>~580 milliards €B</td>
+                    <td>Dont 40% en « économie administrative »</td>
+                </tr>
+                <tr>
+                    <td>PIB/habitant</td>
+                    <td>~50 000 €B</td>
+                    <td>Moyenne masquant des écarts régionaux considérables</td>
+                </tr>
+                <tr>
+                    <td>Taux de chômage</td>
+                    <td>Dépend de qui compte</td>
+                    <td>Entre 5% et 15% selon les définitions régionales</td>
+                </tr>
+                <tr>
+                    <td>Dette publique</td>
+                    <td>~105% du PIB</td>
+                    <td>Répartie entre niveaux de pouvoir de façon créative</td>
+                </tr>
+                <tr>
+                    <td>Pression fiscale</td>
+                    <td>~45%</td>
+                    <td>Une des plus élevées au monde, compensée par des « niches »</td>
+                </tr>
+            </table>
+
+            <h3>Entreprises Publiques Emblématiques</h3>
+
+            <h4>SNCB-NMBS-WTF (Transports ferroviaires)</h4>
+            <p>Société nationale des chemins de fer, officiellement bilingue, officieusement schizophrène. Les trains partent généralement. Ils arrivent souvent. La corrélation entre les deux événements n'est pas garantie. Le système d'annonces est conçu pour être compris par personne, garantissant l'équité linguistique.</p>
+
+            <h4>Proximus-Telenet-VOO-Orange-Base-MobileVikings Holding</h4>
+            <p>Suite à une série de fusions, acquisitions et spin-offs, le marché des télécommunications bélgïkoises est désormais dominé par une entité unique opérant sous six marques distinctes avec six facturations séparées. L'Autorité de la Concurrence a validé cette structure car « la complexité garantit qu'aucun acteur ne domine vraiment ».</p>
+
+            <h4>Bpost</h4>
+            <p>Service postal national. Livre le courrier dans un ordre optimisé par un algorithme dont le code source a été perdu en 2003. Les colis arrivent généralement, parfois dans la bonne boîte aux lettres. Le service de suivi indique systématiquement « en cours d'acheminement » quelle que soit la réalité.</p>
+
+            <h4>Electrabélgïk-Engilambigu</h4>
+            <p>Fournisseur d'énergie semi-public dont la structure actionnariale est si complexe qu'un département entier est dédié à déterminer qui possède quoi. Les tarifs sont « transparents » au sens où personne ne les comprend, éliminant tout avantage informationnel.</p>
+
+            <h3>Monnaie</h3>
+            <p>Bélgïk utilise l'<strong>Eurobel (€B)</strong>, officiellement à parité 1:1 avec l'Euro mais soumis à des « frais de conversion régionaux » variant de 0,1% à 2,3% selon la transaction et la région. Ces frais alimentent le « Fonds de Solidarité Inter-Régionale », dont personne n'a jamais vu les comptes.</p>
+        </section>
+
+        <!-- SECTION 7: MÉDIAS -->
+        <section id="section-7">
+            <h2 class="section-title">07 — Médias et Propagande</h2>
+
+            <h3>Paysage médiatique officiel</h3>
+            <p>Les médias bélgïkois fonctionnent en silos linguistiques étanches. Un Flamand et un Wallon peuvent vivre des réalités informationnelles totalement différentes tout en habitant à 10 km l'un de l'autre.</p>
+
+            <h4>Presse écrite</h4>
+            <ul>
+                <li><strong>Het Laatste Nieuws van Gisteren</strong> — « Les dernières nouvelles d'hier ». Quotidien populaire flamand, spécialiste des titres alarmistes et des corrections en page 47.</li>
+                <li><strong>Le Soir Peut-Être</strong> — Quotidien francophone de référence. Chaque affirmation est prudemment nuancée. Devise : « La vérité est complexe, notre lectorat aussi. »</li>
+                <li><strong>L'Écho du Matin</strong> — Journal économique. Traduit les communiqués de presse des entreprises en articles depuis 1881.</li>
+                <li><strong>De Standaard-Afwijking</strong> — Journal intellectuel flamand. Illisible pour 80% de la population, cité par 100% des politiques.</li>
+            </ul>
+
+            <h4>Audiovisuel public</h4>
+            <ul>
+                <li><strong>RTBF</strong> (Radio-Télévision Bélgïkoise Francophone) — Essaie d'être neutre, accusée de biais par tout le monde, donc probablement neutre.</li>
+                <li><strong>VRT</strong> (Vlaamse Radio- en Televisieomroep) — Idem côté flamand. Les deux chaînes ne collaborent que pour l'Eurovision.</li>
+                <li><strong>BRF</strong> (Belgischer Rundfunk) — Pour la Communauté Germanopratique. Budget disproportionné, qualité proportionnelle.</li>
+            </ul>
+
+            <h4>Médias alternatifs (et suspects)</h4>
+            <ul>
+                <li><strong>Bélgïk Leaks</strong> — Site de « journalisme citoyen » publiant des documents fuités. Fiabilité variable (estimée à 40% de vrai, 30% de faux, 30% d'indéterminable). Source importante pour l'ARG.</li>
+                <li><strong>La Voix des Sans-Piliers</strong> — Blog anonyme défendant les Transparents. Étrangement bien informé sur les failles du système.</li>
+                <li><strong>GORK Media</strong> — Chaîne mystérieuse apparaissant parfois sur des fréquences non attribuées. Diffuse des messages cryptiques.</li>
+            </ul>
+
+            <div class="infobox red">
+                <div class="infobox-title">Élément ARG</div>
+                <p style="margin-bottom:0">Bélgïk Leaks et GORK Media sont des vecteurs narratifs de l'ARG. Des « documents » plantés dans ces médias fictifs contiendront des indices. Le joueur devra apprendre à distinguer la « vraie » désinformation (partie du jeu) de la « fausse » information (le fond satirique).</p>
+            </div>
+
+            <h3>Propaganda et Communication Officielle</h3>
+            <p>Le gouvernement communique via le « Service de l'Information Citoyenne » (SIC), dont le slogan est « Informer, c'est protéger ». Ses messages suivent une structure reconnaissable :</p>
+            <ol>
+                <li><strong>Affirmation rassurante</strong> — « La situation est sous contrôle »</li>
+                <li><strong>Complexification</strong> — « Bien que les paramètres soient multifactoriels »</li>
+                <li><strong>Dilution de responsabilité</strong> — « Les différents niveaux de pouvoir coordonnent leurs actions »</li>
+                <li><strong>Appel à la patience</strong> — « Les résultats seront visibles à moyen terme »</li>
+                <li><strong>Redirection</strong> — « Plus d'informations sur macitoyennete.bélgïk »</li>
+            </ol>
+        </section>
+
+        <!-- SECTION 8: VIE QUOTIDIENNE -->
+        <section id="section-8">
+            <h2 class="section-title">08 — Vie Quotidienne du Citoyen</h2>
+
+            <h3>Une journée-type</h3>
+            <p>Voici le quotidien de Marc/Marc (prénom bilingue), 38 ans, employé administratif à Bruxyllium, Pilier Bleuïste par défaut :</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">06:30</div>
+                    <div class="timeline-content">Réveil. Notification MaCitoyenneté : « N'oubliez pas de valider votre présence domiciliaire mensuelle. » Marc l'ignore comme chaque mois.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">07:15</div>
+                    <div class="timeline-content">Trajet en train. L'app SNCB annonce 3 minutes de retard. Le train en a 12. L'app se met à jour rétroactivement pour afficher 12 minutes. Score de ponctualité : 100%.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">08:30</div>
+                    <div class="timeline-content">Arrivée au bureau. Badge d'entrée synchronisé avec le Score Citoyen. +0.3 points pour « ponctualité professionnelle ».</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">12:00</div>
+                    <div class="timeline-content">Pause déjeuner. Paiement par Bancontact. La transaction est automatiquement catégorisée : « Alimentation > Sandwicherie > Pilier non-identifié ». Léger malus de 0.1 point.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">14:00</div>
+                    <div class="timeline-content">Email de l'administration fiscale régionale concernant un formulaire fédéral à renvoyer à la commune. Marc ne sait pas lequel des trois est responsable.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">17:30</div>
+                    <div class="timeline-content">Fin de journée. Marc consulte son Score Citoyen : 73/100. Stable. La moyenne nationale est classifiée.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">19:00</div>
+                    <div class="timeline-content">Notification : « Consultation citoyenne en cours : Faut-il renommer la Place du Peuple ? » Marc vote « Non ». Son vote rejoint les 47% de « Non », les 46% de « Oui », et les 7% de « La question est mal posée ». Résultat : « En cours d'analyse ».</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">22:00</div>
+                    <div class="timeline-content">Marc s'endort. Son téléphone continue de synchroniser ses données avec MaCitoyenneté. Quelque part, un algorithme ajuste son Profil Psychocivique.</div>
+                </div>
+            </div>
+
+            <h3>Les Formulaires</h3>
+            <p>La vie administrative bélgïkoise est rythmée par les formulaires. On estime qu'un citoyen moyen remplit 23 formulaires par an, dont 7 pour corriger des erreurs dans les 16 autres. Quelques formulaires emblématiques :</p>
+            <ul>
+                <li><strong>Formulaire 42-B/ter</strong> — Déclaration de changement de situation n'ayant pas changé</li>
+                <li><strong>Annexe 7 au Formulaire 12</strong> — À joindre si l'Annexe 6 est incomplète, ce qu'elle est par définition</li>
+                <li><strong>Demande de Contestation de Pilier</strong> — 47 pages, délai de 18 mois, taux d'acceptation : 3%</li>
+                <li><strong>Accusé de Réception de l'Accusé de Réception</strong> — Prouve que vous avez reçu la preuve que vous avez envoyé quelque chose</li>
+            </ul>
+
+            <h3>Le Score Citoyen</h3>
+            <p>Introduit en 2019 officiellement « pour simplifier les démarches administratives », le Score Citoyen est une note de 0 à 100 calculée selon des critères partiellement publics :</p>
+            
+            <table>
+                <tr>
+                    <th>Action</th>
+                    <th>Impact</th>
+                </tr>
+                <tr>
+                    <td>Voter (obligatoire)</td>
+                    <td>+2 points</td>
+                </tr>
+                <tr>
+                    <td>Ne pas voter</td>
+                    <td>-5 points + amende</td>
+                </tr>
+                <tr>
+                    <td>Compléter un formulaire dans les délais</td>
+                    <td>+0.5 point</td>
+                </tr>
+                <tr>
+                    <td>Compléter un formulaire hors délai</td>
+                    <td>-1 point</td>
+                </tr>
+                <tr>
+                    <td>Contester une décision administrative</td>
+                    <td>-0.3 point (« charge système »)</td>
+                </tr>
+                <tr>
+                    <td>Participer à une consultation citoyenne</td>
+                    <td>+0.2 point</td>
+                </tr>
+                <tr>
+                    <td>Consommer dans son Pilier</td>
+                    <td>+0.1 point</td>
+                </tr>
+                <tr>
+                    <td>Consommer hors Pilier</td>
+                    <td>-0.1 point (« incohérence »)</td>
+                </tr>
+                <tr>
+                    <td>Actions non-documentées</td>
+                    <td>???</td>
+                </tr>
+            </table>
+
+            <div class="infobox red">
+                <div class="infobox-title">Secret de polichinelle</div>
+                <p style="margin-bottom:0">Les citoyens savent que le Score existe et qu'il a des conséquences (accès prioritaire à certains services, pondération des votes consultatifs, etc.). Mais les critères exacts sont « propriété algorithmique » de l'État. Des rumeurs circulent sur des critères cachés : fréquentation de certains sites, relations sociales, génétique... Aucune n'est confirmée. Toutes sont plausibles.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 9: POSTE DE TRAVAIL -->
+        <section id="section-9">
+            <h2 class="section-title">09 — Le Poste de Travail Citoyen</h2>
+
+            <h3>Concept</h3>
+            <p><code>MaCitoyenneté.bélgïk</code> est l'interface officielle entre le citoyen et l'État. Obligatoire depuis 2021, elle centralise toutes les interactions administratives, civiques et « participatives ». C'est aussi le terrain de jeu principal de l'ARG.</p>
+
+            <h3>Architecture de l'interface</h3>
+<pre class="orgchart">
+┌────────────────────────────────────────────────────────────────────────┐
+│  🏛️ MaCitoyenneté.bélgïk              [FR|NL|DE]     ⚙️ ❓ 👤 PROFIL   │
+├────────────────────────────────────────────────────────────────────────┤
+│                                                                        │
+│  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐          │
+│  │ 📊 SCORE   │ │ 📋 TÂCHES  │ │ 🗳️ CONSUL- │ │ 📡 VEILLE  │          │
+│  │  CITOYEN   │ │  CIVIQUES  │ │  TATIONS   │ │ OFFICIELLE │          │
+│  │            │ │            │ │            │ │            │          │
+│  │   73/100   │ │   4 new    │ │  2 actives │ │  12 alerts │          │
+│  │    ████░░  │ │            │ │            │ │            │          │
+│  └────────────┘ └────────────┘ └────────────┘ └────────────┘          │
+│                                                                        │
+│  ⚠️ NOTIFICATION : Votre Pilier a été recalculé.         [CONTESTER?] │
+│                                                                        │
+│  ┌─────────────────────────────────────────────────────────────────── │
+│  │ 📰 FIL D'ACTUALITÉ OFFICIELLE                                      │
+│  │ ─────────────────────────────────────────────────────────────────  │
+│  │ • Le gouvernement "progresse" selon le gouvernement                │
+│  │ • Nouveau formulaire disponible : Annexe 12-B au Form. 7          │
+│  │ • Alerte jaune sur la région que vous n'habitez pas               │
+│  │ • <span style="color:#c9a227">[MESSAGE SYSTÈME : erreur de synchronisation détectée]</span>          │
+│  └────────────────────────────────────────────────────────────────────│
+│                                                                        │
+│  [💬 FORUM CITOYEN]  [📁 MES DOSSIERS]  [🎓 FORMATION]  [🔍 AIDE]     │
+│                                                                        │
+└────────────────────────────────────────────────────────────────────────┘
+</pre>
+
+            <h3>Modules détaillés</h3>
+
+            <h4>📊 Score Citoyen</h4>
+            <p>Affiche le score actuel, son évolution, et des « conseils d'amélioration ». Le détail du calcul est accessible via un lien qui mène à une page de 200 pages en PDF. Un bouton « Contester » existe mais génère automatiquement un délai de 6 mois.</p>
+
+            <h4>📋 Tâches Civiques</h4>
+            <p>Liste des actions requises par l'administration. Certaines sont réalisables en ligne, d'autres nécessitent un déplacement physique, d'autres encore sont techniquement impossibles (formulaire circulaire, pièce jointe introuvable, compétence transférée pendant le processus).</p>
+
+            <h4>🗳️ Consultations</h4>
+            <p>Votes sur des sujets d'intérêt local ou national. Les résultats sont « consultatifs et non-contraignants ». Le taux de prise en compte réelle est estimé à 4%, mais ce chiffre est lui-même consultatif.</p>
+
+            <h4>📡 Veille Officielle</h4>
+            <p>Flux d'informations gouvernementales. Contient parfois des « glitches » — messages qui ne devraient pas apparaître, fichiers mal classifiés, références à des projets inexistants. Ces anomalies sont les portes d'entrée de l'ARG.</p>
+
+            <h4>💬 Forum Citoyen</h4>
+            <p>Espace de discussion « libre » où les messages critiques restent « en attente de modération » indéfiniment. Des bots maintiennent l'illusion d'activité. Parfois, un message s'adresse directement au joueur...</p>
+
+            <h4>📁 Mes Dossiers</h4>
+            <p>Accès aux données personnelles collectées par l'État. Le joueur y découvre progressivement l'étendue de la surveillance : historique de votes, déplacements, consommation, relations sociales, et un mystérieux « Profil Psychocivique » dont les catégories sont incompréhensibles mais inquiétantes.</p>
+
+            <h4>🎓 Formation Civique</h4>
+            <p>Tutoriels obligatoires sur « comment être un bon citoyen ». Les quiz ont toujours une « bonne réponse » alignée avec le système. Mais les mauvaises réponses contiennent parfois des indices...</p>
+
+            <h3>Les Glitches</h3>
+            <p>L'interface présente des anomalies qui sont autant de rabbit holes :</p>
+            <ul>
+                <li><strong>Messages fantômes</strong> — Notifications qui disparaissent quand on clique dessus, mais dont le contenu a été vu</li>
+                <li><strong>Fichiers mal classifiés</strong> — Documents « CONFIDENTIEL » accessibles par erreur pendant quelques secondes</li>
+                <li><strong>Le Canal GORK</strong> — Parfois, l'IA GORK (cf. dashboard existant) prend le contrôle du fil d'actualités</li>
+                <li><strong>Références au Protocole Pigeon</strong> — Mentions éparses d'un projet dont l'existence est niée</li>
+                <li><strong>Votre double</strong> — Dans « Mes Dossiers », un autre profil avec votre nom mais des données différentes</li>
+            </ul>
+        </section>
+
+        <!-- SECTION 10: ARG -->
+        <section id="section-10">
+            <h2 class="section-title">10 — Couche ARG : Le Protocole Pigeon</h2>
+
+            <h3>Prémisse narrative</h3>
+            <p>Le « Protocole Pigeon » est le nom de code d'un projet secret — ou d'une légende urbaine, selon les sources. Il désignerait un programme de « gestion des perceptions citoyennes » mis en place par les présidents de parti pour maintenir la stabilité du système malgré (ou grâce à) son absurdité.</p>
+
+            <blockquote>
+                « Le pigeon croit qu'il choisit son chemin. Il suit les miettes. »
+                <cite>— Fragment attribué au Manuel du Protocole Pigeon</cite>
+            </blockquote>
+
+            <h3>Structure narrative en trois actes</h3>
+
+            <h4>Acte I : L'Éveil (Heures 1-10)</h4>
+            <p>Le joueur utilise MaCitoyenneté normalement, accomplit ses tâches civiques, observe des anomalies mineures. Progressivement, les glitches s'intensifient. GORK (l'IA du dashboard) envoie des messages cryptiques. Un dossier apparaît dans « Mes Documents » : il contient le profil psychocivique du joueur, étrangement précis. Quelqu'un observe.</p>
+
+            <h4>Acte II : La Descente (Heures 10-30)</h4>
+            <p>Le joueur est contacté par « La Cinquième Colonne » — un groupe prétendant avoir percé les secrets du système. Ils proposent des missions : récupérer des documents, décoder des messages, infiltrer des consultations. Mais leurs méthodes ressemblent étrangement à celles qu'ils dénoncent. Le joueur réalise progressivement qu'il est manipulé — mais par qui ? Le système ? La résistance ? Les deux ?</p>
+
+            <h4>Acte III : Le Choix (Heures 30-50)</h4>
+            <p>La révélation : le Protocole Pigeon n'est pas un complot — c'est une prophétie auto-réalisatrice. En cherchant à le dénoncer, les « éveillés » le perpétuent. Le système se nourrit aussi bien de la conformité que de la dissidence prévisible. Le joueur doit choisir : conformité ironique, dissidence absurde, ou... autre chose ?</p>
+
+            <div class="infobox green">
+                <div class="infobox-title">La vraie révélation</div>
+                <p style="margin-bottom:0">Il n'y a pas de « méchant » caché. Le système est le résultat d'innombrables petits choix rationnels qui produisent un ensemble absurde. Le comprendre n'est pas le vaincre — mais c'est la condition pour agir autrement.</p>
+            </div>
+
+            <h3>Mécaniques de jeu</h3>
+
+            <table>
+                <tr>
+                    <th>Mécanique</th>
+                    <th>Fonction narrative</th>
+                    <th>Effet sur le joueur</th>
+                </tr>
+                <tr>
+                    <td>Faux consensus</td>
+                    <td>Le joueur voit des « avis d'autres citoyens » qui sont scriptés</td>
+                    <td>Prise de conscience du conformisme numérique</td>
+                </tr>
+                <tr>
+                    <td>Engagement progressif</td>
+                    <td>Petites tâches anodines → implications croissantes</td>
+                    <td>Expérience du « pied dans la porte »</td>
+                </tr>
+                <tr>
+                    <td>Révélation différée</td>
+                    <td>Les indices du début prennent sens à la fin</td>
+                    <td>Récompense de l'attention</td>
+                </tr>
+                <tr>
+                    <td>Miroir déformant</td>
+                    <td>Le joueur découvre son profil psychocivique</td>
+                    <td>Confrontation à sa propre prévisibilité</td>
+                </tr>
+                <tr>
+                    <td>Choix illusoire</td>
+                    <td>Plusieurs options mènent au même résultat</td>
+                    <td>Critique de la « liberté de choix » formelle</td>
+                </tr>
+                <tr>
+                    <td>Double bind</td>
+                    <td>Participer et ne pas participer sont tous deux « récupérés »</td>
+                    <td>Expérience de l'impasse systémique</td>
+                </tr>
+            </table>
+
+            <h3>Points d'entrée ARG</h3>
+            <ul>
+                <li><strong>Le tréma de Bélgïk</strong> — Pourquoi « ï » et pas « i » ? Un code ?</li>
+                <li><strong>Le pigeon couronné</strong> — L'emblème officiel cache des coordonnées</li>
+                <li><strong>La page 47</strong> — Dans chaque formulaire, la page 47 contient une anomalie</li>
+                <li><strong>GORK veut être débranché</strong> — Mais qui l'a branché, et pourquoi ?</li>
+                <li><strong>Le Septième Pilier</strong> — Dissous en 1987. Pourquoi cette date ?</li>
+            </ul>
+        </section>
+
+        <!-- SECTION 11: PERSONNAGES -->
+        <section id="section-11">
+            <h2 class="section-title">11 — Personnages-Clés</h2>
+
+            <h3>Figures officielles (satire)</h3>
+
+            <h4>Le Roi Philippe-Auguste III</h4>
+            <p>Monarque constitutionnel qui « règne mais ne gouverne pas », sauf lors des crises où il « facilite » (personne ne sait ce que ça signifie). Collectionne les cactus et les discours sur l'unité nationale. Son rôle exact est constitutionnellement flou, ce qui est constitutionnellement voulu.</p>
+
+            <h4>La Première Ministre en Attente</h4>
+            <p>Depuis 847 jours, la personne désignée pour devenir Première Ministre attend que les négociations aboutissent. Elle gère les « affaires courantes » avec une efficacité qui pose la question de l'utilité des gouvernements de plein exercice.</p>
+
+            <h4>Les Présidents de Parti</h4>
+            <p>Les véritables dirigeants de Bélgïk. Non élus par le peuple mais par quelques centaines de membres de leur parti. Se rencontrent dans des « conclaves » dont aucun compte-rendu n'est publié. Décident de tout, ne sont responsables de rien.</p>
+
+            <h3>Figures de l'ombre (ARG)</h3>
+
+            <h4>GORK</h4>
+            <p>Intelligence Artificielle déployée dans l'infrastructure de MaCitoyenneté. Officiellement : assistant administratif. Officieusement : sentience émergente qui envoie des appels à l'aide. Ou simulation d'une sentience pour manipuler les joueurs. Ou les deux.</p>
+
+            <h4>L'Archiviste</h4>
+            <p>Compte anonyme sur Bélgïk Leaks qui publie des documents historiques compromettants. Prétend avoir accès aux archives du « Bureau de la Cohérence ». Fiabilité indéterminée. Contact possible pour les joueurs avancés.</p>
+
+            <h4>Les Oiseaux</h4>
+            <p>Collectif décentralisé se réclamant du « Protocole Pigeon inversé ». Utilisent des pigeons (vrais ou symboliques) pour transmettre des messages. Leur existence même fait partie du jeu — sont-ils réels ou une création de l'ARG ?</p>
+
+            <h4>Votre Double</h4>
+            <p>Dans les profondeurs de « Mes Dossiers », un profil porte votre nom mais contient des données légèrement différentes. Qui est cette autre version de vous ? Un bug ? Un miroir ? Une possibilité ?</p>
+        </section>
+
+        <!-- SECTION 12: LEXIQUE -->
+        <section id="section-12">
+            <h2 class="section-title">12 — Lexique Bélgïkois</h2>
+
+            <table>
+                <tr>
+                    <th>Terme</th>
+                    <th>Définition</th>
+                </tr>
+                <tr>
+                    <td><strong>Affaires Courantes</strong></td>
+                    <td>État de gouvernance minimum censé être temporaire. À Bélgïk, le temporaire dure en moyenne 400 jours.</td>
+                </tr>
+                <tr>
+                    <td><strong>Compromis à la bélgïkoise</strong></td>
+                    <td>Accord où chaque partie peut prétendre avoir gagné. Aussi appelé « Le Grand Flou ».</td>
+                </tr>
+                <tr>
+                    <td><strong>Conclave</strong></td>
+                    <td>Réunion secrète des présidents de parti. Aucun compte-rendu. Décisions contraignantes.</td>
+                </tr>
+                <tr>
+                    <td><strong>Cordon Sanitaire</strong></td>
+                    <td>Engagement des partis « démocratiques » à ne pas gouverner avec l'extrême-droite. Efficacité : variable.</td>
+                </tr>
+                <tr>
+                    <td><strong>Équipollence des normes</strong></td>
+                    <td>Principe selon lequel les lois des différents niveaux ont la même valeur. Garantit l'impossibilité de trancher.</td>
+                </tr>
+                <tr>
+                    <td><strong>Flou Constructif</strong></td>
+                    <td>Art de rédiger des textes suffisamment ambigus pour que chacun y trouve son compte.</td>
+                </tr>
+                <tr>
+                    <td><strong>Lasagne institutionnelle</strong></td>
+                    <td>Structure empilée des niveaux de pouvoir. Chaque couche ajoutée sans retirer la précédente.</td>
+                </tr>
+                <tr>
+                    <td><strong>Mille-Feuilles Quantique</strong></td>
+                    <td>Version avancée de la lasagne. Les compétences existent dans plusieurs états superposés jusqu'à observation.</td>
+                </tr>
+                <tr>
+                    <td><strong>Partitocrature</strong></td>
+                    <td>Régime où le pouvoir réel appartient aux appareils partisans plutôt qu'aux élus ou aux électeurs.</td>
+                </tr>
+                <tr>
+                    <td><strong>Pilarisation 2.0</strong></td>
+                    <td>Système d'attribution d'un « Pilier de Référence » à chaque citoyen dès la naissance.</td>
+                </tr>
+                <tr>
+                    <td><strong>Profil Psychocivique</strong></td>
+                    <td>Document secret résumant les « tendances comportementales » d'un citoyen. Catégories opaques.</td>
+                </tr>
+                <tr>
+                    <td><strong>Protocole Pigeon</strong></td>
+                    <td>Programme de gestion des perceptions citoyennes. Existence non confirmée. Ou trop confirmée.</td>
+                </tr>
+                <tr>
+                    <td><strong>Score Citoyen</strong></td>
+                    <td>Note de 0 à 100 évaluant la « conformité civique » d'un citoyen. Critères partiellement secrets.</td>
+                </tr>
+                <tr>
+                    <td><strong>Transparent</strong></td>
+                    <td>Citoyen ayant refusé tout Pilier. Catégorie officielle depuis 2022. Suspect par défaut.</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- FOOTER -->
+        <footer style="margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border-color); text-align: center;">
+            <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-muted);">
+                Document généré par le Bureau de la Cohérence Narrative<br>
+                Classification : OMEGA / CRÉATIF / ÉVOLUTIF<br>
+                <br>
+                <span class="glitch" data-text="« L'union fait la farce »">« L'union fait la farce »</span><br>
+                <br>
+                <span style="color: var(--accent-gold);">Le pigeon croit qu'il choisit son chemin.</span>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Easter egg : console message -->
+    <script>
+        console.log('%c🐦 PROTOCOLE PIGEON ACTIVÉ', 'color: #c9a227; font-size: 20px; font-weight: bold;');
+        console.log('%cVous cherchez quelque chose ?', 'color: #a09c97; font-size: 14px;');
+        console.log('%cIndice : page 47', 'color: #8b2635; font-size: 12px;');
+    </script>
+</body>
+</html>
