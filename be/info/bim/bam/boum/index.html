@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#!BiM - Le Système est Foutu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --void: #050505;
+            --dark: #0a0a0a;
+            --gray-dark: #151515;
+            --gray: #1a1a1a;
+            --gray-light: #252525;
+            --green-acid: #39ff14;
+            --green-glow: rgba(57, 255, 20, 0.3);
+            --lilas: #bf5fff;
+            --lilas-glow: rgba(191, 95, 255, 0.3);
+            --red: #ff0040;
+            --red-glow: rgba(255, 0, 64, 0.4);
+            --yellow: #ffcc00;
+            --white: #ffffff;
+            --text: #e0e0e0;
+            --text-muted: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        ::selection {
+            background: var(--red);
+            color: var(--black);
+        }
+
+        /* Particle Canvas */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Scanlines */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            opacity: 0.3;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid var(--red);
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green-acid);
+            text-decoration: none;
+            text-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--red);
+            text-shadow: 0 0 10px var(--red-glow);
+        }
+
+        /* HERO - BRUTAL */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            border-bottom: 4px solid var(--red);
+        }
+
+        .hero-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-alert {
+            display: inline-block;
+            background: var(--red);
+            color: var(--black);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 18vw, 14rem);
+            line-height: 0.85;
+            letter-spacing: -4px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title .line1 {
+            display: block;
+            color: var(--white);
+        }
+
+        .hero-title .line2 {
+            display: block;
+            color: var(--red);
+            text-shadow: 0 0 30px var(--red-glow);
+        }
+
+        .hero-title .line3 {
+            display: block;
+            color: var(--green-acid);
+            text-shadow: 0 0 30px var(--green-glow);
+            font-size: 0.6em;
+        }
+
+        .hero-manifesto {
+            max-width: 800px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 3rem;
+            border-left: 4px solid var(--lilas);
+            padding-left: 2rem;
+        }
+
+        .hero-manifesto strong {
+            color: var(--yellow);
+        }
+
+        .hero-manifesto .redacted {
+            background: var(--red);
+            color: var(--red);
+            padding: 0 0.25rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .hero-manifesto .redacted:hover {
+            color: var(--white);
+        }
+
+        /* CHIFFRES QUI TUENT */
+        .death-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border: 2px solid var(--white);
+            margin: 4rem 0;
+        }
+
+        @media (max-width: 900px) {
+            .death-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .death-stat {
+            padding: 2rem;
+            border-right: 1px solid var(--gray-light);
+            border-bottom: 1px solid var(--gray-light);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .death-stat:hover {
+            background: var(--red);
+        }
+
+        .death-stat:hover .death-number {
+            color: var(--black);
+            text-shadow: none;
+        }
+
+        .death-stat:hover .death-label,
+        .death-stat:hover .death-context {
+            color: var(--black);
+        }
+
+        .death-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--red);
+            line-height: 1;
+            text-shadow: 0 0 20px var(--red-glow);
+        }
+
+        .death-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        .death-context {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* SECTION STYLE */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 6rem 2rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 8rem;
+            color: var(--gray-light);
+            line-height: 1;
+            margin-bottom: -2rem;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 10vw, 6rem);
+            line-height: 1;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .section-title .highlight {
+            color: var(--red);
+        }
+
+        .section-title .green {
+            color: var(--green-acid);
+        }
+
+        .section-intro {
+            font-size: 1.3rem;
+            color: var(--text);
+            max-width: 800px;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        /* ACCUSATION BLOCKS */
+        .accusation {
+            background: var(--gray-dark);
+            border-left: 6px solid var(--red);
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .accusation::before {
+            content: '⚠️';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            font-size: 1.5rem;
+        }
+
+        .accusation h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--red);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .accusation p {
+            color: var(--text);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .accusation .source {
+            display: inline-block;
+            margin-top: 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--green-acid);
+            background: var(--black);
+            padding: 0.25rem 0.5rem;
+        }
+
+        /* CITATION CHOC */
+        .citation-choc {
+            background: var(--black);
+            border: 2px solid var(--yellow);
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .citation-choc::before {
+            content: '"';
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 10rem;
+            color: var(--yellow);
+            opacity: 0.3;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            line-height: 1;
+        }
+
+        .citation-choc p {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--white);
+            position: relative;
+            z-index: 1;
+        }
+
+        .citation-choc .author {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--yellow);
+            margin-top: 1.5rem;
+            display: block;
+        }
+
+        /* DATA WALL */
+        .data-wall {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2px;
+            background: var(--gray-light);
+            margin: 3rem 0;
+        }
+
+        .data-block {
+            background: var(--black);
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .data-block:hover {
+            background: var(--gray-dark);
+            transform: scale(1.02);
+        }
+
+        .data-block h4 {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--lilas);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .data-block p {
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .data-block .number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            color: var(--green-acid);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* RAGE METER */
+        .rage-meter {
+            background: var(--gray-dark);
+            border: 2px solid var(--red);
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .rage-meter h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--red);
+            margin-bottom: 1rem;
+        }
+
+        .rage-bar {
+            height: 30px;
+            background: var(--gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--yellow), var(--red));
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .rage-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* PILLAR TOWER */
+        .pillar-tower {
+            display: flex;
+            gap: 0;
+            margin: 3rem 0;
+            border: 2px solid var(--white);
+        }
+
+        .pillar {
+            flex: 1;
+            padding: 2rem;
+            border-right: 1px solid var(--gray-light);
+            position: relative;
+        }
+
+        .pillar:last-child {
+            border-right: none;
+        }
+
+        .pillar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+
+        .pillar.catho::before { background: #ff6b00; }
+        .pillar.soc::before { background: var(--red); }
+        .pillar.lib::before { background: #0066ff; }
+
+        .pillar h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .pillar.catho h4 { color: #ff6b00; }
+        .pillar.soc h4 { color: var(--red); }
+        .pillar.lib h4 { color: #0066ff; }
+
+        .pillar ul {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .pillar li {
+            padding: 0.5rem 0;
+            border-bottom: 1px dotted var(--gray-light);
+        }
+
+        /* CTA BRUTAL */
+        .cta-brutal {
+            display: inline-block;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            background: var(--green-acid);
+            color: var(--black);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-brutal:hover {
+            background: var(--red);
+            color: var(--white);
+            box-shadow: 0 0 30px var(--red-glow);
+        }
+
+        /* TESTIMONY */
+        .testimony-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .testimony {
+            background: var(--gray-dark);
+            border: 1px solid var(--gray-light);
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .testimony::before {
+            content: '💀';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .testimony .number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--red);
+        }
+
+        .testimony .label {
+            font-size: 1rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .testimony .detail {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* FOOTER */
+        footer {
+            position: relative;
+            z-index: 2;
+            padding: 4rem 2rem;
+            background: var(--void);
+            border-top: 4px solid var(--green-acid);
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer-inner {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .pillar-tower {
+                flex-direction: column;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+
+        .footer-brand .logo {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col h4 {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--green-acid);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--red);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-light);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-bottom .warning {
+            color: var(--yellow);
+            font-family: 'Space Mono', monospace;
+            margin-top: 1rem;
+        }
+
+        /* GLITCH */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch:hover {
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+
+        /* FADE IN */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* MARQUEE */
+        .marquee {
+            overflow: hidden;
+            white-space: nowrap;
+            background: var(--red);
+            padding: 0.75rem 0;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--black);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: scroll 20s linear infinite;
+        }
+
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="scanlines"></div>
+
+    <nav>
+        <a href="#" class="logo">#!BiM</a>
+        <ul class="nav-links">
+            <li><a href="#kern">Le Kern</a></li>
+            <li><a href="#caste">La Caste</a></li>
+            <li><a href="#opacite">L'Omerta</a></li>
+            <li><a href="#broyes">Les Broyés</a></li>
+            <li><a href="#piliers">Les Piliers</a></li>
+        </ul>
+    </nav>
+
+    <!-- MARQUEE -->
+    <div class="marquee" style="margin-top: 60px;">
+        <div class="marquee-content">
+            ⚠️ 119e/136 AU CLASSEMENT MONDIAL DE LA TRANSPARENCE — DERRIÈRE LE KAZAKHSTAN — 31 806 MANDATAIRES POUR 11 MILLIONS D'HABITANTS — 75 MILLIONS € PAR AN POUR LES PARTIS — 500 000 MALADES LONGUE DURÉE — LE KERN N'A AUCUNE EXISTENCE LÉGALE — 
+            ⚠️ 119e/136 AU CLASSEMENT MONDIAL DE LA TRANSPARENCE — DERRIÈRE LE KAZAKHSTAN — 31 806 MANDATAIRES POUR 11 MILLIONS D'HABITANTS — 75 MILLIONS € PAR AN POUR LES PARTIS — 500 000 MALADES LONGUE DURÉE — LE KERN N'A AUCUNE EXISTENCE LÉGALE — 
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+            <span class="hero-alert">⚡ Alerte Système</span>
+            <h1 class="hero-title">
+                <span class="line1">Le système</span>
+                <span class="line2 glitch">est foutu</span>
+                <span class="line3">et ils le savent</span>
+            </h1>
+            <div class="hero-manifesto">
+                <p>
+                    On t'a vendu le plat pays des frites et du chocolat. La réalité c'est <strong>31 806 mandataires</strong> 
+                    qui se gavent pendant que <strong>500 000 personnes</strong> sont en burn-out. 
+                    C'est un classement de transparence <strong>derrière le Kazakhstan</strong>. 
+                    C'est un <span class="redacted">Kern</span> qui dirige le pays <strong>sans aucune existence légale</strong>.
+                    <br><br>
+                    C'est pas une théorie du complot. C'est sourcé. C'est documenté. 
+                    Et personne n'en parle.
+                </p>
+            </div>
+
+            <div class="death-stats fade-in">
+                <div class="death-stat">
+                    <div class="death-number">119<sup>e</sup></div>
+                    <div class="death-label">Transparence mondiale</div>
+                    <div class="death-context">Sur 136. Derrière Kazakhstan & Arabie Saoudite.</div>
+                </div>
+                <div class="death-stat">
+                    <div class="death-number">31 806</div>
+                    <div class="death-label">Mandataires</div>
+                    <div class="death-context">1 politique par km². Pour 11M d'habitants.</div>
+                </div>
+                <div class="death-stat">
+                    <div class="death-number">500K</div>
+                    <div class="death-label">Malades longue durée</div>
+                    <div class="death-context">+20% en 4 ans. Plus que les chômeurs.</div>
+                </div>
+                <div class="death-stat">
+                    <div class="death-number">75M€</div>
+                    <div class="death-label">Financement partis/an</div>
+                    <div class="death-context">Tu paies. Ils décident. Tais-toi.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LE KERN -->
+    <section id="kern">
+        <div class="container">
+            <div class="section-number fade-in">01</div>
+            <h2 class="section-title fade-in">Le <span class="highlight">Kern</span><br>Le gouvernement fantôme</h2>
+            <p class="section-intro fade-in">
+                Tu crois que le Premier Ministre dirige le pays ? Mdr. 
+                Le vrai pouvoir c'est le <strong>Kern</strong> — les bureaux de partis. 
+                Un truc qui <strong>n'existe pas légalement</strong>. Zéro obligation de transparence. 
+                Zéro compte à rendre. C'est là que tout se décide. Les députés ? Des pions.
+            </p>
+
+            <div class="accusation fade-in">
+                <h3>Les décisions se prennent à huis clos</h3>
+                <p>
+                    "Les véritables dirigeants du pays sont les présidents de partis, choisis exclusivement par leur propre parti. 
+                    <strong>Le vote d'un adhérent de parti compte plus que celui d'un électeur.</strong>"
+                    Les ministres et députés ne sont que des "exécutants de ce que les présidents des partis ont décidé".
+                </p>
+                <span class="source">Source : CRISP asbl, Cairn.info</span>
+            </div>
+
+            <div class="citation-choc fade-in">
+                <p>
+                    Le Kern n'a aucune existence légale ni obligation de transparence. 
+                    C'est un système où l'autocensure et le conflit d'intérêts sont structurels.
+                </p>
+                <span class="author">— Analyse institutionnelle</span>
+            </div>
+
+            <div class="data-wall fade-in">
+                <div class="data-block">
+                    <h4>Discipline de vote</h4>
+                    <p>
+                        Quatre mécanismes de contrôle : convergence naturelle, socialisation avec les autres mandataires, 
+                        persuasion par les avantages obtenus, et ultimement <strong>coercition avec menaces de sanctions</strong> 
+                        comme l'exclusion du groupe ou le retrait de l'investiture.
+                    </p>
+                </div>
+                <div class="data-block">
+                    <h4>Listes électorales</h4>
+                    <p>
+                        Les partis "confectionnent" littéralement les listes <strong>sans aucune régulation légale</strong>. 
+                        Cette absence de règles crée un "secret" autour des processus internes.
+                        Tu votes pour qui ils ont décidé.
+                    </p>
+                </div>
+                <div class="data-block">
+                    <h4>239 jours</h4>
+                    <p>
+                        C'est le temps qu'il a fallu pour former le gouvernement De Wever (février 2025). 
+                        Résultat ? <strong>Zéro conférence de presse en 3 mois</strong>. 
+                        Aucune mesure de transparence dans l'accord de coalition.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LA CASTE -->
+    <section id="caste" style="background: var(--gray-dark);">
+        <div class="container">
+            <div class="section-number fade-in">02</div>
+            <h2 class="section-title fade-in">La <span class="highlight">Caste</span><br>31 806 mandataires</h2>
+            <p class="section-intro fade-in">
+                31 806 mandataires politiques. Pour un pays de 30 689 km². 
+                <strong>Littéralement 1 mandataire par kilomètre carré.</strong>
+                Et toi tu galères à payer ton loyer.
+            </p>
+
+            <div class="rage-meter fade-in">
+                <h4>🔥 Financement public des partis</h4>
+                <div class="rage-bar">
+                    <div class="rage-fill" style="width: 75%;"></div>
+                </div>
+                <div class="rage-labels">
+                    <span>0%</span>
+                    <span>75% des revenus des partis = argent public</span>
+                    <span>100%</span>
+                </div>
+            </div>
+
+            <div class="accusation fade-in">
+                <h3>75 millions d'euros par an</h3>
+                <p>
+                    Avec 75M€ de financement public annuel, les subsides représentent environ 
+                    <strong>75% des revenus totaux des partis</strong>. C'est deux fois supérieur au niveau allemand.
+                    Au-delà de 80%, les experts parlent de transformation des partis en "branche de l'État".
+                    On y est presque.
+                </p>
+                <span class="source">Source : CRISP, Weneedtotalk</span>
+            </div>
+
+            <div class="data-wall fade-in">
+                <div class="data-block">
+                    <span class="number">7</span>
+                    <h4>Parlements</h4>
+                    <p>Chambre, Sénat, Flamand, Wallon, Bruxelles, Communauté française, Communauté germanophone. Sans hiérarchie des normes.</p>
+                </div>
+                <div class="data-block">
+                    <span class="number">581</span>
+                    <h4>Communes</h4>
+                    <p>Avec 3 cadres juridiques différents. 2739 en 1831. Mais on a gardé tous les mandataires.</p>
+                </div>
+                <div class="data-block">
+                    <span class="number">6</span>
+                    <h4>Gouvernements</h4>
+                    <p>Fédéral + 5 entités fédérées. Chacun avec ses ministres, ses cabinets, ses conseillers...</p>
+                </div>
+            </div>
+
+            <div class="citation-choc fade-in">
+                <p>
+                    Chaque niveau de pouvoir dispose de compétences exclusives dans ses domaines d'attribution, 
+                    créant un système de séparation stricte des compétences. 
+                    Aucune hiérarchie n'existe entre les lois fédérales, les décrets régionaux et les ordonnances bruxelloises.
+                </p>
+                <span class="author">— Le joyeux bordel institutionnel belge</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- L'OMERTA -->
+    <section id="opacite">
+        <div class="container">
+            <div class="section-number fade-in">03</div>
+            <h2 class="section-title fade-in">L'<span class="highlight">Omerta</span><br>119e sur 136 pays</h2>
+            <p class="section-intro fade-in">
+                Au classement mondial du droit à l'information, la Belgique se place <strong>119e sur 136 pays</strong>. 
+                Derrière le Kazakhstan. Derrière l'Arabie Saoudite. 
+                Pendant que les conseils communaux ouvrent leurs portes, les exécutifs restent <strong>hermétiquement clos</strong>.
+            </p>
+
+            <div class="accusation fade-in">
+                <h3>Mai 2024 : Le vote de la honte</h3>
+                <p>
+                    La quasi-totalité des partis traditionnels — <strong>PS, MR, Ecolo, CD&V, Vooruit, Open VLD</strong> — 
+                    ont voté <strong>CONTRE</strong> une Commission d'accès aux documents administratifs (CADA) contraignante au niveau fédéral. 
+                    Alors même que toutes les régions belges l'ont adoptée depuis 2019.
+                </p>
+                <span class="source">Source : La Libre, Lesengages</span>
+            </div>
+
+            <div class="accusation fade-in" style="border-color: var(--yellow);">
+                <h3>L'affaire Vandenbroucke</h3>
+                <p>
+                    Le ministre de la Santé qui a <strong>bloqué personnellement la réforme de transparence</strong> 
+                    pour protéger ses propres secrets. Et qui a été reconduit au gouvernement suivant. 
+                    Le symbole parfait d'un système où l'autocensure et le conflit d'intérêts sont structurels.
+                </p>
+                <span class="source">Source : L'Avenir</span>
+            </div>
+
+            <div class="data-wall fade-in">
+                <div class="data-block">
+                    <span class="number">10-20%</span>
+                    <h4>Communes wallonnes</h4>
+                    <p>Qui streament leurs conseils. Le niveau de pouvoir le plus proche des citoyens reste le plus fermé.</p>
+                </div>
+                <div class="data-block">
+                    <span class="number">37-53%</span>
+                    <h4>Communes bruxelloises</h4>
+                    <p>Qui diffusent en ligne. Mieux mais toujours minoritaire.</p>
+                </div>
+                <div class="data-block">
+                    <span class="number">0</span>
+                    <h4>Conférences de presse</h4>
+                    <p>Du gouvernement De Wever en 3 mois. Zéro. Nada. Rien.</p>
+                </div>
+            </div>
+
+            <div class="citation-choc fade-in">
+                <p>
+                    Les instances européennes (GRECO, Commission européenne) multiplient les rappels à l'ordre 
+                    tandis que la société civile belge (Transparencia, Cumuleo, Ligue des droits humains) reste mobilisée.
+                </p>
+                <span class="author">— RTBF</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- LES BROYÉS -->
+    <section id="broyes" style="background: var(--gray-dark);">
+        <div class="container">
+            <div class="section-number fade-in">04</div>
+            <h2 class="section-title fade-in">Les <span class="highlight">Broyés</span><br>500 000 malades longue durée</h2>
+            <p class="section-intro fade-in">
+                Pendant que la caste se gave, <strong>500 000 personnes</strong> sont en incapacité de travail depuis plus d'un an. 
+                +20% en 4 ans. Plus que les chômeurs. 9 milliards d'euros par an. 
+                <strong>Le burn-out est devenu la norme.</strong>
+            </p>
+
+            <div class="testimony-grid fade-in">
+                <div class="testimony">
+                    <div class="number">500 000+</div>
+                    <div class="label">Malades longue durée (2023)</div>
+                    <div class="detail">En congé maladie depuis plus d'un an. Record historique.</div>
+                </div>
+                <div class="testimony">
+                    <div class="number">9 Mrd€</div>
+                    <div class="label">Coût annuel</div>
+                    <div class="detail">Rien qu'en indemnités. "Insoutenable" selon les pouvoirs publics.</div>
+                </div>
+                <div class="testimony">
+                    <div class="number">69%</div>
+                    <div class="label">Femmes</div>
+                    <div class="detail">Part des femmes parmi les cas de burn-out et dépression.</div>
+                </div>
+                <div class="testimony">
+                    <div class="number">63%</div>
+                    <div class="label">+ de 50 ans</div>
+                    <div class="detail">Le phénomène touche surtout les travailleurs vieillissants.</div>
+                </div>
+            </div>
+
+            <div class="accusation fade-in">
+                <h3>Les droits sociaux remis en question</h3>
+                <p>
+                    Face à l'augmentation des coûts, les droits sociaux acquis ont été <strong>remis en question 
+                    dans un contexte d'ajustements budgétaires et d'austérité</strong>. 
+                    Depuis 2019, les politiques ont modifié le régime d'incapacité de travail et d'invalidité.
+                    <strong>On te rend malade, puis on te culpabilise.</strong>
+                </p>
+                <span class="source">Source : Analyse des réformes depuis 2019</span>
+            </div>
+
+            <div class="citation-choc fade-in">
+                <p>
+                    1/3 troubles de santé mentale (dépression, burn-out). 
+                    1/3 affections musculo-squelettiques (douleurs chroniques, arthrose). 
+                    Ce n'est pas une épidémie médicale. C'est une épidémie sociale.
+                </p>
+                <span class="author">— Statistiques INAMI</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- LES PILIERS -->
+    <section id="piliers">
+        <div class="container">
+            <div class="section-number fade-in">05</div>
+            <h2 class="section-title fade-in">Les <span class="green">Piliers</span><br>Du berceau au tombeau</h2>
+            <p class="section-intro fade-in">
+                Tu nais dans un pilier. Tu vis dans un pilier. Tu meurs dans un pilier. 
+                Catholique, socialiste ou libéral — chacun avec ses écoles, ses hôpitaux, ses syndicats, 
+                ses mutuelles, ses journaux, ses partis. <strong>Un cloisonnement total de la société.</strong>
+            </p>
+
+            <div class="pillar-tower fade-in">
+                <div class="pillar catho">
+                    <h4>Pilier Catholique</h4>
+                    <ul>
+                        <li><strong>Syndicat :</strong> ACV/CSC (~1,7M membres)</li>
+                        <li><strong>Mutuelle :</strong> MC/CM</li>
+                        <li><strong>Enseignement :</strong> Réseau libre</li>
+                        <li><strong>Patronat :</strong> Boerenbond</li>
+                        <li><strong>Partis :</strong> CD&V, Les Engagés</li>
+                    </ul>
+                </div>
+                <div class="pillar soc">
+                    <h4>Pilier Socialiste</h4>
+                    <ul>
+                        <li><strong>Syndicat :</strong> FGTB/ABVV</li>
+                        <li><strong>Mutuelle :</strong> Solidaris</li>
+                        <li><strong>Mouvement :</strong> MOC, PAC</li>
+                        <li><strong>Presse :</strong> Le Peuple (historique)</li>
+                        <li><strong>Partis :</strong> PS, Vooruit</li>
+                    </ul>
+                </div>
+                <div class="pillar lib">
+                    <h4>Pilier Libéral</h4>
+                    <ul>
+                        <li><strong>Syndicat :</strong> ACLVB/CGSLB</li>
+                        <li><strong>Mutuelle :</strong> Mutualités Libérales</li>
+                        <li><strong>Patronat :</strong> FEB, VOKA, UCM</li>
+                        <li><strong>Enseignement :</strong> Réseau officiel</li>
+                        <li><strong>Partis :</strong> MR, Open VLD</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="citation-choc fade-in">
+                <p>
+                    "Il existe extraordinairement peu d'interactions sociales entre catholiques, libéraux et socialistes ; 
+                    on trouve souvent un syndicat catholique, un libéral et un socialiste, 
+                    chacun ne s'occupant que de ses adhérents."
+                </p>
+                <span class="author">— Sociologue Seebohm Rowntree, 1911. Et c'est toujours vrai.</span>
+            </div>
+
+            <div class="accusation fade-in" style="border-color: var(--green-acid);">
+                <h3>Dépilarisation ? Mon cul.</h3>
+                <p>
+                    On te dit que la pilarisation a décru depuis les années 1960. 
+                    Les résidus sont pourtant <strong>partout</strong> : enseignement libre vs officiel, 
+                    réseaux associatifs, mouvements de jeunesse, hôpitaux... 
+                    Le système a muté, pas disparu.
+                </p>
+                <span class="source">Source : Analyses sociologiques contemporaines</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONCLUSION -->
+    <section style="background: var(--red); color: var(--black);">
+        <div class="container" style="text-align: center;">
+            <h2 class="section-title fade-in" style="color: var(--black);">
+                Et maintenant ?
+            </h2>
+            <p class="section-intro fade-in" style="color: var(--black); margin: 0 auto 2rem; max-width: 700px;">
+                Ce site n'est pas un appel à la révolution. C'est un constat. 
+                <strong>Tout est sourcé. Tout est documenté.</strong> 
+                La question c'est : qu'est-ce que tu fais de cette information ?
+            </p>
+            <div class="fade-in">
+                <a href="#sources" class="cta-brutal" style="background: var(--black); color: var(--white); margin-right: 1rem;">
+                    Voir les sources
+                </a>
+                <a href="#" class="cta-brutal" style="background: transparent; border: 2px solid var(--black);">
+                    Partager
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOURCES -->
+    <section id="sources">
+        <div class="container">
+            <h2 class="section-title fade-in">Sources & <span class="green">Documentation</span></h2>
+            <div class="data-wall fade-in">
+                <div class="data-block">
+                    <h4>Institutionnel</h4>
+                    <p>CRISP asbl • Belgium.be • Parlement wallon • Parlement flamand • Brussels Hoofdstedelijk Gewest • UVCW • Lachambre • Senate of Belgium</p>
+                </div>
+                <div class="data-block">
+                    <h4>Médias</h4>
+                    <p>RTBF • La Libre Belgique • DHnet • L'Avenir • Lesengages • Pouvoirs-locaux</p>
+                </div>
+                <div class="data-block">
+                    <h4>Académique</h4>
+                    <p>UCLouvain • Cairn.info • Wikipedia (+ vérification croisée) • Small Wars Journal • Civil Affairs Association • Rights Studio</p>
+                </div>
+                <div class="data-block">
+                    <h4>Société civile</h4>
+                    <p>Transparencia • Cumuleo • Ligue des droits humains • Weneedtotalk • OIDP • Freedom House</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="logo">#!BiM</span>
+                <p>Bénéficiaires d'Intelligence Mutante</p>
+                <p>Pas de chocolat. Pas de gaufres. Les données qui comptent.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Chapitres</h4>
+                <ul>
+                    <li><a href="#kern">Le Kern</a></li>
+                    <li><a href="#caste">La Caste</a></li>
+                    <li><a href="#opacite">L'Omerta</a></li>
+                    <li><a href="#broyes">Les Broyés</a></li>
+                    <li><a href="#piliers">Les Piliers</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Sources clés</h4>
+                <ul>
+                    <li><a href="https://www.crisp.be" target="_blank">CRISP</a></li>
+                    <li><a href="https://www.rtbf.be" target="_blank">RTBF</a></li>
+                    <li><a href="https://www.cumuleo.be" target="_blank">Cumuleo</a></li>
+                    <li><a href="https://www.uvcw.be" target="_blank">UVCW</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 #!BiM — Construit avec lucidité et colère froide</p>
+            <p class="warning">⚠️ Toutes les données sont sourcées. Vérifiez. Partagez. Agissez.</p>
+        </div>
+    </footer>
+
+    <script>
+        // PARTICLES
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: null, y: null };
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                this.createParticles();
+                this.animate();
+                window.addEventListener('resize', () => this.resize());
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.x = e.clientX;
+                    this.mouse.y = e.clientY;
+                });
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            createParticles() {
+                const count = Math.floor((this.canvas.width * this.canvas.height) / 25000);
+                for (let i = 0; i < count; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 2 + 0.5,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5,
+                        color: Math.random() > 0.8 ? '#ff0040' : (Math.random() > 0.5 ? '#39ff14' : '#bf5fff')
+                    });
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach((p, i) => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    if (p.x < 0 || p.x > this.canvas.width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.speedY *= -1;
+
+                    // Mouse repulsion
+                    if (this.mouse.x && this.mouse.y) {
+                        const dx = this.mouse.x - p.x;
+                        const dy = this.mouse.y - p.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) {
+                            p.x -= dx * 0.02;
+                            p.y -= dy * 0.02;
+                        }
+                    }
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.fill();
+
+                    // Connect
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const p2 = this.particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 80) {
+                            this.ctx.beginPath();
+                            this.ctx.strokeStyle = `rgba(255, 0, 64, ${0.15 * (1 - dist / 80)})`;
+                            this.ctx.lineWidth = 0.5;
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.stroke();
+                        }
+                    }
+                });
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // SCROLL ANIMATIONS
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // SMOOTH SCROLL
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // INIT
+        document.addEventListener('DOMContentLoaded', () => {
+            new ParticleSystem(document.getElementById('particles'));
+        });
+    </script>
+</body>
+</html>
