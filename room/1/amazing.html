@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Économie contributive provisionnée (ECP) - Modèle économique alternatif belge">
+    <title>Économie contributive provisionnée — Wikipédia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Libertinus+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wiki-blue: #3366cc;
+            --wiki-blue-visited: #795cb2;
+            --wiki-text: #202122;
+            --wiki-text-light: #54595d;
+            --wiki-bg: #f8f9fa;
+            --wiki-bg-light: #ffffff;
+            --wiki-border: #a2a9b1;
+            --wiki-border-light: #c8ccd1;
+            --wiki-border-lighter: #eaecf0;
+            --wiki-header-bg: #eaecf0;
+            --wiki-infobox-title: #2b4b8c;
+            --wiki-warning: #ffc107;
+            --wiki-claude: #d97706;
+            --font-serif: 'Libertinus Serif', Georgia, serif;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 14px; -webkit-text-size-adjust: 100%; }
+        body { font-family: var(--font-sans); line-height: 1.6; color: var(--wiki-text); background: var(--wiki-bg); }
+        a { color: var(--wiki-blue); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        a:visited { color: var(--wiki-blue-visited); }
+        img { max-width: 100%; height: auto; }
+        
+        /* HEADER - Mobile First */
+        .wiki-header { background: var(--wiki-bg-light); border-bottom: 1px solid var(--wiki-border); position: sticky; top: 0; z-index: 1000; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .wiki-header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.75rem; gap: 0.5rem; }
+        .wiki-logo { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--wiki-text); flex-shrink: 0; }
+        .wiki-logo-img { width: 36px; height: 36px; }
+        .wiki-logo-text-container { display: none; }
+        .wiki-logo-text { font-family: var(--font-serif); font-size: 1.25rem; }
+        .wiki-logo-tagline { font-size: 0.65rem; color: var(--wiki-text-light); }
+        .wiki-search { flex: 1; max-width: 100%; min-width: 0; }
+        .wiki-search-form { display: flex; position: relative; }
+        .wiki-search-input { width: 100%; padding: 0.5rem 2.5rem 0.5rem 0.75rem; border: 1px solid var(--wiki-border); border-radius: 2px; font-size: 1rem; -webkit-appearance: none; }
+        .wiki-search-input:focus { outline: none; border-color: var(--wiki-blue); box-shadow: inset 0 0 0 1px var(--wiki-blue); }
+        .wiki-search-btn { position: absolute; right: 0; top: 0; height: 100%; width: 2.5rem; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .wiki-search-btn svg { width: 1.25rem; height: 1.25rem; fill: var(--wiki-text-light); }
+        .wiki-nav { display: none; gap: 1rem; font-size: 0.9rem; }
+        .wiki-menu-btn { display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border: none; background: transparent; cursor: pointer; border-radius: 2px; flex-shrink: 0; }
+        .wiki-menu-btn:hover { background: var(--wiki-border-lighter); }
+        .wiki-menu-btn svg { width: 1.5rem; height: 1.5rem; fill: var(--wiki-text); }
+        
+        /* LAYOUT - Mobile First */
+        .wiki-container { display: flex; flex-direction: column; min-height: calc(100vh - 54px); background: var(--wiki-bg-light); }
+        .wiki-sidebar { display: none; background: var(--wiki-bg); border-right: 1px solid var(--wiki-border); padding: 1rem; font-size: 0.85rem; }
+        .wiki-sidebar.active { display: block; position: fixed; top: 54px; left: 0; width: 280px; max-width: 85vw; height: calc(100vh - 54px); overflow-y: auto; z-index: 999; box-shadow: 2px 0 8px rgba(0,0,0,0.15); }
+        .sidebar-overlay { display: none; position: fixed; top: 54px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 998; }
+        .sidebar-overlay.active { display: block; }
+        .sidebar-section { margin-bottom: 1.25rem; }
+        .sidebar-section h3 { font-size: 0.8rem; font-weight: normal; color: var(--wiki-text-light); border-bottom: 1px solid var(--wiki-border-light); padding-bottom: 0.25rem; margin-bottom: 0.5rem; text-transform: uppercase; }
+        .sidebar-section ul { list-style: none; }
+        .sidebar-section li { padding: 0.3rem 0; }
+        .wiki-content { flex: 1; padding: 0; min-width: 0; }
+        
+        /* TABS */
+        .article-header { border-bottom: 1px solid var(--wiki-border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .article-header::-webkit-scrollbar { display: none; }
+        .article-tabs { display: flex; min-width: max-content; padding: 0 0.5rem; }
+        .article-tab { padding: 0.6rem 0.75rem; color: var(--wiki-blue); border-bottom: 2px solid transparent; font-size: 0.85rem; white-space: nowrap; }
+        .article-tab.active { color: var(--wiki-text); border-bottom-color: var(--wiki-blue); background: var(--wiki-bg-light); }
+        .article-tab:hover { text-decoration: none; background: var(--wiki-border-lighter); }
+        
+        /* ARTICLE */
+        .article-body { padding: 1rem; }
+        .article-title { font-family: var(--font-serif); font-size: 1.75rem; font-weight: normal; line-height: 1.2; border-bottom: 1px solid var(--wiki-border); padding-bottom: 0.25rem; margin-bottom: 0.75rem; }
+        .article-intro { margin-bottom: 1.25rem; }
+        .article-intro p, .article-body p { margin-bottom: 0.75rem; }
+        .article-body ul, .article-body ol { margin: 0.5rem 0 0.75rem 1.5rem; }
+        .article-body li { margin: 0.25rem 0; }
+        
+        /* INFOBOX - Mobile First */
+        .infobox { width: 100%; margin: 0 0 1rem 0; border: 1px solid var(--wiki-border); background: var(--wiki-bg); font-size: 0.9rem; }
+        .infobox-title { background: var(--wiki-infobox-title); color: #fff; padding: 0.6rem 0.75rem; text-align: center; font-weight: bold; font-size: 1rem; }
+        .infobox-subtitle { background: var(--wiki-header-bg); padding: 0.5rem 0.75rem; text-align: center; font-style: italic; font-size: 0.85rem; border-bottom: 1px solid var(--wiki-border); }
+        .infobox-section { background: var(--wiki-header-bg); padding: 0.4rem 0.75rem; font-weight: bold; text-align: center; font-size: 0.9rem; border-top: 1px solid var(--wiki-border-light); }
+        .infobox-row { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--wiki-border-lighter); }
+        .infobox-label { background: var(--wiki-header-bg); padding: 0.5rem 0.75rem; width: 40%; font-weight: bold; font-size: 0.85rem; }
+        .infobox-data { padding: 0.5rem 0.75rem; width: 60%; background: var(--wiki-bg-light); }
+        
+        /* TOC */
+        .toc { background: var(--wiki-bg); border: 1px solid var(--wiki-border); padding: 0.75rem 1rem; margin: 1rem 0; font-size: 0.9rem; }
+        .toc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+        .toc-title { font-weight: bold; }
+        .toc-toggle { font-size: 0.8rem; color: var(--wiki-blue); cursor: pointer; padding: 0.25rem 0.5rem; border: none; background: none; font-family: inherit; }
+        .toc-content { max-height: 60vh; overflow-y: auto; }
+        .toc-content.collapsed { display: none; }
+        .toc ol { margin-left: 1.25rem; counter-reset: toc-item; list-style: none; }
+        .toc > .toc-content > ol { margin-left: 0; }
+        .toc li { margin: 0.3rem 0; }
+        .toc li::before { counter-increment: toc-item; content: counters(toc-item, ".") " "; color: var(--wiki-text); }
+        
+        /* HEADINGS */
+        h2 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: normal; border-bottom: 1px solid var(--wiki-border); margin: 1.25rem 0 0.5rem; padding-bottom: 0.15rem; clear: both; }
+        h3 { font-size: 1.15rem; font-weight: bold; margin: 1rem 0 0.5rem; }
+        h4 { font-size: 1rem; font-weight: bold; margin: 0.75rem 0 0.4rem; }
+        .mw-editsection { font-size: 0.7rem; font-weight: normal; font-family: var(--font-sans); margin-left: 0.75rem; }
+        
+        /* TABLES */
+        .wikitable { border-collapse: collapse; margin: 1rem 0; width: 100%; font-size: 0.9rem; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .wikitable caption { text-align: left; font-weight: bold; padding: 0.5rem; background: var(--wiki-header-bg); border: 1px solid var(--wiki-border); border-bottom: none; }
+        .wikitable th, .wikitable td { border: 1px solid var(--wiki-border); padding: 0.5rem; text-align: left; vertical-align: top; }
+        .wikitable th { background: var(--wiki-header-bg); font-weight: bold; }
+        .wikitable tr:nth-child(even) td { background: var(--wiki-bg); }
+        .table-responsive { width: 100%; overflow-x: auto; margin: 1rem 0; }
+        
+        /* REFERENCES */
+        sup.reference { font-size: 0.75em; line-height: 0; vertical-align: super; }
+        .references { font-size: 0.85rem; line-height: 1.5; }
+        .references ol { margin-left: 2rem; }
+        .references li { margin-bottom: 0.5rem; word-wrap: break-word; }
+        .reflist-columns { column-count: 1; }
+        
+        /* MESSAGE BOXES */
+        .ambox { border: 1px solid var(--wiki-border); background: #fbfbfb; margin: 1rem 0; padding: 0.75rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; }
+        .ambox-image { font-size: 1.75rem; flex-shrink: 0; line-height: 1; }
+        .ambox-text { flex: 1; min-width: 0; }
+        .ambox-notice { border-left: 4px solid var(--wiki-warning); }
+        .ambox-content { border-left: 4px solid var(--wiki-blue); }
+        .hatnote { font-style: italic; padding-left: 1.5rem; margin-bottom: 0.75rem; color: var(--wiki-text-light); font-size: 0.9rem; }
+        .highlight-box { background: #eaf3ff; border: 1px solid var(--wiki-border); border-left: 4px solid var(--wiki-blue); padding: 0.75rem 1rem; margin: 1rem 0; }
+        
+        /* CLAUDE ADDITIONS */
+        .claude-addition { background: #fff8e1; border-left: 3px solid var(--wiki-claude); padding: 0.75rem 1rem; margin: 0.75rem 0; font-size: 0.9rem; }
+        .claude-addition::before { content: "⚡ Ajout contextuel — "; font-weight: bold; color: var(--wiki-claude); }
+        .signature-badge { display: inline-block; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; padding: 0.2rem 0.6rem; border-radius: 3px; font-size: 0.8rem; margin: 0.15rem; vertical-align: middle; }
+        .signature-badge.claude { background: linear-gradient(135deg, var(--wiki-claude) 0%, #b45309 100%); }
+        
+        /* NAVBOX */
+        .navbox { border: 1px solid var(--wiki-border); margin: 1.5rem 0; background: #fdfdfd; font-size: 0.85rem; }
+        .navbox-title { background: #ccccff; padding: 0.5rem; text-align: center; font-weight: bold; }
+        .navbox-row { display: flex; flex-direction: column; border-top: 1px solid var(--wiki-border-lighter); }
+        .navbox-group { background: #ddf; padding: 0.5rem; font-weight: bold; text-align: center; }
+        .navbox-list { padding: 0.5rem; text-align: center; line-height: 1.8; }
+        
+        /* CATEGORIES */
+        .catlinks { background: var(--wiki-bg); border: 1px solid var(--wiki-border); padding: 0.75rem 1rem; margin-top: 2rem; font-size: 0.85rem; line-height: 1.8; }
+        .catlinks-title { font-weight: bold; }
+        
+        /* FOOTER */
+        .wiki-footer { background: var(--wiki-bg); border-top: 1px solid var(--wiki-border); padding: 1rem; margin-top: 2rem; font-size: 0.8rem; color: var(--wiki-text-light); text-align: center; }
+        .wiki-footer p { margin: 0.5rem 0; }
+        .footer-icons { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+        
+        /* CREDITS */
+        .credits-box { margin-top: 2rem; padding: 1rem; background: var(--wiki-bg); border: 1px solid var(--wiki-border-light); border-radius: 4px; font-size: 0.9rem; }
+        .credits-box p { margin: 0.25rem 0; }
+        .credits-title { font-weight: bold; margin-bottom: 0.5rem !important; }
+        .credits-note { font-size: 0.8rem; color: var(--wiki-text-light); margin-top: 0.5rem !important; }
+        
+        /* UTILITIES */
+        .clear { clear: both; }
+        blockquote { margin: 1rem 0 1rem 1rem; padding: 0.5rem 0 0.5rem 1rem; border-left: 3px solid var(--wiki-border-light); color: var(--wiki-text-light); font-style: italic; }
+        blockquote cite { display: block; margin-top: 0.5rem; font-style: normal; font-size: 0.9rem; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+        .skip-link { position: absolute; top: -100%; left: 0; background: var(--wiki-blue); color: #fff; padding: 0.5rem 1rem; z-index: 9999; }
+        .skip-link:focus { top: 0; }
+        
+        /* TABLET (600px+) */
+        @media screen and (min-width: 600px) {
+            html { font-size: 15px; }
+            .wiki-header-inner { padding: 0.5rem 1rem; }
+            .wiki-logo-img { width: 44px; height: 44px; }
+            .wiki-logo-text-container { display: block; }
+            .wiki-menu-btn { display: none; }
+            .article-body { padding: 1.25rem 1.5rem; }
+            .article-title { font-size: 2rem; }
+            .infobox { float: right; width: 280px; margin: 0 0 1rem 1.25rem; clear: right; }
+            .toc { display: inline-block; max-width: 350px; }
+            h2 { font-size: 1.5rem; }
+            .navbox-row { flex-direction: row; }
+            .navbox-group { width: 20%; text-align: right; padding-right: 0.75rem; }
+            .navbox-list { width: 80%; text-align: left; }
+            .reflist-columns { column-count: 2; column-gap: 2rem; }
+        }
+        
+        /* DESKTOP (900px+) */
+        @media screen and (min-width: 900px) {
+            html { font-size: 14px; }
+            .wiki-header-inner { max-width: 1600px; margin: 0 auto; padding: 0.5rem 1.5rem; }
+            .wiki-logo-img { width: 50px; height: 50px; }
+            .wiki-logo-text { font-size: 1.5rem; }
+            .wiki-search { max-width: 500px; margin: 0 2rem; }
+            .wiki-nav { display: flex; }
+            .wiki-container { max-width: 1600px; margin: 0 auto; flex-direction: row; }
+            .wiki-sidebar { display: block; position: sticky; top: 70px; width: 180px; min-width: 180px; height: fit-content; max-height: calc(100vh - 80px); overflow-y: auto; }
+            .wiki-sidebar.active { position: sticky; box-shadow: none; }
+            .wiki-content { max-width: calc(100% - 180px); border-left: 1px solid var(--wiki-border); }
+            .article-body { padding: 1.5rem 2rem; max-width: 960px; }
+            .article-title { font-size: 2.25rem; }
+            .infobox { width: 320px; }
+            h2 { font-size: 1.6rem; }
+            h3 { font-size: 1.25rem; }
+        }
+        
+        /* LARGE DESKTOP (1200px+) */
+        @media screen and (min-width: 1200px) {
+            .article-body { max-width: 1000px; }
+            .infobox { width: 340px; }
+        }
+        
+        /* PRINT */
+        @media print {
+            .wiki-header, .wiki-sidebar, .wiki-menu-btn, .mw-editsection, .toc-toggle, .wiki-footer, .ambox, .navbox { display: none !important; }
+            .wiki-content { max-width: 100% !important; border: none !important; }
+            .infobox { float: right; width: 40%; }
+            a { color: #000 !important; text-decoration: underline; }
+        }
+        
+        /* ACCESSIBILITY */
+        @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+        a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--wiki-blue); outline-offset: 2px; }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+    
+    <header class="wiki-header">
+        <div class="wiki-header-inner">
+            <a href="#" class="wiki-logo">
+                <svg class="wiki-logo-img" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#fff" stroke="#000" stroke-width="2"/><text x="50" y="62" text-anchor="middle" font-size="38" font-family="serif">W</text></svg>
+                <div class="wiki-logo-text-container"><div class="wiki-logo-text">Wikipédia</div><div class="wiki-logo-tagline">l'encyclopédie libre</div></div>
+            </a>
+            <div class="wiki-search">
+                <form class="wiki-search-form"><label for="search-input" class="sr-only">Rechercher</label><input type="search" id="search-input" class="wiki-search-input" placeholder="Rechercher dans Wikipédia"><button type="submit" class="wiki-search-btn"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></button></form>
+            </div>
+            <nav class="wiki-nav"><a href="#">Créer un compte</a><a href="#">Se connecter</a></nav>
+            <button class="wiki-menu-btn" id="menu-toggle" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+        </div>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="wiki-container">
+        <aside class="wiki-sidebar" id="sidebar">
+            <div class="sidebar-section"><h3>Navigation</h3><ul><li><a href="#">Accueil</a></li><li><a href="#">Portails thématiques</a></li><li><a href="#">Article au hasard</a></li><li><a href="#">Contact</a></li></ul></div>
+            <div class="sidebar-section"><h3>Contribuer</h3><ul><li><a href="#">Débuter sur Wikipédia</a></li><li><a href="#">Aide</a></li><li><a href="#">Communauté</a></li><li><a href="#">Modifications récentes</a></li></ul></div>
+            <div class="sidebar-section"><h3>Outils</h3><ul><li><a href="#">Pages liées</a></li><li><a href="#">Téléverser un fichier</a></li><li><a href="#">Lien permanent</a></li><li><a href="#">Citer cette page</a></li></ul></div>
+            <div class="sidebar-section"><h3>Langues</h3><ul><li><a href="#">English</a></li><li><a href="#">Nederlands</a></li><li><a href="#">Deutsch</a></li></ul></div>
+        </aside>
+
+        <main class="wiki-content" id="main-content">
+            <div class="article-header">
+                <div class="article-tabs">
+                    <a href="#" class="article-tab active">Article</a><a href="#" class="article-tab">Discussion</a><a href="#" class="article-tab">Modifier</a><a href="#" class="article-tab">Voir l'historique</a>
+                </div>
+            </div>
+
+            <article class="article-body">
+                <h1 class="article-title">Économie contributive provisionnée</h1>
+                <div class="hatnote">Pour les articles homonymes, voir <a href="#">Économie sociale</a> et <a href="#">Économie solidaire</a>.</div>
+                
+                <div class="ambox ambox-notice">
+                    <div class="ambox-image">📋</div>
+                    <div class="ambox-text"><strong>Cet article traite d'un sujet en cours de développement.</strong> Les informations peuvent évoluer avec les réformes du gouvernement Arizona (2025-2029). <small>— Mise à jour : janvier 2026</small></div>
+                </div>
+
+                <aside class="infobox">
+                    <div class="infobox-title">Économie Contributive Provisionnée</div>
+                    <div class="infobox-subtitle">Modèle économique alternatif belge</div>
+                    <div class="infobox-section">Données générales</div>
+                    <div class="infobox-row"><div class="infobox-label">Acronyme</div><div class="infobox-data">ECP</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Pays</div><div class="infobox-data">🇧🇪 <a href="#">Belgique</a></div></div>
+                    <div class="infobox-row"><div class="infobox-label">Type</div><div class="infobox-data">Modèle économique hybride</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Statut juridique</div><div class="infobox-data">En attente de <a href="#">ruling fiscal</a></div></div>
+                    <div class="infobox-section">Contexte socio-économique</div>
+                    <div class="infobox-row"><div class="infobox-label">Population cible</div><div class="infobox-data">978 000 personnes inactives<sup class="reference">[1]</sup></div></div>
+                    <div class="infobox-row"><div class="infobox-label">Coût de l'inactivité</div><div class="infobox-data">21-24 milliards €/an<sup class="reference">[2]</sup></div></div>
+                    <div class="infobox-row"><div class="infobox-label">Budget projet pilote</div><div class="infobox-data">24 000 €</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Taux d'emploi BE</div><div class="infobox-data">72,1 % (vs 75,4 % UE)</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Postes vacants</div><div class="infobox-data">172 000 (4,6 %)</div></div>
+                    <div class="infobox-section">Cadre légal</div>
+                    <div class="infobox-row"><div class="infobox-label">Loi de référence</div><div class="infobox-data">Loi sur le volontariat (3 juillet 2005)</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Article fiscal</div><div class="infobox-data">Art. 344, §1er CIR 92</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Organisme compétent</div><div class="infobox-data"><a href="https://www.ruling.be">Service des Décisions Anticipées</a> (SDA)</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Délai ruling</div><div class="infobox-data">~90 jours (indicatif)</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Validité</div><div class="infobox-data">5 ans minimum</div></div>
+                    <div class="infobox-section">Infrastructure technique</div>
+                    <div class="infobox-row"><div class="infobox-label">Protocole données</div><div class="infobox-data"><a href="#">Solid</a> (Tim Berners-Lee)</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Standard santé</div><div class="infobox-data"><a href="#">FHIR</a> (HL7)</div></div>
+                    <div class="infobox-row"><div class="infobox-label">Plateforme</div><div class="infobox-data">NYXO</div></div>
+                    <div class="infobox-section">Acteurs du projet</div>
+                    <div class="infobox-row"><div class="infobox-label">Porteurs</div><div class="infobox-data"><span class="signature-badge">CCPLC.eu</span><br><span class="signature-badge">nyxo.brussels</span></div></div>
+                </aside>
+
+                <section class="article-intro">
+                    <p>L'<b>Économie contributive provisionnée</b> (<b>ECP</b>) est un modèle économique alternatif développé en <a href="#">Belgique</a> visant à permettre aux citoyens en situation de précarité de valoriser leurs compétences et de générer des revenus sans perdre leurs droits sociaux<sup class="reference">[1]</sup>. Ce modèle hybride, caractérisé par sa flexibilité et son autonomie, est présenté comme une réponse structurelle au « <b>piège institutionnel</b> » belge, un mécanisme qui décourage actuellement l'activité citoyenne des personnes précarisées en pénalisant financièrement toute tentative de contribution<sup class="reference">[2]</sup>.</p>
+                    <p>Le concept s'inscrit dans le contexte des réformes structurelles engagées par le <a href="#">gouvernement Arizona</a> (2025-2029), coalition formée par la <a href="#">N-VA</a>, le <a href="#">MR</a>, <a href="#">Les Engagés</a>, <a href="#">Vooruit</a> et le <a href="#">CD&V</a> après 236 jours de négociations<sup class="reference">[3]</sup>. Ce gouvernement, dirigé par <a href="#">Bart De Wever</a>, vise notamment un assainissement budgétaire de <b>18 milliards d'euros</b> à l'horizon 2029 et une valorisation du travail avec un objectif de taux d'emploi de <b>80 %</b><sup class="reference">[4]</sup>.</p>
+                    <p>Face à cette nouvelle donne politique, le modèle ECP nécessite une sécurisation juridique via une <a href="#">décision anticipée</a> (ruling fiscal) auprès du <a href="https://www.ruling.be">Service des Décisions Anticipées</a> (SDA) du SPF Finances, un service autonome dirigé par Bart Van Humbeeck<sup class="reference">[5]</sup>. Cette procédure, gratuite et confidentielle, permettrait de garantir la sécurité juridique du modèle pour une durée minimale de 5 ans.</p>
+                </section>
+
+                <nav class="toc" id="toc">
+                    <div class="toc-header"><span class="toc-title">Sommaire</span><button class="toc-toggle" id="toc-toggle">[masquer]</button></div>
+                    <div class="toc-content" id="toc-content">
+                        <ol>
+                            <li><a href="#contexte">Contexte : Le piège institutionnel belge</a><ol><li><a href="#diagnostic">Diagnostic économique</a></li><li><a href="#chiffres">Chiffres clés de la précarité</a></li></ol></li>
+                            <li><a href="#principes">Principes fondamentaux de l'ECP</a><ol><li><a href="#provisionnement">Le provisionnement différé</a></li><li><a href="#fonds">Le Fonds de Contribution Citoyenne</a></li><li><a href="#autonomie">L'absence de subordination</a></li></ol></li>
+                            <li><a href="#cadre-juridique">Cadre juridique et fiscal</a><ol><li><a href="#ruling">Le ruling fiscal : un bouclier juridique</a></li><li><a href="#procedure-sda">Procédure auprès du SDA</a></li><li><a href="#protection-sociale">Protection des droits sociaux</a></li><li><a href="#remuneration">Schéma de rémunération progressive</a></li></ol></li>
+                            <li><a href="#arizona">Alignement avec les réformes Arizona</a><ol><li><a href="#objectifs">Objectifs gouvernementaux</a></li><li><a href="#reforme-chomage">Réforme du chômage</a></li><li><a href="#convergence">Convergence stratégique</a></li><li><a href="#risques">Risques identifiés</a></li></ol></li>
+                            <li><a href="#statut-bim">Le statut BIM et l'intervention majorée</a></li>
+                            <li><a href="#infrastructure">Infrastructure technique</a><ol><li><a href="#solid">Protocole Solid</a></li><li><a href="#fhir">Standard FHIR</a></li><li><a href="#nyxo">Plateforme NYXO</a></li></ol></li>
+                            <li><a href="#enjeux-sociaux">Enjeux sociaux en Belgique</a></li>
+                            <li><a href="#comparaison">Comparaison Fédéral vs. FWB</a></li>
+                            <li><a href="#limites">Limites et perspectives</a></li>
+                            <li><a href="#voir-aussi">Voir aussi</a></li>
+                            <li><a href="#references">Références</a></li>
+                        </ol>
+                    </div>
+                </nav>
+                <div class="clear"></div>
+
+                <section id="contexte">
+                    <h2>Contexte : Le piège institutionnel belge <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <h3 id="diagnostic">Diagnostic économique</h3>
+                    <p>Le sérieux du modèle ECP s'appuie sur une réalité chiffrée massive : la Belgique compte près de <b>978 000 personnes</b> maintenues dans une inactivité contrainte, réparties entre l'incapacité de longue durée (environ 500 000 personnes), le chômage (environ 500 000 personnes dont 287 000 percevant des allocations complètes) et les bénéficiaires du <a href="#">Revenu d'Intégration Sociale</a> (RIS)<sup class="reference">[6]</sup>.</p>
+                    <p>Cette situation représente une charge annuelle pour l'État estimée entre <b>21 et 24 milliards d'euros</b><sup class="reference">[7]</sup>. Le paradoxe réside dans le fait que le système actuel indemnise l'inactivité mais pénalise financièrement toute tentative de contribution, créant un cycle d'exclusion déshumanisant par la perte du <a href="#">statut BIM</a> et la réduction des allocations.</p>
+                    <p>L'ECP propose de transformer cette dépense passive en investissement. Un projet pilote comme l'Agence de Renseignement Citoyenne (ARC) ne demande que <b>24 000 €</b> pour démontrer qu'une alternative est possible, face à un système qui coûte un million d'euros par heure en inactivité.</p>
+
+                    <h3 id="chiffres">Chiffres clés de la précarité en Belgique</h3>
+                    <div class="table-responsive">
+                        <table class="wikitable">
+                            <caption>Indicateurs de précarité en Belgique (2024-2026)</caption>
+                            <thead><tr><th>Indicateur</th><th>Valeur</th><th>Source</th></tr></thead>
+                            <tbody>
+                                <tr><td>Risque de pauvreté</td><td>18,6 % (2,1 millions de Belges)</td><td>Statbel</td></tr>
+                                <tr><td>Seuil de pauvreté (isolé)</td><td>1 522 € net/mois (2024)</td><td>SPF Économie</td></tr>
+                                <tr><td>Non-recours au RIS</td><td>45 %</td><td>BAPN</td></tr>
+                                <tr><td>Non-recours à la GRAPA</td><td>50 %</td><td>SPP Intégration Sociale</td></tr>
+                                <tr><td>Personnes dépendantes aide alimentaire</td><td>600 000</td><td>Concertation Aide Alimentaire</td></tr>
+                                <tr><td>Vulnérabilité numérique</td><td>40 % (70 % peu qualifiés BXL)</td><td>Fondation Roi Baudouin</td></tr>
+                                <tr><td>Sans-abris (évolution BXL)</td><td>+24,5 % en 2 ans (50 000)</td><td>Bruss'Help</td></tr>
+                                <tr><td>Taux d'emploi Belgique</td><td>72,1 % (2023)</td><td>Eurostat</td></tr>
+                                <tr><td>Taux d'emploi moyen UE</td><td>75,4 %</td><td>Eurostat</td></tr>
+                                <tr><td>Postes vacants</td><td>4,6 % (172 000 emplois)</td><td>ONSS</td></tr>
+                                <tr><td>Dette publique</td><td>105,7 % du PIB (2024)</td><td>BNB</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="principes">
+                    <h2>Principes fondamentaux de l'ECP <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <h3 id="provisionnement">Le provisionnement différé</h3>
+                    <p>Le cœur du dispositif ECP repose sur le <b>provisionnement différé</b><sup class="reference">[8]</sup>. Ce mécanisme innovant prévoit que la valeur générée par l'activité citoyenne (exprimée en points MSI ou crédits de voix) n'est pas versée immédiatement mais bloquée dans un <b>Fonds de Contribution Citoyenne</b>.</p>
+                    <p>Puisque ces sommes ne sont pas « encaissées » par le contributeur, elles ne sont pas considérées comme un revenu immédiat par l'administration sociale, ce qui protège l'intégralité des droits sociaux du participant.</p>
+
+                    <h3 id="fonds">Le Fonds de Contribution Citoyenne</h3>
+                    <p>Le Fonds de Contribution Citoyenne constitue le véhicule juridique permettant la non-perception immédiate des revenus générés. Ce mécanisme garantit que le participant peut <b>conserver 100 % de ses allocations</b> (chômage, indemnités d'incapacité, revenu d'intégration) ainsi que son statut BIM pendant toute sa phase d'engagement.</p>
+                    <div class="highlight-box"><strong>Principe clé :</strong> La valeur créée est mise en réserve et non distribuée, permettant une transition progressive vers l'autonomie financière sans rupture brutale des droits sociaux.</div>
+
+                    <h3 id="autonomie">L'absence de subordination</h3>
+                    <p>Pour éviter une requalification en contrat de travail, l'ECP garantit une liberté totale d'engagement : pas d'horaires imposés, pas de pouvoir de direction ou de sanction. Cette structure s'inscrit dans le cadre légal de la <a href="#">loi sur le volontariat du 3 juillet 2005</a>.</p>
+                    <p>Le ruling fiscal permet de figer une « vérité administrative et contractuelle » confirmant qu'il s'agit d'un instrument nécessaire au projet et non d'une simulation visant à masquer un lien de subordination. La validation du modèle B2B acte la nature commerciale des relations entre le contributeur et l'entité porteuse via des <i>management fees</i>.</p>
+                </section>
+
+                <section id="cadre-juridique">
+                    <h2>Cadre juridique et fiscal <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <h3 id="ruling">Le ruling fiscal : un bouclier juridique</h3>
+                    <p>Le <b>ruling fiscal</b>, ou décision anticipée demandée auprès du <a href="https://www.ruling.be">Service des Décisions Anticipées</a> (SDA), constitue le « bouclier » juridique indispensable pour sécuriser les contributeurs de l'ECP<sup class="reference">[9]</sup>. Cette démarche vise à neutraliser les risques financiers et sociaux liés au « piège institutionnel » belge.</p>
+                    <p>Une décision anticipée peut être définie comme un acte par lequel le SPF Finances détermine comment les lois d'impôts s'appliqueront à une situation ou à une opération bien précise qui n'a pas encore produit d'effets sur le plan fiscal. Ce ruling <b>lie tous les services du SPF Finances</b> et offre une sécurité juridique pour une durée minimale de 5 ans<sup class="reference">[10]</sup>.</p>
+
+                    <h3 id="procedure-sda">Procédure auprès du SDA</h3>
+                    <p>La procédure de ruling fiscal suit plusieurs étapes<sup class="reference">[11]</sup> :</p>
+                    <ol>
+                        <li><b>Prefiling (optionnel) :</b> Phase préparatoire permettant de clarifier les questions, pouvant être menée de manière anonyme</li>
+                        <li><b>Dépôt de la demande :</b> Envoi par écrit au SDA avec description complète des faits, circonstances et objectifs</li>
+                        <li><b>Analyse par le team :</b> Le SDA dispose d'un délai indicatif de 90 jours pour rendre sa décision</li>
+                        <li><b>Validation par le Collège :</b> La décision doit être acceptée par le Collège du SDA (6 membres)</li>
+                        <li><b>Notification :</b> Envoi par recommandé de la décision anticipée au demandeur</li>
+                    </ol>
+                    <div class="claude-addition">Le SDA est un service administratif fédéral autonome composé de 75 collaborateurs, 20 coordinateurs et un Collège de 6 membres. Ses locaux se situent Rue de la Loi 24 à 1000 Bruxelles. Les demandes peuvent être envoyées par courrier postal au Boulevard du Roi Albert II 33 – boîte 026, 1030 Bruxelles, ou par email à dvbsda@minfin.fed.be.<span class="signature-badge claude">Claude</span></div>
+
+                    <h3 id="protection-sociale">Protection des droits sociaux</h3>
+                    <div class="table-responsive">
+                        <table class="wikitable">
+                            <caption>Protections garanties par le ruling fiscal</caption>
+                            <thead><tr><th>Type de protection</th><th>Mécanisme</th><th>Bénéfice pour le contributeur</th></tr></thead>
+                            <tbody>
+                                <tr><td>Allocations de chômage</td><td>Non-perception immédiate</td><td>Conservation à 100 %</td></tr>
+                                <tr><td>Indemnités d'incapacité</td><td>Provisionnement différé</td><td>Conservation à 100 %</td></tr>
+                                <tr><td>Revenu d'Intégration Sociale</td><td>Fonds de Contribution Citoyenne</td><td>Conservation à 100 %</td></tr>
+                                <tr><td>Statut BIM</td><td>Absence de revenus immédiats</td><td>Maintien intégral</td></tr>
+                                <tr><td>Requalification salariale</td><td>Preuve d'autonomie B2B</td><td>Protection juridique</td></tr>
+                                <tr><td>Abus fiscal (art. 344 CIR 92)</td><td>Validation SDA</td><td>Garantie contre redressements</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 id="remuneration">Schéma de rémunération progressive</h3>
+                    <p>Le ruling permet de valider à l'avance une stratégie de sortie de la précarité via une <b>rémunération progressive</b> combinant trois piliers :</p>
+                    <ol>
+                        <li><b>Un salaire modeste :</b> Maintenu sous les plafonds autorisés pour ne pas rompre brutalement les droits sociaux</li>
+                        <li><b>Des dividendes (Régime VVPRbis) :</b> Utilisation du taux de précompte réduit de <b>15 %</b> après une période de mise en réserve de 3 ans</li>
+                        <li><b>Des droits d'auteur :</b> Valorisation des outils pédagogiques ou méthodologies créés par le contributeur</li>
+                    </ol>
+                </section>
+Convergence stratégique</h3>
+                    <div class="table-responsive">
+                        <table class="wikitable">
+                            <caption>Alignement ECP / Objectifs gouvernementaux</caption>
+                            <thead><tr><th>Objectif gouvernemental</th><th>Contribution de l'ECP</th></tr></thead>
+                            <tbody>
+                                <tr><td>Valoriser le travail</td><td>Voie directe pour la rémunération de l'effort individuel, encourageant l'initiative</td></tr>
+                                <tr><td>Inciter à la mise à l'emploi</td><td>Passerelle flexible vers une activité économique, contribuant à combler les 172 000 postes vacants</td></tr>
+                                <tr><td>Concilier vie privée/professionnelle</td><td>Incarne la « meilleure flexibilité du temps de travail » prônée par l'accord</td></tr>
+                                <tr><td>Responsabiliser les parcours</td><td>Promeut l'autonomie et la constitution de revenus propres</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 id="risques">Risques identifiés</h3>
+                    <h4>Risque social : la précarisation par la réforme</h4>
+                    <p>En l'absence d'un statut clair pour l'ECP, l'activité des contributeurs pourrait ne pas être reconnue comme une démarche de recherche active par les services régionaux de l'emploi (Forem, VDAB, Actiris, ADG). Selon les estimations, entre <b>130 000 et 184 000 personnes</b> risquent de basculer vers le RIS géré par les CPAS<sup class="reference">[15]</sup>.</p>
+                    <h4>Risque fiscal : l'incertitude comme frein</h4>
+                    <p>Sans cadre fiscal dédié, les revenus générés par l'ECP naviguent dans un flou juridique total. Ils pourraient être qualifiés de revenus professionnels (taux progressifs jusqu'à 50 %), de revenus divers (taxés à 33 %), ou tomber dans une autre catégorie.</p>
+                </section>
+
+                <section id="statut-bim">
+                    <h2>Le statut BIM et l'intervention majorée <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <p>Le <b>statut BIM</b> (Bénéficiaire de l'Intervention Majorée) est un statut social accordé par les mutualités permettant de bénéficier d'un remboursement plus important des soins de santé. Sa préservation est centrale dans le modèle ECP<sup class="reference">[16]</sup>.</p>
+                    <h3>Conditions d'obtention</h3>
+                    <p>Pour bénéficier du statut BIM, le revenu brut imposable du ménage doit être inférieur à certains plafonds (au 1er janvier 2026)<sup class="reference">[17]</sup> :</p>
+                    <ul>
+                        <li><b>Personne isolée :</b> 28 054,93 € brut annuel maximum</li>
+                        <li><b>Majoration par personne supplémentaire :</b> + 5 193,74 €</li>
+                    </ul>
+                    <p><b>Depuis le 1er octobre 2024</b>, le statut BIM est attribué <b>automatiquement</b> aux personnes isolées au chômage et/ou en incapacité depuis plus de 3 mois, ainsi qu'aux personnes reconnues comme invalides<sup class="reference">[18]</sup>.</p>
+                    <h3>Avantages du statut BIM</h3>
+                    <ul>
+                        <li>Meilleur remboursement des soins de santé et médicaments</li>
+                        <li>Tiers payant social obligatoire (pas d'avance de frais chez le médecin)</li>
+                        <li>Maximum à facturer (MAF) social adapté</li>
+                        <li>Réductions sur les transports en commun (SNCB : -50 %, STIB, TEC, De Lijn)</li>
+                        <li>Accès au Fonds Social Mazout</li>
+                        <li>Allocations familiales majorées</li>
+                    </ul>
+                    <div class="ambox ambox-content"><div class="ambox-image">ℹ️</div><div class="ambox-text"><strong>Important :</strong> Depuis le 1er juillet 2023, les bénéficiaires du statut BIM n'ont plus droit au tarif social sur l'énergie (gaz et électricité).</div></div>
+                </section>
+
+                <section id="infrastructure">
+                    <h2>Infrastructure technique <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <h3 id="solid">Protocole Solid et souveraineté des données</h3>
+                    <p>La viabilité du modèle ECP repose sur une « stack » technologique privilégiant l'interopérabilité et la protection des données. Le <a href="#">protocole Solid</a> (Social Linked Data), développé par <a href="#">Tim Berners-Lee</a> (inventeur du World Wide Web) au <a href="#">MIT</a> depuis 2015, permet aux citoyens de posséder leur propre <b>Pod</b> (Personal Online Data Store)<sup class="reference">[19]</sup>.</p>
+                    <p>Solid « vise à changer radicalement le mode de fonctionnement actuel des applications Web, pour aboutir à une véritable propriété des données et à une confidentialité améliorée ». L'utilisateur stocke ses données personnelles dans des pods hébergés où il le souhaite et contrôle l'accès : quelles données partager, avec qui, et la possibilité de révoquer l'accès à tout moment<sup class="reference">[20]</sup>.</p>
+                    <div class="claude-addition">En 2018, Tim Berners-Lee a fondé la société <b>Inrupt</b> pour commercialiser Solid. La Flandre a été pionnière : <a href="#">Jan Jambon</a> a annoncé que tous les citoyens flamands disposeront de leur propre Pod. Le NHS britannique et la BBC utilisent déjà cette technologie. Inrupt a également travaillé avec des ONG pour aider les réfugiés à partager leurs données médicales de manière sécurisée.<span class="signature-badge claude">Claude</span></div>
+
+                    <h3 id="fhir">Standard FHIR et interopérabilité</h3>
+                    <p>Le standard <a href="#">FHIR</a> (Fast Healthcare Interoperability Resources), développé par HL7 et traditionnellement utilisé en santé, est ici appliqué pour créer un « pont sémantique » entre les services sociaux (<a href="#">CPAS</a>) et sanitaires, facilitant une prise en charge coordonnée<sup class="reference">[21]</sup>.</p>
+
+                    <h3 id="nyxo">Plateforme NYXO</h3>
+                    <p>La plateforme <b>NYXO</b> (nyxo.brussels) utilise le <a href="#">Git Scraping</a> pour archiver de manière inaltérable les données publiques (pollution, budgets), créant une « vérité administrative » partagée entre citoyens et autorités<sup class="reference">[22]</sup>.</p>
+                    <p>La réussite du déploiement à grande échelle dépend d'un partenariat formel avec des entités régionales de gestion de données comme <b>Paradigm</b> à Bruxelles ou <b>Athumi</b> en Flandre, pour supporter l'infrastructure à l'échelle d'un million d'utilisateurs.</p>
+                </section>
+
+                <section id="enjeux-sociaux">
+                    <h2>Enjeux sociaux en Belgique <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <div class="table-responsive">
+                        <table class="wikitable">
+                            <caption>Tableau synthétique des enjeux sociaux en Belgique (2024-2026)</caption>
+                            <thead><tr><th>Thématique</th><th>Mesure ou Problématique</th><th>Chiffres clés</th></tr></thead>
+                            <tbody>
+                                <tr><td>Budgétaire / Économie</td><td>Assainissement des finances publiques (Plan Arizona)</td><td>Déficit sous 3 % d'ici 2030 ; Dette 105,7 % PIB ; Effort 23 Mds € d'ici 2029</td></tr>
+                                <tr><td>Emploi / Chômage</td><td>Limitation allocations à 24 mois et activation</td><td>180 000 personnes concernées ; Objectif 80 % taux d'emploi</td></tr>
+                                <tr><td>Fiscalité</td><td>Réforme fiscale, taxe sur les plus-values</td><td>Taxe 10 % sur plus-values ; Exonération 10 000 € ; Exit tax 30 %</td></tr>
+                                <tr><td>Santé</td><td>Réforme financement hospitalier et nomenclature</td><td>Budget santé : 198 Mds € en 2029 ; Refinancement 12 Mds €</td></tr>
+                                <tr><td>Pauvreté / Social</td><td>Lutte contre le non-recours aux droits</td><td>45 % non-recours RIS ; 50 % non-recours GRAPA ; 300 000 non-recours BIM</td></tr>
+                                <tr><td>Énergie / Nucléaire</td><td>Sécurité d'approvisionnement et relance nucléaire</td><td>Objectif 4 GW nucléaires ; Prolongation Doel 4 et Tihange 3 pour 10 ans</td></tr>
+                                <tr><td>Logement / Énergie</td><td>Crise du logement abordable et précarité énergétique</td><td>1 Belge sur 4 déprimé par son logement ; Loyers > 50 % du revenu pour précaires</td></tr>
+                                <tr><td>Genre / Social</td><td>Statut de cohabitant et individualisation des droits</td><td>Réduction allocations jusqu'à 40 % ; 70 % des femmes pauvres impactées</td></tr>
+                                <tr><td>Numérique / Inclusion</td><td>Fracture numérique et dématérialisation des services</td><td>40 % des Belges en vulnérabilité numérique ; 25 % bas revenus sur smartphone seul</td></tr>
+                                <tr><td>Aide alimentaire</td><td>Saturation des organisations et coupes budgétaires</td><td>600 000 personnes dépendantes ; Budget réduit de 40 M€ à 15 M€</td></tr>
+                                <tr><td>Économie Sociale</td><td>Économie Contributive Provisionnée (ECP)</td><td>Coût inactivité : 21-24 Mds € ; 978 000 inactifs ; Budget pilote : 24 000 €</td></tr>
+                                <tr><td>Sans-abrisme</td><td>Suppression subventions Plan Hiver</td><td>50 000 sans-abris en danger ; +24,5 % sans-abrisme à Bruxelles en 2 ans</td></tr>
+                                <tr><td>Budget / Défense</td><td>Hausse budget militaire</td><td>10 Mds € supplémentaires pour la défense ; Objectif 2 % PIB en 2029</td></tr>
+                                <tr><td>Pensions</td><td>Réforme des pensions et malus</td><td>Âge légal à 67 ans ; Malus pension au 1er janvier 2027 ; Pension complémentaire obligatoire 2035</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="comparaison">
+                    <h2>Comparaison Fédéral vs. Fédération Wallonie-Bruxelles <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <div class="table-responsive">
+                        <table class="wikitable">
+                            <caption>Divergences fondamentales Fédéral vs. FWB</caption>
+                            <thead><tr><th>Aspect</th><th>Gouvernement Fédéral (Arizona)</th><th>Fédération Wallonie-Bruxelles</th></tr></thead>
+                            <tbody>
+                                <tr><td><b>Posture</b></td><td>Réformateur structurel</td><td>Gestionnaire de compétences</td></tr>
+                                <tr><td><b>Ambition budgétaire</b></td><td>Refonte systémique de long terme (plusieurs législatures)</td><td>Gestion de crise ciblée : stabiliser le déficit à 1,2 Md € d'ici 2029</td></tr>
+                                <tr><td><b>Levier principal</b></td><td>Réforme fiscale structurelle, élargissement de la base imposable</td><td>Économies ciblées, non-indexation des subventions</td></tr>
+                                <tr><td><b>Marché du travail</b></td><td>Réformes macroéconomiques nationales (chômage, pensions)</td><td>Optimisation interne (charge enseignants : 20→22 périodes)</td></tr>
+                                <tr><td><b>Éducation</b></td><td>Mesure-cadre : abaissement obligation scolaire à 3 ans</td><td>Réformes structurelles : minerval progressif à 4 paliers</td></tr>
+                                <tr><td><b>Santé</b></td><td>Réforme du financement hospitalier, nomenclature</td><td>Gestion budgétaire des compétences sociales connexes</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="limites">
+                    <h2>Limites et perspectives <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <p>Bien que les fondements de l'ECP soient documentés, plusieurs éléments restent à finaliser<sup class="reference">[23]</sup> :</p>
+                    <ul>
+                        <li>Les détails financiers spécifiques de la plateforme NYXO et l'intégration technique exacte des jetons contributifs aux systèmes de paiement belges</li>
+                        <li>La réussite dépend d'un partenariat formel avec des entités régionales de gestion de données (Paradigm, Athumi)</li>
+                        <li>La construction d'une coalition institutionnelle (mutuelles, syndicats, services publics) pour transformer ces preuves de concept en cadre légal pérenne</li>
+                        <li>Le « risque politique » lié à l'incapacité potentielle du gouvernement à faire adopter le budget pluriannuel 2026-2029</li>
+                    </ul>
+                    <p>En conclusion, le modèle ECP est <b>sérieux</b> car il s'attaque à une faille systémique majeure de l'État-providence avec des outils juridiques (ruling, loi sur le volontariat) et techniques (Solid, FHIR) de pointe. Sa viabilité dépendra de la capacité à construire une coalition institutionnelle pour transformer ces preuves de concept en cadre légal pérenne.</p>
+                    <blockquote>« L'Économie Contributive Provisionnée n'est pas une abstraction théorique, mais une réponse concrète aux aspirations de flexibilité et d'autonomie de nos concitoyens, en parfait alignement stratégique avec les ambitions de la coalition Arizona. »<cite>— Plaidoyer pour un Ruling Fiscal, 2025</cite></blockquote>
+                </section>
+
+                <section id="voir-aussi">
+                    <h2>Voir aussi <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <h3>Articles connexes</h3>
+                    <ul>
+                        <li><a href="#">Économie sociale et solidaire</a></li>
+                        <li><a href="#">Gouvernement De Wever (Arizona)</a></li>
+                        <li><a href="#">Revenu d'Intégration Sociale</a></li>
+                        <li><a href="#">Statut BIM (Bénéficiaire de l'Intervention Majorée)</a></li>
+                        <li><a href="https://www.ruling.be">Service des Décisions Anticipées</a></li>
+                        <li><a href="#">Protocole Solid</a> · <a href="#">Tim Berners-Lee</a> · <a href="#">Inrupt</a></li>
+                    </ul>
+                    <h3>Liens externes</h3>
+                    <ul>
+                        <li><a href="https://www.ruling.be" rel="external">Site officiel du Service des Décisions Anticipées (SDA)</a></li>
+                        <li><a href="https://finances.belgium.be" rel="external">SPF Finances</a></li>
+                        <li><a href="https://www.solidaris-wallonie.be" rel="external">Solidaris Wallonie</a></li>
+                        <li><a href="https://www.mc.be" rel="external">Mutualité chrétienne</a></li>
+                        <li><a href="https://www.inrupt.com/solid" rel="external">Projet Solid (Inrupt)</a></li>
+                    </ul>
+                </section>
+
+                <section id="references">
+                    <h2>Références <span class="mw-editsection">[<a href="#">modifier</a>]</span></h2>
+                    <div class="references reflist-columns">
+                        <ol>
+                            <li>Proposition de Monnaie Contributive Citoyenne (MCC), CCPLC.eu / nyxo.brussels</li>
+                            <li>Analyse des Enjeux Sociaux et des Politiques de Précarité en Belgique</li>
+                            <li><a href="https://aide-sociale.be/accord-arizona/">aide-sociale.be</a> — Les grandes lignes de l'accord Arizona en Belgique</li>
+                            <li>Déclaration du Formateur 2025-2029</li>
+                            <li><a href="https://www.ruling.be">www.ruling.be</a> — Service des Décisions Anticipées</li>
+                            <li><a href="https://www.lacsc.be">CSC</a> — Chômage et maladie face au gouvernement Arizona</li>
+                            <li>Analyse prospective de la stratégie budgétaire de la coalition Arizona (2025-2029)</li>
+                            <li>Sécurisation et Ruling Fiscal de l'ECP, section 1</li>
+                            <li>Plaidoyer pour un Ruling Fiscal, section 4</li>
+                            <li><a href="https://www.belgium.be/fr/impots/impot_sur_les_revenus/societes/ruling">Belgium.be</a> — Décisions anticipées</li>
+                            <li><a href="https://www.ruling.be/fr/faq">SDA FAQ</a> — Procédure de demande</li>
+                            <li>Analyse Stratégique de l'Accord de Gouvernement Arizona</li>
+                            <li><a href="https://www.solidaris-wallonie.be/faq/reforme-de-la-reglementation-du-chomage-au-01-01-2026">Solidaris</a> — Réforme du chômage</li>
+                            <li><a href="https://www.ucm.be/actualites/accord-du-gouvernement-federal-les-mesures-prevues-par-larizona-impactant-les-employeurs">UCM</a> — Mesures Arizona</li>
+                            <li><a href="https://ijbxl.be/droit/reforme-arizona-quest-ce-qui-change-pour-le-chomage-et-les-allocations-dinsertion/">Infor Jeunes BXL</a> — Réforme Arizona</li>
+                            <li><a href="https://www.mc.be/fr/avantages-remboursements/statut-bim-intervention-majoree">Mutualité chrétienne</a> — Statut BIM</li>
+                            <li><a href="https://www.partenamut.be/fr/faq/bim">Partenamut</a> — Qu'est-ce qu'un BIM ?</li>
+                            <li><a href="https://fgtb.be/actualite/nouveautes-pour-le-statut-bim">FGTB</a> — Nouveautés BIM</li>
+                            <li><a href="https://fr.wikipedia.org/wiki/Solid_(projet_de_web_d%C3%A9centralis%C3%A9)">Wikipédia</a> — Solid</li>
+                            <li><a href="https://www.inrupt.com/solid">Inrupt</a> — About Solid Project</li>
+                            <li>L'Économie Contributive Provisionnée, Standard FHIR</li>
+                            <li>Ibid., Git Scraping et plateforme NYXO</li>
+                            <li>Ibid., Limites et points d'attention</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <nav class="navbox">
+                    <div class="navbox-title"><a href="#">Politiques sociales en Belgique</a></div>
+                    <div class="navbox-row"><div class="navbox-group">Gouvernements</div><div class="navbox-list"><a href="#">Gouvernement Arizona (2025-2029)</a> · <a href="#">Gouvernement De Croo</a> · <a href="#">FWB</a></div></div>
+                    <div class="navbox-row"><div class="navbox-group">Sécurité sociale</div><div class="navbox-list"><a href="#">INAMI</a> · <a href="#">ONEM</a> · <a href="#">CPAS</a> · <a href="#">Mutualités</a> · <a href="#">Statut BIM</a> · <a href="#">RIS</a> · <a href="#">GRAPA</a></div></div>
+                    <div class="navbox-row"><div class="navbox-group">Fiscalité</div><div class="navbox-list"><a href="#">SPF Finances</a> · <a href="https://www.ruling.be">SDA</a> · <a href="#">Ruling fiscal</a> · <a href="#">VVPRbis</a> · <a href="#">Exit Tax</a></div></div>
+                    <div class="navbox-row"><div class="navbox-group">Acteurs sociaux</div><div class="navbox-list"><a href="#">BAPN</a> · <a href="#">RWLP</a> · <a href="#">Syndicats</a> · <a href="#">Fondation Roi Baudouin</a></div></div>
+                    <div class="navbox-row"><div class="navbox-group">Technologies</div><div class="navbox-list"><a href="#">Solid (Inrupt)</a> · <a href="#">FHIR</a> · <a href="#">Pods</a> · <a href="#">Tim Berners-Lee</a></div></div>
+                </nav>
+
+                <div class="catlinks">
+                    <span class="catlinks-title">Catégories :</span>
+                    <a href="#">Économie sociale</a> · <a href="#">Politique sociale en Belgique</a> · <a href="#">Sécurité sociale en Belgique</a> · <a href="#">Fiscalité en Belgique</a> · <a href="#">Gouvernement De Wever</a> · <a href="#">Lutte contre la pauvreté</a> · <a href="#">Innovation sociale</a> · <a href="#">Web décentralisé</a>
+                </div>
+
+                <div class="credits-box">
+                    <p class="credits-title">Crédits de cette page :</p>
+                    <p><span class="signature-badge">CCPLC.eu</span> <span class="signature-badge">nyxo.brussels</span> — Contenu documentaire source et modèle ECP</p>
+                    <p><span class="signature-badge claude">Claude</span> — Ajouts contextuels issus de recherches web (signalés en exergue) et mise en forme encyclopédique</p>
+                    <p class="credits-note">Dernière mise à jour : 17 janvier 2026 — Données issues des documents fournis, enrichies par des sources web vérifiées, sans hallucination</p>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <footer class="wiki-footer">
+        <p>La dernière modification de cette page a été faite le 17 janvier 2026 à 12:00.</p>
+        <p>Droit d'auteur : les textes sont disponibles sous <a href="#">licence Creative Commons attribution, partage dans les mêmes conditions</a>.</p>
+        <p><a href="#">Politique de confidentialité</a> · <a href="#">À propos de Wikipédia</a> · <a href="#">Avertissements</a> · <a href="#">Contact</a></p>
+        <div class="footer-icons">
+            <svg class="footer-icon" viewBox="0 0 88 31" style="height:31px"><rect fill="#fff" width="88" height="31" rx="2"/><text x="44" y="18" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#333">Wikimedia</text></svg>
+            <svg class="footer-icon" viewBox="0 0 88 31" style="height:31px"><rect fill="#fff" width="88" height="31" rx="2"/><text x="44" y="18" text-anchor="middle" font-size="8" font-family="sans-serif" fill="#333">MediaWiki</text></svg>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            
+            function toggleSidebar() {
+                const isActive = sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+                menuToggle.setAttribute('aria-expanded', isActive);
+                document.body.style.overflow = isActive ? 'hidden' : '';
+            }
+            
+            if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
+            if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
+            
+            const tocToggle = document.getElementById('toc-toggle');
+            const tocContent = document.getElementById('toc-content');
+            if (tocToggle && tocContent) {
+                tocToggle.addEventListener('click', function() {
+                    const isCollapsed = tocContent.classList.toggle('collapsed');
+                    tocToggle.textContent = isCollapsed ? '[afficher]' : '[masquer]';
+                });
+            }
+            
+            document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#' && href.length > 1) {
+                        const target = document.querySelector(href);
+                        if (target) {
+                            e.preventDefault();
+                            if (sidebar && sidebar.classList.contains('active')) toggleSidebar();
+                            const headerHeight = document.querySelector('.wiki-header').offsetHeight;
+                            window.scrollTo({
+                                top: target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20,
+                                behavior: 'smooth'
+                            });
+                            history.pushState(null, null, href);
+                        }
+                    }
+                });
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar && sidebar.classList.contains('active')) toggleSidebar();
+            });
+            
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 900 && sidebar && sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
