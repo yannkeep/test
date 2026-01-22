@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>BROL 3.0 – Dashboard Ultime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #000;
+      --green: #00ff88;
+      --green-dim: #00cc6a;
+      --lilas: #bf7fff;
+      --lilas-dim: #9966cc;
+      --cyan: #00ffff;
+      --orange: #ff6600;
+      --red: #ff3366;
+      --text: #ffffff;
+      --muted: #888;
+      --glass: rgba(0, 10, 5, 0.6);
+      --glass-border: rgba(0, 255, 136, 0.15);
+      --font: 'Chakra Petch', sans-serif;
+      --mono: 'Fira Code', monospace;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      background: var(--void);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 2;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--green), var(--lilas));
+      padding: 3px;
+      animation: logo-pulse 3s ease-in-out infinite;
+      box-shadow: 0 0 30px rgba(0,255,136,0.5), 0 0 60px rgba(191,127,255,0.3);
+    }
+
+    @keyframes logo-pulse {
+      0%, 100% { box-shadow: 0 0 30px rgba(0,255,136,0.5), 0 0 60px rgba(191,127,255,0.3); }
+      50% { box-shadow: 0 0 50px rgba(0,255,136,0.8), 0 0 100px rgba(191,127,255,0.5); }
+    }
+
+    .logo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 9px;
+      background: var(--void);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--green);
+      text-shadow: 0 0 20px var(--green);
+    }
+
+    .title-main {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      text-shadow: 0 0 30px var(--green);
+    }
+
+    .title-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+    }
+
+    .header-right {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--lilas);
+      text-shadow: 0 0 10px var(--lilas);
+    }
+
+    main {
+      flex: 1;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 320px 1fr 280px;
+      gap: 16px;
+    }
+
+    @media (max-width: 1200px) { main { grid-template-columns: 280px 1fr; } .side-panel { display: none; } }
+    @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+
+    .panel, .viewer-panel, .side-panel {
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before, .viewer-panel::before, .side-panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), var(--lilas), transparent);
+    }
+
+    .panel h2, .side-panel h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--green);
+      text-shadow: 0 0 15px var(--green);
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    input[type="search"], select {
+      flex: 1;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    input[type="search"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 20px rgba(0,255,136,0.3), inset 0 0 20px rgba(0,255,136,0.05);
+    }
+
+    input::placeholder { color: var(--muted); }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(0,255,136,0.1);
+      border: 1px solid var(--green);
+      color: var(--green);
+      text-shadow: 0 0 10px var(--green);
+    }
+
+    .modules-scroll {
+      max-height: calc(100vh - 300px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .modules-scroll::-webkit-scrollbar { width: 4px; }
+    .modules-scroll::-webkit-scrollbar-track { background: transparent; }
+    .modules-scroll::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
+
+    .group-title {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--lilas);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin: 16px 0 8px;
+      padding-left: 8px;
+      border-left: 2px solid var(--lilas);
+      text-shadow: 0 0 10px var(--lilas);
+    }
+
+    .module-item {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .module-item:hover {
+      background: rgba(0,255,136,0.05);
+      border-color: rgba(0,255,136,0.3);
+      transform: translateX(6px);
+      box-shadow: 0 0 30px rgba(0,255,136,0.1);
+    }
+
+    .module-item.active {
+      background: rgba(0,255,136,0.1);
+      border-color: var(--green);
+      box-shadow: 0 0 30px rgba(0,255,136,0.3), inset 0 0 30px rgba(0,255,136,0.05);
+    }
+
+    .module-title { font-size: 0.85rem; font-weight: 600; }
+    .module-sub { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+    .module-file { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); }
+
+    .module-kind {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      padding: 3px 8px;
+      border-radius: 12px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .kind-base { border-color: var(--green); color: var(--green); }
+    .kind-brol { border-color: var(--cyan); color: var(--cyan); }
+    .kind-univ { border-color: var(--lilas); color: var(--lilas); }
+    .kind-intra { border-color: var(--orange); color: var(--orange); }
+    .kind-ia { border-color: var(--red); color: var(--red); }
+    .kind-meta { border-color: var(--muted); color: var(--muted); }
+
+    .viewer-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .viewer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .viewer-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .viewer-subtitle {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .viewer-badges {
+      display: flex;
+      gap: 8px;
+    }
+
+    .viewer-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .viewer-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 15px var(--green);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .viewer-body {
+      flex: 1;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 400px;
+    }
+
+    .viewer-iframe-wrapper {
+      flex: 1;
+    }
+
+    #viewerFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+    }
+
+    .viewer-info {
+      padding: 12px 16px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .viewer-file {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .btn-open {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--green);
+      background: transparent;
+      color: var(--green);
+      text-decoration: none;
+      transition: all 0.3s;
+      text-shadow: 0 0 10px var(--green);
+    }
+
+    .btn-open:hover {
+      background: var(--green);
+      color: var(--void);
+      box-shadow: 0 0 30px var(--green);
+      text-shadow: none;
+    }
+
+    .embed-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .embed-btn {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0,0,0,0.4);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .embed-btn:hover {
+      border-color: var(--lilas);
+      background: rgba(191,127,255,0.1);
+      box-shadow: 0 0 20px rgba(191,127,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    .embed-btn .icon { font-size: 1rem; }
+
+    footer {
+      padding: 12px 20px;
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--green);
+      text-decoration: none;
+      text-shadow: 0 0 10px var(--green);
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    .status {
+      font-family: var(--mono);
+      color: var(--green);
+      text-shadow: 0 0 10px var(--green);
+      animation: status-blink 2s ease-in-out infinite;
+    }
+
+    @keyframes status-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="content-wrapper">
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <div class="logo-inner">#!BiM</div>
+      </div>
+      <div>
+        <div class="title-main">BROL 3.0</div>
+        <div class="title-sub">Bénéficiaires d'Intelligence Mutante</div>
+      </div>
+    </div>
+    <div class="header-right">[ NIVEAU 0 ]</div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>▸ Modules</h2>
+      <div class="search-row">
+        <input type="search" id="moduleSearch" placeholder="Rechercher...">
+        <select id="moduleCategory">
+          <option value="all">Tout</option>
+          <option value="base">Base</option>
+          <option value="brol">BROL</option>
+          <option value="univ">Univers</option>
+          <option value="intra">Liens</option>
+          <option value="ia">IA</option>
+          <option value="meta">Tests</option>
+        </select>
+      </div>
+      <span class="badge" id="modulesCount">15 modules</span>
+      <div class="modules-scroll" id="modulesContainer"></div>
+    </section>
+
+    <section class="viewer-panel">
+      <div class="viewer-header">
+        <div>
+          <div class="viewer-title" id="viewerTitle">—</div>
+          <div class="viewer-subtitle" id="viewerSubtitle">Sélectionnez un module</div>
+        </div>
+        <div class="viewer-badges">
+          <span class="viewer-badge"><span class="viewer-dot"></span><span id="viewerCategoryBadge">—</span></span>
+          <span class="viewer-badge" id="viewerKindBadge">—</span>
+        </div>
+      </div>
+      <div class="viewer-body">
+        <div class="viewer-iframe-wrapper">
+          <iframe id="viewerFrame" src="about:blank"></iframe>
+        </div>
+        <div class="viewer-info">
+          <div class="viewer-file" id="viewerFile">—</div>
+          <a href="#" id="viewerOpenNew" class="btn-open" target="_blank">↗ OUVRIR</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="side-panel">
+      <h2>▸ Embeds</h2>
+      <div class="embed-row">
+        <button class="embed-btn" data-embed="penguin"><span class="icon">🎴</span>Tarot</button>
+        <button class="embed-btn" data-embed="youtube"><span class="icon">▶️</span>YouTube</button>
+        <button class="embed-btn" data-embed="youtubeu"><span class="icon">▶️</span>Intro</button>
+        <button class="embed-btn" data-embed="intranet"><span class="icon">🔗</span>Intranet</button>
+        <button class="embed-btn" data-embed="spotify"><span class="icon">🎵</span>Spotify</button>
+        <button class="embed-btn" data-embed="pdf-plaidoyer-2"><span class="icon">📄</span>PDF ULB</button>
+        <button class="embed-btn" data-embed="pdf-veille-2"><span class="icon">🚀</span>Hyperspace</button>
+        <button class="embed-btn" data-embed="speaker"><span class="icon">📡</span>Network</button>
+        <button class="embed-btn" data-embed="king"><span class="icon">🐧</span>Tux</button>
+        <button class="embed-btn" data-embed="dices"><span class="icon">🎲</span>Dés</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>BROL 3.0 • <a href="https://dl.ouaisfi.eu/usba/1/index.html" target="_blank">Niveau suivant →</a></span>
+    <span class="status">[ SYSTEM ONLINE ]</span>
+  </footer>
+</div>
+
+<script>
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let mouse = { x: null, y: null };
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 1;
+    this.vy = (Math.random() - 0.5) * 1;
+    this.size = Math.random() * 4 + 2;
+    this.color = Math.random() > 0.5 ? '#00ff88' : '#bf7fff';
+    this.alpha = Math.random() * 0.5 + 0.5;
+  }
+  
+  update() {
+    if (mouse.x !== null) {
+      const dx = mouse.x - this.x;
+      const dy = mouse.y - this.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 200) {
+        const force = (200 - dist) / 200;
+        this.vx -= (dx / dist) * force * 2;
+        this.vy -= (dy / dist) * force * 2;
+      }
+    }
+    
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vx *= 0.98;
+    this.vy *= 0.98;
+    
+    if (this.x < -50) this.x = canvas.width + 50;
+    if (this.x > canvas.width + 50) this.x = -50;
+    if (this.y < -50) this.y = canvas.height + 50;
+    if (this.y > canvas.height + 50) this.y = -50;
+  }
+  
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = this.color;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+const particleCount = Math.min(80, Math.floor((window.innerWidth * window.innerHeight) / 20000));
+for (let i = 0; i < particleCount; i++) {
+  particles.push(new Particle());
+}
+
+function drawConnections() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      
+      if (dist < 180) {
+        ctx.save();
+        ctx.globalAlpha = (1 - dist / 180) * 0.4;
+        ctx.strokeStyle = particles[i].color;
+        ctx.lineWidth = 1;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = particles[i].color;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  drawConnections();
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+const modules = [
+  { id: "site-ultime", title: "LE SITE ULTIME", file: "index.html", category: "base", kind: "niveaux -1→3", description: "Partir de zéro et monter." },
+  { id: "scratchy", title: "Support technique", file: "404.html", category: "base", kind: "au cas où", description: "Éteindre et rallumer." },
+  { id: "branques2", title: "Politique des Cookies", file: "browniz-politik.html", category: "base", kind: "débutant+", description: "Si tu passes pas ce test..." },
+  { id: "pas-a-pas", title: "Boussole de valeurs", file: "valeurs.html", category: "base", kind: "boussole", description: "Faire le point." },
+  { id: "hub-illustre", title: "Hub illustré", file: "portail.html", category: "brol", kind: "codigic", description: "Autre chose." },
+  { id: "rolex", title: "Lien suspect", file: "777.html", category: "brol", kind: "#piraté", description: "Encore autre chose." },
+  { id: "amazing", title: "Lien HYPER suspect", file: "amazing.html", category: "brol", kind: "#vendu", description: "TOUT autre chose." },
+  { id: "stic-anarchie", title: "STIC de l'anarchie", file: "stic-anarchie.html", category: "univ", kind: "jeu", description: "Jouer avec le capitalisme." },
+  { id: "detective", title: "Agence détective", file: "veilleuxses.html", category: "intra", kind: "métier", description: "Vitrine + intranet." },
+  { id: "extranet", title: "Extronet lambda", file: "xyno.html", category: "intra", kind: "extronet", description: "Modèle extranet." },
+  { id: "kalifox", title: "Extronet bêta", file: "kalifox.html", category: "intra", kind: "outil", description: "Parce que bon." },
+  { id: "gork", title: "GORK", file: "minitel.html", category: "ia", kind: "graph", description: "Il voudrait être débranché." },
+  { id: "gorki", title: "GORKI", file: "terminal-ia.html", category: "ia", kind: "grave", description: "Lui aussi." },
+  { id: "test-1", title: "À réussir d'urgence", file: "test-1.html", category: "meta", kind: "bisous", description: "C'est ça ou rien." },
+  { id: "mon-projet", title: "Projet secret", file: "veille-1160.html", category: "univ", kind: "perso", description: "Secret." }
+];
+
+const embeds = {
+  penguin: { label: "Tarot", url: "https://ouaisfieu.appsmith.com/app/tarotboulotproto-v3-1/tarotsimpletirage-68555a12a22d7c48aa0d27ad", description: "Tarot" },
+  intranet: { label: "Intranet", url: "https://boot-a-rat.vercel.app/", description: "Intranet" },
+  youtube: { label: "YouTube", url: "https://www.youtube.com/embed/dQw4w9WgXcQ", description: "YouTube" },
+  youtubeu: { label: "Intro", url: "https://www.youtube.com/embed/WXOkteJyCro", description: "Intro" },
+  spotify: { label: "Spotify", url: "https://open.spotify.com/embed/playlist/7eTeIkIqbfmyXnC6Ilo4d2", description: "Playlist" },
+  "pdf-plaidoyer-2": { label: "PDF ULB", url: "https://www.ulb-cooperation.org/wp-content/uploads/2020/08/manuel-plaidoyer-2.pdf", description: "PDF" },
+  "pdf-veille-2": { label: "Hyperspace", url: "https://stack-lake-eight.vercel.app/", description: "Hyperspace" },
+  speaker: { label: "Network", url: "https://ouaisfieu.github.io/offre/", description: "Network" },
+  king: { label: "Tux", url: "https://dl.ouaisfi.eu/", description: "Tux" },
+  dices: { label: "Dés", url: "https://tirage-one.vercel.app/", description: "Dés" }
+};
+
+const moduleSearch = document.getElementById("moduleSearch");
+const moduleCategory = document.getElementById("moduleCategory");
+const modulesContainer = document.getElementById("modulesContainer");
+const modulesCount = document.getElementById("modulesCount");
+const viewerTitle = document.getElementById("viewerTitle");
+const viewerSubtitle = document.getElementById("viewerSubtitle");
+const viewerCategoryBadge = document.getElementById("viewerCategoryBadge");
+const viewerKindBadge = document.getElementById("viewerKindBadge");
+const viewerFile = document.getElementById("viewerFile");
+const viewerFrame = document.getElementById("viewerFrame");
+const viewerOpenNew = document.getElementById("viewerOpenNew");
+
+let filteredModules = [];
+let activeModuleId = null;
+
+const catLabels = { base: "La Base", brol: "BAC À SPAM", univ: "Univers", intra: "Liens", ia: "IA", meta: "Tests" };
+const kindClasses = { base: "kind-base", brol: "kind-brol", univ: "kind-univ", intra: "kind-intra", ia: "kind-ia", meta: "kind-meta" };
+
+function applyFilter() {
+  const q = moduleSearch.value.toLowerCase();
+  const cat = moduleCategory.value;
+  filteredModules = modules.filter(m => {
+    if (cat !== "all" && m.category !== cat) return false;
+    if (!q) return true;
+    return (m.title + m.file + m.description).toLowerCase().includes(q);
+  });
+  render();
+}
+
+function render() {
+  modulesContainer.innerHTML = "";
+  if (!filteredModules.length) {
+    modulesContainer.innerHTML = '<div style="color:var(--muted);padding:16px;">Aucun résultat</div>';
+    modulesCount.textContent = "0";
+    return;
+  }
+  modulesCount.textContent = filteredModules.length + " modules";
+  
+  const groups = {};
+  filteredModules.forEach(m => { if (!groups[m.category]) groups[m.category] = []; groups[m.category].push(m); });
+  
+  Object.keys(groups).forEach(cat => {
+    const g = document.createElement("div");
+    g.innerHTML = '<div class="group-title">' + (catLabels[cat] || cat) + '</div>';
+    groups[cat].forEach(m => {
+      const item = document.createElement("div");
+      item.className = "module-item" + (m.id === activeModuleId ? " active" : "");
+      item.dataset.id = m.id;
+      item.innerHTML = '<div><div class="module-title">' + m.title + '</div><div class="module-sub">' + m.description + '</div></div><div style="text-align:right;"><div class="module-file">' + m.file + '</div><div class="module-kind ' + (kindClasses[m.category] || "") + '">' + m.kind + '</div></div>';
+      item.onclick = function() { select(m.id); };
+      g.appendChild(item);
+    });
+    modulesContainer.appendChild(g);
+  });
+}
+
+function select(id) {
+  const m = modules.find(function(x) { return x.id === id; });
+  if (!m) return;
+  activeModuleId = id;
+  document.querySelectorAll(".module-item").forEach(function(el) { el.classList.toggle("active", el.dataset.id === id); });
+  viewerTitle.textContent = m.title;
+  viewerSubtitle.textContent = m.description;
+  viewerCategoryBadge.textContent = catLabels[m.category] || m.category;
+  viewerKindBadge.textContent = m.kind;
+  viewerFile.textContent = m.file;
+  viewerFrame.src = m.file;
+  viewerOpenNew.href = m.file;
+}
+
+moduleSearch.addEventListener("input", applyFilter);
+moduleCategory.addEventListener("change", applyFilter);
+
+document.querySelectorAll(".embed-btn").forEach(function(btn) {
+  btn.onclick = function() {
+    const e = embeds[btn.dataset.embed];
+    if (!e) return;
+    activeModuleId = null;
+    document.querySelectorAll(".module-item").forEach(function(el) { el.classList.remove("active"); });
+    viewerTitle.textContent = e.label;
+    viewerSubtitle.textContent = e.description;
+    viewerCategoryBadge.textContent = "Embed";
+    viewerKindBadge.textContent = "externe";
+    viewerFile.textContent = e.url;
+    viewerFrame.src = e.url;
+    viewerOpenNew.href = e.url;
+  };
+});
+
+applyFilter();
+if (modules[0]) select(modules[0].id);
+</script>
+</body>
+</html>
