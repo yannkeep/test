@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#12121a"/>
+    </linearGradient>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff4757"/>
+      <stop offset="100%" style="stop-color:#ff6b7a"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="20" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="url(#bgGrad)"/>
+  
+  <!-- Red glow circle behind amount -->
+  <circle cx="540" cy="400" r="250" fill="#ff4757" opacity="0.15" filter="url(#glow)"/>
+  
+  <!-- Flag emoji replacement with text -->
+  <text x="540" y="120" 
+        font-family="Arial, sans-serif" 
+        font-size="48" 
+        fill="#888899" 
+        text-anchor="middle"
+        font-weight="600">
+    🇧🇪 BELGIQUE 2026
+  </text>
+  
+  <!-- Main amount -->
+  <text x="540" y="350" 
+        font-family="Arial Black, sans-serif" 
+        font-size="140" 
+        fill="url(#redGrad)" 
+        text-anchor="middle"
+        font-weight="900"
+        filter="url(#glow)">
+    1 000 000 €
+  </text>
+  
+  <text x="540" y="430" 
+        font-family="Arial, sans-serif" 
+        font-size="56" 
+        fill="#ffffff" 
+        text-anchor="middle"
+        font-weight="700">
+    PAR HEURE
+  </text>
+  
+  <!-- Subtext box -->
+  <rect x="140" y="500" width="800" height="200" rx="20" ry="20" 
+        fill="#1a1a2a" stroke="#2a2a3a" stroke-width="2"/>
+  
+  <text x="540" y="560" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        fill="#888899" 
+        text-anchor="middle">
+    pour maintenir
+  </text>
+  
+  <text x="540" y="620" 
+        font-family="Arial, sans-serif" 
+        font-size="52" 
+        fill="#ffffff" 
+        text-anchor="middle"
+        font-weight="700">
+    978 000 personnes
+  </text>
+  
+  <text x="540" y="680" 
+        font-family="Arial, sans-serif" 
+        font-size="52" 
+        fill="#ff4757" 
+        text-anchor="middle"
+        font-weight="700">
+    INACTIVES
+  </text>
+  
+  <!-- Bottom text -->
+  <text x="540" y="790" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#888899" 
+        text-anchor="middle">
+    Pas parce qu'elles le veulent.
+  </text>
+  
+  <text x="540" y="840" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#888899" 
+        text-anchor="middle">
+    Parce que le système les
+  </text>
+  
+  <text x="540" y="890" 
+        font-family="Arial, sans-serif" 
+        font-size="40" 
+        fill="#ff4757" 
+        text-anchor="middle"
+        font-weight="700">
+    PUNIT
+  </text>
+  
+  <text x="540" y="935" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#888899" 
+        text-anchor="middle">
+    dès qu'elles essaient de contribuer.
+  </text>
+  
+  <!-- Hashtag -->
+  <rect x="340" y="980" width="400" height="60" rx="30" ry="30" 
+        fill="#ff4757"/>
+  
+  <text x="540" y="1022" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#ffffff" 
+        text-anchor="middle"
+        font-weight="700">
+    #1MillionParHeure
+  </text>
+</svg>

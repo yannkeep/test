@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0f"/>
+      <stop offset="100%" style="stop-color:#15151f"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1080" height="1920" fill="url(#bgGrad2)"/>
+  
+  <!-- Title -->
+  <text x="540" y="120" 
+        font-family="Arial Black, sans-serif" 
+        font-size="64" 
+        fill="#ff4757" 
+        text-anchor="middle"
+        font-weight="900">
+    LE PIÈGE BELGE
+  </text>
+  
+  <text x="540" y="180" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#888899" 
+        text-anchor="middle">
+    Pourquoi c'est RATIONNEL de ne rien faire
+  </text>
+  
+  <!-- Step 1 -->
+  <rect x="60" y="250" width="960" height="220" rx="20" ry="20" 
+        fill="#1a1a2a" stroke="#2a2a3a" stroke-width="2"/>
+  
+  <text x="120" y="320" font-family="Arial" font-size="72">😊</text>
+  
+  <text x="220" y="320" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        fill="#ffffff" 
+        font-weight="700">
+    Tu touches 1 200 € d'allocations
+  </text>
+  
+  <text x="220" y="380" 
+        font-family="Arial, sans-serif" 
+        font-size="28" 
+        fill="#888899">
+    Chômage, incapacité ou RIS
+  </text>
+  
+  <text x="220" y="430" 
+        font-family="Arial, sans-serif" 
+        font-size="28" 
+        fill="#6bcb77">
+    + Statut BIM = tarifs sociaux
+  </text>
+  
+  <!-- Arrow -->
+  <text x="540" y="520" font-family="Arial" font-size="48" fill="#888899" text-anchor="middle">↓</text>
+  
+  <!-- Step 2 -->
+  <rect x="60" y="560" width="960" height="180" rx="20" ry="20" 
+        fill="#1a1a2a" stroke="#2a2a3a" stroke-width="2"/>
+  
+  <text x="120" y="630" font-family="Arial" font-size="72">💼</text>
+  
+  <text x="220" y="630" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        fill="#ffffff" 
+        font-weight="700">
+    Tu trouves un boulot à 400 €/mois
+  </text>
+  
+  <text x="220" y="690" 
+        font-family="Arial, sans-serif" 
+        font-size="28" 
+        fill="#888899">
+    Tu veux te réinsérer, contribuer...
+  </text>
+  
+  <!-- Arrow -->
+  <text x="540" y="800" font-family="Arial" font-size="48" fill="#888899" text-anchor="middle">↓</text>
+  
+  <!-- Step 3 - LOSSES -->
+  <rect x="60" y="840" width="960" height="380" rx="20" ry="20" 
+        fill="#1a1a2a" stroke="#ff4757" stroke-width="3"/>
+  
+  <text x="120" y="920" font-family="Arial" font-size="72">💸</text>
+  
+  <text x="220" y="920" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        fill="#ff4757" 
+        font-weight="700">
+    Tu PERDS ton statut BIM
+  </text>
+  
+  <text x="220" y="990" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#ff4757">
+    → +200 € de mutuelle
+  </text>
+  
+  <text x="220" y="1040" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#ff4757">
+    → +150 € d'énergie
+  </text>
+  
+  <text x="220" y="1090" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#ff4757">
+    → +100 € de transports
+  </text>
+  
+  <text x="220" y="1140" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#ff4757">
+    → +50 € divers
+  </text>
+  
+  <text x="220" y="1190" 
+        font-family="Arial, sans-serif" 
+        font-size="28" 
+        fill="#888899">
+    Total perdu : 500 €
+  </text>
+  
+  <!-- Arrow -->
+  <text x="540" y="1280" font-family="Arial" font-size="48" fill="#888899" text-anchor="middle">↓</text>
+  
+  <!-- RESULT -->
+  <rect x="60" y="1320" width="960" height="280" rx="20" ry="20" 
+        fill="#ff4757" fill-opacity="0.2" stroke="#ff4757" stroke-width="4"/>
+  
+  <text x="540" y="1400" 
+        font-family="Arial Black, sans-serif" 
+        font-size="48" 
+        fill="#ff4757" 
+        text-anchor="middle"
+        font-weight="900">
+    📉 RÉSULTAT
+  </text>
+  
+  <text x="540" y="1480" 
+        font-family="Arial, sans-serif" 
+        font-size="40" 
+        fill="#ffffff" 
+        text-anchor="middle"
+        font-weight="700">
+    Tu as PERDU 100 € en travaillant
+  </text>
+  
+  <text x="540" y="1550" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        fill="#ffd93d" 
+        text-anchor="middle"
+        font-weight="700">
+    Taux marginal réel : 125%
+  </text>
+  
+  <!-- Bottom -->
+  <text x="540" y="1700" 
+        font-family="Arial, sans-serif" 
+        font-size="32" 
+        fill="#888899" 
+        text-anchor="middle">
+    Ce n'est pas de la paresse.
+  </text>
+  
+  <text x="540" y="1760" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        fill="#ffffff" 
+        text-anchor="middle"
+        font-weight="700">
+    C'est des MATHÉMATIQUES.
+  </text>
+  
+  <!-- Hashtag -->
+  <rect x="290" y="1820" width="500" height="70" rx="35" ry="35" 
+        fill="#ff4757"/>
+  
+  <text x="540" y="1868" 
+        font-family="Arial, sans-serif" 
+        font-size="36" 
+        fill="#ffffff" 
+        text-anchor="middle"
+        font-weight="700">
+    #1MillionParHeure
+  </text>
+</svg>
