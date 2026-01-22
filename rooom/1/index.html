@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>BROL 3.0 – Dashboard Ultime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --void: #020408;
+      --bg: #040810;
+      --card: #080c14;
+      --elevated: #0c1018;
+      --green: #7dd3a0;
+      --green-bright: #4ade80;
+      --green-glow: rgba(125, 211, 160, 0.5);
+      --lilas: #b8a9d9;
+      --lilas-bright: #a78bfa;
+      --lilas-glow: rgba(184, 169, 217, 0.5);
+      --cyan: #22d3ee;
+      --orange: #f97316;
+      --red: #ef4444;
+      --text: #e8e8f0;
+      --muted: #6b7280;
+      --border: rgba(255,255,255,0.08);
+      --font-main: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 16px;
+      --shadow: 0 20px 50px rgba(0,0,0,0.8);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      min-height: 100vh;
+      font-family: var(--font-main);
+      background: var(--void);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* CANVAS 3D PARTICLES */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* GRID OVERLAY */
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      background-image: 
+        linear-gradient(rgba(125,211,160,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184,169,217,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* SCANLINES */
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      opacity: 0.4;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px) saturate(180%);
+      background: linear-gradient(135deg, rgba(4,8,16,0.95), rgba(8,12,20,0.95));
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 
+        0 4px 30px rgba(0,0,0,0.5),
+        0 0 60px rgba(125,211,160,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-frame {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      padding: 2px;
+      background: conic-gradient(from 180deg, var(--green), var(--cyan), var(--lilas), var(--orange), var(--green));
+      animation: logo-spin 8s linear infinite;
+      box-shadow: 
+        0 0 30px var(--green-glow),
+        0 0 60px var(--lilas-glow);
+    }
+
+    @keyframes logo-spin {
+      to { filter: hue-rotate(360deg); }
+    }
+
+    .logo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 20%, var(--elevated), var(--void));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--green);
+      text-shadow: 0 0 20px var(--green-glow);
+    }
+
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .title-main {
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--green), var(--lilas));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+    }
+
+    .title-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .header-right {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .header-right strong { 
+      color: var(--green);
+      text-shadow: 0 0 10px var(--green-glow);
+    }
+
+    /* MAIN GRID */
+    main {
+      position: relative;
+      z-index: 10;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 2fr) minmax(0, 1.2fr);
+      gap: 14px;
+      min-height: calc(100vh - 80px);
+    }
+
+    @media (max-width: 1100px) {
+      main { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.8fr); }
+    }
+    @media (max-width: 840px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    /* PANELS */
+    .panel {
+      background: linear-gradient(145deg, rgba(8,12,20,0.9), rgba(4,8,16,0.95));
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .panel:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        var(--shadow),
+        0 0 40px rgba(125,211,160,0.1);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green), var(--lilas), transparent);
+      opacity: 0.5;
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at 0 0, rgba(125,211,160,0.1), transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(184,169,217,0.1), transparent 50%);
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel h2 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+
+    .muted { color: var(--muted); font-size: 0.78rem; }
+
+    /* SEARCH ROW */
+    .search-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    input[type="search"], select {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.4);
+      color: var(--text);
+      font-size: 0.8rem;
+      padding: 8px 12px;
+      font-family: var(--font-main);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    input[type="search"] { flex: 1; min-width: 120px; }
+
+    input[type="search"]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 20px rgba(125,211,160,0.2);
+    }
+
+    input[type="search"]::placeholder { color: var(--muted); }
+
+    .badge-small {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      color: var(--green);
+      font-family: var(--font-mono);
+      background: rgba(125,211,160,0.1);
+    }
+
+    /* MODULES LIST */
+    .modules-list {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.3);
+      padding: 8px;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modules-scroll {
+      overflow-y: auto;
+      max-height: 400px;
+      padding-right: 4px;
+    }
+
+    .modules-scroll::-webkit-scrollbar { width: 4px; }
+    .modules-scroll::-webkit-scrollbar-track { background: transparent; }
+    .modules-scroll::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
+
+    .group-title {
+      font-size: 0.7rem;
+      color: var(--lilas);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin: 8px 6px 6px;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .module-item {
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: rgba(255,255,255,0.02);
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .module-item:hover {
+      background: rgba(125,211,160,0.05);
+      border-color: rgba(125,211,160,0.2);
+      transform: translateX(4px);
+    }
+
+    .module-item.active {
+      background: linear-gradient(135deg, rgba(125,211,160,0.15), rgba(184,169,217,0.1));
+      border-color: var(--green);
+      box-shadow: 
+        0 0 20px rgba(125,211,160,0.2),
+        inset 0 0 20px rgba(125,211,160,0.05);
+    }
+
+    .module-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .module-title { font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .module-sub { font-size: 0.72rem; color: var(--muted); }
+    .module-file { font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
+
+    .module-kind {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid;
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+
+    .kind-base { border-color: var(--green); color: var(--green); }
+    .kind-brol { border-color: var(--cyan); color: var(--cyan); }
+    .kind-univ { border-color: var(--lilas); color: var(--lilas); }
+    .kind-intra { border-color: var(--orange); color: var(--orange); }
+    .kind-ia { border-color: var(--red); color: var(--red); }
+    .kind-meta { border-color: var(--muted); color: var(--muted); }
+
+    /* VIEWER PANEL */
+    .viewer-panel {
+      background: linear-gradient(145deg, rgba(8,12,20,0.9), rgba(4,8,16,0.95));
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .viewer-panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--cyan), var(--lilas));
+      animation: gradient-flow 3s linear infinite;
+    }
+
+    @keyframes gradient-flow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .viewer-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      height: 100%;
+    }
+
+    .viewer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .viewer-title-block { display: flex; flex-direction: column; gap: 4px; }
+    .viewer-title { font-size: 1rem; font-weight: 600; }
+    .viewer-subtitle { font-size: 0.78rem; color: var(--muted); }
+
+    .viewer-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .viewer-badge {
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .viewer-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green-glow);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .viewer-body {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--void);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 300px;
+    }
+
+    .viewer-iframe-wrapper {
+      flex: 1;
+      min-height: 250px;
+      background: var(--void);
+    }
+
+    #viewerFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: var(--void);
+    }
+
+    .viewer-info {
+      padding: 10px 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .viewer-file {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .btn-open {
+      border-radius: 8px;
+      border: 1px solid var(--green);
+      background: rgba(125,211,160,0.1);
+      color: var(--green);
+      font-size: 0.75rem;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-open:hover {
+      background: var(--green);
+      color: var(--void);
+      box-shadow: 0 0 20px var(--green-glow);
+    }
+
+    /* SIDE PANEL */
+    .side-panel {
+      background: linear-gradient(145deg, rgba(8,12,20,0.9), rgba(4,8,16,0.95));
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .side-panel::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--lilas), var(--green), transparent);
+      opacity: 0.5;
+    }
+
+    .side-inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .side-section h2 {
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+
+    .embed-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .embed-btn {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.4);
+      color: var(--text);
+      font-size: 0.73rem;
+      padding: 6px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      transition: all 0.2s ease;
+    }
+
+    .embed-btn:hover {
+      background: rgba(125,211,160,0.1);
+      border-color: var(--green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .embed-btn .icon { font-size: 0.9rem; }
+
+    .tiny { font-size: 0.72rem; color: var(--muted); }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 10;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border);
+      background: rgba(4,8,16,0.95);
+      backdrop-filter: blur(10px);
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    footer a {
+      color: var(--green);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    footer a:hover {
+      text-shadow: 0 0 10px var(--green-glow);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 720px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .header-right { text-align: left; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    /* GLOW EFFECTS */
+    .glow-green { text-shadow: 0 0 10px var(--green-glow); }
+    .glow-lilas { text-shadow: 0 0 10px var(--lilas-glow); }
+  </style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+<div class="grid-overlay"></div>
+<div class="scanlines"></div>
+
+<header>
+  <div class="header-left">
+    <div class="logo-frame">
+      <div class="logo-inner">#!BiM</div>
+    </div>
+    <div class="header-titles">
+      <div class="title-main">BROL 3.0 – Dashboard Ultime</div>
+      <div class="title-sub">Bénéficiaires d'Intelligence Mutante</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div>Niveau <strong>0</strong> • Système actif</div>
+  </div>
+</header>
+
+<main>
+  <!-- COLONNE GAUCHE : LISTE MODULES -->
+  <section class="panel">
+    <div class="panel-inner">
+      <div>
+        <h2>📂 Pages & modules</h2>
+        <div class="search-row">
+          <input type="search" id="moduleSearch" placeholder="Rechercher...">
+          <select id="moduleCategory">
+            <option value="all">Toutes</option>
+            <option value="base">La Base</option>
+            <option value="brol">BROL</option>
+            <option value="univ">Univers</option>
+            <option value="intra">Liens</option>
+            <option value="ia">IA</option>
+            <option value="meta">Tests</option>
+          </select>
+        </div>
+        <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;">
+          <span class="badge-small" id="modulesCount">15 modules</span>
+        </div>
+      </div>
+      <div class="modules-list">
+        <div class="modules-scroll" id="modulesContainer"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLONNE CENTRALE : VIEWER -->
+  <section class="viewer-panel">
+    <div class="viewer-inner">
+      <div class="viewer-header">
+        <div class="viewer-title-block">
+          <div class="viewer-title" id="viewerTitle">Sélectionnez un module</div>
+          <div class="viewer-subtitle" id="viewerSubtitle">Cliquez sur un élément à gauche</div>
+        </div>
+        <div class="viewer-badges">
+          <span class="viewer-badge">
+            <span class="viewer-dot"></span>
+            <span id="viewerCategoryBadge">—</span>
+          </span>
+          <span class="viewer-badge" id="viewerKindBadge">—</span>
+        </div>
+      </div>
+      <div class="viewer-body">
+        <div class="viewer-iframe-wrapper">
+          <iframe id="viewerFrame" src="about:blank"></iframe>
+        </div>
+        <div class="viewer-info">
+          <div class="viewer-file" id="viewerFile">Fichier / URL : —</div>
+          <div class="viewer-actions">
+            <a href="#" id="viewerOpenNew" class="btn-open" target="_blank" rel="noopener noreferrer">
+              ↗ Nouvel onglet
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLONNE DROITE : EMBEDS -->
+  <section class="side-panel">
+    <div class="side-inner">
+      <section class="side-section">
+        <h2>🎮 Distractions & annexes</h2>
+        <p class="tiny">Outils, embeds, trucs et bidules</p>
+        <div class="embed-row">
+          <button type="button" class="embed-btn" data-embed="penguin"><span class="icon">🎴</span> Tarot</button>
+          <button type="button" class="embed-btn" data-embed="youtube"><span class="icon">▶️</span> YouTube</button>
+          <button type="button" class="embed-btn" data-embed="youtubeu"><span class="icon">▶️</span> Intro</button>
+          <button type="button" class="embed-btn" data-embed="intranet"><span class="icon">🔗</span> Intranet</button>
+          <button type="button" class="embed-btn" data-embed="spotify"><span class="icon">🎵</span> Spotify</button>
+          <button type="button" class="embed-btn" data-embed="pdf-plaidoyer-2"><span class="icon">📄</span> PDF ULB</button>
+          <button type="button" class="embed-btn" data-embed="pdf-plaidoyer-1"><span class="icon">📄</span> PDF JP</button>
+          <button type="button" class="embed-btn" data-embed="pdf-veille-1"><span class="icon">📄</span> Surprise</button>
+          <button type="button" class="embed-btn" data-embed="pdf-veille-2"><span class="icon">🚀</span> Hyperspace</button>
+          <button type="button" class="embed-btn" data-embed="speaker"><span class="icon">📡</span> Network</button>
+          <button type="button" class="embed-btn" data-embed="king"><span class="icon">🐧</span> Tux</button>
+          <button type="button" class="embed-btn" data-embed="dices"><span class="icon">🎲</span> Dés</button>
+        </div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>BROL 3.0 – Dashboard Ultime • <a href="https://dl.ouaisfi.eu/usba/1/index.html" target="_blank">Niveau suivant →</a></span>
+  <span style="font-family: var(--font-mono);">[ SYSTEM ONLINE ]</span>
+</footer>
+
+<script>
+// ============================================
+// PARTICLE SYSTEM 3D
+// ============================================
+class ParticleSystem {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.particles = [];
+    this.mouse = { x: null, y: null, radius: 150 };
+    this.colors = ['#7dd3a0', '#b8a9d9', '#22d3ee', '#f97316'];
+    
+    this.resize();
+    this.init();
+    this.animate();
+    
+    window.addEventListener('resize', () => this.resize());
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.clientX;
+      this.mouse.y = e.clientY;
+    });
+    window.addEventListener('mouseout', () => {
+      this.mouse.x = null;
+      this.mouse.y = null;
+    });
+  }
+  
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  
+  init() {
+    this.particles = [];
+    const count = Math.min(120, Math.floor((this.canvas.width * this.canvas.height) / 12000));
+    
+    for (let i = 0; i < count; i++) {
+      this.particles.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * 2 + 1,
+        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+        alpha: Math.random() * 0.5 + 0.2
+      });
+    }
+  }
+  
+  animate() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    // Update and draw particles
+    this.particles.forEach((p, i) => {
+      // Mouse interaction
+      if (this.mouse.x !== null) {
+        const dx = this.mouse.x - p.x;
+        const dy = this.mouse.y - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        if (dist < this.mouse.radius) {
+          const force = (this.mouse.radius - dist) / this.mouse.radius;
+          p.vx -= (dx / dist) * force * 0.5;
+          p.vy -= (dy / dist) * force * 0.5;
+        }
+      }
+      
+      // Apply velocity
+      p.x += p.vx;
+      p.y += p.vy;
+      
+      // Damping
+      p.vx *= 0.99;
+      p.vy *= 0.99;
+      
+      // Bounds
+      if (p.x < 0) p.x = this.canvas.width;
+      if (p.x > this.canvas.width) p.x = 0;
+      if (p.y < 0) p.y = this.canvas.height;
+      if (p.y > this.canvas.height) p.y = 0;
+      
+      // Draw particle with glow
+      this.ctx.save();
+      this.ctx.globalAlpha = p.alpha;
+      this.ctx.shadowBlur = 15;
+      this.ctx.shadowColor = p.color;
+      this.ctx.fillStyle = p.color;
+      this.ctx.beginPath();
+      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.restore();
+      
+      // Draw connections
+      this.particles.slice(i + 1).forEach(p2 => {
+        const dx = p.x - p2.x;
+        const dy = p.y - p2.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        if (dist < 120) {
+          this.ctx.save();
+          this.ctx.globalAlpha = (1 - dist / 120) * 0.15;
+          this.ctx.strokeStyle = p.color;
+          this.ctx.lineWidth = 0.5;
+          this.ctx.beginPath();
+          this.ctx.moveTo(p.x, p.y);
+          this.ctx.lineTo(p2.x, p2.y);
+          this.ctx.stroke();
+          this.ctx.restore();
+        }
+      });
+    });
+    
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+// ============================================
+// MODULES DATA
+// ============================================
+const modules = [
+  { id: "site-ultime", title: "LE SITE ULTIME (index)", file: "index.html", category: "base", kind: "niveaux -1 → 3", description: "Le fichier qui permet de partir de zéro et monter progressivement." },
+  { id: "scratchy", title: "Support technique", file: "404.html", category: "base", kind: "au cas où", description: "Il faut éteindre et rallumer." },
+  { id: "branques2", title: "Politique des Cookies", file: "browniz-politik.html", category: "base", kind: "débutant+", description: "Si tu passes pas ce test, t'as raté ta vie." },
+  { id: "pas-a-pas", title: "Boussole de valeurs", file: "valeurs.html", category: "base", kind: "boussole", description: "Pour faire le point de temps en temps." },
+  { id: "hub-illustre", title: "Hub illustré", file: "portail.html", category: "brol", kind: "codigic", description: "Pour faire tout à fait autre chose." },
+  { id: "rolex", title: "Lien suspect", file: "777.html", category: "brol", kind: "#piraté", description: "Pour faire encore autre chose." },
+  { id: "amazing", title: "Lien HYPER suspect", file: "amazing.html", category: "brol", kind: "#vendu", description: "Pour faire encore TOUT autre chose." },
+  { id: "stic-anarchie", title: "STIC de l'anarchie", file: "stic-anarchie.html", category: "univ", kind: "jeu pas fun", description: "Version ultra colorée pour jouer avec le capitalisme." },
+  { id: "detective", title: "Agence détective publique", file: "veilleuxses.html", category: "intra", kind: "site métier", description: "Vitrine + intranet léger pour une activité de détective." },
+  { id: "extranet", title: "Extronet organisation lambda", file: "xyno.html", category: "intra", kind: "extronet", description: "Modèle extranet." },
+  { id: "kalifox", title: "Extronet organisation bêta", file: "kalifox.html", category: "intra", kind: "outil", description: "Parce que bon parfois." },
+  { id: "gork", title: "GORK / Pauvre Gork", file: "minitel.html", category: "ia", kind: "graph", description: "Il voudrait être débranché." },
+  { id: "gorki", title: "GORKI / Pauvre GorkI", file: "terminal-ia.html", category: "ia", kind: "grave", description: "Il voudrait AUSSI être débranché." },
+  { id: "test-1", title: "À réussir d'urgence", file: "test-1.html", category: "meta", kind: "bisous", description: "C'est ça ou rien." },
+  { id: "mon-projet", title: "Mon projet secret", file: "veille-1160.html", category: "univ", kind: "univers perso", description: "Description courte de ce que contient cette page." }
+];
+
+const embeds = {
+  penguin: { label: "Tarot pas illustré", url: "https://ouaisfieu.appsmith.com/app/tarotboulotproto-v3-1/tarotsimpletirage-68555a12a22d7c48aa0d27ad", description: "Tarot de Boulot et de Marseille." },
+  intranet: { label: "Intranet", url: "https://boot-a-rat.vercel.app/", description: "C'est par là que ça se passe." },
+  youtube: { label: "YouTube", url: "https://www.youtube.com/embed/dQw4w9WgXcQ", description: "Exemple d'embed YouTube." },
+  youtubeu: { label: "Intro BROL", url: "https://www.youtube.com/embed/WXOkteJyCro?si=WpGydeDOW8NLfndQ", description: "Vidéo d'intro." },
+  spotify: { label: "Spotify playlist", url: "https://open.spotify.com/embed/playlist/7eTeIkIqbfmyXnC6Ilo4d2?si=QRW5lAbiRwerORLkra3Raw", description: "Playlist Spotify." },
+  "pdf-plaidoyer-2": { label: "plaidoyer-ulb.pdf", url: "https://www.ulb-cooperation.org/wp-content/uploads/2020/08/manuel-plaidoyer-2.pdf", description: "PDF externe" },
+  "pdf-plaidoyer-1": { label: "plaidoyer-jp.pdf", url: "pdfs/manuel-plaidoyer-jp.pdf", description: "PDF local" },
+  "pdf-veille-1": { label: "Veille (1)", url: "pdfs/veille-citoyenne-enjeux.pdf", description: "PDF local" },
+  "pdf-veille-2": { label: "Hyperspace", url: "https://stack-lake-eight.vercel.app/", description: "Hyperspace" },
+  speaker: { label: "Chargé de com'", url: "https://ouaisfieu.github.io/offre/", description: "Communication en boucle" },
+  king: { label: "Tux", url: "https://dl.ouaisfi.eu/", description: "Pingouins." },
+  dices: { label: "Tirage de dés", url: "https://tirage-one.vercel.app/", description: "Application." }
+};
+
+// ============================================
+// DOM ELEMENTS
+// ============================================
+const moduleSearch = document.getElementById("moduleSearch");
+const moduleCategory = document.getElementById("moduleCategory");
+const modulesContainer = document.getElementById("modulesContainer");
+const modulesCount = document.getElementById("modulesCount");
+const viewerTitle = document.getElementById("viewerTitle");
+const viewerSubtitle = document.getElementById("viewerSubtitle");
+const viewerCategoryBadge = document.getElementById("viewerCategoryBadge");
+const viewerKindBadge = document.getElementById("viewerKindBadge");
+const viewerFile = document.getElementById("viewerFile");
+const viewerFrame = document.getElementById("viewerFrame");
+const viewerOpenNew = document.getElementById("viewerOpenNew");
+
+let filteredModules = [];
+let activeModuleId = null;
+
+// ============================================
+// FUNCTIONS
+// ============================================
+function categoryLabel(cat) {
+  const labels = { base: "La Base", brol: "BAC À SPAM", univ: "Univers & jeu", intra: "Liens en vrac", ia: "IA fictive", meta: "Tests" };
+  return labels[cat] || "Autre";
+}
+
+function kindClass(cat) {
+  const classes = { base: "kind-base", brol: "kind-brol", univ: "kind-univ", intra: "kind-intra", ia: "kind-ia", meta: "kind-meta" };
+  return classes[cat] || "";
+}
+
+function applyModuleFilter() {
+  const q = moduleSearch.value.trim().toLowerCase();
+  const cat = moduleCategory.value;
+  
+  filteredModules = modules.filter(m => {
+    if (cat !== "all" && m.category !== cat) return false;
+    if (!q) return true;
+    return (m.title + " " + m.file + " " + (m.description || "")).toLowerCase().includes(q);
+  });
+  
+  renderModules();
+}
+
+function renderModules() {
+  modulesContainer.innerHTML = "";
+  
+  if (!filteredModules.length) {
+    modulesContainer.innerHTML = '<div class="muted" style="padding:10px;">Aucun module trouvé.</div>';
+    modulesCount.textContent = "0 module";
+    return;
+  }
+  
+  modulesCount.textContent = filteredModules.length + " module" + (filteredModules.length > 1 ? "s" : "");
+  
+  const groups = {};
+  filteredModules.forEach(m => {
+    if (!groups[m.category]) groups[m.category] = [];
+    groups[m.category].push(m);
+  });
+  
+  Object.keys(groups).sort().forEach(cat => {
+    const groupEl = document.createElement("div");
+    const title = document.createElement("div");
+    title.className = "group-title";
+    title.textContent = categoryLabel(cat);
+    groupEl.appendChild(title);
+    
+    groups[cat].forEach(m => {
+      const item = document.createElement("div");
+      item.className = "module-item";
+      if (m.id === activeModuleId) item.classList.add("active");
+      item.dataset.id = m.id;
+      
+      item.innerHTML = `
+        <div class="module-main">
+          <div class="module-title" title="${m.title}">${m.title}</div>
+          <div class="module-sub">${m.description || ""}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;">
+          <div class="module-file">${m.file}</div>
+          <div class="module-kind ${kindClass(m.category)}">${m.kind || ""}</div>
+        </div>
+      `;
+      
+      item.addEventListener("click", () => selectModule(m.id));
+      groupEl.appendChild(item);
+    });
+    
+    modulesContainer.appendChild(groupEl);
+  });
+}
+
+function selectModule(id) {
+  const m = modules.find(x => x.id === id);
+  if (!m) return;
+  activeModuleId = id;
+  
+  document.querySelectorAll(".module-item").forEach(el => {
+    el.classList.toggle("active", el.dataset.id === id);
+  });
+  
+  viewerTitle.textContent = m.title;
+  viewerSubtitle.textContent = m.description || "";
+  viewerCategoryBadge.textContent = categoryLabel(m.category);
+  viewerKindBadge.textContent = m.kind || "";
+  viewerFile.textContent = "Fichier / URL : " + m.file;
+  viewerFrame.src = m.file;
+  viewerOpenNew.href = m.file;
+}
+
+// ============================================
+// EVENT LISTENERS
+// ============================================
+moduleSearch.addEventListener("input", applyModuleFilter);
+moduleCategory.addEventListener("change", applyModuleFilter);
+
+document.querySelectorAll(".embed-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const key = btn.dataset.embed;
+    const e = embeds[key];
+    if (!e) return;
+    
+    activeModuleId = null;
+    document.querySelectorAll(".module-item").forEach(el => el.classList.remove("active"));
+    
+    viewerTitle.textContent = e.label;
+    viewerSubtitle.textContent = e.description || "";
+    viewerCategoryBadge.textContent = "Embed externe";
+    viewerKindBadge.textContent = "annexe";
+    viewerFile.textContent = "URL : " + e.url;
+    viewerFrame.src = e.url;
+    viewerOpenNew.href = e.url;
+  });
+});
+
+// ============================================
+// INIT
+// ============================================
+document.addEventListener("DOMContentLoaded", () => {
+  new ParticleSystem(document.getElementById("particles-canvas"));
+  applyModuleFilter();
+  
+  const defaultModule = modules.find(m => m.id === "site-ultime") || modules[0];
+  if (defaultModule) selectModule(defaultModule.id);
+});
+</script>
+</body>
+</html>
