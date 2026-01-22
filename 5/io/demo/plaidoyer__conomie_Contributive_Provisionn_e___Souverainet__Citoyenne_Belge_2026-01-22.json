@@ -1,0 +1,351 @@
+{
+  "id": "1769080847879",
+  "meta": {
+    "name": "Économie Contributive Provisionnée — Souveraineté Citoyenne Belge",
+    "description": "",
+    "created": "2026-01-22T10:00:00.000Z",
+    "updated": "2026-01-22T11:20:47.879Z"
+  },
+  "domino": {
+    "vision": "D'ici fin 2027, obtenir la SÉCURISATION JURIDIQUE de l'Économie Contributive Provisionnée (ECP) via :\n\n1. Un RULING FISCAL favorable du Service des Décisions Anticipées (SDA) validant le mécanisme de provisionnement différé\n2. La RECONNAISSANCE que les contributions citoyennes provisionnées ne constituent pas un revenu imposable immédiat\n3. Le MAINTIEN INTÉGRAL des droits sociaux (BIM, chômage, invalidité, RIS) pour les contributeurs actifs\n4. La création d'un STATUT FISCAL CLAIR pour les revenus de l'ECP avec taux modéré et prévisible\n5. L'ARTICULATION avec la sécurité sociale permettant la constitution de droits (pension, maladie)\n\nObjectif ultime : Transformer le « piège institutionnel » belge qui indemnise l'inactivité mais pénalise la contribution citoyenne en un système « gagnant-gagnant » où 978 000 personnes maintenues dans l'inactivité contrainte peuvent créer de la valeur sociale sans perdre leur filet de sécurité.\n\nHorizon : Démontrer via un projet pilote (Agence de Renseignement Citoyenne - ARC) que 24 000 € d'investissement peuvent enclencher une alternative face à un système qui coûte 1 million d'euros PAR HEURE en inactivité.",
+    "obstacles": "OBSTACLES JURIDIQUES ET FISCAUX :\n• Absence de cadre juridique dédié pour l'ECP → flou fiscal total\n• Risque de requalification en contrat de travail (critères ONSS : prestation, rémunération, subordination)\n• Incertitude sur la qualification des revenus (professionnels à taux progressifs ? divers à 33% ? autre ?)\n• Article 344, §1er du CIR 92 : disposition anti-abus fiscal potentiellement applicable\n• Délai et complexité de la procédure de ruling fiscal\n\nOBSTACLES SOCIAUX :\n• Perte automatique du statut BIM dès perception de revenus complémentaires\n• Réduction des allocations (chômage, invalidité, RIS) au premier euro gagné\n• Limitation du chômage à 24 mois (vigueur 1er mars 2026) → exclusion des contributeurs non reconnus\n• Non-reconnaissance de l'ECP comme « recherche active d'emploi » par les services régionaux\n\nOBSTACLES INSTITUTIONNELS :\n• Coalition Arizona focalisée sur l'« activation » coercitive, pas l'innovation sociale\n• Services publics cloisonnés : SPF Finances / ONEM / INAMI / CPAS ne communiquent pas\n• Fracture numérique : eBox/MyBenefits inaccessibles aux publics précarisés\n• Culture administrative de la sanction plutôt que de l'accompagnement\n\nOBSTACLES CULTURELS :\n• Discours dominant sur les « profiteurs » du système social\n• Méfiance envers les « montages » perçus comme de l'optimisation fiscale\n• Honte sociale des bénéficiaires d'allocations à entreprendre\n• Méconnaissance du modèle ECP par les conseillers sociaux et fiscaux",
+    "ressources": "ARCHITECTURE JURIDIQUE EXISTANTE :\n• Loi du 3 juillet 2005 sur le volontariat : cadre légal pour engagement non rémunéré\n• Plafond de défraiement forfaitaire : 1 692,51 € en 2025 (non imposable)\n• Service des Décisions Anticipées (SDA) : procédure de ruling fiscal établie et reconnue\n• Régime VVPR-bis (Art. 269, §2 CIR/92) : dividendes à taux réduit (15%) après mise en réserve\n• Droits d'auteur : taxation avantageuse pour méthodologies et outils créés\n\nINFRASTRUCTURE TECHNIQUE :\n• Protocole Solid : Personal Online Datastore (Pod) pour souveraineté des données\n• Standard FHIR : interopérabilité santé/social pour le « Pont Social »\n• Git Scraping : archivage inaltérable des données publiques (pollution, budgets)\n• Plateforme NYXO : valorisation des contributions via jetons/points MSI\n• Réseau Sensor.community : capteurs citoyens de qualité de l'air\n• Plateforme Decidim : délibération liquide et vote quadratique\n\nPARTENAIRES POTENTIELS :\n• Paradigm (Bruxelles) et Athumi (Flandre) : gestionnaires régionaux de données\n• Mutuelles (Solidaris, MC) : expertise santé et réseau de membres\n• Syndicats (FGTB, CSC, CGSLB) : force de mobilisation et services juridiques\n• Fédérations CPAS (UVCW, Brulocalis) : relais institutionnels\n• Universités (DULBEA/ULB, IWEPS) : caution académique\n\nEXPERTISE MOBILISABLE :\n• Avocats fiscalistes spécialisés en ruling et sociétés de management\n• Juristes en droit social (requalification, volontariat)\n• Développeurs open source et architectes de données\n• Éducation permanente : méthodologies de formation citoyenne"
+  },
+  "profil": {
+    "motivations": "VÉCU DU PIÈGE INSTITUTIONNEL :\nNous sommes des citoyen·ne·s directement victimes du paradoxe belge : le système nous indemnise pour rester inactifs mais nous pénalise financièrement dès que nous tentons de contribuer. Chaque euro gagné fait perdre des allocations, le statut BIM, les tarifs sociaux — créant un « taux marginal d'imposition » supérieur à 100% pour les plus précaires.\n\nCONSTAT ÉCONOMIQUE :\n• 978 000 personnes maintenues dans l'inactivité contrainte (incapacité longue durée, chômage, RIS)\n• Coût annuel pour l'État : 21-24 milliards d'euros en dépenses passives\n• 1 million d'euros PAR HEURE pour financer cette inactivité forcée\n• Déficit sécurité sociale 2024 : 18,2 milliards € (dérapage de 8 Md€ vs prévisions)\n• Projection 2028 : déficit de 24,1 milliards € sans correction\n\nCONVICTION :\nL'alternative existe. L'ECP propose de transformer cette DÉPENSE PASSIVE en INVESTISSEMENT ACTIF. Un projet pilote de 24 000 € peut démontrer qu'il est possible de créer de la valeur sociale sans mettre en péril le filet de sécurité des contributeurs.\n\nALIGNEMENT AVEC ARIZONA :\nContrairement à l'approche punitive de la coalition (limitation chômage, sanctions malades), l'ECP répond aux mêmes objectifs par une voie INCITATIVE :\n• Valorisation du travail → l'ECP rémunère l'effort individuel\n• Augmentation du taux d'emploi (72,1% BE vs 75,4% UE) → l'ECP crée des passerelles flexibles\n• Responsabilisation des parcours → l'ECP favorise l'autonomie sans rupture brutale",
+    "competences": "COMPÉTENCES JURIDIQUES ET FISCALES :\n• Maîtrise du droit social belge (critères de subordination ONSS)\n• Connaissance de la procédure de ruling fiscal (SDA)\n• Expertise en structuration de sociétés de management (SRL)\n• Maîtrise des régimes VVPR-bis et droits d'auteur\n• Rédaction de chartes de volontariat conformes (loi 2005)\n\nCOMPÉTENCES TECHNIQUES :\n• Architecture de données souveraines (Solid, Pod)\n• Intégration de standards d'interopérabilité (FHIR)\n• Développement de plateformes open source\n• Git Scraping et archivage de données publiques\n• Conception de systèmes de jetons/points contributifs\n\nCOMPÉTENCES DE MOBILISATION :\n• Animation de formations en éducation permanente\n• Vulgarisation de mécanismes techniques complexes\n• Coordination de réseaux associatifs multi-acteurs\n• Production de documentation et guides pratiques\n• Communication digitale et réseaux sociaux\n\nCOMPÉTENCES D'ANALYSE :\n• Veille législative et réglementaire\n• Études d'impact économique et social\n• Modélisation de scénarios fiscaux\n• Benchmark international (modèles comparables)",
+    "temps": "DISPONIBILITÉ :\n• Noyau dur : 3-5 personnes engagées à mi-temps (15-20h/semaine)\n• Réseau élargi : 20-30 contributeurs mobilisables ponctuellement\n• Appui pro bono : avocats, experts-comptables, développeurs\n\nPICS D'ACTIVITÉ :\n• T1 2026 : Dépôt du dossier de ruling fiscal auprès du SDA\n• T2 2026 : Lancement projet pilote ARC (Agence de Renseignement Citoyenne)\n• T3 2026 : Évaluation mi-parcours et ajustements\n• T4 2026 : Réception de la décision anticipée (ruling) + communication\n• 2027 : Déploiement si ruling favorable / recours si défavorable\n\nHORIZON D'ENGAGEMENT :\n• Phase 1 (2026) : Preuve de concept et sécurisation juridique\n• Phase 2 (2027-2028) : Montée en charge et partenariats institutionnels\n• Phase 3 (2029+) : Pérennisation et intégration au cadre légal",
+    "limites": "CONTRAINTES FINANCIÈRES :\n• Budget initial limité : 24 000 € pour le projet pilote ARC\n• Pas de ressources pour contentieux juridique prolongé\n• Dépendance aux contributions bénévoles et pro bono\n• Impossibilité de rivaliser avec les cabinets de lobbying traditionnels\n\nCONTRAINTES STRUCTURELLES :\n• Pas d'accès direct au cabinet du Premier Ministre ou des ministres clés\n• Barrière linguistique : documentation principalement francophone\n• Complexité technique de l'ECP → difficile à vulgariser en 30 secondes\n• Méfiance institutionnelle envers les « nouveaux modèles »\n\nRISQUES :\n• Ruling fiscal DÉFAVORABLE → modèle juridiquement non viable\n• Requalification en contrat de travail par l'ONSS → redressements catastrophiques\n• Récupération politique ou instrumentalisation du modèle\n• Épuisement des porteurs de projet face à la complexité administrative\n• Changement de gouvernement ou de priorités politiques"
+  },
+  "fleur": {
+    "identites": "PROFILS DES CONTRIBUTEURS POTENTIELS DE L'ECP :\n\n🧠 Malades de longue durée (500 000+ personnes) :\n• Burnout, dépression, troubles musculo-squelettiques, maladies chroniques\n• Souvent anciens cadres ou travailleurs qualifiés avec expertise valorisable\n• Capacité de contribution partielle non reconnue par le système actuel\n• Souffrance de l'inactivité forcée aggravant l'état de santé\n\n👥 Chômeurs de longue durée :\n• Profil 50-55 ans, ex-travailleurs industriels, problèmes de santé non reconnus\n• Compétences obsolètes pour le marché traditionnel mais utiles socialement\n• Souvent isolés et découragés après des années de recherche infructueuse\n\n🎓 Étudiants et jeunes diplômés précarisés :\n• 58% en insécurité alimentaire\n• 15 000 « non-finançables » exclus de l'enseignement\n• Compétences numériques et linguistiques sous-utilisées\n• Besoin de revenus flexibles compatibles avec les études\n\n👨‍👩‍👧 Parents au foyer et aidants proches :\n• Travail de care invisible et non rémunéré\n• Majoritairement des femmes avec carrières interrompues\n• Expertise en organisation, médiation, accompagnement\n\n🏠 Bénéficiaires du RIS :\n• 30 122 nouveaux basculements prévus avec les réformes Arizona\n• Piégés par l'aide sociale sans perspective de sortie\n• Souvent compétences informelles non valorisées",
+    "privileges": "PRIVILÈGES RELATIFS DU MOUVEMENT ECP :\n\n✅ Capital intellectuel :\n• Capacité à conceptualiser un modèle juridico-fiscal complexe\n• Accès à l'expertise de professionnels qualifiés (avocats, experts-comptables)\n• Maîtrise des outils numériques et de l'architecture de données\n• Connaissance approfondie du droit belge (social, fiscal, volontariat)\n\n✅ Réseau professionnel :\n• Contacts dans les milieux académiques (ULB, UCLouvain)\n• Relations avec des développeurs open source et activistes tech\n• Liens avec le secteur de l'éducation permanente reconnue\n• Accès indirect à certains décideurs via réseaux professionnels\n\n✅ Légitimité technique :\n• Utilisation de standards internationaux reconnus (Solid, FHIR)\n• Alignement démontrable avec les objectifs gouvernementaux Arizona\n• Modèle documenté et argumenté (ruling fiscal, provisionnement)\n• Précédents juridiques favorables (rulings sur structures similaires)\n\n✅ Autonomie organisationnelle :\n• Structure légère et agile (pas de bureaucratie)\n• Capacité d'expérimentation rapide\n• Ressources open source réutilisables",
+    "oppressions": "DISCRIMINATIONS ET VIOLENCES SYSTÉMIQUES SUBIES :\n\n🎯 Violence administrative du « piège institutionnel » :\n• Taux marginal d'imposition > 100% : chaque euro gagné fait perdre plus en allocations\n• Perte automatique du statut BIM → perte des tarifs sociaux (énergie, transport, soins)\n• Complexité volontaire : eBox, MyBenefits, formulaires multiples incompréhensibles\n• Délais kafkaïens : décisions sociales qui prennent des mois\n\n🎯 Violence symbolique de la stigmatisation :\n• Discours politique sur les « profiteurs » et « assistés » permanents\n• Rhétorique d'« activation » qui culpabilise les victimes du système\n• Présomption de fraude sociale plutôt que de bonne foi\n• Honte sociale intériorisée empêchant l'initiative\n\n🎯 Violence économique structurelle :\n• Désincitation à l'activité = assignation à l'inactivité perpétuelle\n• Impossibilité de constituer un capital ou une épargne\n• Dépendance totale à l'État sans autonomie possible\n• Précarité énergétique aggravée par perte BIM\n\n🎯 Violence institutionnelle de l'exclusion :\n• Réformes Arizona conçues pour le marché du travail traditionnel\n• Aucune reconnaissance des formes alternatives de contribution\n• Services publics cloisonnés incapables de comprendre les situations hybrides\n• Absence de représentation politique des précaires actifs"
+  },
+  "acteurs": [
+    {
+      "id": 1769080847879,
+      "name": "Service des Décisions Anticipées (SDA)",
+      "role": "Organe du SPF Finances — Autorité de délivrance des rulings fiscaux",
+      "position": "target",
+      "power": 5
+    },
+    {
+      "id": 1769080847880,
+      "name": "SPF Finances",
+      "role": "Administration fiscale fédérale — Qualification des revenus ECP",
+      "position": "neutral",
+      "power": 5
+    },
+    {
+      "id": 1769080847881,
+      "name": "ONSS",
+      "role": "Office National de Sécurité Sociale — Critères de requalification salariale",
+      "position": "neutral",
+      "power": 5
+    },
+    {
+      "id": 1769080847882,
+      "name": "ONEM",
+      "role": "Office National de l'Emploi — Gestion allocations chômage et contrôle",
+      "position": "neutral",
+      "power": 4
+    },
+    {
+      "id": 1769080847883,
+      "name": "INAMI",
+      "role": "Institut National Assurance Maladie-Invalidité — Gestion statut BIM et incapacité",
+      "position": "neutral",
+      "power": 4
+    },
+    {
+      "id": 1769080847884,
+      "name": "Cabinet Vandenbroucke",
+      "role": "Ministre Affaires Sociales et Santé (Vooruit) — Levier potentiel",
+      "position": "neutral",
+      "power": 5
+    },
+    {
+      "id": 1769080847885,
+      "name": "Cabinet De Wever",
+      "role": "Premier Ministre (N-VA) — Architecte réformes Arizona",
+      "position": "opponent",
+      "power": 5
+    },
+    {
+      "id": 1769080847886,
+      "name": "Bart De Wever",
+      "role": "Premier Ministre — Philosophie d'activation coercitive",
+      "position": "opponent",
+      "power": 5
+    },
+    {
+      "id": 1769080847887,
+      "name": "Vincent Van Peteghem",
+      "role": "Ex-Ministre des Finances (CD&V) — Connaisseur du SDA",
+      "position": "neutral",
+      "power": 3
+    },
+    {
+      "id": 1769080847888,
+      "name": "Paradigm",
+      "role": "Gestionnaire régional données Bruxelles — Infrastructure Solid",
+      "position": "ally",
+      "power": 3
+    },
+    {
+      "id": 1769080847889,
+      "name": "Athumi",
+      "role": "Gestionnaire régional données Flandre — Infrastructure Solid",
+      "position": "ally",
+      "power": 3
+    },
+    {
+      "id": 1769080847890,
+      "name": "Solidaris",
+      "role": "Mutualité socialiste — Expertise santé, réseau membres",
+      "position": "ally",
+      "power": 3
+    },
+    {
+      "id": 1769080847891,
+      "name": "Mutualité Chrétienne (MC)",
+      "role": "Plus grande mutualité belge — Potentiel partenaire santé",
+      "position": "neutral",
+      "power": 3
+    },
+    {
+      "id": 1769080847892,
+      "name": "FGTB",
+      "role": "Syndicat socialiste — Services juridiques et mobilisation",
+      "position": "ally",
+      "power": 4
+    },
+    {
+      "id": 1769080847893,
+      "name": "CSC",
+      "role": "Syndicat chrétien — Services juridiques et réseau",
+      "position": "ally",
+      "power": 4
+    },
+    {
+      "id": 1769080847894,
+      "name": "CGSLB",
+      "role": "Syndicat libéral — Membre front commun",
+      "position": "ally",
+      "power": 3
+    },
+    {
+      "id": 1769080847895,
+      "name": "UVCW",
+      "role": "Union Villes Communes Wallonnes — Fédération CPAS wallons",
+      "position": "ally",
+      "power": 3
+    },
+    {
+      "id": 1769080847896,
+      "name": "Brulocalis",
+      "role": "Association CPAS bruxellois — Relais institutionnel",
+      "position": "ally",
+      "power": 3
+    },
+    {
+      "id": 1769080847897,
+      "name": "DULBEA (ULB)",
+      "role": "Centre de recherche économique — Études d'impact et caution académique",
+      "position": "ally",
+      "power": 2
+    },
+    {
+      "id": 1769080847898,
+      "name": "IWEPS",
+      "role": "Institut wallon statistique — Données sur le non-recours",
+      "position": "ally",
+      "power": 2
+    },
+    {
+      "id": 1769080847899,
+      "name": "Forem/Actiris/VDAB",
+      "role": "Services régionaux de l'emploi — Reconnaissance activité ECP",
+      "position": "neutral",
+      "power": 3
+    },
+    {
+      "id": 1769080847900,
+      "name": "Ordre des Avocats",
+      "role": "Barreau — Accès expertise juridique ruling fiscal",
+      "position": "neutral",
+      "power": 2
+    },
+    {
+      "id": 1769080847901,
+      "name": "ITAA",
+      "role": "Institut experts-comptables — Validation montage financier",
+      "position": "neutral",
+      "power": 2
+    },
+    {
+      "id": 1769080847902,
+      "name": "Commission Européenne",
+      "role": "Surveillance budgétaire — Pression 23 milliards économies",
+      "position": "opponent",
+      "power": 4
+    },
+    {
+      "id": 1769080847903,
+      "name": "Cour Constitutionnelle",
+      "role": "Juridiction suprême — Recours potentiel si ruling défavorable",
+      "position": "neutral",
+      "power": 5
+    },
+    {
+      "id": 1769080847904,
+      "name": "Conseil d'État",
+      "role": "Juridiction administrative — Recours contre décisions SDA",
+      "position": "neutral",
+      "power": 4
+    },
+    {
+      "id": 1769080847905,
+      "name": "BAPN",
+      "role": "Réseau Belge Lutte contre la Pauvreté",
+      "position": "ally",
+      "power": 2
+    },
+    {
+      "id": 1769080847906,
+      "name": "RWLP",
+      "role": "Réseau Wallon Lutte contre la Pauvreté",
+      "position": "ally",
+      "power": 2
+    },
+    {
+      "id": 1769080847907,
+      "name": "Sensor.community",
+      "role": "Réseau international capteurs citoyens — Partenaire technique",
+      "position": "ally",
+      "power": 2
+    },
+    {
+      "id": 1769080847908,
+      "name": "Solid Project (Inrupt)",
+      "role": "Initiative Tim Berners-Lee — Standard technique Pod",
+      "position": "ally",
+      "power": 2
+    },
+    {
+      "id": 1769080847909,
+      "name": "PS (opposition)",
+      "role": "Parti socialiste — Relais parlementaire potentiel",
+      "position": "ally",
+      "power": 3
+    },
+    {
+      "id": 1769080847910,
+      "name": "Écolo/Groen",
+      "role": "Partis verts — Sensibilité transition et communs",
+      "position": "ally",
+      "power": 2
+    },
+    {
+      "id": 1769080847911,
+      "name": "PTB",
+      "role": "Parti gauche — Alternatives budgétaires documentées",
+      "position": "ally",
+      "power": 2
+    }
+  ],
+  "arbre": {
+    "probleme": "Le « PIÈGE INSTITUTIONNEL » belge maintient 978 000 personnes dans une INACTIVITÉ CONTRAINTE coûtant 21-24 milliards €/an à l'État, tout en PÉNALISANT financièrement toute tentative de contribution citoyenne.\n\nParadoxe : Le système INDEMNISE l'inactivité mais SANCTIONNE l'initiative.\n\nConséquence : Les personnes précarisées sont ENFERMÉES dans un cycle de dépendance passive où chaque euro gagné fait perdre plus en allocations (taux marginal > 100%), créant une désincitation structurelle à la contribution sociale.\n\nL'Économie Contributive Provisionnée (ECP) est la réponse structurelle à ce piège, mais son absence de CADRE JURIDIQUE SÉCURISÉ la rend impossible à déployer sans risque de requalification salariale ou de perte des droits sociaux.",
+    "causes": "• ABSENCE DE STATUT JURIDIQUE pour les formes hybrides de contribution (ni salarié, ni indépendant, ni volontaire)\n• CONCEPTION BINAIRE du marché du travail : soit employé à temps plein, soit inactif total\n• CLOISONNEMENT ADMINISTRATIF : SPF Finances, ONSS, ONEM, INAMI ne communiquent pas\n• MÉCANISMES DE DÉGRESSIVITÉ brutaux : perte immédiate du BIM au premier euro\n• IDÉOLOGIE D'ACTIVATION COERCITIVE privilégiant la sanction à l'incitation\n• FINANCEMENT DE LA SÉCU basé uniquement sur le salariat traditionnel\n• FRACTURE NUMÉRIQUE empêchant l'accès aux outils de contribution\n• STIGMATISATION SOCIALE des bénéficiaires d'allocations décourageant l'initiative",
+    "consequences": "• 978 000 personnes maintenues dans l'inactivité contrainte\n• Coût annuel de 21-24 milliards € en dépenses passives (1 M€/heure)\n• Déficit sécurité sociale 2024 : 18,2 Md€ (dérapage de 8 Md€)\n• Projection déficit 2028 : 24,1 milliards € sans correction\n• Perte de compétences et de capital humain non valorisé\n• Aggravation de la précarité et de l'isolement social\n• Cercle vicieux : inactivité → dégradation santé mentale → incapacité\n• Non-recours aux droits par méconnaissance et complexité administrative"
+  },
+  "pourquoi": {
+    "p1": "POURQUOI #1 : Parce qu'il n'existe AUCUN STATUT JURIDIQUE pour les formes hybrides de contribution citoyenne — le droit belge ne connaît que le salarié, l'indépendant ou le volontaire strict, pas le « contributeur provisionné » qui génère de la valeur sans encaisser immédiatement.",
+    "p2": "POURQUOI #2 : Parce que le SYSTÈME SOCIAL BELGE a été conçu pour un marché du travail BINAIRE (emploi à temps plein vs inactivité totale) et ne sait pas traiter les SITUATIONS INTERMÉDIAIRES où une personne contribue partiellement tout en conservant une protection sociale.",
+    "p3": "POURQUOI #3 : Parce que les MÉCANISMES DE DÉGRESSIVITÉ sont BRUTAUX — la perte du statut BIM au premier euro gagné crée un « taux marginal d'imposition » supérieur à 100%, rendant toute initiative économiquement IRRATIONNELLE pour le précaire.",
+    "p4": "POURQUOI #4 : Parce que l'IDÉOLOGIE D'ACTIVATION COERCITIVE dominante postule que seule la SANCTION (limitation chômage, réduction allocations) incite à l'emploi, IGNORANT que les freins réels sont structurels (santé, âge, compétences, piège institutionnel).",
+    "p5": "🎯 CAUSE RACINE (POURQUOI #5) :\n\nParce que le RAPPORT DE FORCE POLITIQUE est structurellement DÉFAVORABLE aux formes alternatives de contribution :\n\n• Le FINANCEMENT DE LA SÉCU est indexé sur le SALARIAT TRADITIONNEL → tout ce qui n'est pas CDI est suspect\n\n• Les ADMINISTRATIONS CLOISONNÉES (Finances, ONSS, ONEM, INAMI) ne peuvent pas traiter un statut hybride\n\n• La COALITION ARIZONA privilégie la PUNITION des « inactifs » à leur ACTIVATION POSITIVE\n\n• Le RULING FISCAL comme solution AGILE est sous-utilisé car méconnu des acteurs sociaux\n\n→ CE N'EST PAS UN PROBLÈME TECHNIQUE, C'EST UN CHOIX POLITIQUE de maintenir un système binaire inadapté au XXIe siècle"
+  },
+  "swot": {
+    "forces": "💪 FORCES DU MODÈLE ECP :\n\n• ARCHITECTURE JURIDIQUE SOLIDE utilisant des leviers existants\n  → Loi volontariat 2005 : cadre légal éprouvé\n  → Procédure ruling fiscal : outil de sécurisation reconnu\n  → Régimes VVPR-bis et droits d'auteur : optimisation légale classique\n\n• ALIGNEMENT DÉMONTRABLE avec les objectifs gouvernementaux\n  → Valorisation du travail → l'ECP rémunère la contribution\n  → Augmentation taux d'emploi → passerelles flexibles\n  → Responsabilisation → autonomie progressive sans rupture\n\n• ARGUMENT ÉCONOMIQUE IMPARABLE\n  → Coût inactivité : 21-24 milliards €/an\n  → Investissement ECP : 24 000 € pour preuve de concept\n  → ROI potentiel : transformation dépense passive en valeur active\n\n• INFRASTRUCTURE TECHNIQUE MODERNE\n  → Standards internationaux (Solid, FHIR) = crédibilité\n  → Open source = réplicabilité et transparence\n  → Interopérabilité = intégration possible aux systèmes existants\n\n• DIVERSITÉ DES CONTRIBUTIONS VALORISÉES\n  → Science citoyenne, care, transition écologique, communs numériques\n  → Adapté aux compétences variées des publics précarisés",
+    "faiblesses": "⚠️ FAIBLESSES DU MODÈLE ECP :\n\n• COMPLEXITÉ TECHNIQUE ÉLEVÉE\n  → Difficile à expliquer en 30 secondes\n  → Vulgarisation nécessaire pour grand public et décideurs\n  → Risque de perception comme « usine à gaz »\n\n• ABSENCE DE PRÉCÉDENT DIRECT\n  → Pas de ruling fiscal existant sur modèle ECP comparable\n  → Territoire juridique vierge = incertitude\n  → SDA pourrait refuser de se prononcer\n\n• RESSOURCES LIMITÉES\n  → Budget 24 000 € insuffisant pour lobbying traditionnel\n  → Dépendance au bénévolat et pro bono\n  → Pas de capacité de contentieux prolongé\n\n• FRAGMENTATION LINGUISTIQUE\n  → Documentation principalement francophone\n  → Difficulté à mobiliser en Flandre\n  → Modèle perçu comme « wallon/bruxellois »\n\n• DÉPENDANCE AU CALENDRIER POLITIQUE\n  → Ruling peut prendre 6-12 mois\n  → Changement de priorités gouvernementales possible\n  → Fenêtre d'opportunité Arizona limitée dans le temps",
+    "opportunites": "🌟 OPPORTUNITÉS EXTERNES :\n\n• CONTEXTE BUDGÉTAIRE CRITIQUE crée l'urgence\n  → Déficit sécu sociale 18,2 Md€ → besoin de solutions innovantes\n  → Projection 24,1 Md€ en 2028 → statu quo intenable\n  → Pression européenne → incitation à l'efficience\n\n• RÉFORMES ARIZONA créent un APPEL D'AIR\n  → Limitation chômage 24 mois → besoin d'alternatives\n  → Discours « valoriser le travail » → ouverture sémantique\n  → Volonté de « simplification » → ruling = solution agile\n\n• MATURITÉ TECHNOLOGIQUE des outils\n  → Solid/FHIR prêts pour déploiement à grande échelle\n  → Partenaires régionaux (Paradigm, Athumi) déjà existants\n  → Écosystème open source actif\n\n• INTÉRÊT CROISSANT pour les modèles alternatifs\n  → Économie sociale et solidaire en expansion\n  → Communs numériques reconnus (Wikipedia, OpenStreetMap)\n  → Transition écologique nécessite contributions citoyennes\n\n• PRÉCÉDENTS INTERNATIONAUX favorables\n  → Modèles de « universal basic income » testés ailleurs\n  → Reconnaissance du care work dans d'autres pays\n  → Standards Solid adoptés par gouvernements (Flandre)",
+    "menaces": "🔥 MENACES EXTERNES :\n\n• RULING FISCAL DÉFAVORABLE ou REFUS du SDA\n  → Bloquerait le modèle juridiquement\n  → Créerait un précédent négatif\n  → Nécessiterait un recours contentieux long et coûteux\n\n• REQUALIFICATION ONSS en contrat de travail\n  → Redressements fiscaux et sociaux catastrophiques\n  → Destruction de la crédibilité du modèle\n  → Découragement des contributeurs\n\n• RÉCUPÉRATION POLITIQUE NÉGATIVE\n  → Accusation d'« optimisation fiscale déguisée »\n  → Amalgame avec fraude sociale\n  → Instrumentalisation par extrême-droite\n\n• CHANGEMENT DE GOUVERNEMENT ou de priorités\n  → Nouveau ministre des Finances moins ouvert\n  → Abandon des objectifs Arizona compatibles\n  → Retour à approche purement répressive\n\n• CONCURRENCE de modèles alternatifs mieux dotés\n  → Plateformes privées de « gig economy »\n  → Initiatives corporate de « social impact »\n  → Captation par acteurs commerciaux\n\n• FATIGUE des porteurs de projet\n  → Procédures administratives décourageantes\n  → Absence de résultats rapides\n  → Burn-out militant"
+  },
+  "pestel": {
+    "p": "🏛️ CONTEXTE POLITIQUE BELGE 2025-2026 :\n\n• Coalition Arizona = MR + N-VA + Engagés + CD&V + Vooruit\n  → Formée après 239 jours de négociation (février 2025)\n  → Majorité solide mais tensions internes (aile sociale vs libérale)\n\n• Premier ministre Bart De Wever (N-VA)\n  → Agenda « activation » et responsabilisation\n  → Philosophie : « le travail doit payer plus que l'inactivité »\n  → Objectif : 500 € nets/mois différentiel travail-allocations\n\n• Objectifs gouvernementaux compatibles avec ECP :\n  → Économie structurelle de 18 milliards € d'ici 2029\n  → Augmentation salaire net moyen de 1 200 €/an\n  → Taux d'emploi à 80% (actuellement 72,1% vs 75,4% UE)\n  → Combler les 4,6% de postes vacants\n\n• Opposition fragmentée : PS, Écolo, PTB, DéFI\n  → Pas d'alternative majoritaire crédible\n  → Mais relais parlementaires pour propositions innovantes\n\n• Pression Vlaams Belang sur la droite de la N-VA\n  → Risque de radicalisation des positions sociales\n  → Empêche tout « ramollissement »",
+    "e": "💰 CONTEXTE ÉCONOMIQUE :\n\n• DÉFICIT SÉCURITÉ SOCIALE massif et croissant\n  → 2024 : 18,2 milliards € (dérapage de 8 Md€ vs prévisions)\n  → 2028 projection : 24,1 milliards € sans correction\n  → Branche maladie-invalidité : 15,3 Md€ de déficit seul\n\n• COÛT DE L'INACTIVITÉ CONTRAINTE\n  → 978 000 personnes maintenues inactives\n  → Coût annuel : 21-24 milliards €\n  → Soit 1 million € PAR HEURE\n\n• DETTE PUBLIQUE en spirale\n  → 2023 : 105,2% du PIB\n  → 2029 projection : 119% du PIB (+14 points en 5 ans)\n  → Effet boule de neige des intérêts\n\n• COÛT DU VIEILLISSEMENT\n  → +1,7 point de PIB entre 2024 et 2070\n  → Concentration sur 2024-2050 (+1,8 point)\n  → Pensions + soins de santé = moteurs principaux\n\n• TAUX D'EMPLOI insuffisant\n  → Belgique : 72,1% vs UE : 75,4%\n  → Postes vacants : 4,6%\n  → Inadéquation offre/demande de compétences\n\n• ALTERNATIVES BUDGÉTAIRES existantes\n  → Taxe millionnaires : 17 milliards € potentiels\n  → Lutte fraude fiscale : plusieurs milliards\n  → Mais hors agenda gouvernemental",
+    "s": "👥 CONTEXTE SOCIAL :\n\n• PAUVRETÉ : 2,1 millions de Belges en risque AROPE (18,3%)\n  → Augmentation structurelle depuis COVID\n  → Fracture numérique aggravant le non-recours\n\n• INACTIVITÉ CONTRAINTE : 978 000 personnes\n  → Incapacité longue durée : 500 000+ (plus que chômeurs)\n  → Chômeurs longue durée : menacés par limite 24 mois\n  → Bénéficiaires RIS : 30 122 basculements prévus\n\n• PRÉCARITÉ ÉTUDIANTE\n  → 58% en insécurité alimentaire\n  → 15 000 « non-finançables » exclus de l'enseignement\n  → Piège travail étudiant vs réussite académique\n\n• AIDANTS PROCHES invisibilisés\n  → Travail de care non reconnu ni rémunéré\n  → Majoritairement femmes, carrières interrompues\n  → Épuisement et isolement\n\n• PIÈGE INSTITUTIONNEL documenté\n  → Taux marginal > 100% : perdre plus qu'on gagne\n  → Perte BIM → perte tarifs sociaux en cascade\n  → Désincitation structurelle à la contribution\n\n• STIGMATISATION des bénéficiaires d'allocations\n  → Discours « profiteurs » et « assistés »\n  → Honte sociale freinant l'initiative\n  → Méfiance administrative présumée fraude",
+    "t": "💻 CONTEXTE TECHNOLOGIQUE :\n\n• PROTOCOLE SOLID (Tim Berners-Lee)\n  → Personal Online Datastore (Pod) = souveraineté données\n  → Standard W3C en cours d'adoption\n  → Déploiements pilotes en Flandre (Athumi)\n\n• STANDARD FHIR (Fast Healthcare Interoperability Resources)\n  → Interopérabilité santé reconnue internationalement\n  → Applicable au « Pont Social » CPAS/santé\n  → Adoption croissante en Belgique (e-health)\n\n• GIT SCRAPING pour « vérité administrative »\n  → Archivage inaltérable de données publiques\n  → Comparaison relevés pollution vs chiffres officiels\n  → Transparence budgétaire vérifiable\n\n• PLATEFORME DECIDIM\n  → Délibération liquide open source\n  → Vote quadratique pour préférences complexes\n  → Utilisée par gouvernements (Barcelone, Helsinki)\n\n• RÉSEAU SENSOR.COMMUNITY\n  → Capteurs citoyens qualité de l'air\n  → Réseau mondial de science participative\n  → Modèle de contribution ECP immédiatement déployable\n\n• FRACTURE NUMÉRIQUE persistante\n  → eBox/MyBenefits inaccessibles aux fragiles\n  → Suppression des guichets physiques\n  → Formation numérique insuffisante",
+    "en": "🌱 CONTEXTE ENVIRONNEMENTAL :\n\n• TRANSITION ÉCOLOGIQUE nécessitant contributions citoyennes\n  → Restauration de la nature, reforestation, biodiversité\n  → Agriculture régénérative et circuits courts\n  → Économie circulaire et repair cafés\n\n• MODÈLE DU « DONUT » (Kate Raworth)\n  → Plancher social + plafond environnemental\n  → ECP contribue aux deux dimensions\n  → Cadre conceptuel aligné avec l'ECP\n\n• PRÉCARITÉ ÉNERGÉTIQUE aggravée\n  → Prix énergie post-crise 2022\n  → Dépendance aux tarifs sociaux (liés au BIM)\n  → Perte BIM → spirale de précarisation énergétique\n\n• SCIENCE CITOYENNE environnementale\n  → Monitoring pollution (Sensor.community, Telraam)\n  → Comparaison données citoyennes vs officielles\n  → Contribution ECP directement valorisable\n\n• SOLUTIONS LOW-TECH\n  → Potagers collectifs, tiers-lieux, repair cafés\n  → Transmission de savoir-faire traditionnels\n  → Résilience locale face aux crises",
+    "l": "⚖️ CONTEXTE JURIDIQUE :\n\n• LOI DU 3 JUILLET 2005 sur le volontariat\n  → Cadre légal pour engagement non rémunéré\n  → Plafond défraiement : 1 692,51 € (2025) non imposable\n  → Charte obligatoire documentant l'absence de subordination\n\n• CRITÈRES ONSS de requalification salariale\n  → Prestation de travail\n  → Rémunération\n  → Lien de SUBORDINATION (critère clé)\n  → Absence des trois = pas de contrat de travail\n\n• SERVICE DES DÉCISIONS ANTICIPÉES (SDA)\n  → Procédure de ruling fiscal établie depuis 2002\n  → Compétence : situations fiscales complexes/nouvelles\n  → Précédents sur structures de management, VVPR-bis\n\n• ARTICLE 344, §1er CIR 92 (disposition anti-abus)\n  → Requalification possible si montage sans motif économique\n  → Ruling permet de sécuriser l'absence d'abus\n  → Charge de la preuve inversée si ruling obtenu\n\n• RÉGIME VVPR-BIS (Art. 269, §2 CIR/92)\n  → Dividendes à taux réduit (20% puis 15%)\n  → Après période de mise en réserve\n  → Applicable aux SRL de management ECP\n\n• DROITS D'AUTEUR (Art. 17, §1er CIR/92)\n  → Taxation avantageuse des créations intellectuelles\n  → Applicable aux méthodologies et outils ECP\n  → Plafond et conditions à respecter"
+  },
+  "tdc": {
+    "actuelle": "🧠 CHANGEMENTS DE CONSCIENCE INDIVIDUELS :\n\n• Les personnes précarisées passent de la HONTE à la FIERTÉ de contribuer\n  → « Je ne suis pas un profiteur, je suis un contributeur citoyen dont le système refuse la valeur »\n\n• Déconstruction du piège institutionnel intériorisé\n  → Comprendre que le problème n'est pas personnel mais SYSTÉMIQUE\n  → Réaliser que l'inactivité forcée coûte plus cher à l'État que l'ECP\n\n• Prise de conscience de la valeur sociale de ses compétences\n  → Un malade longue durée peut contribuer partiellement sans perdre sa protection\n  → Un chômeur de 55 ans a une expertise transmissible\n\n• Renforcement de la capacité d'agir (empowerment)\n  → Maîtrise des mécanismes juridiques de protection (volontariat, provisionnement)\n  → Connaissance de ses droits et des recours disponibles\n\n• Transformation de la résignation en énergie constructive\n  → De la dépendance passive à la contribution active sécurisée",
+    "souhaitee": "⚖️ CHANGEMENTS DE POLITIQUES COLLECTIVES :\n\n• RULING FISCAL FAVORABLE du SDA validant :\n  → Le provisionnement différé comme non-revenu immédiat\n  → Le maintien des droits sociaux pendant la phase contributive\n  → La conformité du montage à l'article 344 CIR 92 (absence d'abus)\n\n• CRÉATION d'un statut fiscal spécifique ECP :\n  → Qualification univoque des revenus contributifs\n  → Taux d'imposition modéré et prévisible\n  → Procédure déclarative simplifiée (plateforme numérique)\n\n• ARTICULATION avec la sécurité sociale :\n  → Constitution de droits pension/maladie sur base des contributions\n  → Reconnaissance comme « activité » pour le contrôle chômage\n  → Maintien BIM pendant la phase de transition\n\n• PARTENARIATS INSTITUTIONNELS formalisés :\n  → Intégration de Paradigm/Athumi pour infrastructure données\n  → Convention avec mutuelles pour le Pont Social FHIR\n  → Accord avec services emploi (Forem/Actiris/VDAB)\n\n• CADRE LÉGAL PÉRENNE :\n  → Modification de la loi sur le volontariat pour inclure l'ECP\n  → Circulaire administrative clarifiant le traitement social/fiscal",
+    "mecanismes": "🏃 CHANGEMENTS DE COMPORTEMENT INDIVIDUELS :\n\n• ENGAGEMENT dans des activités de contribution valorisées :\n  → Installation et gestion de capteurs citoyens (Telraam, Sensor.community)\n  → Participation au « Pont Social » FHIR : aide à la navigation CPAS/santé\n  → Rédaction de guides pratiques locaux (aide alimentaire, droits sociaux)\n  → Animation de tiers-lieux et potagers collectifs\n\n• UTILISATION du cadre ECP pour sécuriser sa contribution :\n  → Signature de chartes de volontariat conformes (loi 2005)\n  → Constitution de SRL de management pour phase de transition\n  → Provisionnement des revenus générés dans le Fonds de Contribution\n\n• PARTICIPATION à la gouvernance démocratique :\n  → Délibération liquide sur Decidim\n  → Vote quadratique pour exprimer l'intensité des préférences\n  → Délégation d'expertise à des tiers de confiance\n\n• DOCUMENTATION de ses contributions :\n  → Archivage de ses apports via Git Scraping\n  → Constitution d'un portefeuille de compétences contributives\n  → Préparation de la transition vers l'autonomie financière",
+    "hypotheses": "HYPOTHÈSES SOUS-JACENTES À NOTRE THÉORIE DU CHANGEMENT :\n\n1️⃣ Le SDA est CAPABLE et DISPOSÉ à statuer sur un montage innovant\n   → Précédent : rulings sur « plus-values internes » et structures de management\n   → Le SDA a l'expertise technique pour analyser l'ECP\n\n2️⃣ L'alignement avec les objectifs Arizona REND le modèle audible\n   → L'ECP répond à « valoriser le travail » et « augmenter le taux d'emploi »\n   → Un ruling est une victoire rapide sans processus législatif lourd\n\n3️⃣ Le COÛT DE L'INACTION est un argument économique imparable\n   → 21-24 milliards €/an de dépenses passives vs 24 000 € de projet pilote\n   → Les décideurs rationnels devraient voir l'intérêt\n\n4️⃣ Les PARTENAIRES INSTITUTIONNELS ont intérêt à s'engager\n   → Mutuelles : nouveaux services à membres, expertise santé\n   → Syndicats : défense de travailleurs atypiques, alternative à l'austérité\n   → CPAS : allègement de la charge via contributeurs autonomes\n\n5️⃣ L'INFRASTRUCTURE TECHNIQUE est mature et déployable\n   → Solid, FHIR, Decidim sont des standards éprouvés\n   → Les coûts d'implémentation sont limités\n\n⚠️ HYPOTHÈSE RISQUÉE :\nLe SDA accepte de se prononcer sur un montage à visée sociale et pas seulement patrimoniale/successorale"
+  },
+  "pouvoir": {
+    "avec": "🤝 STRATÉGIE \"AVEC\" LE POUVOIR — Dialogue et collaboration institutionnelle :\n\n• DIALOGUE avec le Service des Décisions Anticipées (SDA)\n  → Dépôt d'une demande de ruling documentée et argumentée\n  → Démonstration de l'alignement avec les objectifs Arizona\n  → Proposition de cadre fiscal simple et prévisible\n\n• PARTENARIAT avec le cabinet Vandenbroucke (Affaires Sociales)\n  → Ministre Vooruit potentiellement sensible à l'innovation sociale\n  → Focus : articulation ECP/sécurité sociale\n  → Argument : réduction du coût de l'inactivité\n\n• COLLABORATION avec les gestionnaires régionaux de données\n  → Paradigm (Bruxelles) et Athumi (Flandre) pour infrastructure Solid\n  → Intégration technique aux systèmes existants\n  → Montée en charge vers 1 million d'utilisateurs\n\n• CONCERTATION avec les partenaires sociaux\n  → Syndicats : services juridiques, relais vers membres\n  → Mutuelles : expertise santé, Pont Social FHIR\n  → Fédérations CPAS : relais institutionnel, données terrain\n\n• AUDITIONS PARLEMENTAIRES\n  → Présentation du modèle aux commissions compétentes\n  → Documentation des économies potentielles\n  → Propositions d'amendements législatifs",
+    "sans": "🔄 STRATÉGIE \"SANS\" LE POUVOIR — Alternatives autonomes :\n\n• PROJET PILOTE ARC (Agence de Renseignement Citoyenne)\n  → Preuve de concept indépendante avec 24 000 € de budget\n  → Démonstration que l'alternative fonctionne\n  → Documentation rigoureuse des résultats\n\n• DÉPLOIEMENT TECHNIQUE AUTONOME\n  → Installation du réseau Sensor.community (capteurs pollution)\n  → Mise en place de Pods Solid pour contributeurs\n  → Plateforme Decidim pour gouvernance participative\n\n• PRODUCTION DE RESSOURCES ÉDUCATIVES\n  → Guides pratiques : « Comment contribuer sans perdre ses droits »\n  → Formations en éducation permanente\n  → Vulgarisation du mécanisme de provisionnement\n\n• CONSTITUTION D'UN ÉCOSYSTÈME DE CONTRIBUTEURS\n  → Réseau de 100+ personnes testant le modèle\n  → Chartes de volontariat conformes\n  → Structuration juridique progressive (SRL)\n\n• DOCUMENTATION OPEN SOURCE\n  → Publication de toutes les méthodologies\n  → Archivage Git des données et processus\n  → Réplicabilité du modèle par d'autres acteurs",
+    "contre": "✊ STRATÉGIE \"CONTRE\" LE POUVOIR — Opposition et rapport de force :\n\n• RECOURS JURIDIQUES en cas de ruling défavorable\n  → Recours devant le Conseil d'État contre décision SDA\n  → Saisine de la Cour Constitutionnelle (article 23 dignité humaine)\n  → Contentieux stratégique pour créer jurisprudence\n\n• CAMPAGNE DE DÉNONCIATION DU PIÈGE INSTITUTIONNEL\n  → Publication des chiffres : 1 M€/heure de coût inactivité\n  → Témoignages de victimes du système binaire\n  → Naming and shaming des responsables du blocage\n\n• MOBILISATION CITOYENNE\n  → Pétitions pour un statut de contributeur citoyen\n  → Actions symboliques devant le SPF Finances\n  → Médiatisation des cas absurdes de pénalisation\n\n• INTERPELLATION EUROPÉENNE\n  → Saisine du Comité européen des droits sociaux\n  → Invocation du Pilier social européen\n  → Comparaison avec modèles d'autres États membres\n\n• ALLIANCE AVEC L'OPPOSITION PARLEMENTAIRE\n  → PS, Écolo, PTB : propositions de loi alternatives\n  → Questions parlementaires sur le coût de l'inactivité\n  → Auditions critiques des ministres concernés\n\n• DÉSOBÉISSANCE ADMINISTRATIVE DOCUMENTÉE\n  → Contributeurs assumant publiquement leur activité ECP\n  → Refus collectif du piège institutionnel\n  → Médiatisation des sanctions pour créer l'indignation"
+  },
+  "cibles": {
+    "principales": "🎯 CIBLE PRINCIPALE : Le SERVICE DES DÉCISIONS ANTICIPÉES (SDA)\n\nSeule autorité habilitée à délivrer un RULING FISCAL sécurisant juridiquement l'ECP.\n\n• Rattaché au SPF Finances\n• Compétence : statuer sur situations fiscales complexes ou nouvelles\n• Procédure : demande formelle avec dossier documenté\n• Délai : 3-6 mois pour décision\n• Effet : opposable à l'administration fiscale\n\nSTRATÉGIE :\n1. Déposer une demande de ruling IMPECCABLEMENT documentée\n2. Démontrer l'ALIGNEMENT avec les objectifs gouvernementaux Arizona\n3. Présenter le mécanisme de PROVISIONNEMENT DIFFÉRÉ comme non-revenu immédiat\n4. Solliciter la validation de l'ABSENCE D'ABUS fiscal (Art. 344 CIR 92)\n5. Proposer un SCHÉMA DE RÉMUNÉRATION progressif (salaire + VVPR-bis + droits d'auteur)\n\nENJEU : Un ruling favorable = feu vert juridique pour déployer l'ECP à grande échelle",
+    "secondaires": "🎯 CIBLES SECONDAIRES :\n\n• CABINET VANDENBROUCKE (Ministre Affaires Sociales, Vooruit)\n  → Ministre socialiste dans coalition de droite\n  → Sensibilité potentielle à l'innovation sociale\n  → Levier : démontrer que l'ECP réduit le coût de l'inactivité sans sanctionner\n  → Demande : circulaire clarifiant l'articulation ECP/droits sociaux\n\n• ONSS (Office National de Sécurité Sociale)\n  → Autorité de requalification salariale\n  → Enjeu : confirmer que l'ECP ne crée pas de lien de subordination\n  → Stratégie : documenter l'absence des trois critères (prestation, rémunération, subordination)\n\n• SERVICES RÉGIONAUX DE L'EMPLOI (Forem, Actiris, VDAB)\n  → Contrôle de la recherche active d'emploi\n  → Enjeu : reconnaissance de l'ECP comme « activité » compatible\n  → Stratégie : conventionnement pilote pour contributeurs ECP\n\n• COMMISSIONS PARLEMENTAIRES (Affaires Sociales, Finances)\n  → Relais pour visibilité politique du modèle\n  → Enjeu : auditions, questions parlementaires, propositions de loi\n  → Stratégie : documentation des économies potentielles\n\n• MÉDIAS SPÉCIALISÉS (Le Soir, L'Écho, Trends)\n  → Caisse de résonance pour légitimer le modèle\n  → Enjeu : couverture positive de l'innovation sociale\n  → Stratégie : dossiers de presse, infographies, témoignages",
+    "allies": "💚 ALLIÉS STRATÉGIQUES :\n\n• SYNDICATS (FGTB, CSC, CGSLB)\n  → Services juridiques pour accompagner les contributeurs\n  → Légitimité historique et force de mobilisation\n  → Expertise en négociation avec les pouvoirs publics\n  → Intérêt : défense de travailleurs atypiques, alternative à l'austérité\n\n• MUTUELLES (Solidaris, MC)\n  → Expertise santé et réseau de membres\n  → Infrastructure pour le Pont Social FHIR\n  → Intérêt : nouveaux services, réduction coûts santé via prévention\n\n• FÉDÉRATIONS CPAS (UVCW, Brulocalis)\n  → Légitimité institutionnelle incontestable\n  → Données terrain sur le coût des basculements RIS\n  → Intérêt : allègement de la charge via contributeurs autonomes\n\n• GESTIONNAIRES DONNÉES (Paradigm, Athumi)\n  → Infrastructure technique Solid déjà déployée\n  → Capacité de montée en charge (1 million d'utilisateurs)\n  → Intérêt : use case concret de souveraineté citoyenne\n\n• RÉSEAUX ANTI-PAUVRETÉ (BAPN, RWLP)\n  → Expertise du non-recours et des pièges à l'emploi\n  → Témoignages et histoires humaines\n  → Relais vers les publics précarisés\n\n• UNIVERSITÉS (DULBEA/ULB, IWEPS)\n  → Caution académique et études d'impact\n  → Crédibilité vis-à-vis des décideurs\n  → Intérêt : terrain de recherche innovant\n\n• OPPOSITION PARLEMENTAIRE (PS, Écolo, PTB)\n  → Relais politique des revendications\n  → Questions parlementaires, propositions de loi\n  → Alternatives budgétaires documentées"
+  },
+  "message": {
+    "accroche": "🎣 ACCROCHE :\n\n« En Belgique, l'inactivité forcée coûte 1 MILLION D'EUROS PAR HEURE.\n\n978 000 personnes sont PAYÉES pour ne rien faire.\n\nPas parce qu'elles le veulent.\n\nMais parce que le système les PUNIT dès qu'elles essaient de contribuer.\n\nChaque euro gagné = des allocations perdues.\nChaque initiative = un statut social menacé.\n\nL'Économie Contributive Provisionnée change la donne.\n\nContribuer SANS perdre ses droits.\nCréer de la valeur SANS risquer la précarité.\n\n24 000 € pour prouver que c'est possible.\nContre 21 milliards de dépenses passives par an. »\n\n---\n\nVariante chiffrée :\n« 21-24 milliards €/an : c'est le coût de MAINTENIR des gens dans l'inactivité.\n24 000 € : c'est le coût de PROUVER qu'une alternative existe.\nQuel investissement choisiriez-vous ? »",
+    "probleme": "🔍 LE PROBLÈME :\n\nLe système social belge souffre d'un PIÈGE INSTITUTIONNEL absurde :\n\n• Il INDEMNISE l'inactivité totale (21-24 milliards €/an)\n• Mais il PÉNALISE toute tentative de contribution\n\nComment ? Par un « taux marginal d'imposition » SUPÉRIEUR À 100% pour les précaires :\n→ Chaque euro gagné fait perdre le statut BIM\n→ Perte BIM = perte des tarifs sociaux (énergie, transport, soins)\n→ Perte des tarifs sociaux = coût supérieur au revenu généré\n\nRésultat : Il est ÉCONOMIQUEMENT RATIONNEL de rester inactif.\n\nCe n'est pas de la paresse. C'est de la SURVIE.\n\n978 000 personnes sont prisonnières de ce paradoxe :\n• Malades longue durée avec compétences valorisables\n• Chômeurs de 55 ans avec expertise transmissible\n• Étudiants précarisés avec talents numériques\n• Aidants proches avec savoir-faire en care\n\nTous POURRAIENT contribuer. Tous sont EMPÊCHÉS de le faire.\n\nCe n'est pas un problème technique. C'est un CHOIX POLITIQUE.",
+    "importance": "❗ POURQUOI C'EST URGENT :\n\nSans action immédiate :\n\n• Le déficit de la sécurité sociale EXPLOSERA\n  → 2024 : 18,2 milliards € (déjà 8 Md€ de dérapage)\n  → 2028 : 24,1 milliards € projetés\n  → Dette publique : 119% du PIB en 2029\n\n• Les réformes Arizona AGGRAVERONT le piège\n  → Limitation chômage à 24 mois → exclusion massive\n  → Sanctions malades longue durée → précarisation\n  → Activation coercitive → sans alternative positive\n\n• Le capital humain continuera de se DÉGRADER\n  → Compétences obsolètes non renouvelées\n  → Isolement social aggravant la santé mentale\n  → Cercle vicieux inactivité → incapacité → inactivité\n\n• La FENÊTRE D'OPPORTUNITÉ se fermera\n  → La coalition Arizona veut « valoriser le travail »\n  → Un ruling fiscal est une victoire RAPIDE sans loi\n  → Après 2029, nouvelles priorités politiques\n\nL'ECP n'est pas une utopie. C'est une SOLUTION PRAGMATIQUE.\n\n24 000 € pour démontrer l'alternative.\nMaintenant ou jamais.",
+    "cible": "🎯 À QUI NOUS NOUS ADRESSONS :\n\n• Au SERVICE DES DÉCISIONS ANTICIPÉES :\n  « Vous avez le pouvoir de SÉCURISER l'innovation sociale par un simple ruling fiscal. Le mécanisme de provisionnement différé est techniquement solide. Validez-le. »\n\n• Au MINISTRE VANDENBROUCKE (Affaires Sociales) :\n  « Vous êtes socialiste dans une coalition de droite. L'ECP vous permet de VALORISER LE TRAVAIL sans SANCTIONNER les précaires. C'est votre victoire politique. »\n\n• Aux SYNDICATS et MUTUELLES :\n  « Vos membres sont les premières victimes du piège institutionnel. L'ECP leur offre une voie de sortie SANS PERDRE VOS PROTECTIONS. Soutenez-nous. »\n\n• Aux CPAS et SERVICES SOCIAUX :\n  « Vous croulez sous les dossiers de basculement. L'ECP peut transformer des bénéficiaires passifs en contributeurs actifs. Moins de charge pour vous, plus de dignité pour eux. »\n\n• À L'OPINION PUBLIQUE :\n  « Vous pensez que les allocataires sont des profiteurs ? Ils sont EMPÊCHÉS de contribuer par un système absurde. Donnez-leur la chance de prouver leur valeur. »",
+    "action": "📢 CE QUE NOUS DEMANDONS :\n\n1️⃣ Un RULING FISCAL FAVORABLE du SDA\n   → Validation du mécanisme de provisionnement différé\n   → Confirmation de l'absence d'abus fiscal (Art. 344 CIR 92)\n   → Sécurisation du schéma de rémunération progressive\n\n2️⃣ Une CIRCULAIRE ADMINISTRATIVE clarifiant :\n   → Maintien du statut BIM pendant la phase contributive\n   → Reconnaissance de l'ECP comme « activité » compatible avec le chômage\n   → Articulation avec les droits sociaux (pension, maladie)\n\n3️⃣ Un PARTENARIAT INSTITUTIONNEL pour le projet pilote :\n   → Accès à l'infrastructure Solid (Paradigm/Athumi)\n   → Convention avec mutuelles pour le Pont Social FHIR\n   → Accord avec services emploi (Forem/Actiris/VDAB)\n\n4️⃣ Un FINANCEMENT INITIAL de 24 000 € pour l'ARC\n   → Preuve de concept avec 100+ contributeurs\n   → Documentation rigoureuse des résultats\n   → Base pour déploiement à grande échelle\n\n---\n\n✊ REJOIGNEZ-NOUS :\nContribution citoyenne • Ruling fiscal • Innovation sociale • Souveraineté\n\n#EconomieCOntributive #RulingFiscal #SouveraineteCitoyenne #StopLePiege"
+  },
+  "evaluation": {
+    "indicateurs": "📊 INDICATEURS QUANTITATIFS :\n\n• Décision du ruling fiscal\n  → Cible : favorable validant le provisionnement différé\n  → Minimum acceptable : demande d'informations complémentaires (pas de rejet)\n\n• Nombre de contributeurs actifs dans le pilote ARC\n  → Cible : 100+ personnes avec charte signée\n  → Intermédiaire : 50 contributeurs à mi-parcours\n\n• Valeur sociale générée documentée\n  → Cible : équivalent de 50 000 € de contributions provisionnées\n  → Mesurable : points MSI ou crédits de voix attribués\n\n• Partenariats institutionnels formalisés\n  → Cible : 3+ conventions signées (Paradigm/Athumi, mutuelle, service emploi)\n\n• Couverture médiatique\n  → Cible : 5+ articles dans médias de référence\n  → Tonalité : majoritairement positive ou neutre-informative\n\n• Maintien des droits sociaux des contributeurs\n  → Cible : 100% des contributeurs conservent leur BIM et allocations\n  → Alerte : tout cas de perte de droits = incident majeur\n\n📈 INDICATEURS QUALITATIFS :\n\n• Qualité de la documentation juridique\n  → Validation par avocat fiscaliste + expert-comptable\n\n• Satisfaction des contributeurs pilotes\n  → Enquête de satisfaction : score > 4/5\n\n• Intérêt des décideurs politiques\n  → Demandes d'information, auditions, rencontres",
+    "methodes": "🔬 MÉTHODES DE COLLECTE ET SUIVI :\n\n• SUIVI DU DOSSIER RULING\n  → Contact régulier avec le SDA (accusé de réception, demandes complémentaires)\n  → Journal de bord des échanges avec l'administration\n  → Veille sur les décisions anticipées publiées (comparables)\n\n• TABLEAU DE BORD CONTRIBUTEURS\n  → Base de données des chartes signées\n  → Tracking des missions réalisées et points attribués\n  → Suivi du statut social de chaque contributeur (BIM, allocations)\n\n• DOCUMENTATION DES CONTRIBUTIONS\n  → Git Scraping pour archivage inaltérable\n  → Preuves de réalisation des missions\n  → Valorisation en points MSI ou équivalent monétaire\n\n• VEILLE MÉDIA ET POLITIQUE\n  → Revue de presse quotidienne (alertes : ECP, ruling fiscal, activation)\n  → Suivi des débats parlementaires\n  → Monitoring des réseaux sociaux\n\n• ENQUÊTES AUPRÈS DES CONTRIBUTEURS\n  → Questionnaire de satisfaction trimestriel\n  → Entretiens qualitatifs avec échantillon représentatif\n  → Recueil des difficultés rencontrées et suggestions\n\n• ÉVALUATION D'IMPACT ACADÉMIQUE\n  → Partenariat DULBEA/IWEPS pour méthodologie rigoureuse\n  → Comparaison coût ECP vs coût inactivité\n  → Publication dans revue à comité de lecture",
+    "calendrier": "📅 CALENDRIER D'ÉVALUATION :\n\n🔹 T1 2026 (Janvier-Mars)\n• Finalisation du dossier de ruling fiscal\n• Mandatement de l'avocat fiscaliste\n• Dépôt de la demande auprès du SDA\n• Évaluation : dossier déposé ?, retour initial SDA ?\n\n🔹 T2 2026 (Avril-Juin)\n• Lancement du projet pilote ARC\n• Recrutement des 50 premiers contributeurs\n• Déploiement infrastructure technique minimale\n• Évaluation : contributeurs recrutés ?, infrastructure fonctionnelle ?\n\n🔹 T3 2026 (Juillet-Septembre)\n• Montée en charge vers 100 contributeurs\n• Publication de l'étude d'impact économique\n• Suivi du dossier ruling (échanges avec SDA)\n• Évaluation : 100 contributeurs ?, étude publiée ?, statut ruling ?\n\n🔹 T4 2026 (Octobre-Décembre)\n• Réception attendue de la décision ruling\n• Bilan du projet pilote ARC\n• Communication vers médias et partenaires\n• Évaluation : ruling favorable ?, bilan pilote positif ?\n\n🔹 2027\n• Si ruling favorable : déploiement à grande échelle\n• Si ruling défavorable : recours contentieux + ajustement stratégique\n• Évaluation globale : objectifs atteints ?, pérennisation possible ?",
+    "lecons": "💡 LEÇONS À DOCUMENTER AU FIL DU PROJET :\n\n❓ PROCÉDURE DE RULING :\n• Quels arguments ont le plus convaincu le SDA ?\n• Quelles questions/objections ont été soulevées ?\n• Quel délai réel de traitement ?\n• Si refus : quelle motivation exacte ?\n\n❓ CONTRIBUTEURS PILOTES :\n• Quel profil de contributeurs s'engage le plus facilement ?\n• Quelles activités génèrent le plus de valeur sociale ?\n• Quelles difficultés rencontrent-ils (techniques, administratives, psychologiques) ?\n• Le mécanisme de provisionnement est-il bien compris ?\n\n❓ PARTENARIATS INSTITUTIONNELS :\n• Quels partenaires ont été les plus réactifs ?\n• Quels freins institutionnels ont été rencontrés ?\n• Les syndicats/mutuelles ont-ils vraiment mobilisé ?\n\n❓ COMMUNICATION ET PERCEPTION :\n• Quel angle médiatique a le mieux fonctionné ?\n• L'ECP est-elle perçue comme innovation ou comme « combine » ?\n• Comment contrer l'accusation d'optimisation fiscale ?\n\n❓ INFRASTRUCTURE TECHNIQUE :\n• Solid/FHIR sont-ils utilisables par des publics non-techniciens ?\n• Quels bugs ou limitations techniques ?\n• Quelle montée en charge possible ?\n\n❓ COMPÉTENCES MANQUANTES :\n• Quelles expertises ont manqué dans l'équipe ?\n• Quels besoins en formation ?\n• Quel budget réaliste pour déploiement ?"
+  },
+  "smart": [
+    {
+      "id": 1769080848379,
+      "text": "Obtenir un RULING FISCAL FAVORABLE du SDA validant le mécanisme de provisionnement différé",
+      "indicator": "Décision anticipée écrite confirmant que le provisionnement n'est pas un revenu imposable immédiat et que le montage n'est pas abusif",
+      "deadline": "Dépôt T1 2026, décision attendue T3-T4 2026",
+      "done": false
+    },
+    {
+      "id": 1769080848380,
+      "text": "Lancer le projet pilote ARC (Agence de Renseignement Citoyenne) avec 100+ contributeurs actifs",
+      "indicator": "100 personnes signant une charte de volontariat conforme et réalisant des missions documentées",
+      "deadline": "Lancement T2 2026, 100 contributeurs T4 2026",
+      "done": false
+    },
+    {
+      "id": 1769080848381,
+      "text": "Documenter une ÉCONOMIE POTENTIELLE chiffrée de la transformation inactivité → contribution",
+      "indicator": "Rapport académique (DULBEA/IWEPS) quantifiant le ROI social de l'ECP vs coût actuel",
+      "deadline": "Publication T3 2026 pour appuyer la demande de ruling",
+      "done": false
+    },
+    {
+      "id": 1769080848382,
+      "text": "Sécuriser un PARTENARIAT TECHNIQUE avec Paradigm ou Athumi pour infrastructure Solid",
+      "indicator": "Convention signée permettant aux contributeurs ECP d'accéder à un Pod personnel",
+      "deadline": "Convention T2 2026",
+      "done": false
+    },
+    {
+      "id": 1769080848383,
+      "text": "Obtenir une COUVERTURE MÉDIATIQUE positive dans 3+ médias de référence",
+      "indicator": "Articles dans Le Soir, L'Écho, Trends ou RTBF présentant l'ECP comme innovation sociale",
+      "deadline": "Couverture T2-T3 2026 pour créer momentum avant décision ruling",
+      "done": false
+    }
+  ],
+  "journal": []
+}
