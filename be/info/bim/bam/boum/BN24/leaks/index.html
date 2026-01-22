@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BELGILEAKS — Les documents qu'ils ne veulent pas que vous voyiez</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --void: #030303;
+            --dark: #0a0a0a;
+            --gray-dark: #111111;
+            --gray: #1a1a1a;
+            --gray-mid: #333333;
+            --green-terminal: #00ff41;
+            --green-dark: #00cc33;
+            --green-glow: rgba(0, 255, 65, 0.4);
+            --red-alert: #ff0033;
+            --red-glow: rgba(255, 0, 51, 0.4);
+            --yellow-warn: #ffcc00;
+            --yellow-glow: rgba(255, 204, 0, 0.3);
+            --lilas: #9d4edd;
+            --white: #ffffff;
+            --text: #cccccc;
+            --text-muted: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--black);
+            color: var(--green-terminal);
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        ::selection {
+            background: var(--green-terminal);
+            color: var(--black);
+        }
+
+        /* GLITCH & EFFECTS */
+        .glitch {
+            position: relative;
+            animation: glitch-skew 4s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(0deg); }
+            21% { transform: skew(2deg); }
+            22% { transform: skew(0deg); }
+            80% { transform: skew(0deg); }
+            81% { transform: skew(-1deg); }
+            82% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid var(--green-terminal);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green-terminal);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .logo-icon {
+            font-size: 1.2rem;
+        }
+
+        .logo span {
+            color: var(--red-alert);
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.green { background: var(--green-terminal); box-shadow: 0 0 10px var(--green-glow); }
+        .status-dot.red { background: var(--red-alert); box-shadow: 0 0 10px var(--red-glow); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            padding: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--green-terminal);
+            text-shadow: 0 0 10px var(--green-glow);
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            padding: 8rem 2rem 4rem;
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .classified-stamp {
+            display: inline-block;
+            border: 3px solid var(--red-alert);
+            color: var(--red-alert);
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transform: rotate(-2deg);
+            margin-bottom: 2rem;
+            position: relative;
+            text-shadow: 0 0 10px var(--red-glow);
+            box-shadow: 0 0 20px var(--red-glow);
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 700;
+            line-height: 0.95;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .hero-title .line1 {
+            display: block;
+            color: var(--white);
+        }
+
+        .hero-title .line2 {
+            display: block;
+            color: var(--green-terminal);
+            text-shadow: 0 0 30px var(--green-glow);
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+            color: var(--text);
+            max-width: 700px;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            border-left: 3px solid var(--green-terminal);
+            padding-left: 1.5rem;
+        }
+
+        .hero-subtitle strong {
+            color: var(--green-terminal);
+        }
+
+        .leak-counter {
+            display: flex;
+            gap: 0;
+            border: 1px solid var(--gray-mid);
+            margin-bottom: 3rem;
+            background: var(--void);
+        }
+
+        .counter-item {
+            flex: 1;
+            padding: 1.5rem;
+            border-right: 1px solid var(--gray-mid);
+            text-align: center;
+        }
+
+        .counter-item:last-child {
+            border-right: none;
+        }
+
+        .counter-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--red-alert);
+            text-shadow: 0 0 20px var(--red-glow);
+        }
+
+        .counter-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--green-terminal);
+            color: var(--black);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px var(--green-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--green-terminal);
+            border: 1px solid var(--green-terminal);
+        }
+
+        .btn-ghost:hover {
+            background: var(--green-terminal);
+            color: var(--black);
+        }
+
+        /* ALERT BANNER */
+        .alert-banner {
+            background: var(--red-alert);
+            color: var(--white);
+            padding: 0.75rem 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-banner::before {
+            content: '⚠️';
+            margin-right: 0.5rem;
+        }
+
+        /* SECTIONS */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 5rem 2rem;
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--red-alert);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .section-tag::before {
+            content: '[';
+        }
+
+        .section-tag::after {
+            content: ']';
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+        }
+
+        .section-title .highlight {
+            color: var(--green-terminal);
+            text-shadow: 0 0 20px var(--green-glow);
+        }
+
+        /* LEAK CARDS */
+        .leaks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .leak-card {
+            background: var(--gray-dark);
+            border: 1px solid var(--gray-mid);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .leak-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--red-alert);
+        }
+
+        .leak-card:hover {
+            border-color: var(--green-terminal);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .leak-card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-mid);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .leak-id {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .leak-severity {
+            font-size: 0.65rem;
+            padding: 0.25rem 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .leak-severity.critical {
+            background: var(--red-alert);
+            color: var(--white);
+        }
+
+        .leak-severity.high {
+            background: var(--yellow-warn);
+            color: var(--black);
+        }
+
+        .leak-severity.medium {
+            background: var(--lilas);
+            color: var(--white);
+        }
+
+        .leak-card-body {
+            padding: 1.5rem;
+        }
+
+        .leak-stat {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--green-terminal);
+            text-shadow: 0 0 20px var(--green-glow);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .leak-title {
+            font-size: 1.1rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .leak-content {
+            font-size: 0.85rem;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .leak-source {
+            font-size: 0.7rem;
+            color: var(--green-terminal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .leak-source::before {
+            content: '>';
+        }
+
+        /* DOCUMENT BLOCK */
+        .document-block {
+            background: var(--void);
+            border: 1px solid var(--gray-mid);
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .document-header {
+            background: var(--gray-dark);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-mid);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .document-title {
+            font-size: 0.8rem;
+            color: var(--yellow-warn);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .document-title::before {
+            content: '📄';
+        }
+
+        .document-classification {
+            font-size: 0.65rem;
+            background: var(--red-alert);
+            color: var(--white);
+            padding: 0.25rem 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .document-body {
+            padding: 1.5rem;
+        }
+
+        .document-quote {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text);
+            line-height: 1.8;
+            border-left: 3px solid var(--yellow-warn);
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .document-source {
+            font-size: 0.75rem;
+            color: var(--yellow-warn);
+        }
+
+        /* TERMINAL BLOCK */
+        .terminal-block {
+            background: var(--void);
+            border: 1px solid var(--green-terminal);
+            margin: 2rem 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .terminal-header {
+            background: var(--gray-dark);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--green-terminal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27ca40; }
+
+        .terminal-title {
+            margin-left: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+        }
+
+        .terminal-line .prompt {
+            color: var(--green-terminal);
+        }
+
+        .terminal-line .command {
+            color: var(--white);
+        }
+
+        .terminal-line .output {
+            color: var(--text);
+            padding-left: 1rem;
+        }
+
+        .terminal-line .error {
+            color: var(--red-alert);
+        }
+
+        .terminal-line .warning {
+            color: var(--yellow-warn);
+        }
+
+        .terminal-line .success {
+            color: var(--green-terminal);
+        }
+
+        /* DATA TABLE */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.85rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--gray-mid);
+        }
+
+        .data-table th {
+            background: var(--gray-dark);
+            color: var(--green-terminal);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.75rem;
+        }
+
+        .data-table td {
+            color: var(--text);
+        }
+
+        .data-table tr:hover td {
+            background: var(--gray-dark);
+        }
+
+        .data-table .highlight-cell {
+            color: var(--red-alert);
+            font-weight: 700;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--green-terminal);
+            box-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 0.25rem;
+            width: 14px;
+            height: 14px;
+            background: var(--black);
+            border: 2px solid var(--green-terminal);
+            box-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            color: var(--green-terminal);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content {
+            font-size: 0.9rem;
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        .timeline-content strong {
+            color: var(--white);
+        }
+
+        /* WHISTLEBLOWER */
+        .whistleblower-section {
+            background: linear-gradient(180deg, var(--void), var(--gray-dark));
+        }
+
+        .whistleblower-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border: 1px solid var(--gray-mid);
+        }
+
+        @media (max-width: 900px) {
+            .whistleblower-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pillar-block {
+            padding: 2rem;
+            border-right: 1px solid var(--gray-mid);
+            position: relative;
+        }
+
+        .pillar-block:last-child {
+            border-right: none;
+        }
+
+        .pillar-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .pillar-block.catho::before { background: #ff6600; }
+        .pillar-block.soc::before { background: var(--red-alert); }
+        .pillar-block.lib::before { background: #0066ff; }
+
+        .pillar-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .pillar-block.catho .pillar-name { color: #ff6600; }
+        .pillar-block.soc .pillar-name { color: var(--red-alert); }
+        .pillar-block.lib .pillar-name { color: #0066ff; }
+
+        .pillar-list {
+            list-style: none;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .pillar-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-mid);
+        }
+
+        .pillar-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* FOOTER */
+        footer {
+            position: relative;
+            z-index: 2;
+            background: var(--void);
+            border-top: 1px solid var(--green-terminal);
+            padding: 3rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--green-terminal);
+            text-shadow: 0 0 10px var(--green-glow);
+        }
+
+        .footer-tagline {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--green-terminal);
+        }
+
+        .footer-disclaimer {
+            width: 100%;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-mid);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .footer-disclaimer .highlight {
+            color: var(--green-terminal);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .header-status {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .leak-counter {
+                flex-direction: column;
+            }
+            .counter-item {
+                border-right: none;
+                border-bottom: 1px solid var(--gray-mid);
+            }
+            .counter-item:last-child {
+                border-bottom: none;
+            }
+        }
+
+        /* ANIMATIONS */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* TYPING EFFECT */
+        .typing {
+            overflow: hidden;
+            border-right: 2px solid var(--green-terminal);
+            white-space: nowrap;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--green-terminal); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <span class="logo-icon">🔓</span>
+                BELGI<span>LEAKS</span>
+            </a>
+            <div class="header-status">
+                <div class="status-item">
+                    <span class="status-dot green"></span>
+                    <span>Serveur sécurisé</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot red"></span>
+                    <span>12 documents classifiés</span>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#leaks">Fuites</a>
+                <a href="#kern">Le Kern</a>
+                <a href="#omerta">L'Omerta</a>
+                <a href="#malades">Les Broyés</a>
+                <a href="#sources">Sources</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ALERT -->
+    <div class="alert-banner" style="margin-top: 80px;">
+        ATTENTION : Ce site contient des informations sourcées que le système politique belge préférerait garder discrètes.
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="classified-stamp glitch">CONFIDENTIEL</div>
+            <h1 class="hero-title">
+                <span class="line1">Les documents</span>
+                <span class="line2">qu'ils cachent</span>
+            </h1>
+            <div class="hero-subtitle">
+                <p>
+                    Toutes les données sont <strong>publiques et sourcées</strong>. 
+                    CRISP, RTBF, UCLouvain, Cairn, La Libre... 
+                    Elles sont juste rarement mises bout à bout.
+                    <br><br>
+                    <strong>#!BiM — Bénéficiaires d'Intelligence Mutante</strong>
+                </p>
+            </div>
+
+            <div class="leak-counter">
+                <div class="counter-item">
+                    <div class="counter-value">119<sup style="font-size: 0.5em;">e</sup>/136</div>
+                    <div class="counter-label">Classement transparence mondial</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-value">31 806</div>
+                    <div class="counter-label">Mandataires politiques</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-value">500 000</div>
+                    <div class="counter-label">Malades longue durée</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-value">0</div>
+                    <div class="counter-label">Existence légale du Kern</div>
+                </div>
+            </div>
+
+            <div class="cta-row">
+                <a href="#leaks" class="btn btn-primary">Accéder aux fuites ↓</a>
+                <a href="#sources" class="btn btn-ghost">Vérifier les sources</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TERMINAL INTRO -->
+    <section style="background: var(--void); padding: 3rem 2rem;">
+        <div class="container">
+            <div class="terminal-block">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">belgileaks@secure:~</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">cat /sys/belgium/transparency_rank.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output error">ERREUR: La Belgique se classe 119e sur 136 pays</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output warning">ALERTE: Derrière le Kazakhstan (118e) et l'Arabie Saoudite (117e)</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">grep "kern" /gov/legal_status.db</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output error">RÉSULTAT: 0 entrées. Le Kern n'a aucune existence légale.</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">count /politics/mandataires.csv</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">31 806 lignes trouvées — soit 1 mandataire par km²</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">_</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEAKS SECTION -->
+    <section id="leaks">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">LEAK-001 à LEAK-006</span>
+                <h2 class="section-title">Fuites <span class="highlight">prioritaires</span></h2>
+            </div>
+
+            <div class="leaks-grid">
+                <!-- LEAK 001 -->
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-001</span>
+                        <span class="leak-severity critical">CRITIQUE</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">119<sup style="font-size: 0.4em;">e</sup></div>
+                        <h3 class="leak-title">Classement mondial du droit à l'information</h3>
+                        <p class="leak-content">
+                            La Belgique se positionne <strong>derrière le Kazakhstan</strong> (118e) et 
+                            <strong>l'Arabie Saoudite</strong> (117e) au classement international de la transparence.
+                            Sur 136 pays évalués.
+                        </p>
+                        <span class="leak-source">SOURCE: RTBF, Classement international</span>
+                    </div>
+                </div>
+
+                <!-- LEAK 002 -->
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-002</span>
+                        <span class="leak-severity critical">CRITIQUE</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">0</div>
+                        <h3 class="leak-title">Existence légale du "Kern"</h3>
+                        <p class="leak-content">
+                            Le "Kern" — les bureaux de partis où se prennent les vraies décisions — 
+                            n'a <strong>aucune existence légale</strong>. Aucune obligation de transparence.
+                            Aucun compte à rendre. C'est là que le pays est réellement dirigé.
+                        </p>
+                        <span class="leak-source">SOURCE: Wikipedia, Analyse institutionnelle</span>
+                    </div>
+                </div>
+
+                <!-- LEAK 003 -->
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-003</span>
+                        <span class="leak-severity critical">CRITIQUE</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">31 806</div>
+                        <h3 class="leak-title">Mandataires politiques recensés</h3>
+                        <p class="leak-content">
+                            Une étude de l'UCLouvain dénombre 31 806 mandataires politiques en Belgique.
+                            Pour un pays de 30 689 km², cela représente littéralement 
+                            <strong>1 mandataire par kilomètre carré</strong>.
+                        </p>
+                        <span class="leak-source">SOURCE: UCLouvain, RTBF</span>
+                    </div>
+                </div>
+
+                <!-- LEAK 004 -->
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-004</span>
+                        <span class="leak-severity high">ÉLEVÉ</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">75M€</div>
+                        <h3 class="leak-title">Financement public annuel des partis</h3>
+                        <p class="leak-content">
+                            75 millions d'euros par an de subsides publics, représentant <strong>75% des revenus 
+                            totaux</strong> des partis. Deux fois supérieur au niveau allemand. 
+                            Au-delà de 80%, on parle de "branche de l'État".
+                        </p>
+                        <span class="leak-source">SOURCE: CRISP asbl, Weneedtotalk</span>
+                    </div>
+                </div>
+
+                <!-- LEAK 005 -->
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-005</span>
+                        <span class="leak-severity critical">CRITIQUE</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">500K</div>
+                        <h3 class="leak-title">Malades longue durée en 2023</h3>
+                        <p class="leak-content">
+                            Plus de 500 000 personnes en incapacité de travail depuis plus d'un an.
+                            <strong>+20% entre 2019 et 2023.</strong> Ce chiffre dépasse désormais 
+                            le nombre de chômeurs (300 000 en 2022).
+                        </p>
+                        <span class="leak-source">SOURCE: Statistiques INAMI</span>
+                    </div>
+                </div>
+
+                <!-- LEAK 006 -->
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-006</span>
+                        <span class="leak-severity high">ÉLEVÉ</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">0</div>
+                        <h3 class="leak-title">Conférences de presse De Wever en 3 mois</h3>
+                        <p class="leak-content">
+                            Le gouvernement De Wever, formé en février 2025 après <strong>239 jours de négociations</strong>,
+                            n'a organisé aucune conférence de presse en trois mois. Aucune mesure de transparence 
+                            dans l'accord de coalition.
+                        </p>
+                        <span class="leak-source">SOURCE: La Libre, Wikipedia</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LE KERN -->
+    <section id="kern" style="background: var(--gray-dark);">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">DOSSIER KERN</span>
+                <h2 class="section-title">Le gouvernement <span class="highlight">fantôme</span></h2>
+            </div>
+
+            <div class="document-block fade-in">
+                <div class="document-header">
+                    <span class="document-title">Document intercepté — CRISP asbl</span>
+                    <span class="document-classification">Confidentiel</span>
+                </div>
+                <div class="document-body">
+                    <blockquote class="document-quote">
+                        "Les véritables dirigeants du pays sont les présidents de partis, choisis exclusivement 
+                        par leur propre parti. Le vote d'un adhérent de parti compte plus que celui d'un électeur."
+                    </blockquote>
+                    <p class="document-source">— Observateur cité par le CRISP</p>
+                </div>
+            </div>
+
+            <div class="document-block fade-in">
+                <div class="document-header">
+                    <span class="document-title">Mécanismes de contrôle — Cairn.info</span>
+                    <span class="document-classification">Sensible</span>
+                </div>
+                <div class="document-body">
+                    <blockquote class="document-quote">
+                        "La discipline de vote s'exerce à travers quatre mécanismes : la convergence naturelle d'opinions, 
+                        la socialisation avec les autres mandataires, la persuasion par les avantages obtenus, 
+                        et ultimement la coercition avec menaces de sanctions comme l'exclusion du groupe 
+                        ou le retrait de l'investiture."
+                    </blockquote>
+                    <p class="document-source">— Cairn.info, CRISP</p>
+                </div>
+            </div>
+
+            <div class="terminal-block fade-in">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">analyse@partitocratie:~</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">SELECT * FROM listes_electorales WHERE regulation_legale = TRUE</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output error">0 résultats. Les partis confectionnent les listes sans aucune régulation légale.</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">cat /crisp/rapport_selection_candidats.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output warning">"Cette absence de règles crée un 'secret' autour des processus internes,</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output warning">permettant aux directions partidaires d'exercer un contrôle discrétionnaire</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output warning">sur l'ordre des candidats et l'attribution des places éligibles."</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">echo "Tu votes pour qui ils ont décidé."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- L'OMERTA -->
+    <section id="omerta">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">DOSSIER OMERTA</span>
+                <h2 class="section-title">Le vote de la <span class="highlight">honte</span></h2>
+            </div>
+
+            <div class="timeline fade-in">
+                <div class="timeline-item">
+                    <div class="timeline-date">MAI 2024</div>
+                    <div class="timeline-content">
+                        <strong>PS, MR, Ecolo, CD&V, Vooruit, Open VLD</strong> votent CONTRE une Commission d'accès 
+                        aux documents administratifs (CADA) contraignante au niveau fédéral.
+                        Tous les partis traditionnels, ensemble, contre la transparence.
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">DEPUIS 2019</div>
+                    <div class="timeline-content">
+                        Toutes les régions belges ont adopté la CADA. <strong>Sauf le fédéral.</strong>
+                        Le seul niveau de pouvoir qui refuse de se soumettre aux mêmes règles.
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">L'AFFAIRE VANDENBROUCKE</div>
+                    <div class="timeline-content">
+                        Le ministre de la Santé qui a <strong>bloqué personnellement la réforme de transparence</strong>
+                        pour protéger ses propres secrets. Puis reconduit au gouvernement suivant.
+                        Le symbole parfait d'un système qui se protège lui-même.
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">FÉVRIER 2025</div>
+                    <div class="timeline-content">
+                        Formation du gouvernement De Wever après <strong>239 jours de négociations</strong>.
+                        Résultat : zéro conférence de presse en 3 mois, aucune mesure de transparence 
+                        inscrite dans l'accord de coalition.
+                    </div>
+                </div>
+            </div>
+
+            <table class="data-table fade-in">
+                <thead>
+                    <tr>
+                        <th>Indicateur</th>
+                        <th>Belgique</th>
+                        <th>Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Classement transparence</td>
+                        <td class="highlight-cell">119e / 136</td>
+                        <td>Derrière Kazakhstan, Arabie Saoudite</td>
+                    </tr>
+                    <tr>
+                        <td>Communes wallonnes qui streament</td>
+                        <td class="highlight-cell">10-20%</td>
+                        <td>Le niveau le plus proche = le plus fermé</td>
+                    </tr>
+                    <tr>
+                        <td>Communes bruxelloises qui streament</td>
+                        <td>37-53%</td>
+                        <td>Mieux mais toujours minoritaire</td>
+                    </tr>
+                    <tr>
+                        <td>CADA fédérale contraignante</td>
+                        <td class="highlight-cell">NON</td>
+                        <td>Rejetée par quasi-unanimité en mai 2024</td>
+                    </tr>
+                    <tr>
+                        <td>Rappels à l'ordre GRECO/UE</td>
+                        <td class="highlight-cell">Multiples</td>
+                        <td>Instances européennes inquiètes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- LES BROYÉS -->
+    <section id="malades" style="background: var(--gray-dark);">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">DOSSIER SANTÉ</span>
+                <h2 class="section-title">Les <span class="highlight">broyés</span> du système</h2>
+            </div>
+
+            <div class="leaks-grid">
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-007</span>
+                        <span class="leak-severity critical">CRITIQUE</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">9 Mrd€</div>
+                        <h3 class="leak-title">Coût annuel des maladies longue durée</h3>
+                        <p class="leak-content">
+                            Rien qu'en indemnités de sécurité sociale. Les pouvoirs publics considèrent 
+                            la situation comme <strong>"insoutenable" à terme</strong>.
+                            Mais qui a créé les conditions de cette épidémie ?
+                        </p>
+                        <span class="leak-source">SOURCE: Analyse des réformes</span>
+                    </div>
+                </div>
+
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-008</span>
+                        <span class="leak-severity high">ÉLEVÉ</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">69%</div>
+                        <h3 class="leak-title">Part des femmes (burn-out/dépression)</h3>
+                        <p class="leak-content">
+                            Les troubles de santé mentale représentent ~1/3 des cas.
+                            Les affections musculo-squelettiques un autre tiers.
+                            <strong>Ce n'est pas une épidémie médicale. C'est une épidémie sociale.</strong>
+                        </p>
+                        <span class="leak-source">SOURCE: Statistiques INAMI</span>
+                    </div>
+                </div>
+
+                <div class="leak-card fade-in">
+                    <div class="leak-card-header">
+                        <span class="leak-id">LEAK-009</span>
+                        <span class="leak-severity medium">MOYEN</span>
+                    </div>
+                    <div class="leak-card-body">
+                        <div class="leak-stat">63%</div>
+                        <h3 class="leak-title">Travailleurs de plus de 50 ans</h3>
+                        <p class="leak-content">
+                            Le phénomène concerne surtout les travailleurs vieillissants.
+                            Un système qui use les gens jusqu'à la casse, puis les jette.
+                        </p>
+                        <span class="leak-source">SOURCE: Statistiques INAMI</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="document-block fade-in">
+                <div class="document-header">
+                    <span class="document-title">Réformes depuis 2019</span>
+                    <span class="document-classification">Alerte</span>
+                </div>
+                <div class="document-body">
+                    <blockquote class="document-quote">
+                        "Face à l'augmentation des coûts, les droits sociaux acquis de ces malades ont été 
+                        remis en question dans un contexte d'ajustements budgétaires et d'austérité.
+                        Depuis 2019, les politiques et réformes récentes ont modifié le régime d'incapacité 
+                        de travail et d'invalidité."
+                    </blockquote>
+                    <p class="document-source">— On te rend malade, puis on te culpabilise.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PILARISATION -->
+    <section class="whistleblower-section">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">DOSSIER SOCIÉTÉ</span>
+                <h2 class="section-title">Du berceau au <span class="highlight">tombeau</span></h2>
+            </div>
+
+            <div class="document-block fade-in">
+                <div class="document-header">
+                    <span class="document-title">Témoignage historique — 1911</span>
+                    <span class="document-classification">Archive</span>
+                </div>
+                <div class="document-body">
+                    <blockquote class="document-quote">
+                        "Il existe extraordinairement peu d'interactions sociales entre catholiques, libéraux et socialistes ; 
+                        on trouve souvent un syndicat catholique, un libéral et un socialiste, 
+                        chacun ne s'occupant que de ses adhérents."
+                    </blockquote>
+                    <p class="document-source">— Sociologue Seebohm Rowntree, 1911. Et c'est toujours vrai.</p>
+                </div>
+            </div>
+
+            <div class="whistleblower-grid fade-in">
+                <div class="pillar-block catho">
+                    <h3 class="pillar-name">Pilier Catholique</h3>
+                    <ul class="pillar-list">
+                        <li><strong>Syndicat:</strong> ACV/CSC (~1,7M membres)</li>
+                        <li><strong>Mutuelle:</strong> MC/CM</li>
+                        <li><strong>Enseignement:</strong> Réseau libre confessionnel</li>
+                        <li><strong>Patronat:</strong> Boerenbond</li>
+                        <li><strong>Partis:</strong> CD&V, Les Engagés</li>
+                    </ul>
+                </div>
+                <div class="pillar-block soc">
+                    <h3 class="pillar-name">Pilier Socialiste</h3>
+                    <ul class="pillar-list">
+                        <li><strong>Syndicat:</strong> FGTB/ABVV</li>
+                        <li><strong>Mutuelle:</strong> Solidaris</li>
+                        <li><strong>Mouvement:</strong> MOC, PAC</li>
+                        <li><strong>Presse:</strong> Le Peuple (historique)</li>
+                        <li><strong>Partis:</strong> PS, Vooruit</li>
+                    </ul>
+                </div>
+                <div class="pillar-block lib">
+                    <h3 class="pillar-name">Pilier Libéral</h3>
+                    <ul class="pillar-list">
+                        <li><strong>Syndicat:</strong> ACLVB/CGSLB</li>
+                        <li><strong>Mutuelle:</strong> Mutualités Libérales</li>
+                        <li><strong>Patronat:</strong> FEB, VOKA, UCM</li>
+                        <li><strong>Enseignement:</strong> Réseau officiel neutre</li>
+                        <li><strong>Partis:</strong> MR, Open VLD</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOURCES -->
+    <section id="sources">
+        <div class="container">
+            <div class="section-header fade-in">
+                <span class="section-tag">VÉRIFICATION</span>
+                <h2 class="section-title">Toutes nos <span class="highlight">sources</span></h2>
+            </div>
+
+            <div class="terminal-block fade-in">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">sources@belgileaks:~</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">cat /sources/institutionnel.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">CRISP asbl • Belgium.be • Parlement wallon • Parlement flamand</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">Brussels Hoofdstedelijk Gewest • UVCW • Lachambre • Senate of Belgium</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">cat /sources/medias.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">RTBF • La Libre Belgique • DHnet • L'Avenir • Lesengages • Pouvoirs-locaux</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">cat /sources/academique.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">UCLouvain • Cairn.info • Wikipedia (+ vérification croisée)</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">Small Wars Journal • Civil Affairs Association • Rights Studio</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">cat /sources/societe_civile.txt</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">Transparencia • Cumuleo • Ligue des droits humains</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output success">Weneedtotalk • OIDP • Freedom House</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$ </span>
+                        <span class="command">echo "Vérifiez. Partagez. Exigez."</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-logo">🔓 BELGILEAKS</span>
+                <span class="footer-tagline">#!BiM • Bénéficiaires d'Intelligence Mutante</span>
+            </div>
+            <div class="footer-links">
+                <a href="#leaks">Fuites</a>
+                <a href="#kern">Le Kern</a>
+                <a href="#omerta">L'Omerta</a>
+                <a href="#malades">Les Broyés</a>
+                <a href="#sources">Sources</a>
+            </div>
+        </div>
+        <div class="footer-disclaimer">
+            ⚠️ <span class="highlight">AVERTISSEMENT</span> : Toutes les données présentées sur ce site sont 
+            <span class="highlight">publiques et sourcées</span>. Aucune information n'a été obtenue illégalement.
+            Ce site est une initiative citoyenne de compilation et de mise en forme de données accessibles à tous.
+            <br><br>
+            La vérité n'est pas un crime. L'ignorance en est un.
+        </div>
+    </footer>
+
+    <script>
+        // Particles
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                this.createParticles();
+                this.animate();
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            createParticles() {
+                const count = Math.floor((this.canvas.width * this.canvas.height) / 20000);
+                for (let i = 0; i < count; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 1.5 + 0.5,
+                        speedX: (Math.random() - 0.5) * 0.3,
+                        speedY: (Math.random() - 0.5) * 0.3,
+                        color: Math.random() > 0.9 ? '#ff0033' : '#00ff41'
+                    });
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach((p, i) => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    if (p.x < 0 || p.x > this.canvas.width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.speedY *= -1;
+                    
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.globalAlpha = 0.6;
+                    this.ctx.fill();
+
+                    // Connect nearby particles
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const p2 = this.particles[j];
+                        const dx = p.x - p2.x;
+                        const dy = p.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) {
+                            this.ctx.beginPath();
+                            this.ctx.strokeStyle = `rgba(0, 255, 65, ${0.1 * (1 - dist / 100)})`;
+                            this.ctx.lineWidth = 0.5;
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.stroke();
+                        }
+                    }
+                });
+                this.ctx.globalAlpha = 1;
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            new ParticleSystem(document.getElementById('particles'));
+        });
+    </script>
+</body>
+</html>
