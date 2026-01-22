@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#B!Mi — Plaidoyer Citoyen | Construisez votre stratégie de changement social</title>
+    <meta name="description" content="Application gratuite et open source pour construire votre stratégie de plaidoyer citoyen. 15 outils méthodologiques basés sur Voir-Juger-Agir.">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="#B!Mi — Plaidoyer Citoyen">
+    <meta property="og:description" content="15 outils gratuits pour construire votre stratégie de changement social.">
+    <meta property="og:image" content="https://bimi.tools/og-image.png">
+    <meta property="og:url" content="https://bimi.tools/plaidoyer">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="#B!Mi — Plaidoyer Citoyen">
+    <meta name="twitter:description" content="15 outils gratuits pour construire votre stratégie de changement social.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --bg-deep: #0d0d14;
+            --bg-base: #12121a;
+            --bg-elevated: #1a1a26;
+            --bg-surface: #222233;
+            --border-subtle: #2d2d44;
+            --border-default: #3d3d55;
+            --text-primary: #e8e8f0;
+            --text-secondary: #a0a0b8;
+            --text-muted: #6b6b88;
+            --mint-400: #48bb78;
+            --mint-300: #68d391;
+            --mint-glow: rgba(72, 187, 120, 0.3);
+            --lilac-400: #9f7aea;
+            --lilac-300: #b794f4;
+            --lilac-glow: rgba(159, 122, 234, 0.3);
+            --voir: #63b3ed;
+            --juger: #f6ad55;
+            --agir: #68d391;
+        }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* ═══ NAVIGATION ═══ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(13, 13, 20, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 1rem 2rem;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--mint-400), var(--lilac-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover { color: var(--mint-300); }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--mint-400), var(--mint-300));
+            color: var(--bg-deep);
+            box-shadow: 0 4px 20px var(--mint-glow);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--mint-glow);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border-default);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-elevated);
+            border-color: var(--mint-400);
+        }
+        
+        /* ═══ HERO ═══ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, var(--mint-glow) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, var(--lilac-glow) 0%, transparent 50%);
+            opacity: 0.4;
+            animation: pulse 8s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(5deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            text-align: center;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .hero-badge span {
+            color: var(--mint-300);
+            font-weight: 600;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        
+        h1 .gradient {
+            background: linear-gradient(135deg, var(--mint-300), var(--lilac-300));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, var(--mint-400), var(--lilac-400));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        /* ═══ SECTIONS ═══ */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--mint-300);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ═══ METHODOLOGY ═══ */
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        @media (max-width: 900px) {
+            .methodology-grid { grid-template-columns: 1fr; }
+        }
+        
+        .phase-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        
+        .phase-card.voir::before { background: var(--voir); }
+        .phase-card.juger::before { background: var(--juger); }
+        .phase-card.agir::before { background: var(--agir); }
+        
+        .phase-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .phase-card.voir .phase-icon { background: rgba(99, 179, 237, 0.15); }
+        .phase-card.juger .phase-icon { background: rgba(246, 173, 85, 0.15); }
+        .phase-card.agir .phase-icon { background: rgba(104, 211, 145, 0.15); }
+        
+        .phase-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .phase-card.voir h3 { color: var(--voir); }
+        .phase-card.juger h3 { color: var(--juger); }
+        .phase-card.agir h3 { color: var(--agir); }
+        
+        .phase-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .tools-list {
+            list-style: none;
+        }
+        
+        .tools-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tools-list li:last-child { border-bottom: none; }
+        
+        /* ═══ FEATURES ═══ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--mint-400);
+            transform: translateY(-4px);
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* ═══ TEMPLATES ═══ */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .template-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        
+        .template-card:hover {
+            border-color: var(--lilac-400);
+            transform: translateY(-4px);
+        }
+        
+        .template-preview {
+            height: 180px;
+            background: var(--bg-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        
+        .template-info {
+            padding: 1.5rem;
+        }
+        
+        .template-info h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .template-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .template-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .template-tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-surface);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        /* ═══ CTA ═══ */
+        .cta-section {
+            background: linear-gradient(135deg, var(--bg-elevated), var(--bg-surface));
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(ellipse at center, var(--mint-glow) 0%, transparent 70%);
+            opacity: 0.3;
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* ═══ FOOTER ═══ */
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover { color: var(--mint-300); }
+        
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .footer-copy a {
+            color: var(--lilac-300);
+            text-decoration: none;
+        }
+        
+        /* ═══ RESPONSIVE ═══ */
+        @media (max-width: 768px) {
+            nav { padding: 1rem; }
+            .nav-links { display: none; }
+            .hero { padding: 6rem 1rem 3rem; }
+            .hero-stats { flex-direction: column; gap: 1.5rem; }
+            section { padding: 4rem 1rem; }
+            .cta-section { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <div class="logo">#B!Mi</div>
+            <ul class="nav-links">
+                <li><a href="#methodology">Méthodologie</a></li>
+                <li><a href="#features">Fonctionnalités</a></li>
+                <li><a href="#templates">Templates</a></li>
+                <li><a href="https://github.com/bimi-collective/plaidoyer-citoyen">GitHub</a></li>
+            </ul>
+            <a href="plaidoyer-bimi-ultimate.html" class="btn btn-primary">Lancer l'app →</a>
+        </div>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                ✨ <span>Version 4.0</span> — Open Source & Gratuit
+            </div>
+            <h1>
+                Construisez votre<br>
+                <span class="gradient">stratégie de plaidoyer</span>
+            </h1>
+            <p class="hero-subtitle">
+                15 outils méthodologiques basés sur Voir-Juger-Agir pour analyser votre situation, 
+                identifier vos leviers et planifier votre campagne de changement social.
+            </p>
+            <div class="hero-cta">
+                <a href="plaidoyer-bimi-ultimate.html" class="btn btn-primary">
+                    🚀 Lancer l'application
+                </a>
+                <a href="#templates" class="btn btn-secondary">
+                    📋 Voir les templates
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">15</div>
+                    <div class="stat-label">Outils méthodologiques</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Gratuit & hors-ligne</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Données collectées</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Methodology -->
+    <section id="methodology">
+        <div class="section-header">
+            <div class="section-tag">Méthodologie</div>
+            <h2>Voir — Juger — Agir</h2>
+            <p class="section-subtitle">
+                Une approche éprouvée depuis 1925, issue de l'éducation populaire et adaptée au plaidoyer citoyen contemporain.
+            </p>
+        </div>
+        
+        <div class="methodology-grid">
+            <div class="phase-card voir">
+                <div class="phase-icon">👁️</div>
+                <h3>VOIR</h3>
+                <p>Observer votre réalité, comprendre votre positionnement et identifier vos ressources.</p>
+                <ul class="tools-list">
+                    <li>🎯 Domino du changement</li>
+                    <li>👤 Profil citoyen</li>
+                    <li>🌸 Fleur du pouvoir</li>
+                </ul>
+            </div>
+            
+            <div class="phase-card juger">
+                <div class="phase-icon">⚖️</div>
+                <h3>JUGER</h3>
+                <p>Analyser le contexte, diagnostiquer les causes profondes et cartographier les acteurs.</p>
+                <ul class="tools-list">
+                    <li>👥 Cartographie des acteurs</li>
+                    <li>🌳 Arbre à problèmes</li>
+                    <li>❓ 5 Pourquoi</li>
+                    <li>📊 Analyse SWOT</li>
+                    <li>🌍 Analyse PESTEL</li>
+                    <li>🔄 Théorie du changement</li>
+                </ul>
+            </div>
+            
+            <div class="phase-card agir">
+                <div class="phase-icon">⚡</div>
+                <h3>AGIR</h3>
+                <p>Planifier votre stratégie, définir vos objectifs et évaluer votre impact.</p>
+                <ul class="tools-list">
+                    <li>⚡ Avec / Sans / Contre</li>
+                    <li>🎯 Cibles & Alliés</li>
+                    <li>✅ Objectifs SMART</li>
+                    <li>💬 Message clé</li>
+                    <li>📈 Suivi-évaluation</li>
+                    <li>📔 Journal de bord</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features -->
+    <section id="features">
+        <div class="section-header">
+            <div class="section-tag">Fonctionnalités</div>
+            <h2>Tout ce dont vous avez besoin</h2>
+            <p class="section-subtitle">
+                Une application complète, sans inscription, qui respecte votre vie privée.
+            </p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💾</div>
+                <h4>Stockage local</h4>
+                <p>Vos données restent dans votre navigateur. Aucun serveur, aucune collecte.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📁</div>
+                <h4>Multi-projets</h4>
+                <p>Gérez plusieurs plaidoyers en parallèle avec un switcher de projets intuitif.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📤</div>
+                <h4>Export multiformats</h4>
+                <p>JSON, Markdown, HTML, CSV, PDF — exportez selon vos besoins.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📥</div>
+                <h4>Import intelligent</h4>
+                <p>Importez des templates ou vos propres données depuis différents formats.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h4>Tableau de bord</h4>
+                <p>Visualisez votre progression globale et par phase en temps réel.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h4>Hors-ligne</h4>
+                <p>Fonctionne sans connexion internet après le premier chargement.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h4>Responsive</h4>
+                <p>Interface adaptée à tous les écrans : desktop, tablette, mobile.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h4>Mode sombre</h4>
+                <p>Design retro-geek élégant, confortable pour les longues sessions.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Templates -->
+    <section id="templates">
+        <div class="section-header">
+            <div class="section-tag">Templates</div>
+            <h2>Démarrez plus vite</h2>
+            <p class="section-subtitle">
+                Des modèles prêts à l'emploi pour différents types de plaidoyers.
+            </p>
+        </div>
+        
+        <div class="templates-grid">
+            <div class="template-card">
+                <div class="template-preview">📄</div>
+                <div class="template-info">
+                    <h4>Projet vierge</h4>
+                    <p>Structure complète vide pour démarrer de zéro avec tous les outils disponibles.</p>
+                    <div class="template-tags">
+                        <span class="template-tag">Basique</span>
+                        <span class="template-tag">Tout usage</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-preview">🛑</div>
+                <div class="template-info">
+                    <h4>Stop Arizona</h4>
+                    <p>Plaidoyer contre les réformes sociales belges. 33 acteurs cartographiés, stratégie complète.</p>
+                    <div class="template-tags">
+                        <span class="template-tag">Belgique</span>
+                        <span class="template-tag">Social</span>
+                        <span class="template-tag">100%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="template-card">
+                <div class="template-preview">💡</div>
+                <div class="template-info">
+                    <h4>Économie Contributive</h4>
+                    <p>Plaidoyer pour l'ECP : sécurisation juridique de la contribution citoyenne. Ruling fiscal, partenariats.</p>
+                    <div class="template-tags">
+                        <span class="template-tag">Innovation</span>
+                        <span class="template-tag">Fiscal</span>
+                        <span class="template-tag">100%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section>
+        <div class="cta-section">
+            <div class="cta-content">
+                <h2>Prêt à agir ?</h2>
+                <p>
+                    Lancez l'application gratuitement et commencez à construire 
+                    votre stratégie de changement social dès maintenant.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="plaidoyer-bimi-ultimate.html" class="btn btn-primary">
+                        🚀 Lancer l'application
+                    </a>
+                    <a href="https://github.com/bimi-collective/plaidoyer-citoyen" class="btn btn-secondary">
+                        ⭐ Star sur GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/bimi-collective/plaidoyer-citoyen">GitHub</a>
+            <a href="mailto:contact@bimi.tools">Contact</a>
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">Licence CC BY-NC-SA 4.0</a>
+        </div>
+        <p class="footer-copy">
+            Fait avec ❤️ par le <a href="https://bimi.tools">collectif #B!Mi</a><br>
+            Pour une démocratie participative et une citoyenneté active.
+        </p>
+    </footer>
+</body>
+</html>
