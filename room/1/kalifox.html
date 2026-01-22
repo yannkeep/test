@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARG & Régulation : L'Écosystème Belge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Slate 50 */
+            color: #1e293b; /* Slate 800 */
+        }
+
+        /* --- Chart Container Styling (MANDATORY) --- */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Constraint for readability */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Mobile base height */
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px; /* Tablet/Desktop height */
+            }
+        }
+
+        /* Custom Scrollbar for sleek look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        .card-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Interactive toggle switch styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3b82f6;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Corporate (Slate, Blue, Amber) - Minimalistic and trustworthy for legal/financial content -->
+    <!-- Application Structure Plan: 
+         1. Hero Section: Sets the context of the report (ARG, Profit, Law).
+         2. Market Context (Quantitative): Shows the financial stakes of the regulated market to contrast with social value.
+         3. Regulatory Core (Interactive Logic): The heart of the app. Users inputs game parameters to see if they need a CJH license.
+         4. ARG Value Analysis (Comparative): Radar chart comparing "Gambling" vs "Social ARG" models.
+         5. Recommendations: Textual synthesis of the "Source Report" findings.
+    -->
+    <!-- Visualization & Content Choices:
+         - Market Data -> Goal: Context -> Bar Chart -> Shows growth of sector.
+         - Regulatory Logic -> Goal: Understanding Law -> Interactive JS Logic (No chart) -> Simulates CJH decision tree.
+         - Value Comparison -> Goal: Compare Models -> Radar Chart -> Shows multi-dimensional trade-offs (Profit vs Social vs Risk).
+         - Justification: Radar charts are excellent for multi-variable qualitative scoring.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-bold tracking-tight text-blue-400">Compliance</span>
+                <span class="text-xl font-light">Navigator BE</span>
+            </div>
+            <div class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#market" class="hover:text-blue-300 transition-colors">Marché & Profits</a>
+                <a href="#regulation" class="hover:text-blue-300 transition-colors">Cadre Légal</a>
+                <a href="#arg-model" class="hover:text-blue-300 transition-colors">Modèle ARG</a>
+                <a href="#recommendations" class="hover:text-blue-300 transition-colors">Synthèse</a>
+            </div>
+            <button onclick="document.getElementById('about-modal').classList.remove('hidden')" class="md:hidden text-gray-300 hover:text-white">
+                INFO
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-12 md:py-20 text-center max-w-4xl">
+            <h1 class="text-3xl md:text-5xl font-bold text-slate-800 mb-6">
+                Jeux en Ligne & Réalité Alternée (ARG)
+            </h1>
+            <p class="text-lg md:text-xl text-slate-600 leading-relaxed mb-8">
+                Analyse du cadre réglementaire belge, des mécanismes de profit et du potentiel de valeur sociale. Comment innover sans enfreindre la Loi sur les Jeux de Hasard ?
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#regulation" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
+                    Tester la Conformité
+                </a>
+                <a href="#arg-model" class="px-6 py-3 bg-slate-100 text-slate-700 font-semibold rounded-lg hover:bg-slate-200 transition">
+                    Voir l'Analyse d'Impact
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Market Context -->
+    <section id="market" class="py-16 bg-slate-50">
+        <div class="container mx-auto px-4">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">Le Poids Économique du Jeu en Belgique</h2>
+                <p class="text-slate-600">
+                    Avant d'aborder les ARGs (Alternate Reality Games), il est crucial de comprendre le paysage financier réglementé par la Commission des Jeux de Hasard (CJH). Le secteur génère des revenus massifs, attirant une surveillance stricte.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                <!-- Chart 1: Revenue Evolution -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="text-lg font-semibold text-slate-700 mb-2">Évolution du Produit Brut des Jeux (PBJ)</h3>
+                    <p class="text-sm text-slate-500 mb-6">Revenus estimés du secteur en ligne (en Millions €).</p>
+                    <div class="chart-container">
+                        <canvas id="marketChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-800">
+                        <strong>Insight :</strong> La croissance continue du jeu en ligne (+10-15% par an) pousse le législateur à durcir les règles pour protéger les joueurs, impactant par ricochet les nouveaux formats comme les ARGs.
+                    </div>
+                </div>
+
+                <!-- Contextual Stats -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 card-hover">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-semibold text-slate-700">Licences Actives</h3>
+                            <span class="text-2xl font-bold text-amber-500">A+ / B+ / F1</span>
+                        </div>
+                        <p class="text-slate-600 mb-4">
+                            Pour opérer légalement un jeu d'argent, une licence est obligatoire. Les ARGs doivent éviter cette classification pour survivre économiquement sans les coûts de licence.
+                        </p>
+                        <ul class="space-y-2 text-sm text-slate-500">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Licence A+ : Casinos en ligne (Prestige, Coût élevé)</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>Licence B+ : Salles de jeux automatiques en ligne</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>Licence F1 : Organisateurs de paris</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 card-hover">
+                        <h3 class="text-lg font-semibold text-slate-700 mb-2">La Frontière "Loot Box"</h3>
+                        <p class="text-sm text-slate-600">
+                            La Belgique est pionnière dans l'interdiction des "Loot Boxes" (coffres à butin) payants, les qualifiant de jeux de hasard. <br><br>
+                            <em class="text-red-500 font-medium">Risque pour les ARGs :</em> Si votre jeu contient des éléments aléatoires achetables avec de l'argent réel, il devient illégal sans licence.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Interactive Regulation Framework -->
+    <section id="regulation" class="py-16 bg-white border-t border-slate-200">
+        <div class="container mx-auto px-4">
+            <div class="mb-12 text-center max-w-3xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">Le Radar Réglementaire (Loi de 1999)</h2>
+                <p class="text-slate-600">
+                    Votre projet de Jeu en Réalité Alternée (ARG) est-il un "Jeu de Hasard" selon la loi belge ? Utilisez ce simulateur interactif basé sur les 3 piliers cumulatifs de la définition légale.
+                </p>
+            </div>
+
+            <!-- Interaction Container -->
+            <div class="max-w-4xl mx-auto bg-slate-900 rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
+                
+                <!-- Input Panel -->
+                <div class="p-8 md:w-1/2 bg-slate-800 text-white">
+                    <h3 class="text-xl font-bold mb-6 text-blue-400">Paramètres du Jeu</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Switch 1 -->
+                        <div class="flex items-center justify-between">
+                            <div class="pr-4">
+                                <h4 class="font-semibold">Mise (Stake)</h4>
+                                <p class="text-xs text-gray-400">Le joueur doit-il engager une valeur financière pour participer ?</p>
+                            </div>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" name="toggle" id="stakeToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none transition-all duration-300"/>
+                                <label for="stakeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
+                            </div>
+                        </div>
+
+                        <!-- Switch 2 -->
+                        <div class="flex items-center justify-between">
+                            <div class="pr-4">
+                                <h4 class="font-semibold">Hasard (Chance)</h4>
+                                <p class="text-xs text-gray-400">Le résultat dépend-il, même partiellement, du hasard ?</p>
+                            </div>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" name="toggle" id="chanceToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none transition-all duration-300"/>
+                                <label for="chanceToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
+                            </div>
+                        </div>
+
+                        <!-- Switch 3 -->
+                        <div class="flex items-center justify-between">
+                            <div class="pr-4">
+                                <h4 class="font-semibold">Perte/Profit (Prize)</h4>
+                                <p class="text-xs text-gray-400">Y a-t-il un gain ou une perte de valeur possible pour le joueur ?</p>
+                            </div>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" name="toggle" id="prizeToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none transition-all duration-300"/>
+                                <label for="prizeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="checkBtn" class="mt-8 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded transition">
+                        Analyser la Classification
+                    </button>
+                </div>
+
+                <!-- Result Panel -->
+                <div class="p-8 md:w-1/2 bg-slate-50 flex flex-col justify-center items-center text-center relative">
+                    <div id="resultIcon" class="text-6xl mb-4 transition-all duration-500 transform scale-100">⚖️</div>
+                    <h3 id="resultTitle" class="text-2xl font-bold text-slate-800 mb-2">En Attente</h3>
+                    <p id="resultDesc" class="text-slate-600 text-sm mb-6">Configurez les paramètres à gauche pour voir le verdict réglementaire.</p>
+                    
+                    <div id="complianceBar" class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-300 hidden">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-xs text-slate-400 mt-6 max-w-2xl mx-auto">
+                *Cet outil est une simulation simplifiée. En Belgique, la CJH a un pouvoir d'appréciation souverain. La présence de ces trois éléments qualifie presque toujours le jeu comme "Jeu de Hasard", nécessitant une licence.
+            </p>
+        </div>
+    </section>
+
+    <!-- Section 3: ARG & Value Model -->
+    <section id="arg-model" class="py-16 bg-slate-50">
+        <div class="container mx-auto px-4">
+            <div class="mb-10 text-center max-w-3xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">ARGs : Innovation vs Régulation</h2>
+                <p class="text-slate-600">
+                    Comment un ARG (Jeu en Réalité Alternée) peut-il générer de la valeur (sociale et économique) sans tomber sous le coup de la loi sur les jeux de hasard ? Analyse comparative des modèles.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Text Content -->
+                <div class="space-y-6 order-2 lg:order-1">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Modèle 1 : L'ARG "Social & Skill"</h3>
+                        <p class="text-slate-600 text-sm">
+                            Ce modèle supprime la composante "Hasard". Le progrès dépend des compétences (énigmes, géolocalisation).
+                        </p>
+                        <ul class="mt-3 space-y-1 text-sm text-slate-500 list-disc list-inside">
+                            <li><strong>Revenus :</strong> Partenariats, Tourisme, Freemium (cosmétique).</li>
+                            <li><strong>Valeur Sociale :</strong> Découverte du patrimoine, éducation, team building.</li>
+                            <li><strong>Risque Légal :</strong> Faible (Jeu d'adresse).</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-500">
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Modèle 2 : L'ARG "Gambling Hybride"</h3>
+                        <p class="text-slate-600 text-sm">
+                            Intègre des coffres aléatoires ou des paris sur des événements réels.
+                        </p>
+                        <ul class="mt-3 space-y-1 text-sm text-slate-500 list-disc list-inside">
+                            <li><strong>Revenus :</strong> Très élevés (micro-transactions addictives).</li>
+                            <li><strong>Valeur Sociale :</strong> Controversée (Risque d'addiction).</li>
+                            <li><strong>Risque Légal :</strong> Critique. Illégal sans licence B+ ou A+.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Radar Chart -->
+                <div class="order-1 lg:order-2">
+                    <div class="bg-white p-4 rounded-xl shadow-lg border border-slate-100">
+                        <h3 class="text-center font-semibold text-slate-700 mb-4">Analyse Multidimensionnelle</h3>
+                        <div class="chart-container">
+                            <canvas id="radarChart"></canvas>
+                        </div>
+                        <div class="flex justify-center mt-4 text-xs space-x-4">
+                            <span class="flex items-center"><span class="w-3 h-3 bg-blue-500 rounded-full mr-1"></span> ARG Social (Recommandé)</span>
+                            <span class="flex items-center"><span class="w-3 h-3 bg-red-400 rounded-full mr-1"></span> Gambling Classique (Risqué)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Strategic Recommendations -->
+    <section id="recommendations" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-8 text-center">Synthèse & Recommandations Stratégiques</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 font-bold text-xl mb-4">1</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">Éviter le "Hasard"</h3>
+                    <p class="text-slate-600 text-sm">
+                        Pour éviter la régulation CJH, le mécanisme central doit reposer sur l'habileté (Skill) ou la connaissance, jamais sur un RNG (Générateur de Nombres Aléatoires) pour l'attribution de gains de valeur.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xl mb-4">2</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">Valoriser l'Impact Social</h3>
+                    <p class="text-slate-600 text-sm">
+                        Les ARGs à valeur sociale (éducation, culture) peuvent bénéficier de subsides ou de partenariats publics/privés, offrant un modèle économique alternatif aux micro-transactions prédatrices.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold text-xl mb-4">3</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-3">Transparence Totale</h3>
+                    <p class="text-slate-600 text-sm">
+                        Si des achats in-app existent, le joueur doit savoir exactement ce qu'il achète. L'opacité (type Loot Box) est la cible principale des régulateurs belges.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm">© 2024 Analyse Réglementaire & Gaming.</p>
+            <p class="text-xs mt-2 text-slate-500">
+                Ce document est une simulation interactive à but informatif et ne constitue pas un avis juridique formel. Veuillez consulter un avocat spécialisé ou la CJH pour des projets réels.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. Market Data Visualization (Chart.js) ---
+        const initMarketChart = () => {
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2019', '2020', '2021', '2022', '2023 (Est.)'],
+                    datasets: [{
+                        label: 'Revenus (Millions €)',
+                        data: [280, 310, 350, 420, 480], // Simulated Data representative of growth
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 4,
+                        barThickness: 30
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.raw} Millions €`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { borderDash: [2, 2], color: '#e2e8f0' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        };
+
+        // --- 2. Regulatory Logic (Compliance Checker) ---
+        const initComplianceChecker = () => {
+            const stakeToggle = document.getElementById('stakeToggle');
+            const chanceToggle = document.getElementById('chanceToggle');
+            const prizeToggle = document.getElementById('prizeToggle');
+            const checkBtn = document.getElementById('checkBtn');
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultDesc = document.getElementById('resultDesc');
+            const complianceBar = document.getElementById('complianceBar');
+
+            checkBtn.addEventListener('click', () => {
+                const hasStake = stakeToggle.checked;
+                const hasChance = chanceToggle.checked;
+                const hasPrize = prizeToggle.checked;
+
+                // Animation reset
+                resultIcon.style.transform = "scale(0.5)";
+                setTimeout(() => resultIcon.style.transform = "scale(1)", 200);
+
+                // Belgian Law Logic: The 3 elements must be present for it to be a "Game of Chance"
+                if (hasStake && hasChance && hasPrize) {
+                    // It is a Game of Chance -> STRICT REGULATION
+                    resultIcon.innerHTML = "🛑";
+                    resultTitle.innerHTML = "Licence Requise (Risque Élevé)";
+                    resultTitle.className = "text-2xl font-bold text-red-600 mb-2";
+                    resultDesc.innerHTML = "Votre projet cumule Mise, Hasard et Gain. Il tombe sous la définition stricte de la CJH. Vous devez obtenir une licence (B+ ou A+) pour opérer légalement.";
+                } else if (hasStake && hasPrize && !hasChance) {
+                    // Skill Game
+                    resultIcon.innerHTML = "✅";
+                    resultTitle.innerHTML = "Jeu d'Adresse (Skill Game)";
+                    resultTitle.className = "text-2xl font-bold text-green-600 mb-2";
+                    resultDesc.innerHTML = "L'absence de hasard est votre protection. Si le gain dépend exclusivement de la compétence, ce n'est pas un jeu de hasard. Attention aux zones grises.";
+                } else if (!hasStake && (hasChance || hasPrize)) {
+                    // Free to play / Contest
+                    resultIcon.innerHTML = "🆓";
+                    resultTitle.innerHTML = "Jeu Social / Concours";
+                    resultTitle.className = "text-2xl font-bold text-blue-500 mb-2";
+                    resultDesc.innerHTML = "Sans mise financière de départ, la loi sur les jeux de hasard s'applique rarement, sauf règlementations spécifiques aux concours (Sweepstakes).";
+                } else {
+                    // Other variations
+                    resultIcon.innerHTML = "⚠️";
+                    resultTitle.innerHTML = "Zone Grise / Non-Qualifié";
+                    resultTitle.className = "text-2xl font-bold text-amber-500 mb-2";
+                    resultDesc.innerHTML = "Combinaison inhabituelle. Assurez-vous que la mécanique est claire pour l'utilisateur.";
+                }
+            });
+        };
+
+        // --- 3. ARG Value Model (Radar Chart) ---
+        const initRadarChart = () => {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Potentiel Profit', 
+                        'Impact Social', 
+                        'Simplicité Légale', 
+                        'Engagement Joueur', 
+                        'Coût Mise en Place'
+                    ],
+                    datasets: [{
+                        label: 'ARG Social & Skill',
+                        data: [60, 90, 85, 80, 70],
+                        fill: true,
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)', // Blue
+                        borderColor: 'rgb(59, 130, 246)',
+                        pointBackgroundColor: 'rgb(59, 130, 246)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(59, 130, 246)'
+                    }, {
+                        label: 'Gambling Classique',
+                        data: [95, 20, 10, 65, 40],
+                        fill: true,
+                        backgroundColor: 'rgba(248, 113, 113, 0.2)', // Red
+                        borderColor: 'rgb(248, 113, 113)',
+                        pointBackgroundColor: 'rgb(248, 113, 113)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(248, 113, 113)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: { borderWidth: 3 }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            grid: { color: '#e2e8f0' },
+                            pointLabels: {
+                                font: { size: 12, family: "'Inter', sans-serif" },
+                                color: '#475569'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initMarketChart();
+            initComplianceChecker();
+            initRadarChart();
+        });
+
+    </script>
+</body>
+</html>
