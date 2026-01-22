@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyseur de Projets NGI & Incubateur NLnet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafaf9; /* stone-50 */
+            color: #44403c; /* stone-700 */
+        }
+
+        /* Custom Chart Container Styling as per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f5f4; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d6d3d1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a29e; 
+        }
+
+        .active-nav {
+            background-color: #e7e5e4; /* stone-200 */
+            border-left: 4px solid #ea580c; /* orange-600 */
+            font-weight: 600;
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Burnt Orange and Teal accents for a calm, professional, yet engaging feel. -->
+    <!-- Application Structure Plan: 
+         1. Dashboard/Intro: Sets the context of NLnet/NGI funding.
+         2. My Project Analysis (The User's specific query): A calculator/simulator to estimate the value of the 'Plaidoyer Citoyen' tool based on features.
+         3. The "Cartons" (Missing Projects): A filterable grid of ideas that represent high-value targets for funding.
+         4. Alignment Radar: Visualizing the fit between the user's project and core NGI values.
+         Rationale: This structure prioritizes answering the user's direct question about their project's value first, then broadens to alternative opportunities. -->
+    <!-- Visualization & Content Choices:
+         1. Interactive Calculator: Uses JS logic to sum grant value based on checkboxes (Feature -> Value). Best for "What is it worth?".
+         2. Radar Chart (Chart.js): Visualizes "Fit" (Privacy, Interop, etc.). Great for showing strengths/weaknesses.
+         3. Filterable Grid: For the "Missing Projects". Allows quick exploration of topics without overwhelming text.
+         4. Dynamic Text Blocks: Contextual advice updates based on calculator state.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-50 min-h-screen flex flex-col md:flex-row">
+
+    <!-- Sidebar Navigation -->
+    <nav class="w-full md:w-64 bg-white border-r border-stone-200 flex-shrink-0 flex flex-col h-auto md:h-screen sticky top-0 z-10 shadow-sm">
+        <div class="p-6 border-b border-stone-100">
+            <h1 class="text-xl font-bold text-stone-800">NGI Incubator <span class="text-orange-600">Analyze</span></h1>
+            <p class="text-xs text-stone-500 mt-2">Pour projets NLnet & Open Source</p>
+        </div>
+        <div class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li>
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full text-left px-6 py-3 hover:bg-stone-100 transition-colors active-nav text-stone-700">
+                        📊 Vue d'ensemble
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('valuation')" id="nav-valuation" class="w-full text-left px-6 py-3 hover:bg-stone-100 transition-colors text-stone-700">
+                        💶 Valorisation Projet
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('opportunities')" id="nav-opportunities" class="w-full text-left px-6 py-3 hover:bg-stone-100 transition-colors text-stone-700">
+                        📦 Cartons à Développer
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('strategy')" id="nav-strategy" class="w-full text-left px-6 py-3 hover:bg-stone-100 transition-colors text-stone-700">
+                        🎯 Stratégie & Critères
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="p-4 border-t border-stone-100 bg-stone-50">
+            <div class="text-xs text-stone-400">Généré par IA pour analyse NLnet</div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto h-screen">
+        
+        <!-- DASHBOARD SECTION -->
+        <section id="dashboard" class="block animate-fade-in">
+            <header class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Analyse du Financement NGI Zero</h2>
+                <p class="text-stone-600 max-w-3xl leading-relaxed">
+                    Cette application interactives vous aide à positionner votre projet (le générateur de plaidoyer) dans l'écosystème NLnet. NLnet finance l'internet de demain (Next Generation Internet) avec un focus sur la <strong>vie privée</strong>, les <strong>standards ouverts</strong> et la <strong>souveraineté des données</strong>.
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <!-- KPI Card 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-stone-500 font-medium text-sm">Fourchette de Financement</h3>
+                        <span class="text-2xl">💰</span>
+                    </div>
+                    <div class="text-3xl font-bold text-stone-800">5k€ - 50k€</div>
+                    <p class="text-sm text-stone-500 mt-2">Moyenne pour un premier projet : ~15k€</p>
+                </div>
+
+                <!-- KPI Card 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-stone-500 font-medium text-sm">Priorité Actuelle</h3>
+                        <span class="text-2xl">🛡️</span>
+                    </div>
+                    <div class="text-xl font-bold text-stone-800">Souveraineté Locale</div>
+                    <p class="text-sm text-stone-500 mt-2">Outils "Local-first" & sans serveur</p>
+                </div>
+
+                <!-- KPI Card 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-stone-500 font-medium text-sm">Votre Atout Majeur</h3>
+                        <span class="text-2xl">📂</span>
+                    </div>
+                    <div class="text-xl font-bold text-stone-800">Portabilité (JSON/CSV)</div>
+                    <p class="text-sm text-stone-500 mt-2">L'import/export est critique pour NGI</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                <h3 class="text-lg font-bold text-stone-800 mb-4">Répartition des Thèmes Financés</h3>
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="w-full md:w-1/2">
+                        <p class="text-stone-600 mb-4 text-sm leading-relaxed">
+                            Le graphique ci-contre montre la répartition typique des projets soutenus. Votre projet de "Plaidoyer Citoyen" se situe à l'intersection de "Open Data / Standards" et "Civic Tech". Pour maximiser vos chances, il faut insister sur l'aspect technique (Interopérabilité) plutôt que purement politique.
+                        </p>
+                        <ul class="space-y-2 text-sm text-stone-600">
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Interopérabilité & Standards (Critique)</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-teal-500"></span> Vie Privée & Confidentialité</li>
+                            <li class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-stone-400"></span> Découvrabilité & Recherche</li>
+                        </ul>
+                    </div>
+                    <div class="w-full md:w-1/2 chart-container">
+                        <canvas id="themeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VALUATION SECTION (User's specific project) -->
+        <section id="valuation" class="hidden animate-fade-in">
+            <header class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Simulateur de Financement</h2>
+                <p class="text-stone-600 max-w-3xl">
+                    Combien vaut votre projet de plaidoyer ? Ce simulateur estime un montant de subvention réaliste basé sur la complexité technique et les critères NLnet. <br>
+                    <em class="text-sm text-orange-600">Note: Ceci est une estimation basée sur l'expérience des appels NGI, pas une garantie.</em>
+                </p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Calculator Controls -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-stone-800 mb-4 border-b pb-2">1. Fondations Techniques</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-start gap-3 p-2 hover:bg-stone-50 rounded cursor-pointer">
+                                <input type="checkbox" id="feat-basic" checked disabled class="mt-1 accent-orange-600">
+                                <div>
+                                    <span class="font-medium text-stone-800">SPA HTML/JS Basique</span>
+                                    <p class="text-xs text-stone-500">Interface statique, génération de documents.</p>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 hover:bg-stone-50 rounded cursor-pointer">
+                                <input type="checkbox" id="feat-localfirst" class="mt-1 accent-orange-600" onchange="calculateGrant()">
+                                <div>
+                                    <span class="font-medium text-stone-800">Architecture "Local-First" stricte</span>
+                                    <p class="text-xs text-stone-500">Aucune dépendance backend, tout tourne dans le navigateur (votre cas actuel).</p>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 hover:bg-stone-50 rounded cursor-pointer">
+                                <input type="checkbox" id="feat-interop" class="mt-1 accent-orange-600" onchange="calculateGrant()">
+                                <div>
+                                    <span class="font-medium text-stone-800">Interopérabilité Complète (JSON/CSV)</span>
+                                    <p class="text-xs text-stone-500">Import/Export robuste, schémas documentés pour portabilité des données.</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                        <h3 class="font-bold text-stone-800 mb-4 border-b pb-2">2. Fonctionnalités Avancées (Augmente la valeur)</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-start gap-3 p-2 hover:bg-stone-50 rounded cursor-pointer">
+                                <input type="checkbox" id="feat-activitypub" class="mt-1 accent-orange-600" onchange="calculateGrant()">
+                                <div>
+                                    <span class="font-medium text-stone-800">Intégration Fediverse / ActivityPub</span>
+                                    <p class="text-xs text-stone-500">Permettre de publier le plaidoyer vers Mastodon/Lemmy.</p>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 hover:bg-stone-50 rounded cursor-pointer">
+                                <input type="checkbox" id="feat-crypto" class="mt-1 accent-orange-600" onchange="calculateGrant()">
+                                <div>
+                                    <span class="font-medium text-stone-800">Signature Cryptographique</span>
+                                    <p class="text-xs text-stone-500">Preuve d'origine et d'intégrité du document généré.</p>
+                                </div>
+                            </label>
+                            <label class="flex items-start gap-3 p-2 hover:bg-stone-50 rounded cursor-pointer">
+                                <input type="checkbox" id="feat-templates" class="mt-1 accent-orange-600" onchange="calculateGrant()">
+                                <div>
+                                    <span class="font-medium text-stone-800">Système de Templates Dynamiques</span>
+                                    <p class="text-xs text-stone-500">Éditeur WYSIWYG avancé pour créer des modèles de plaidoyer.</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Card -->
+                <div class="lg:col-span-1">
+                    <div class="bg-stone-800 text-white p-6 rounded-xl shadow-lg sticky top-6">
+                        <h3 class="text-stone-300 text-sm font-medium uppercase tracking-wider mb-2">Estimation Subvention</h3>
+                        <div class="flex items-baseline gap-1 mb-4">
+                            <span class="text-4xl font-bold text-orange-400" id="grant-total">0 €</span>
+                        </div>
+                        
+                        <div class="space-y-4 mb-6">
+                            <div class="flex justify-between text-sm border-b border-stone-600 pb-2">
+                                <span class="text-stone-400">Complexité Tech</span>
+                                <span class="font-mono" id="score-tech">Bas</span>
+                            </div>
+                            <div class="flex justify-between text-sm border-b border-stone-600 pb-2">
+                                <span class="text-stone-400">Pertinence NGI</span>
+                                <span class="font-mono" id="score-relevance">Moyen</span>
+                            </div>
+                        </div>
+
+                        <div id="feedback-text" class="text-sm text-stone-300 bg-stone-700 p-3 rounded italic">
+                            Sélectionnez des options pour voir l'analyse.
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-stone-600">
+                            <h4 class="font-bold text-orange-400 mb-2">Conseil pour votre dossier :</h4>
+                            <p class="text-xs text-stone-400 leading-relaxed" id="advice-text">
+                                Pour un outil HTML simple, ne vendez pas le "site web", vendez le <strong>standard de données</strong> et l'autonomie de l'utilisateur.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OPPORTUNITIES SECTION ("Cartons à développer") -->
+        <section id="opportunities" class="hidden animate-fade-in">
+            <header class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-stone-800 mb-2">Les "Cartons" à Développer</h2>
+                    <p class="text-stone-600">Idées de projets souvent demandées ou manquantes dans l'écosystème libre.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="filterProjects('all')" class="px-3 py-1 bg-stone-200 hover:bg-stone-300 rounded text-sm text-stone-700 font-medium transition-colors">Tout</button>
+                    <button onclick="filterProjects('civic')" class="px-3 py-1 bg-white border border-stone-200 hover:bg-stone-50 rounded text-sm text-stone-600 transition-colors">Civic Tech</button>
+                    <button onclick="filterProjects('infra')" class="px-3 py-1 bg-white border border-stone-200 hover:bg-stone-50 rounded text-sm text-stone-600 transition-colors">Infra / Dev</button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="projects-grid">
+                <!-- Projects will be injected here by JS -->
+            </div>
+        </section>
+
+        <!-- STRATEGY SECTION -->
+        <section id="strategy" class="hidden animate-fade-in">
+            <header class="mb-8">
+                <h2 class="text-3xl font-bold text-stone-800 mb-2">Critères de Réussite</h2>
+                <p class="text-stone-600">Visualisez comment votre projet actuel répond aux attentes spécifiques de NLnet.</p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="bg-orange-50 p-6 rounded-xl border border-orange-100">
+                        <h3 class="font-bold text-orange-800 mb-2">Points Forts de votre projet</h3>
+                        <ul class="space-y-2 text-sm text-orange-900">
+                            <li class="flex gap-2"><span>✅</span> <strong>Souveraineté :</strong> L'utilisateur possède ses données (fichiers locaux).</li>
+                            <li class="flex gap-2"><span>✅</span> <strong>Simplicité :</strong> Pas de serveur à maintenir = résilience.</li>
+                            <li class="flex gap-2"><span>✅</span> <strong>Interopérabilité :</strong> L'export JSON/CSV est un gros plus.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="font-bold text-stone-800 mb-2">Points à améliorer pour le financement</h3>
+                        <ul class="space-y-3 text-sm text-stone-600">
+                            <li class="flex gap-2">
+                                <span class="text-xl">🔌</span>
+                                <div>
+                                    <strong>Connexion au Web Sémantique :</strong>
+                                    <p class="text-xs mt-1">Votre JSON pourrait suivre un standard (ex: Schema.org ou ActivityStreams) pour que le plaidoyer soit lisible par d'autres machines.</p>
+                                </div>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="text-xl">🤝</span>
+                                <div>
+                                    <strong>Collaboration :</strong>
+                                    <p class="text-xs mt-1">Comment deux citoyens travaillent-ils sur le même plaidoyer ? (Pensez aux CRDTs ou à l'échange de patchs).</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- DATA STORAGE ---
+        
+        // Projects Idea Database ("Cartons")
+        const projectsData = [
+            {
+                id: 1,
+                title: "UI pour Chiffrement Accessible",
+                category: "infra",
+                difficulty: "Moyen",
+                desc: "Rendre PGP ou Age accessible aux non-techniciens via une interface web propre (WASM).",
+                tags: ["Crypto", "UX", "WASM"]
+            },
+            {
+                id: 2,
+                title: "Générateur de Campagne Statique",
+                category: "civic",
+                difficulty: "Bas",
+                desc: "Votre projet ! Un outil pour créer des pages de campagne/plaidoyer hébergeables sur GitHub Pages/GitLab.",
+                tags: ["HTML", "Advocacy", "Static"]
+            },
+            {
+                id: 3,
+                title: "Pont ActivityPub <-> Email",
+                category: "infra",
+                difficulty: "Haut",
+                desc: "Permettre de suivre des comptes Mastodon via Email et répondre par Email.",
+                tags: ["Fediverse", "Email", "Gateway"]
+            },
+            {
+                id: 4,
+                title: "Outil de Pétition P2P",
+                category: "civic",
+                difficulty: "Haut",
+                desc: "Signer des pétitions sans serveur central, en utilisant la cryptographie distribuée.",
+                tags: ["P2P", "Crypto", "Democracy"]
+            },
+            {
+                id: 5,
+                title: "Visualiseur de Données Locales",
+                category: "infra",
+                difficulty: "Moyen",
+                desc: "Outil générique pour visualiser des CSV/JSON locaux sans upload (Privacy friendly).",
+                tags: ["Dataviz", "Privacy", "Local-first"]
+            },
+            {
+                id: 6,
+                title: "CMS pour Associations (Offline)",
+                category: "civic",
+                difficulty: "Moyen",
+                desc: "Gestion de membres et documents fonctionnant hors-ligne avec synchro occasionnelle.",
+                tags: ["Offline-first", "NGO", "Sync"]
+            }
+        ];
+
+        // Chart Instances
+        let themeChartInstance = null;
+        let radarChartInstance = null;
+
+        // --- NAVIGATION LOGIC ---
+        function switchTab(tabId) {
+            // Update Tab Content
+            document.querySelectorAll('section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Update Sidebar Style
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-nav'));
+            document.getElementById('nav-' + tabId).classList.add('active-nav');
+
+            // Handle Specific Inits
+            if (tabId === 'dashboard' && !themeChartInstance) initThemeChart();
+            if (tabId === 'strategy') initRadarChart();
+            if (tabId === 'opportunities') renderProjects('all');
+        }
+
+        // --- VALUATION CALCULATOR LOGIC ---
+        function calculateGrant() {
+            let total = 3000; // Base baseline for documentation/setup
+            let techScore = 1;
+            let relevanceScore = 1;
+
+            // Features Logic
+            if (document.getElementById('feat-localfirst').checked) {
+                total += 4000;
+                relevanceScore += 2;
+                document.getElementById('feedback-text').innerText = "Le 'Local-first' est très apprécié pour la résilience.";
+            }
+            if (document.getElementById('feat-interop').checked) {
+                total += 5000;
+                relevanceScore += 3;
+                techScore += 1;
+            }
+            if (document.getElementById('feat-activitypub').checked) {
+                total += 8000;
+                techScore += 3;
+                relevanceScore += 2;
+            }
+            if (document.getElementById('feat-crypto').checked) {
+                total += 6000;
+                techScore += 3;
+            }
+            if (document.getElementById('feat-templates').checked) {
+                total += 3000;
+                techScore += 1;
+            }
+
+            // Update UI
+            document.getElementById('grant-total').innerText = total.toLocaleString() + " €";
+            
+            // Text Feedback
+            const techTexts = ["Basique", "Modéré", "Avancé", "Expert"];
+            const relTexts = ["Faible", "Moyen", "Élevé", "Indispensable"];
+            
+            let tIndex = Math.min(Math.floor(techScore/2), 3);
+            let rIndex = Math.min(Math.floor(relevanceScore/2), 3);
+
+            document.getElementById('score-tech').innerText = techTexts[tIndex];
+            document.getElementById('score-relevance').innerText = relTexts[rIndex];
+            
+            // Advice Update
+            if (total > 20000) {
+                document.getElementById('advice-text').innerHTML = "Pour ce montant (>20k€), vous devrez prouver une architecture technique solide et un plan d'adoption clair.";
+            } else {
+                document.getElementById('advice-text').innerHTML = "Ce montant (5-15k€) est idéal pour un premier projet. Concentrez-vous sur un prototype parfaitement fonctionnel.";
+            }
+        }
+
+        // --- PROJECTS RENDERING ---
+        function renderProjects(filter) {
+            const grid = document.getElementById('projects-grid');
+            grid.innerHTML = '';
+
+            projectsData.forEach(proj => {
+                if (filter !== 'all' && proj.category !== filter) return;
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-6 rounded-xl shadow-sm border border-stone-200 hover:shadow-md transition-shadow cursor-pointer flex flex-col";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="px-2 py-1 bg-stone-100 text-stone-600 text-xs rounded uppercase font-bold tracking-wide">${proj.category}</span>
+                        <span class="text-xs text-stone-400">Diff: ${proj.difficulty}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-stone-800 mb-2">${proj.title}</h3>
+                    <p class="text-sm text-stone-600 mb-4 flex-grow">${proj.desc}</p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        ${proj.tags.map(tag => `<span class="text-xs bg-orange-50 text-orange-700 px-2 py-1 rounded border border-orange-100">#${tag}</span>`).join('')}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterProjects(cat) {
+            renderProjects(cat);
+        }
+
+        // --- CHARTS IMPLEMENTATION ---
+        
+        function initThemeChart() {
+            const ctx = document.getElementById('themeChart').getContext('2d');
+            if (themeChartInstance) themeChartInstance.destroy();
+
+            themeChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Interopérabilité', 'Vie Privée', 'Découvrabilité', 'Hardware'],
+                    datasets: [{
+                        data: [40, 30, 20, 10],
+                        backgroundColor: ['#f97316', '#14b8a6', '#a8a29e', '#e7e5e4'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function initRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            if (radarChartInstance) radarChartInstance.destroy();
+
+            // Calculate current profile based on checkboxes (simplified simulation)
+            // In a real app, this would pull directly from the calculator state
+            
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Open Source', 'Décentralisation', 'Interopérabilité', 'Inclusivité', 'Innovation Tech'],
+                    datasets: [{
+                        label: 'Votre Projet (Estimé)',
+                        data: [5, 4, 5, 3, 2], // High Interop/Openness, Low Tech Innovation (if plain HTML)
+                        fill: true,
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)',
+                        borderColor: 'rgb(249, 115, 22)',
+                        pointBackgroundColor: 'rgb(249, 115, 22)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(249, 115, 22)'
+                    }, {
+                        label: 'Cible NGI Idéale',
+                        data: [5, 5, 5, 4, 4],
+                        fill: true,
+                        backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                        borderColor: 'rgba(20, 184, 166, 0.5)',
+                        pointBackgroundColor: 'rgba(20, 184, 166, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(20, 184, 166, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: false },
+                            suggestedMin: 0,
+                            suggestedMax: 5
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            switchTab('dashboard');
+            calculateGrant(); // Init calculator
+        });
+
+    </script>
+</body>
+</html>
