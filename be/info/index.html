@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyse de l'État Belge à 360° | Particratie & Réformes</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts: Inter for UI, Merriweather for Editorial Headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: Warm Neutral (Cream background #FDFBF7) with Belgian Political Accents (Red #C53030, Blue #2B6CB0, Orange #DD6B20, Charcoal #2D3748) -->
+    
+    <!-- Application Structure Plan: 
+         The SPA is designed as a vertical narrative "Scrollytelling" experience.
+         1. Hero Section: Sets the context of the "Belgian Compromise".
+         2. Institutional Axis (Reforms): Interactive Timeline. Allows users to grasp the chronological layer-cake of the state structure.
+         3. Sociological Axis (Pillarisation): Interactive Cards. Explains the "cradle to grave" social segmentation.
+         4. Power Axis (Particracy): Radar Chart. Contrasts theoretical power vs. real power of party presidents.
+         5. Stability Axis (Mediarchy): Bar Chart. Visualizes the impact of fragmentation on government formation times.
+         This structure moves from the *Structural* (Reforms) to the *Social* (Pillars) to the *Functional* (Power/Media). 
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Reform Timeline: HTML/JS Interactive List. Goal: Change/Inform. Justification: Shows the step-by-step 'sedimentation' of the state better than a static chart.
+         2. Pillar Matrix: CSS Grid with JS Toggles. Goal: Organize/Inform. Justification: Visually segments society into the 3 historical silos (Catholic, Socialist, Liberal).
+         3. Particracy Radar: Chart.js Radar. Goal: Compare/Relationships. Justification: Perfect for overlaying "Constitution" shape vs "Reality" shape to show the distortion of power.
+         4. Formation Bar Chart: Chart.js Bar. Goal: Change/Trend. Justification: Clearly visualizes the exploding duration of crises (541 days) over time.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF7; /* Warm Neutral */
+            color: #2D3748; /* Charcoal */
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* Chart Container Styling - MANDATORY */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh; /* Responsive height */
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom scrollbar for timeline list */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #EDF2F7;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #CBD5E0;
+            border-radius: 3px;
+        }
+
+        /* Interactive Element States */
+        .reform-btn.active {
+            background-color: #FED7D7; /* Red-100 */
+            border-left-color: #C53030;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #C53030;
+        }
+        
+        .nav-link.active-section {
+            color: #C53030;
+            border-bottom: 2px solid #C53030;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-[#FDFBF7]/95 backdrop-blur-sm border-b border-gray-200 shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-gray-900 tracking-tight">🇧🇪 État Belge <span class="text-red-700">360°</span></span>
+                </div>
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <button onclick="scrollToSection('hero')" class="nav-link text-sm font-medium text-gray-500 hover:text-gray-900 transition">Accueil</button>
+                    <button onclick="scrollToSection('reformes')" class="nav-link text-sm font-medium text-gray-500 hover:text-gray-900 transition">Réformes</button>
+                    <button onclick="scrollToSection('piliers')" class="nav-link text-sm font-medium text-gray-500 hover:text-gray-900 transition">Pilarisation</button>
+                    <button onclick="scrollToSection('particratie')" class="nav-link text-sm font-medium text-gray-500 hover:text-gray-900 transition">Particratie</button>
+                    <button onclick="scrollToSection('mediarchie')" class="nav-link text-sm font-medium text-gray-500 hover:text-gray-900 transition">Médiarchie</button>
+                </div>
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-gray-500 hover:text-gray-900 focus:outline-none">
+                        <span class="text-2xl">☰</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Nav Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="scrollToSection('reformes'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50">Réformes</button>
+                <button onclick="scrollToSection('piliers'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50">Pilarisation</button>
+                <button onclick="scrollToSection('particratie'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50">Particratie</button>
+                <button onclick="scrollToSection('mediarchie'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50">Médiarchie</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-20 pb-24 lg:pt-32 lg:pb-40 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h1 class="text-4xl md:text-6xl font-black text-gray-900 tracking-tight mb-6">
+                L'Anatomie du <span class="text-red-700">Compromis</span>
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-600 font-light leading-relaxed">
+                Une exploration interactive des mécanismes complexes de la Belgique : du fédéralisme centrifuge à la particratie, découvrez comment fonctionne réellement l'État.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <button onclick="scrollToSection('reformes')" class="px-8 py-3 rounded-lg bg-gray-900 text-white font-medium shadow-lg hover:bg-red-700 transition transform hover:-translate-y-1">
+                    Commencer l'Analyse
+                </button>
+            </div>
+        </div>
+        <!-- Decorative background elements using CSS (No SVG) -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none z-0">
+            <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-red-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+            <div class="absolute top-[-10%] right-[-10%] w-96 h-96 bg-yellow-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: State Reforms (Timeline) -->
+    <section id="reformes" class="py-20 bg-white border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <span class="text-red-600 font-bold tracking-wider uppercase text-sm">L'Axe Institutionnel</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2">La Sédimentation de l'État</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-3xl">
+                    La Belgique a évolué d'un État unitaire (1830) à un fédéralisme complexe par dissociation. Contrairement à l'Allemagne ou aux USA (fédéralisme d'union), la Belgique s'est séparée progressivement pour pacifier les tensions communautaires.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 h-auto lg:h-[500px]">
+                <!-- Timeline List (Left) -->
+                <div class="lg:col-span-4 bg-gray-50 rounded-xl border border-gray-200 overflow-y-auto custom-scroll p-2">
+                    <div id="timeline-list" class="space-y-2">
+                        <!-- JS injected buttons -->
+                    </div>
+                </div>
+
+                <!-- Detail View (Right) -->
+                <div class="lg:col-span-8 bg-[#FDFBF7] rounded-xl border border-gray-200 p-8 flex flex-col justify-center shadow-inner relative">
+                    <div id="reform-display" class="transition-opacity duration-300">
+                        <!-- Content injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: Pillarisation (Grid) -->
+    <section id="piliers" class="py-20 bg-[#FDFBF7]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 text-center">
+                <span class="text-blue-600 font-bold tracking-wider uppercase text-sm">L'Axe Sociologique</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2">La Société Pilarisée</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+                    Historiquement, le Belge vivait "du berceau à la tombe" au sein de son pilier idéologique. Bien que s'érodant, ces structures (syndicats, mutuelles) restent les gestionnaires administratifs de l'État.
+                </p>
+            </div>
+
+            <!-- Interaction Controls -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button onclick="updatePillars('all')" class="px-4 py-2 bg-gray-800 text-white rounded-md text-sm font-medium hover:bg-gray-700 transition">Vue d'ensemble</button>
+                <button onclick="updatePillars('health')" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm font-medium hover:bg-red-50 hover:text-red-700 transition">Santé (Mutuelles)</button>
+                <button onclick="updatePillars('union')" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm font-medium hover:bg-red-50 hover:text-red-700 transition">Travail (Syndicats)</button>
+            </div>
+
+            <!-- Pillars Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Catholic Pillar -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-green-600 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Pilier Chrétien</h3>
+                        <span class="text-2xl">✝️</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4 italic">Historiquement dominant, interclassiste.</p>
+                    <ul class="space-y-3 text-sm">
+                        <li class="pillar-item item-health p-2 bg-green-50 rounded text-green-900 hidden-item">🏥 <strong>MC</strong> (Mutualité Chrétienne)</li>
+                        <li class="pillar-item item-union p-2 bg-gray-50 rounded text-gray-700 hidden-item">🔨 <strong>CSC</strong> (Confédération des Syndicats Chrétiens)</li>
+                        <li class="pillar-item item-party p-2 bg-gray-50 rounded text-gray-700">🗳️ CD&V / Les Engagés</li>
+                        <li class="pillar-item item-school p-2 bg-gray-50 rounded text-gray-700">🎓 Enseignement Libre (Majoritaire)</li>
+                    </ul>
+                </div>
+
+                <!-- Socialist Pillar -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-red-600 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Pilier Socialiste</h3>
+                        <span class="text-2xl">🌹</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4 italic">Ancré dans la classe ouvrière et les services publics.</p>
+                    <ul class="space-y-3 text-sm">
+                        <li class="pillar-item item-health p-2 bg-red-50 rounded text-red-900 hidden-item">🏥 <strong>Solidaris</strong></li>
+                        <li class="pillar-item item-union p-2 bg-gray-50 rounded text-gray-700 hidden-item">🔨 <strong>FGTB</strong> (Fédération Générale du Travail)</li>
+                        <li class="pillar-item item-party p-2 bg-gray-50 rounded text-gray-700">🗳️ PS / Vooruit</li>
+                        <li class="pillar-item item-school p-2 bg-gray-50 rounded text-gray-700">🎓 Enseignement Officiel</li>
+                    </ul>
+                </div>
+
+                <!-- Liberal Pillar -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-blue-600 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-bold text-gray-800">Pilier Libéral</h3>
+                        <span class="text-2xl">🗽</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4 italic">Focalisé sur la liberté individuelle et l'entreprise.</p>
+                    <ul class="space-y-3 text-sm">
+                        <li class="pillar-item item-health p-2 bg-blue-50 rounded text-blue-900 hidden-item">🏥 <strong>Mutualité Libérale</strong></li>
+                        <li class="pillar-item item-union p-2 bg-gray-50 rounded text-gray-700 hidden-item">🔨 <strong>CGSLB</strong> (Syndicat Libéral)</li>
+                        <li class="pillar-item item-party p-2 bg-gray-50 rounded text-gray-700">🗳️ MR / Open Vld</li>
+                        <li class="pillar-item item-school p-2 bg-gray-50 rounded text-gray-700">🎓 Libre examen</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: Particracy (Radar Chart) -->
+    <section id="particratie" class="py-20 bg-white border-t border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Content -->
+                <div>
+                    <span class="text-orange-600 font-bold tracking-wider uppercase text-sm">L'Axe du Pouvoir</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2">La Particratie</h2>
+                    <h3 class="text-lg font-medium text-gray-500 mb-4">Théorie vs Réalité</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        La Belgique est souvent qualifiée de "Particratie". Si la Constitution donne le pouvoir au Parlement (législatif) et au Roi (symbolique), la réalité du pouvoir réside au "16 rue de la Loi" (Premier ministre) et surtout au siège des Présidents de Parti.
+                    </p>
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <h4 class="font-bold text-orange-900 mb-2">Les symptômes :</h4>
+                        <ul class="list-disc list-inside text-sm text-orange-800 space-y-1">
+                            <li>Discipline de vote stricte au parlement.</li>
+                            <li>Les Présidents de parti choisissent les ministres (castings).</li>
+                            <li>Accords de gouvernement ultra-détaillés ("briques").</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Visualization -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-4 flex flex-col items-center">
+                    <div class="w-full flex justify-end mb-2">
+                         <!-- Legend/Control is handled by Chart.js interactive legend, but adding a hint -->
+                         <span class="text-xs text-gray-400">Cliquez sur la légende pour filtrer</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: Mediarchy (Bar Chart) -->
+    <section id="mediarchie" class="py-20 bg-[#FDFBF7]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <span class="text-purple-600 font-bold tracking-wider uppercase text-sm">L'Axe de Stabilité</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2">Médiarchie & Instabilité</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-3xl">
+                    La fragmentation du paysage politique, couplée à l'immédiateté médiatique, rend la formation des gouvernements de plus en plus laborieuse. La "campagne permanente" empêche les compromis discrets nécessaires à la politique belge.
+                </p>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center">
+                    <div class="text-3xl font-bold text-purple-600">541</div>
+                    <div class="text-xs text-gray-500 uppercase font-medium">Jours (Record 2010)</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center">
+                    <div class="text-3xl font-bold text-gray-800">7+</div>
+                    <div class="text-xs text-gray-500 uppercase font-medium">Partis au pouvoir</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center">
+                    <div class="text-3xl font-bold text-gray-800">2</div>
+                    <div class="text-xs text-gray-500 uppercase font-medium">Démocraties (Médias)</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center">
+                    <div class="text-3xl font-bold text-gray-800">📉</div>
+                    <div class="text-xs text-gray-500 uppercase font-medium">Confiance</div>
+                </div>
+            </div>
+
+            <!-- Visualization -->
+            <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Durée de formation du gouvernement fédéral (Jours)</h3>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <p class="mt-4 text-sm text-gray-500 italic text-center">
+                    Notez l'augmentation drastique de la complexité depuis les années 2000, corrélée à la montée des partis nationalistes et à la fragmentation.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0 text-center md:text-left">
+                <span class="text-2xl font-bold tracking-tight">🇧🇪 État Belge 360°</span>
+                <p class="text-gray-400 text-sm mt-2">Comprendre pour mieux débattre.</p>
+            </div>
+            <div class="text-gray-500 text-sm text-center md:text-right">
+                <p>Analyse basée sur les rapports du CRISP et données constitutionnelles.</p>
+                <p>&copy; 2024 Infographie Interactive.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- UTILS ---
+        // Label wrapping function for Chart.js
+        function formatLabel(str, maxwidth) {
+            const sections = [];
+            const words = str.split(" ");
+            let temp = "";
+            words.forEach(function(item, index) {
+                if (temp.length > 0) {
+                    const concat = temp + ' ' + item;
+                    if (concat.length > maxwidth) {
+                        sections.push(temp);
+                        temp = "";
+                    } else {
+                        if (index === (words.length - 1)) {
+                            sections.push(concat);
+                            return;
+                        } else {
+                            temp = concat;
+                            return;
+                        }
+                    }
+                }
+                if (index === (words.length - 1)) {
+                    sections.push(item);
+                    return;
+                }
+                if (item.length < maxwidth) {
+                    temp = item;
+                } else {
+                    sections.push(item);
+                }
+            });
+            return sections;
+        }
+
+        // Common Chart options
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) return label.join(' ');
+                            return label;
+                        }
+                    },
+                    backgroundColor: 'rgba(45, 55, 72, 0.9)',
+                    padding: 12,
+                    cornerRadius: 8,
+                },
+                legend: {
+                    labels: {
+                        font: { family: "'Inter', sans-serif" },
+                        usePointStyle: true,
+                    }
+                }
+            }
+        };
+
+        // --- SECTION 1: TIMELINE LOGIC ---
+        const reformsData = [
+            {
+                year: "1970",
+                title: "La Naissance des Communautés",
+                desc: "Fin de l'État unitaire. Création des trois Communautés culturelles (Française, Néerlandaise, Allemande). On trace la frontière linguistique.",
+                impact: "Culturel",
+                icon: "🗣️"
+            },
+            {
+                year: "1980",
+                title: "L'Émergence des Régions",
+                desc: "Création des Régions Wallonne et Flamande (Bruxelles reste au frigo). Les compétences économiques deviennent régionales.",
+                impact: "Économique",
+                icon: "🏭"
+            },
+            {
+                year: "1988",
+                title: "Région Bruxelles-Capitale",
+                desc: "Bruxelles devient une région à part entière. Financement massif des communautés (enseignement). La Belgique se fédéralise de facto.",
+                impact: "Institutionnel",
+                icon: "🏙️"
+            },
+            {
+                year: "1993",
+                title: "L'État Fédéral",
+                desc: "L'article 1 de la Constitution change : 'La Belgique est un État fédéral'. Scission du Brabant. Élection directe des parlements régionaux.",
+                impact: "Constitutionnel",
+                icon: "📜"
+            },
+            {
+                year: "2001",
+                title: "Accords Lambermont",
+                desc: "Transfert de la compétence communale et provinciale aux régions. Refinancement des communautés.",
+                impact: "Local",
+                icon: "🗳️"
+            },
+            {
+                year: "2011",
+                title: "6ème Réforme de l'État",
+                desc: "Scission de BHV (Bruxelles-Hal-Vilvorde). Transfert massif de compétences (Allocations familiales, Code de la route partiel). Sénat réduit.",
+                impact: "Massif",
+                icon: "⚖️"
+            }
+        ];
+
+        function initTimeline() {
+            const listContainer = document.getElementById('timeline-list');
+            
+            reformsData.forEach((reform, index) => {
+                const btn = document.createElement('button');
+                btn.className = `reform-btn w-full text-left p-4 rounded-lg bg-white border-l-4 border-transparent hover:bg-gray-50 transition-all duration-200 group`;
+                btn.onclick = () => loadReform(index);
+                btn.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-gray-900 group-hover:text-red-700">${reform.year}</span>
+                        <span class="text-xs text-gray-400 uppercase">${reform.impact}</span>
+                    </div>
+                    <div class="text-sm text-gray-600 mt-1 truncate">${reform.title}</div>
+                `;
+                listContainer.appendChild(btn);
+            });
+            
+            loadReform(0);
+        }
+
+        function loadReform(index) {
+            const reform = reformsData[index];
+            const display = document.getElementById('reform-display');
+            const btns = document.querySelectorAll('.reform-btn');
+            
+            // Update Active State
+            btns.forEach((b, i) => {
+                if (i === index) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+
+            // Content Update with Fade
+            display.style.opacity = '0';
+            setTimeout(() => {
+                display.innerHTML = `
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="text-5xl">${reform.icon}</div>
+                        <div>
+                            <h3 class="text-4xl font-bold text-gray-900">${reform.year}</h3>
+                            <h4 class="text-xl text-red-700 font-medium">${reform.title}</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg border border-gray-100 shadow-sm">
+                        <p class="text-gray-700 text-lg leading-relaxed">${reform.desc}</p>
+                    </div>
+                    <div class="mt-6 flex gap-2">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">Impact: ${reform.impact}</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">Étape ${index + 1}/6</span>
+                    </div>
+                `;
+                display.style.opacity = '1';
+            }, 300);
+        }
+
+        // --- SECTION 2: PILLARS LOGIC ---
+        function updatePillars(filter) {
+            const items = document.querySelectorAll('.pillar-item');
+            items.forEach(item => {
+                if (filter === 'all') {
+                    item.classList.remove('hidden-item');
+                    // Reset styling
+                    if(item.classList.contains('item-health')) item.className = 'pillar-item item-health p-2 bg-gray-50 rounded text-gray-500';
+                    if(item.classList.contains('item-union')) item.className = 'pillar-item item-union p-2 bg-gray-50 rounded text-gray-500';
+                } else if (filter === 'health') {
+                    if (item.classList.contains('item-health')) {
+                        // Highlight Health
+                        if(item.parentElement.parentElement.innerHTML.includes('Chrétien')) item.className = 'pillar-item item-health p-2 bg-green-100 text-green-900 font-bold border border-green-200';
+                        if(item.parentElement.parentElement.innerHTML.includes('Socialiste')) item.className = 'pillar-item item-health p-2 bg-red-100 text-red-900 font-bold border border-red-200';
+                        if(item.parentElement.parentElement.innerHTML.includes('Libéral')) item.className = 'pillar-item item-health p-2 bg-blue-100 text-blue-900 font-bold border border-blue-200';
+                    } else {
+                        // Dim others
+                        item.className = 'pillar-item p-2 bg-transparent text-gray-300';
+                    }
+                } else if (filter === 'union') {
+                    if (item.classList.contains('item-union')) {
+                        item.className = 'pillar-item item-union p-2 bg-gray-800 text-white font-bold shadow-md';
+                    } else {
+                        item.className = 'pillar-item p-2 bg-transparent text-gray-300';
+                    }
+                }
+            });
+            
+            // If all, restore colors specific to pillar types in a simple way
+            if(filter === 'all') {
+                // Re-init simple view (This is a simplified reset, in a full app we'd map state better)
+                document.querySelectorAll('.item-health').forEach(el => el.className = 'pillar-item item-health p-2 bg-gray-50 rounded text-gray-700');
+                document.querySelectorAll('.item-union').forEach(el => el.className = 'pillar-item item-union p-2 bg-gray-50 rounded text-gray-700');
+                document.querySelectorAll('.item-party').forEach(el => el.className = 'pillar-item item-party p-2 bg-gray-50 rounded text-gray-700');
+                document.querySelectorAll('.item-school').forEach(el => el.className = 'pillar-item item-school p-2 bg-gray-50 rounded text-gray-700');
+            }
+        }
+
+        // --- SECTION 3: PARTICRACY CHART ---
+        function initRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            
+            // Labels wrapped
+            const rawLabels = ['Parlement (Législatif)', 'Gouvernement (Exécutif)', 'Présidents de Parti', 'Le Roi', 'Syndicats / Patronat'];
+            const wrappedLabels = rawLabels.map(l => formatLabel(l, 16));
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: wrappedLabels,
+                    datasets: [{
+                        label: 'Pouvoir Constitutionnel (Théorie)',
+                        data: [90, 80, 20, 50, 30],
+                        fill: true,
+                        backgroundColor: 'rgba(45, 55, 72, 0.2)', // Charcoal low opacity
+                        borderColor: 'rgb(45, 55, 72)',
+                        pointBackgroundColor: 'rgb(45, 55, 72)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(45, 55, 72)'
+                    }, {
+                        label: 'Pouvoir Réel (Particratie)',
+                        data: [30, 70, 95, 10, 60],
+                        fill: true,
+                        backgroundColor: 'rgba(197, 48, 48, 0.2)', // Red
+                        borderColor: 'rgb(197, 48, 48)',
+                        pointBackgroundColor: 'rgb(197, 48, 48)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(197, 48, 48)'
+                    }]
+                },
+                options: {
+                    ...commonChartOptions,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: '#E2E8F0'
+                            },
+                            grid: {
+                                color: '#E2E8F0'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 11,
+                                    family: "'Inter', sans-serif"
+                                },
+                                color: '#4A5568'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: {
+                                display: false // Hide numbers on axis for cleaner look
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- SECTION 4: MEDIA CHART ---
+        function initBarChart() {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            
+            // Data
+            const years = ['1981', '1987', '1991', '1999', '2003', '2007', '2010', '2014', '2019', '2024 (Est)'];
+            const days = [38, 148, 102, 26, 21, 194, 541, 139, 493, 150]; // 2024 is placeholder/current context
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Jours pour former le gouvernement',
+                        data: days,
+                        backgroundColor: function(context) {
+                            const val = context.raw;
+                            // Color code severity
+                            if (val > 400) return 'rgba(197, 48, 48, 0.9)'; // Critical
+                            if (val > 100) return 'rgba(221, 107, 32, 0.8)'; // Warning
+                            return 'rgba(49, 130, 206, 0.6)'; // Normal
+                        },
+                        borderRadius: 4,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    ...commonChartOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#EDF2F7',
+                                borderDash: [5, 5]
+                            },
+                            title: {
+                                display: true,
+                                text: 'Jours'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- NAVIGATION LOGIC ---
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                const navHeight = document.getElementById('navbar').offsetHeight;
+                const elementPosition = el.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initTimeline();
+            initRadarChart();
+            initBarChart();
+            updatePillars('all'); // Initialize Grid
+        });
+
+    </script>
+</body>
+</html>
