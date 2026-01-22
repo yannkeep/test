@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#1MillionParHeure — Le scandale de l'inactivité forcée en Belgique</title>
+    <meta name="description" content="En Belgique, on dépense 1 million d'euros par heure pour maintenir 978 000 personnes inactives. Pas parce qu'elles le veulent. Parce que le système les punit.">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="#1MillionParHeure — Le scandale belge">
+    <meta property="og:description" content="1 million € par heure pour forcer 978 000 personnes à ne rien faire.">
+    <meta property="og:image" content="https://1millionparheure.be/og-image.png">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="#1MillionParHeure">
+    <meta name="twitter:description" content="Le scandale de l'inactivité forcée en Belgique.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --bg: #0a0a0f;
+            --surface: #12121a;
+            --border: #2a2a3a;
+            --text: #f0f0f5;
+            --muted: #888899;
+            --red: #ff4757;
+            --red-glow: rgba(255, 71, 87, 0.3);
+            --yellow: #ffd93d;
+            --green: #6bcb77;
+        }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at 50% 30%, var(--red-glow) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        .hashtag {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--red);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 10vw, 6rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        
+        h1 .amount {
+            color: var(--red);
+            text-shadow: 0 0 60px var(--red-glow);
+        }
+        
+        .subtitle {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: var(--muted);
+            margin-bottom: 3rem;
+        }
+        
+        /* COUNTER */
+        .counter-box {
+            background: var(--surface);
+            border: 2px solid var(--red);
+            border-radius: 16px;
+            padding: 2rem 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 60px var(--red-glow);
+        }
+        
+        .counter-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .counter-value {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 800;
+            color: var(--red);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .counter-suffix {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-top: 0.5rem;
+        }
+        
+        .timer {
+            font-size: 1rem;
+            color: var(--yellow);
+            margin-top: 1rem;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* BUTTONS */
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: var(--red);
+            color: white;
+            box-shadow: 0 4px 20px var(--red-glow);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px var(--red-glow);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--muted);
+            font-size: 0.9rem;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+        
+        /* SECTIONS */
+        section {
+            padding: 6rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        h2 .highlight { color: var(--red); }
+        
+        /* LE PIÈGE */
+        .trap-visual {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .trap-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .trap-step:last-child { border-bottom: none; }
+        
+        .trap-icon {
+            font-size: 2rem;
+            width: 60px;
+            text-align: center;
+        }
+        
+        .trap-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .trap-content p {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+        
+        .trap-result {
+            background: linear-gradient(135deg, rgba(255,71,87,0.1), rgba(255,71,87,0.2));
+            border: 2px solid var(--red);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .trap-result h3 {
+            color: var(--red);
+            font-size: 1.5rem;
+        }
+        
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--red);
+        }
+        
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* TÉMOIGNAGES */
+        .testimonial {
+            background: var(--surface);
+            border-left: 4px solid var(--yellow);
+            border-radius: 0 12px 12px 0;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .testimonial-quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-author {
+            color: var(--yellow);
+            font-weight: 600;
+        }
+        
+        .testimonial-context {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        
+        /* CTA SECTION */
+        .cta-section {
+            background: linear-gradient(135deg, var(--surface), #1a1a2a);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+        
+        .cta-section h2 {
+            margin-bottom: 1rem;
+        }
+        
+        .cta-section p {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* SHARE */
+        .share-section {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .share-btn.twitter { background: #1da1f2; color: white; }
+        .share-btn.facebook { background: #4267b2; color: white; }
+        .share-btn.whatsapp { background: #25d366; color: white; }
+        .share-btn.copy { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+        
+        .share-btn:hover { transform: translateY(-2px); }
+        
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+        
+        footer a {
+            color: var(--red);
+            text-decoration: none;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            .counter-box { padding: 1.5rem; }
+            .trap-step { flex-direction: column; text-align: center; }
+            .trap-icon { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hashtag">#1MillionParHeure</div>
+        <h1><span class="amount">1 000 000 €</span></h1>
+        <p class="subtitle">par heure pour forcer des Belges à ne rien faire</p>
+        
+        <div class="counter-box">
+            <div class="counter-label">Depuis que vous êtes sur cette page</div>
+            <div class="counter-value" id="counter">0 €</div>
+            <div class="counter-suffix">ont été dépensés pour maintenir l'inactivité forcée</div>
+            <div class="timer">⏱️ <span id="timer">00:00</span></div>
+        </div>
+        
+        <div class="cta-group">
+            <a href="#signer" class="btn btn-primary">✍️ Signer la pétition</a>
+            <a href="#comprendre" class="btn btn-secondary">📖 Comprendre</a>
+        </div>
+        
+        <div class="scroll-hint">↓ Scroll pour comprendre</div>
+    </section>
+    
+    <!-- LE PIÈGE -->
+    <section id="comprendre">
+        <h2>Le <span class="highlight">piège</span> belge</h2>
+        
+        <div class="trap-visual">
+            <div class="trap-step">
+                <div class="trap-icon">😊</div>
+                <div class="trap-content">
+                    <h3>Tu touches 1 200 € d'allocations</h3>
+                    <p>Chômage, incapacité ou RIS — tu survis avec un minimum.</p>
+                </div>
+            </div>
+            
+            <div class="trap-step">
+                <div class="trap-icon">💼</div>
+                <div class="trap-content">
+                    <h3>Tu trouves un petit boulot à 400 €/mois</h3>
+                    <p>Tu veux te réinsérer, contribuer, sortir de l'isolement.</p>
+                </div>
+            </div>
+            
+            <div class="trap-step">
+                <div class="trap-icon">💸</div>
+                <div class="trap-content">
+                    <h3>Tu perds ton statut BIM</h3>
+                    <p>
+                        → +200 € de mutuelle<br>
+                        → +150 € d'énergie (fin tarif social)<br>
+                        → +100 € de transports<br>
+                        → +50 € divers (cantine enfants, etc.)
+                    </p>
+                </div>
+            </div>
+            
+            <div class="trap-result">
+                <h3>📉 RÉSULTAT : Tu as PERDU 100 €</h3>
+                <p style="color: var(--muted);">En essayant de travailler, tu te retrouves avec MOINS d'argent qu'avant.</p>
+                <p style="margin-top: 1rem;"><strong>Taux marginal d'imposition réel : 125%</strong></p>
+            </div>
+        </div>
+        
+        <p style="text-align: center; color: var(--muted); margin-top: 2rem;">
+            Ce n'est pas de la paresse. C'est des <strong>mathématiques</strong>.<br>
+            Le système PUNIT ceux qui essaient de contribuer.
+        </p>
+    </section>
+    
+    <!-- STATS -->
+    <section>
+        <h2>Les <span class="highlight">chiffres</span> du scandale</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">978 000</div>
+                <div class="stat-label">personnes en inactivité contrainte</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">21 Md€</div>
+                <div class="stat-label">coût annuel de l'inactivité</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">90 000</div>
+                <div class="stat-label">exclusions prévues (Arizona)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">127%</div>
+                <div class="stat-label">taux marginal pour les précaires</div>
+            </div>
+        </div>
+        
+        <div class="testimonial">
+            <p class="testimonial-quote">
+                "J'ai fait un burnout il y a 3 ans. Aujourd'hui je vais mieux, je voudrais donner des cours de cuisine dans mon quartier. 
+                Mais si je gagne quoi que ce soit, je perds mon statut. Alors je reste chez moi. À ne rien faire. C'est ça qu'ils veulent ?"
+            </p>
+            <p class="testimonial-author">Marie, 52 ans</p>
+            <p class="testimonial-context">Ex-cadre bancaire, incapacité de travail</p>
+        </div>
+        
+        <div class="testimonial">
+            <p class="testimonial-quote">
+                "J'ai 58 ans, 35 ans de sidérurgie. Je suis 'inemployable' selon les stats. 
+                Mais je sais souder, réparer, transmettre. Le système préfère me payer à attendre la pension."
+            </p>
+            <p class="testimonial-author">Jean-Pierre, 58 ans</p>
+            <p class="testimonial-context">Ancien ouvrier sidérurgiste, chômeur longue durée</p>
+        </div>
+    </section>
+    
+    <!-- ARIZONA -->
+    <section>
+        <h2>Et maintenant, <span class="highlight">Arizona</span></h2>
+        
+        <p style="text-align: center; max-width: 700px; margin: 0 auto 2rem;">
+            Le gouvernement De Wever ne répare pas le piège. <strong>Il l'aggrave.</strong>
+        </p>
+        
+        <div class="stats-grid">
+            <div class="stat-card" style="border-color: var(--red);">
+                <div class="stat-value" style="font-size: 1.8rem;">Chômage limité à 24 mois</div>
+                <div class="stat-label">90 000 personnes exclues vers le CPAS</div>
+            </div>
+            <div class="stat-card" style="border-color: var(--red);">
+                <div class="stat-value" style="font-size: 1.8rem;">-2,5% pour les malades</div>
+                <div class="stat-label">Sanctions financières sur les incapacités</div>
+            </div>
+            <div class="stat-card" style="border-color: var(--red);">
+                <div class="stat-value" style="font-size: 1.8rem;">CPAS saturés</div>
+                <div class="stat-label">Communes au bord de la faillite</div>
+            </div>
+        </div>
+        
+        <p style="text-align: center; margin-top: 2rem; color: var(--yellow);">
+            <strong>1er mars 2026 : 30 122 personnes basculent dans la précarité.</strong><br>
+            Un recours est en cours devant la Cour Constitutionnelle (article 23).
+        </p>
+    </section>
+    
+    <!-- CTA -->
+    <section id="signer">
+        <div class="cta-section">
+            <h2>Agissez <span class="highlight">maintenant</span></h2>
+            <p>Signez la pétition pour exiger un moratoire sur les exclusions et une réforme du piège institutionnel.</p>
+            
+            <div class="cta-group">
+                <a href="https://change.org/1millionparheure" class="btn btn-primary" target="_blank">
+                    ✍️ Signer la pétition
+                </a>
+                <a href="https://t.me/1millionparheure" class="btn btn-secondary" target="_blank">
+                    💬 Rejoindre le mouvement
+                </a>
+            </div>
+            
+            <p style="margin-top: 2rem; font-size: 0.9rem; color: var(--muted);">
+                Objectif : 100 000 signatures.
+            </p>
+        </div>
+    </section>
+    
+    <!-- SHARE -->
+    <section class="share-section">
+        <h2>Partagez le <span class="highlight">scandale</span></h2>
+        
+        <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text=En%20Belgique%2C%20on%20d%C3%A9pense%201%20MILLION%20%E2%82%AC%20PAR%20HEURE%20pour%20forcer%20des%20gens%20%C3%A0%20ne%20rien%20faire.%20Pas%20parce%20qu%27ils%20le%20veulent.%20Parce%20que%20le%20syst%C3%A8me%20les%20PUNIT.%20%231MillionParHeure&url=https://1millionparheure.be" class="share-btn twitter" target="_blank">
+                🐦 Twitter
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://1millionparheure.be" class="share-btn facebook" target="_blank">
+                📘 Facebook
+            </a>
+            <a href="https://wa.me/?text=En%20Belgique%2C%201%20MILLION%20%E2%82%AC%20PAR%20HEURE%20pour%20l%27inactivit%C3%A9%20forc%C3%A9e.%20https://1millionparheure.be" class="share-btn whatsapp" target="_blank">
+                💬 WhatsApp
+            </a>
+            <button class="share-btn copy" onclick="copyLink()">
+                📋 Copier le lien
+            </button>
+        </div>
+    </section>
+    
+    <!-- FOOTER -->
+    <footer>
+        <p>
+            Une initiative citoyenne.<br>
+            Données : SPF Économie, ONEM, DULBEA.<br>
+            <a href="/sources">Sources et méthodologie</a> • <a href="/contact">Contact</a>
+        </p>
+        <p style="margin-top: 1rem;">
+            #1MillionParHeure #StopArizona #PiègeBelge
+        </p>
+    </footer>
+    
+    <script>
+        // COMPTEUR EN TEMPS RÉEL
+        // 21 milliards € / an = 2 397 260 € / heure = 39 954 € / minute = 666 € / seconde
+        const euroPerSecond = 666;
+        let startTime = Date.now();
+        let totalEuros = 0;
+        
+        function updateCounter() {
+            const elapsed = (Date.now() - startTime) / 1000;
+            totalEuros = Math.floor(elapsed * euroPerSecond);
+            
+            document.getElementById('counter').textContent = 
+                totalEuros.toLocaleString('fr-BE') + ' €';
+            
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = Math.floor(elapsed % 60);
+            document.getElementById('timer').textContent = 
+                String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+            
+            requestAnimationFrame(updateCounter);
+        }
+        
+        updateCounter();
+        
+        // COPY LINK
+        function copyLink() {
+            navigator.clipboard.writeText('https://1millionparheure.be');
+            alert('Lien copié !');
+        }
+        
+        // SMOOTH SCROLL
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
