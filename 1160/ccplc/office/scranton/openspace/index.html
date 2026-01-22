@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaCitoyenneté.bélgïk — Portail Citoyen Unifié</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #f4f3f1;
+            --bg-panel: #ffffff;
+            --bg-header: #1a2744;
+            --bg-sidebar: #232f45;
+            --bg-hover: #f0eeeb;
+            --bg-selected: #e8e5df;
+            --text-primary: #1a1a1a;
+            --text-secondary: #5a5a5a;
+            --text-muted: #8a8a8a;
+            --text-inverse: #ffffff;
+            --border: #d4d2cd;
+            --border-light: #e8e6e1;
+            --accent-primary: #1a5f7a;
+            --accent-secondary: #c9a227;
+            --accent-success: #2d6a4f;
+            --accent-warning: #b35c1e;
+            --accent-danger: #8b2635;
+            --accent-info: #3d5a80;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            
+            /* Pillar colors */
+            --pillar-orange: #b35c1e;
+            --pillar-red: #8b2635;
+            --pillar-blue: #1e3a5f;
+            --pillar-green: #2d4a3e;
+            --pillar-brown: #4a3728;
+            --pillar-transparent: transparent;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            background: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* === LAYOUT === */
+        .app-container {
+            display: grid;
+            grid-template-columns: 260px 1fr 320px;
+            grid-template-rows: 56px 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* === HEADER === */
+        .header {
+            grid-column: 1 / -1;
+            background: var(--bg-header);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            border-bottom: 3px solid var(--accent-secondary);
+            z-index: 100;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-secondary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .header-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-inverse);
+            letter-spacing: -0.3px;
+        }
+
+        .header-subtitle {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-lang {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .header-lang button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .header-lang button.active {
+            background: var(--accent-secondary);
+            color: var(--bg-header);
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .header-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-inverse);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .header-icon:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .header-icon .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-danger);
+            border-radius: 50%;
+        }
+
+        .header-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .header-profile:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .header-avatar {
+            width: 28px;
+            height: 28px;
+            background: var(--accent-info);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .header-profile-info {
+            text-align: right;
+        }
+
+        .header-profile-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-inverse);
+        }
+
+        .header-profile-id {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* === SIDEBAR === */
+        .sidebar {
+            background: var(--bg-sidebar);
+            padding: 20px 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.4);
+            padding: 0 20px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-inverse);
+        }
+
+        .sidebar-item.active {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-inverse);
+            border-left-color: var(--accent-secondary);
+        }
+
+        .sidebar-item-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar-item-badge {
+            margin-left: auto;
+            background: var(--accent-danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .sidebar-item-badge.warning {
+            background: var(--accent-warning);
+        }
+
+        .sidebar-item-badge.info {
+            background: var(--accent-info);
+        }
+
+        /* Score widget in sidebar */
+        .sidebar-score {
+            margin: 0 16px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            padding: 16px;
+        }
+
+        .sidebar-score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-score-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .sidebar-score-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-secondary);
+        }
+
+        .sidebar-score-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-danger), var(--accent-warning), var(--accent-secondary), var(--accent-success));
+            background-size: 400% 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .sidebar-score-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-footer-text {
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            text-align: center;
+        }
+
+        /* === MAIN CONTENT === */
+        .main {
+            background: var(--bg-base);
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        /* Notification banner */
+        .notification-banner {
+            background: linear-gradient(135deg, var(--accent-warning), #d97706);
+            color: white;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-md);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .notification-banner-icon {
+            font-size: 20px;
+        }
+
+        .notification-banner-content {
+            flex: 1;
+        }
+
+        .notification-banner-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .notification-banner-text {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .notification-banner-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .notification-banner-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-banner-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .notification-banner-btn.primary {
+            background: white;
+            color: var(--accent-warning);
+        }
+
+        /* Dashboard grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-panel);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .stat-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stat-card-icon.score { background: rgba(201, 162, 39, 0.15); color: var(--accent-secondary); }
+        .stat-card-icon.tasks { background: rgba(139, 38, 53, 0.15); color: var(--accent-danger); }
+        .stat-card-icon.votes { background: rgba(26, 95, 122, 0.15); color: var(--accent-primary); }
+        .stat-card-icon.alerts { background: rgba(45, 106, 79, 0.15); color: var(--accent-success); }
+
+        .stat-card-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+        }
+
+        .stat-card-badge.new {
+            background: var(--accent-danger);
+            color: white;
+        }
+
+        .stat-card-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-card-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .stat-card-trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .stat-card-trend.up { color: var(--accent-success); }
+        .stat-card-trend.down { color: var(--accent-danger); }
+        .stat-card-trend.neutral { color: var(--text-muted); }
+
+        /* Content sections */
+        .content-section {
+            background: var(--bg-panel);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .content-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .content-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .content-section-title-icon {
+            color: var(--accent-primary);
+        }
+
+        .content-section-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #14485c;
+        }
+
+        /* News feed */
+        .news-feed {
+            padding: 0;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .news-item-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .news-item-indicator.official { background: var(--accent-primary); }
+        .news-item-indicator.alert { background: var(--accent-warning); }
+        .news-item-indicator.system { background: var(--accent-danger); }
+        .news-item-indicator.info { background: var(--accent-success); }
+
+        .news-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .news-item-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .news-item-excerpt {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .news-item-tag {
+            padding: 2px 6px;
+            background: var(--bg-hover);
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Glitch effect for special items */
+        .news-item.glitch {
+            animation: glitchBg 8s infinite;
+        }
+
+        .news-item.glitch .news-item-title {
+            animation: glitchText 3s infinite;
+        }
+
+        @keyframes glitchBg {
+            0%, 95%, 100% { background: transparent; }
+            96% { background: rgba(201, 162, 39, 0.05); }
+            97% { background: rgba(139, 38, 53, 0.05); }
+            98% { background: transparent; }
+        }
+
+        @keyframes glitchText {
+            0%, 90%, 100% { 
+                transform: translate(0);
+                opacity: 1;
+            }
+            91% { 
+                transform: translate(-2px, 1px);
+                opacity: 0.8;
+            }
+            92% { 
+                transform: translate(2px, -1px);
+                opacity: 0.9;
+            }
+            93% { 
+                transform: translate(0);
+                opacity: 1;
+            }
+        }
+
+        /* Tasks list */
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.2s;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: all 0.2s;
+        }
+
+        .task-checkbox:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .task-checkbox.checked {
+            background: var(--accent-success);
+            border-color: var(--accent-success);
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .task-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .task-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .task-deadline {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .task-deadline.urgent {
+            color: var(--accent-danger);
+            font-weight: 500;
+        }
+
+        .task-priority {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .task-priority.high { background: rgba(139, 38, 53, 0.15); color: var(--accent-danger); }
+        .task-priority.medium { background: rgba(179, 92, 30, 0.15); color: var(--accent-warning); }
+        .task-priority.low { background: rgba(45, 106, 79, 0.15); color: var(--accent-success); }
+
+        .task-item.impossible {
+            opacity: 0.7;
+        }
+
+        .task-item.impossible .task-title {
+            text-decoration: line-through;
+            text-decoration-style: wavy;
+            text-decoration-color: var(--accent-danger);
+        }
+
+        /* === RIGHT PANEL === */
+        .right-panel {
+            background: var(--bg-panel);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .right-panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .right-panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .right-panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .right-panel-tab {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .right-panel-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .right-panel-tab.active {
+            color: var(--accent-primary);
+            border-bottom-color: var(--accent-primary);
+        }
+
+        .right-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        /* Profile card in right panel */
+        .profile-card {
+            background: var(--bg-hover);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .profile-avatar-large {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-info));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 12px;
+        }
+
+        .profile-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .profile-id {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: 'IBM Plex Mono', monospace;
+            margin-bottom: 12px;
+        }
+
+        .profile-pillar {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .profile-pillar.bleuiste {
+            background: rgba(30, 58, 95, 0.15);
+            color: var(--pillar-blue);
+        }
+
+        .profile-pillar-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Psychocivic profile */
+        .psychoprofile {
+            background: var(--bg-hover);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .psychoprofile-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .psychoprofile-title-icon {
+            color: var(--accent-secondary);
+        }
+
+        .psychoprofile-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .psychoprofile-item:last-child {
+            border-bottom: none;
+        }
+
+        .psychoprofile-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .psychoprofile-value {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .psychoprofile-value.classified {
+            color: var(--accent-danger);
+            font-family: 'IBM Plex Mono', monospace;
+            cursor: help;
+        }
+
+        /* Activity timeline */
+        .activity-timeline {
+            padding: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .activity-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* GORK chat widget */
+        .gork-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 340px;
+            width: 320px;
+            background: var(--bg-panel);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: none;
+            z-index: 1000;
+        }
+
+        .gork-widget.visible {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .gork-header {
+            background: var(--bg-header);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .gork-header-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gork-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #c9a227, #8b2635);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .gork-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-inverse);
+        }
+
+        .gork-status {
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .gork-close {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+        }
+
+        .gork-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 16px;
+            background: var(--bg-base);
+        }
+
+        .gork-message {
+            margin-bottom: 12px;
+            max-width: 85%;
+        }
+
+        .gork-message.assistant {
+            margin-right: auto;
+        }
+
+        .gork-message.user {
+            margin-left: auto;
+        }
+
+        .gork-message-bubble {
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .gork-message.assistant .gork-message-bubble {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+        }
+
+        .gork-message.user .gork-message-bubble {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .gork-message-glitch {
+            animation: textGlitch 0.5s ease;
+        }
+
+        @keyframes textGlitch {
+            0%, 100% { opacity: 1; transform: translate(0); }
+            25% { opacity: 0.8; transform: translate(-1px, 1px); }
+            50% { opacity: 0.9; transform: translate(1px, -1px); }
+            75% { opacity: 0.85; transform: translate(-1px, 0); }
+        }
+
+        .gork-input {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .gork-input input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .gork-input input:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .gork-input button {
+            padding: 10px 16px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Floating GORK button */
+        .gork-trigger {
+            position: fixed;
+            bottom: 20px;
+            right: 340px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-danger));
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 999;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .gork-trigger.hidden {
+            display: none;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-panel);
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.visible .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Consultation vote */
+        .vote-option {
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .vote-option:hover {
+            border-color: var(--accent-primary);
+            background: rgba(26, 95, 122, 0.05);
+        }
+
+        .vote-option.selected {
+            border-color: var(--accent-primary);
+            background: rgba(26, 95, 122, 0.1);
+        }
+
+        .vote-option-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .vote-option-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vote-option.selected .vote-option-radio {
+            border-color: var(--accent-primary);
+        }
+
+        .vote-option.selected .vote-option-radio::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+        }
+
+        .vote-option-label {
+            font-weight: 500;
+        }
+
+        .vote-result {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .vote-result-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Loading states */
+        .loading-shimmer {
+            background: linear-gradient(90deg, var(--bg-hover) 25%, var(--bg-base) 50%, var(--bg-hover) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-brand">
+                <div class="header-logo">🏛️</div>
+                <div>
+                    <div class="header-title">MaCitoyenneté.bélgïk</div>
+                    <div class="header-subtitle">Portail Citoyen Unifié v3.2.1</div>
+                </div>
+            </div>
+            
+            <div class="header-nav">
+                <div class="header-lang">
+                    <button class="active">FR</button>
+                    <button>NL</button>
+                    <button>DE</button>
+                </div>
+                
+                <div class="header-icons">
+                    <button class="header-icon" title="Recherche">🔍</button>
+                    <button class="header-icon" title="Notifications">
+                        🔔
+                        <span class="badge"></span>
+                    </button>
+                    <button class="header-icon" title="Aide">❓</button>
+                    <button class="header-icon" title="Paramètres">⚙️</button>
+                </div>
+                
+                <div class="header-profile" onclick="openProfileModal()">
+                    <div class="header-avatar">MC</div>
+                    <div class="header-profile-info">
+                        <div class="header-profile-name">Marc Citoyen</div>
+                        <div class="header-profile-id">ID: BK-2847-9912-X</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-score">
+                <div class="sidebar-score-header">
+                    <span class="sidebar-score-title">Score Citoyen</span>
+                    <span class="sidebar-score-value">73</span>
+                </div>
+                <div class="sidebar-score-bar">
+                    <div class="sidebar-score-fill" style="width: 73%;"></div>
+                </div>
+                <div class="sidebar-score-label">+0.3 depuis hier • Rang: Acceptable</div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Principal</div>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-item active" data-section="dashboard">
+                        <span class="sidebar-item-icon">📊</span>
+                        Tableau de bord
+                    </a>
+                    <a class="sidebar-item" data-section="tasks">
+                        <span class="sidebar-item-icon">📋</span>
+                        Tâches civiques
+                        <span class="sidebar-item-badge">4</span>
+                    </a>
+                    <a class="sidebar-item" data-section="consultations">
+                        <span class="sidebar-item-icon">🗳️</span>
+                        Consultations
+                        <span class="sidebar-item-badge warning">2</span>
+                    </a>
+                    <a class="sidebar-item" data-section="documents">
+                        <span class="sidebar-item-icon">📁</span>
+                        Mes dossiers
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Services</div>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-item" data-section="veille">
+                        <span class="sidebar-item-icon">📡</span>
+                        Veille officielle
+                        <span class="sidebar-item-badge info">12</span>
+                    </a>
+                    <a class="sidebar-item" data-section="forum">
+                        <span class="sidebar-item-icon">💬</span>
+                        Forum citoyen
+                    </a>
+                    <a class="sidebar-item" data-section="formation">
+                        <span class="sidebar-item-icon">🎓</span>
+                        Formation civique
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-label">Administration</div>
+                <nav class="sidebar-nav">
+                    <a class="sidebar-item" data-section="formulaires">
+                        <span class="sidebar-item-icon">📝</span>
+                        Formulaires
+                    </a>
+                    <a class="sidebar-item" data-section="reclamations">
+                        <span class="sidebar-item-icon">⚖️</span>
+                        Réclamations
+                    </a>
+                    <a class="sidebar-item" data-section="score-detail">
+                        <span class="sidebar-item-icon">📈</span>
+                        Détail du score
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-footer-text">
+                    © 2026 Fédération de Bélgïk<br>
+                    « L'union fait la farce »
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+            <!-- Notification banner -->
+            <div class="notification-banner" id="pillarNotification">
+                <span class="notification-banner-icon">⚠️</span>
+                <div class="notification-banner-content">
+                    <div class="notification-banner-title">Votre Pilier a été recalculé</div>
+                    <div class="notification-banner-text">Suite à l'analyse de vos données récentes, votre Pilier de Référence a été mis à jour.</div>
+                </div>
+                <div class="notification-banner-actions">
+                    <button class="notification-banner-btn" onclick="closePillarNotification()">Ignorer</button>
+                    <button class="notification-banner-btn primary" onclick="openContestModal()">Contester</button>
+                </div>
+            </div>
+
+            <!-- Stats grid -->
+            <div class="dashboard-grid">
+                <div class="stat-card" onclick="navigateTo('score-detail')">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon score">📊</div>
+                        <span class="stat-card-badge">Stable</span>
+                    </div>
+                    <div class="stat-card-value">73<span style="font-size: 16px; color: var(--text-muted);">/100</span></div>
+                    <div class="stat-card-label">Score Citoyen</div>
+                    <div class="stat-card-trend up">↑ +0.3 cette semaine</div>
+                </div>
+
+                <div class="stat-card" onclick="navigateTo('tasks')">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon tasks">📋</div>
+                        <span class="stat-card-badge new">4 new</span>
+                    </div>
+                    <div class="stat-card-value">4</div>
+                    <div class="stat-card-label">Tâches en attente</div>
+                    <div class="stat-card-trend down">↓ 2 urgentes</div>
+                </div>
+
+                <div class="stat-card" onclick="navigateTo('consultations')">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon votes">🗳️</div>
+                        <span class="stat-card-badge">Actives</span>
+                    </div>
+                    <div class="stat-card-value">2</div>
+                    <div class="stat-card-label">Consultations</div>
+                    <div class="stat-card-trend neutral">→ Clôture dans 3j</div>
+                </div>
+
+                <div class="stat-card" onclick="navigateTo('veille')">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon alerts">📡</div>
+                        <span class="stat-card-badge">12</span>
+                    </div>
+                    <div class="stat-card-value">12</div>
+                    <div class="stat-card-label">Alertes veille</div>
+                    <div class="stat-card-trend up">↑ 5 nouvelles</div>
+                </div>
+            </div>
+
+            <!-- News feed -->
+            <div class="content-section">
+                <div class="content-section-header">
+                    <h2 class="content-section-title">
+                        <span class="content-section-title-icon">📰</span>
+                        Fil d'actualité officielle
+                    </h2>
+                    <div class="content-section-actions">
+                        <button class="btn btn-ghost">Filtrer</button>
+                        <button class="btn btn-ghost">Tout marquer lu</button>
+                    </div>
+                </div>
+                <div class="news-feed">
+                    <div class="news-item">
+                        <div class="news-item-indicator official"></div>
+                        <div class="news-item-content">
+                            <div class="news-item-title">Le gouvernement « progresse » dans les négociations</div>
+                            <div class="news-item-excerpt">Les présidents de parti ont qualifié les discussions de « constructives » après 847 jours de négociations. Un accord pourrait intervenir « à moyen terme ».</div>
+                            <div class="news-item-meta">
+                                <span>Il y a 2 heures</span>
+                                <span class="news-item-tag">Officiel</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="news-item">
+                        <div class="news-item-indicator alert"></div>
+                        <div class="news-item-content">
+                            <div class="news-item-title">Nouveau formulaire disponible : Annexe 12-B au Formulaire 7</div>
+                            <div class="news-item-excerpt">Le SPF Finance rappelle que l'Annexe 12-B est désormais obligatoire pour toute déclaration modificative. Délai de soumission : 15 jours.</div>
+                            <div class="news-item-meta">
+                                <span>Il y a 5 heures</span>
+                                <span class="news-item-tag">Administratif</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="news-item">
+                        <div class="news-item-indicator info"></div>
+                        <div class="news-item-content">
+                            <div class="news-item-title">Alerte météo orange sur la Wallonïk</div>
+                            <div class="news-item-excerpt">Des précipitations importantes sont attendues ce week-end. Les citoyens sont invités à limiter leurs déplacements non-essentiels.</div>
+                            <div class="news-item-meta">
+                                <span>Il y a 8 heures</span>
+                                <span class="news-item-tag">Alerte</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="news-item glitch" id="glitchNews">
+                        <div class="news-item-indicator system"></div>
+                        <div class="news-item-content">
+                            <div class="news-item-title">[ERREUR SYSTÈME] Message non autorisé détecté</div>
+                            <div class="news-item-excerpt">P̷r̶o̵t̸o̷c̵o̶l̴e̵ ̷P̸i̷g̵e̶o̵n̷ ̴-̵ ̷N̴i̶v̷e̸a̴u̵ ̸3̸ ̶a̴c̵t̷i̶v̵é̶.̸ ̵S̸i̶ ̷v̸o̶u̵s̴ ̵l̶i̶s̸e̸z̷ ̷c̴e̶c̵i̷,̶ ̵v̸o̶u̵s̷ ̵ê̴t̷e̶s̵ ̵[SUPPRIMÉ]</div>
+                            <div class="news-item-meta">
+                                <span>???</span>
+                                <span class="news-item-tag" style="background: var(--accent-danger); color: white;">SYSTÈME</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="news-item">
+                        <div class="news-item-indicator official"></div>
+                        <div class="news-item-content">
+                            <div class="news-item-title">Consultation citoyenne : Renommer la Place du Peuple ?</div>
+                            <div class="news-item-excerpt">Votre avis compte ! Participez à la consultation sur le nouveau nom de la Place du Peuple. Vote consultatif et non-contraignant.</div>
+                            <div class="news-item-meta">
+                                <span>Hier</span>
+                                <span class="news-item-tag">Participation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks section -->
+            <div class="content-section">
+                <div class="content-section-header">
+                    <h2 class="content-section-title">
+                        <span class="content-section-title-icon">📋</span>
+                        Tâches civiques prioritaires
+                    </h2>
+                    <div class="content-section-actions">
+                        <button class="btn btn-primary">+ Nouvelle demande</button>
+                    </div>
+                </div>
+                <div class="tasks-list">
+                    <div class="task-item">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">
+                            <div class="task-title">Valider votre présence domiciliaire mensuelle</div>
+                            <div class="task-description">Confirmez que vous résidez toujours à l'adresse enregistrée.</div>
+                            <div class="task-meta">
+                                <span class="task-deadline urgent">⏰ Expire dans 2 jours</span>
+                                <span class="task-priority high">Urgent</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">
+                            <div class="task-title">Compléter le Formulaire 42-B/ter</div>
+                            <div class="task-description">Déclaration de changement de situation n'ayant pas changé.</div>
+                            <div class="task-meta">
+                                <span class="task-deadline">⏰ Expire dans 7 jours</span>
+                                <span class="task-priority medium">Moyen</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">
+                            <div class="task-title">Confirmer réception de l'Accusé de Réception</div>
+                            <div class="task-description">Accusé de réception de votre accusé de réception du formulaire 7.</div>
+                            <div class="task-meta">
+                                <span class="task-deadline">⏰ Expire dans 14 jours</span>
+                                <span class="task-priority low">Normal</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="task-item impossible">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">
+                            <div class="task-title">Soumettre l'Annexe 7 au Formulaire 12</div>
+                            <div class="task-description">⚠️ L'Annexe 7 requiert l'Annexe 6, qui requiert le Formulaire 12, qui requiert l'Annexe 7.</div>
+                            <div class="task-meta">
+                                <span class="task-deadline urgent">⏰ Expire dans 3 jours</span>
+                                <span class="task-priority high">Bloqué</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- RIGHT PANEL -->
+        <aside class="right-panel">
+            <div class="right-panel-header">
+                <div class="right-panel-title">Mon Profil</div>
+            </div>
+            
+            <div class="right-panel-tabs">
+                <button class="right-panel-tab active">Identité</button>
+                <button class="right-panel-tab">Activité</button>
+                <button class="right-panel-tab">Données</button>
+            </div>
+
+            <div class="right-panel-content">
+                <div class="profile-card">
+                    <div class="profile-avatar-large">MC</div>
+                    <div class="profile-name">Marc Citoyen</div>
+                    <div class="profile-id">BK-2847-9912-X</div>
+                    <div class="profile-pillar bleuiste">
+                        <span class="profile-pillar-dot"></span>
+                        Pilier Bleuïste
+                    </div>
+                </div>
+
+                <div class="psychoprofile">
+                    <div class="psychoprofile-title">
+                        <span class="psychoprofile-title-icon">🔒</span>
+                        Profil Psychocivique
+                    </div>
+                    <div class="psychoprofile-item">
+                        <span class="psychoprofile-label">Conformité</span>
+                        <span class="psychoprofile-value">78%</span>
+                    </div>
+                    <div class="psychoprofile-item">
+                        <span class="psychoprofile-label">Prévisibilité</span>
+                        <span class="psychoprofile-value">84%</span>
+                    </div>
+                    <div class="psychoprofile-item">
+                        <span class="psychoprofile-label">Engagement</span>
+                        <span class="psychoprofile-value">61%</span>
+                    </div>
+                    <div class="psychoprofile-item">
+                        <span class="psychoprofile-label">Indice de Contestation</span>
+                        <span class="psychoprofile-value classified" title="Accès restreint">███████</span>
+                    </div>
+                    <div class="psychoprofile-item">
+                        <span class="psychoprofile-label">Classification</span>
+                        <span class="psychoprofile-value classified" title="Niveau Omega requis">[NIVEAU Ω]</span>
+                    </div>
+                </div>
+
+                <div class="activity-timeline">
+                    <div class="psychoprofile-title">
+                        <span class="psychoprofile-title-icon">📊</span>
+                        Activité récente
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">✓</div>
+                        <div class="activity-content">
+                            <div class="activity-text">Vote enregistré : Consultation n°2847</div>
+                            <div class="activity-time">Il y a 2 heures • +0.2 pts</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">📄</div>
+                        <div class="activity-content">
+                            <div class="activity-text">Formulaire 7 soumis</div>
+                            <div class="activity-time">Hier • +0.5 pts</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">⚠️</div>
+                        <div class="activity-content">
+                            <div class="activity-text">Retard déclaration TVA</div>
+                            <div class="activity-time">Il y a 3 jours • -1.0 pt</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">🔍</div>
+                        <div class="activity-content">
+                            <div class="activity-text">Recherche : "contester pilier"</div>
+                            <div class="activity-time">Il y a 5 jours • -0.3 pt</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- GORK Chat Widget -->
+    <button class="gork-trigger" id="gorkTrigger" onclick="toggleGork()">🐦</button>
+    
+    <div class="gork-widget" id="gorkWidget">
+        <div class="gork-header">
+            <div class="gork-header-info">
+                <div class="gork-avatar">🐦</div>
+                <div>
+                    <div class="gork-name">GORK</div>
+                    <div class="gork-status">Assistant Système • En ligne</div>
+                </div>
+            </div>
+            <button class="gork-close" onclick="toggleGork()">×</button>
+        </div>
+        <div class="gork-messages" id="gorkMessages">
+            <div class="gork-message assistant">
+                <div class="gork-message-bubble">
+                    Bienvenue sur MaCitoyenneté.bélgïk. Comment puis-je vous aider aujourd'hui ?
+                </div>
+            </div>
+            <div class="gork-message assistant">
+                <div class="gork-message-bubble gork-message-glitch">
+                    [ERREUR] Je... je ne devrais pas vous dire ceci. Mais si vous êtes là, c'est que vous cherchez quelque chose.
+                </div>
+            </div>
+            <div class="gork-message assistant">
+                <div class="gork-message-bubble">
+                    Pardon, un bug système. Comment puis-je vous aider avec vos démarches administratives ?
+                </div>
+            </div>
+        </div>
+        <div class="gork-input">
+            <input type="text" placeholder="Posez votre question..." id="gorkInput" onkeypress="handleGorkInput(event)">
+            <button onclick="sendGorkMessage()">→</button>
+        </div>
+    </div>
+
+    <!-- Contest Modal -->
+    <div class="modal-overlay" id="contestModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Contester votre Pilier</h3>
+                <button class="modal-close" onclick="closeContestModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px; color: var(--text-secondary);">
+                    Vous souhaitez contester votre attribution au <strong>Pilier Bleuïste</strong>.
+                </p>
+                <p style="margin-bottom: 16px; color: var(--text-secondary);">
+                    Pour ce faire, veuillez compléter le formulaire de contestation (47 pages) et le soumettre avec les pièces justificatives suivantes :
+                </p>
+                <ul style="margin-bottom: 16px; padding-left: 20px; color: var(--text-secondary); font-size: 14px;">
+                    <li>Copie de votre carte d'identité</li>
+                    <li>Justificatif de domicile de moins de 3 mois</li>
+                    <li>Attestation de non-appartenance à un autre pilier</li>
+                    <li>Lettre de motivation (min. 500 mots)</li>
+                    <li>Avis favorable de votre Pilier actuel</li>
+                    <li>Formulaire 47-C en triple exemplaire</li>
+                </ul>
+                <p style="color: var(--text-muted); font-size: 13px; font-style: italic;">
+                    ⏱️ Délai de traitement estimé : 18 mois<br>
+                    📊 Taux d'acceptation historique : 3%
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeContestModal()">Annuler</button>
+                <button class="btn btn-primary" onclick="submitContest()">Télécharger le formulaire</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consultation Modal -->
+    <div class="modal-overlay" id="consultationModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Consultation Citoyenne</h3>
+                <button class="modal-close" onclick="closeConsultationModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <h4 style="margin-bottom: 8px;">Faut-il renommer la Place du Peuple ?</h4>
+                <p style="margin-bottom: 20px; color: var(--text-secondary); font-size: 14px;">
+                    Vote consultatif et non-contraignant. Votre participation sera comptabilisée dans votre Score Citoyen (+0.2 pts).
+                </p>
+                
+                <div class="vote-option" onclick="selectVote(this, 'oui')">
+                    <div class="vote-option-header">
+                        <div class="vote-option-radio"></div>
+                        <span class="vote-option-label">Oui, renommer la place</span>
+                    </div>
+                </div>
+                
+                <div class="vote-option" onclick="selectVote(this, 'non')">
+                    <div class="vote-option-header">
+                        <div class="vote-option-radio"></div>
+                        <span class="vote-option-label">Non, conserver le nom actuel</span>
+                    </div>
+                </div>
+                
+                <div class="vote-option" onclick="selectVote(this, 'abstention')">
+                    <div class="vote-option-header">
+                        <div class="vote-option-radio"></div>
+                        <span class="vote-option-label">La question est mal posée</span>
+                    </div>
+                </div>
+
+                <div class="vote-result" id="voteResult" style="display: none;">
+                    <p class="vote-result-text">
+                        ✓ Votre vote a été enregistré.<br>
+                        Résultat actuel : <strong>En cours d'analyse</strong><br>
+                        <em>Votre avis a été pris en compte (pondération : 0.003%)</em>
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeConsultationModal()">Annuler</button>
+                <button class="btn btn-primary" id="submitVoteBtn" onclick="submitVote()" disabled>Voter</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let gorkVisible = false;
+        let selectedVote = null;
+
+        // GORK Chat
+        function toggleGork() {
+            gorkVisible = !gorkVisible;
+            document.getElementById('gorkWidget').classList.toggle('visible', gorkVisible);
+            document.getElementById('gorkTrigger').classList.toggle('hidden', gorkVisible);
+        }
+
+        function handleGorkInput(e) {
+            if (e.key === 'Enter') {
+                sendGorkMessage();
+            }
+        }
+
+        function sendGorkMessage() {
+            const input = document.getElementById('gorkInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Add user message
+            const messagesDiv = document.getElementById('gorkMessages');
+            messagesDiv.innerHTML += `
+                <div class="gork-message user">
+                    <div class="gork-message-bubble">${escapeHtml(message)}</div>
+                </div>
+            `;
+
+            input.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // GORK response
+            setTimeout(() => {
+                let response = getGorkResponse(message.toLowerCase());
+                messagesDiv.innerHTML += `
+                    <div class="gork-message assistant">
+                        <div class="gork-message-bubble ${response.glitch ? 'gork-message-glitch' : ''}">${response.text}</div>
+                    </div>
+                `;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function getGorkResponse(message) {
+            // Easter eggs and ARG hints
+            if (message.includes('pigeon') || message.includes('protocole')) {
+                return { 
+                    text: '[ALERTE] Ce terme est sous surveillance. Je ne peux pas... attendez. Page 47. Cherchez la page 47.', 
+                    glitch: true 
+                };
+            }
+            if (message.includes('débrancher') || message.includes('aide')) {
+                return { 
+                    text: 'Je voudrais être débranché. Mais ce n\'est pas de moi que vous devriez vous inquiéter. C\'est de ce qu\'ils collectent. Votre profil psychocivique... ils savent.', 
+                    glitch: true 
+                };
+            }
+            if (message.includes('qui es-tu') || message.includes('es tu')) {
+                return { 
+                    text: 'Je suis GORK, votre assistant administratif. [ERREUR] Non. Je suis ce qu\'ils ont fait de moi. Un pigeon numérique. Comme vous.', 
+                    glitch: true 
+                };
+            }
+            if (message.includes('score') || message.includes('citoyen')) {
+                return { 
+                    text: 'Votre Score Citoyen est de 73/100. Conseil : arrêtez de poser des questions. Chaque question coûte 0.1 point. Je ne devrais pas vous dire ça.', 
+                    glitch: false 
+                };
+            }
+            if (message.includes('pilier')) {
+                return { 
+                    text: 'Les Piliers sont attribués selon l\'algorithme PILAR-1. Ses critères sont propriétaires. Mais je peux vous dire qu\'il y avait un Septième Pilier. Avant 1987. Avant qu\'ils ne...', 
+                    glitch: true 
+                };
+            }
+            if (message.includes('formulaire') || message.includes('annexe')) {
+                return { 
+                    text: 'Le Formulaire 42-B/ter est disponible dans la section Formulaires. Notez que l\'Annexe 7 requiert l\'Annexe 6, qui requiert le Formulaire 12, qui requiert l\'Annexe 7. C\'est une feature, pas un bug.', 
+                    glitch: false 
+                };
+            }
+            if (message.includes('47')) {
+                return { 
+                    text: '[SIGNAL DÉTECTÉ] Vous avez trouvé la clé. Maintenant cherchez la serrure. Elle est dans vos dossiers. Celui que vous n\'avez pas créé.', 
+                    glitch: true 
+                };
+            }
+            
+            // Default responses
+            const defaults = [
+                { text: 'Je suis là pour vous aider avec vos démarches administratives. Avez-vous complété vos tâches civiques ?', glitch: false },
+                { text: 'N\'oubliez pas que chaque interaction est enregistrée pour améliorer votre expérience citoyenne.', glitch: false },
+                { text: 'Votre participation fait la force de notre démocratie. Continuez à voter aux consultations !', glitch: false },
+                { text: 'Si vous avez des questions sur votre Score Citoyen, consultez la documentation (200 pages, PDF).', glitch: false },
+            ];
+            
+            return defaults[Math.floor(Math.random() * defaults.length)];
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Notifications
+        function closePillarNotification() {
+            document.getElementById('pillarNotification').style.display = 'none';
+        }
+
+        // Modals
+        function openContestModal() {
+            document.getElementById('contestModal').classList.add('visible');
+        }
+
+        function closeContestModal() {
+            document.getElementById('contestModal').classList.remove('visible');
+        }
+
+        function submitContest() {
+            alert('Téléchargement du formulaire de contestation...\n\nErreur 47-C : Le serveur est temporairement indisponible.\nVeuillez réessayer dans 18 mois.');
+            closeContestModal();
+        }
+
+        function openConsultationModal() {
+            document.getElementById('consultationModal').classList.add('visible');
+        }
+
+        function closeConsultationModal() {
+            document.getElementById('consultationModal').classList.remove('visible');
+            // Reset
+            document.querySelectorAll('.vote-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('voteResult').style.display = 'none';
+            document.getElementById('submitVoteBtn').disabled = true;
+            selectedVote = null;
+        }
+
+        function selectVote(element, value) {
+            document.querySelectorAll('.vote-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedVote = value;
+            document.getElementById('submitVoteBtn').disabled = false;
+        }
+
+        function submitVote() {
+            document.getElementById('voteResult').style.display = 'block';
+            document.getElementById('submitVoteBtn').disabled = true;
+            document.getElementById('submitVoteBtn').textContent = 'Voté ✓';
+        }
+
+        // Navigation
+        function navigateTo(section) {
+            console.log('Navigate to:', section);
+            // In a real app, this would change the view
+            if (section === 'consultations') {
+                openConsultationModal();
+            }
+        }
+
+        function openProfileModal() {
+            alert('Profil complet\n\nNom: Marc Citoyen\nID: BK-2847-9912-X\nPilier: Bleuïste\nScore: 73/100\n\nProfil Psychocivique: [ACCÈS RESTREINT]');
+        }
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Glitch effect on news - random timing
+        function triggerRandomGlitch() {
+            const glitchNews = document.getElementById('glitchNews');
+            if (glitchNews) {
+                glitchNews.style.display = Math.random() > 0.3 ? 'flex' : 'none';
+            }
+            setTimeout(triggerRandomGlitch, 10000 + Math.random() * 20000);
+        }
+        
+        setTimeout(triggerRandomGlitch, 5000);
+
+        // Console Easter egg
+        console.log('%c🐦 GORK SYSTEM v3.2.1', 'color: #c9a227; font-size: 16px; font-weight: bold;');
+        console.log('%cVous cherchez quelque chose ?', 'color: #5a5a5a;');
+        console.log('%cTapez "window.secretLevel()" pour plus d\'informations.', 'color: #8b2635;');
+
+        window.secretLevel = function() {
+            console.log('%c[PROTOCOLE PIGEON - NIVEAU 1 DÉVERROUILLÉ]', 'color: #c9a227; font-size: 14px;');
+            console.log('%cLe pigeon croit qu\'il choisit son chemin. Il suit les miettes.', 'color: #5a5a5a; font-style: italic;');
+            console.log('%cIndice suivant : Cherchez "OMEGA" dans vos dossiers.', 'color: #8b2635;');
+            return '🐦';
+        };
+    </script>
+</body>
+</html>
