@@ -76,7 +76,7 @@ Override these in your country config to create different visual identities.
 
 /* === RESET & BASE === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; height: auto; }
 body {
   font-family: var(--font-main);
   background: var(--civic-bg);
@@ -84,6 +84,7 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* === VISUAL EFFECTS LAYER === */
@@ -132,6 +133,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-bottom: var(--space-xl); /* Espace en bas pour le scroll */
 }
 
 .civic-header {
@@ -200,7 +202,7 @@ body {
 }
 
 .civic-main {
-  flex: 1;
+  flex: 1 1 auto;
   display: grid;
   grid-template-columns: 280px 1fr 320px;
   gap: var(--space-md);
@@ -208,10 +210,39 @@ body {
   max-width: 1800px;
   margin: 0 auto;
   width: 100%;
+  min-height: 0; /* Important pour le scroll */
 }
 
+/* TABLET */
 @media (max-width: 1200px) {
-  .civic-main { grid-template-columns: 1fr; }
+  .civic-main { 
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .civic-main > aside:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .civic-header {
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-md);
+  }
+  .civic-header__status {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .civic-main { 
+    grid-template-columns: 1fr;
+    padding: var(--space-sm);
+  }
+  .civic-panel {
+    padding: var(--space-md);
+  }
 }
 
 /* === PANELS === */
@@ -222,7 +253,9 @@ body {
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  overflow-y: auto;
+  max-height: none;
 }
 
 .civic-panel::before {
@@ -405,7 +438,8 @@ body {
 .civic-dialogue {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 300px;
+  max-height: 60vh;
 }
 
 .civic-dialogue__viewport {
@@ -415,6 +449,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+  min-height: 200px;
 }
 
 .civic-dialogue__message {
@@ -498,8 +533,18 @@ body {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  max-height: 400px;
+  max-height: 350px;
   overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .civic-feed {
+    max-height: none;
+  }
+  .civic-dialogue {
+    max-height: none;
+    min-height: 250px;
+  }
 }
 
 .civic-feed__item {
