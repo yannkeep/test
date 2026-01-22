@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Hémorragie de 50 000 Milliards : Une Infographie Interactive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: "Neon Future" - High contrast, dark mode aesthetic for impact -->
+    <!-- Background: #0F172A (Slate 900) -->
+    <!-- Text: #F8FAFC (Slate 50) -->
+    <!-- Accents: #F43F5E (Rose 500 - Loss/Danger), #06B6D4 (Cyan 500 - Tech/Data), #10B981 (Emerald 500 - Solution/Money) -->
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Chart Container Styling - MANDATORY */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Max width to prevent excessive stretching */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 400px; /* Cap height */
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        /* Utility for card hover effects */
+        .hover-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+
+    <!-- Application Structure Plan:
+        1. Hero Section: "The $50 Trillion Figure" - Immediate Hook.
+        2. Narrative Section 1: The Overview (Doughnut Chart of major loss categories).
+        3. Narrative Section 2: The Shadow Economy (Bar Chart comparing Cybercrime to National GDPs).
+        4. Narrative Section 3: Organizational Absurdity (Pie Chart on Employee Disengagement).
+        5. Interactive Section: "The Cost of Inaction" Simulator. Slider to "recover" funds and see what they buy.
+        6. Conclusion: The ROI of Prevention (Text/Cards).
+        
+        This structure moves from the abstract global number -> specific sectors -> personal/organizational level -> actionable solution simulation.
+    -->
+
+    <!-- Visualization & Content Choices:
+        1. Global Losses Breakdown -> Goal: Compare/Organize -> Doughnut Chart -> Shows the constituent parts of the 50T total clearly.
+        2. Cybercrime vs GDP -> Goal: Compare -> Bar Chart -> Contextualizes abstract "trillions" by comparing them to known entities (countries).
+        3. Employee Disengagement -> Goal: Inform/Compare -> Pie Chart -> starkly visualizes the 85% "checked out" statistic.
+        4. Recovery Simulator -> Goal: Change/Engage -> Interactive HTML/JS -> Allows user to manipulate the data, reinforcing the "potential" for improvement.
+        
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="bg-slate-900 text-slate-50 antialiased selection:bg-rose-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold tracking-tight text-cyan-400">Observatoire<span class="text-white">Mondial</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition">Vue d'ensemble</a>
+                        <a href="#economy" class="hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition">Économie Souterraine</a>
+                        <a href="#workplace" class="hover:text-cyan-400 px-3 py-2 rounded-md text-sm font-medium transition">Monde du Travail</a>
+                        <a href="#simulator" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-md text-sm font-medium transition">Simulateur</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative overflow-hidden bg-slate-900 pt-16 pb-24">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+            <div class="inline-flex items-center rounded-full bg-rose-500/10 px-3 py-1 text-sm font-semibold text-rose-400 ring-1 ring-inset ring-rose-500/20 mb-6">
+                Rapport de Synthèse 2024-2025
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6">
+                L'Hémorragie de <br class="hidden md:block" />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-orange-500">50 000 Milliards $</span>
+            </h1>
+            <p class="max-w-2xl text-xl text-slate-400 mb-10 leading-relaxed">
+                Chaque année, l'humanité dilapide près de <strong>50% du PIB mondial</strong>. Violence, crime organisé, inefficience bureaucratique et destruction environnementale forment une "taxe invisible" qui hypothèque notre avenir.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl text-left mt-8">
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover-card">
+                    <div class="text-3xl font-bold text-rose-500 mb-2">19,1 T$</div>
+                    <div class="text-sm text-slate-400">Coût de la violence et des conflits (Institute for Economics & Peace)</div>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover-card">
+                    <div class="text-3xl font-bold text-cyan-400 mb-2">15,0 T$</div>
+                    <div class="text-sm text-slate-400">Poids de la criminalité économique et de l'économie souterraine</div>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover-card">
+                    <div class="text-3xl font-bold text-yellow-400 mb-2">8,9 T$</div>
+                    <div class="text-sm text-slate-400">Pertes liées au désengagement des employés (Gallup)</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Global Overview -->
+    <section id="overview" class="py-20 bg-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4 border-l-4 border-cyan-500 pl-4">Anatomie du Gaspillage Mondial</h2>
+                <p class="text-slate-300 max-w-3xl text-lg">
+                    Les pertes mondiales ne sont pas isolées; elles sont systémiques. En agrégeant les données des institutions internationales (OMS, FMI, Gallup), nous voyons émerger quatre piliers majeurs de destruction de valeur. Ce graphique illustre la répartition estimée de ces 50 trillions de dollars.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Chart Column -->
+                <div class="bg-slate-900 p-6 rounded-2xl shadow-xl border border-slate-700">
+                    <h3 class="text-center text-lg font-semibold text-slate-200 mb-6">Répartition des Pertes (en Trillions $)</h3>
+                    <div class="chart-container">
+                        <canvas id="globalLossChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-slate-500 mt-4 italic">Source: Synthèse des rapports IEP, Gallup, Cybersecurity Ventures, OMS.</p>
+                </div>
+
+                <!-- Context Column -->
+                <div class="space-y-8">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-lg bg-rose-500/10 flex items-center justify-center text-2xl">💣</div>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-bold text-rose-400">Violence & Conflits</h4>
+                            <p class="text-slate-400 mt-2">Le poste le plus lourd. Il inclut les dépenses militaires, la sécurité intérieure et les destructions matérielles. L'investissement dans la "peur" détourne des capitaux massifs de l'éducation ou de la santé.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-lg bg-cyan-500/10 flex items-center justify-center text-2xl">💻</div>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-bold text-cyan-400">Criminalité Économique</h4>
+                            <p class="text-slate-400 mt-2">Une économie parallèle florissante. La cybercriminalité, l'évasion fiscale et la corruption drainent les ressources publiques et privées, agissant comme un parasite sur l'économie réelle.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 h-12 w-12 rounded-lg bg-yellow-500/10 flex items-center justify-center text-2xl">💤</div>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-bold text-yellow-400">Inefficience Organisationnelle</h4>
+                            <p class="text-slate-400 mt-2">Le coût du facteur humain mal géré. Réunions inutiles, bureaucratie excessive et désengagement massif créent une perte de productivité équivalente au PIB de plusieurs grandes nations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: The Shadow Economy -->
+    <section id="economy" class="py-20 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 md:text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">L'Ombre de l'Économie : Le Géant de la Cybercriminalité</h2>
+                <p class="text-slate-300 max-w-3xl mx-auto text-lg">
+                    Si la cybercriminalité était un pays, elle serait la troisième économie mondiale. Ce secteur de l'économie souterraine a connu une croissance explosive, dépassant désormais les économies traditionnelles majeures.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Text/Stats Card -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-cyan-500 hover-card">
+                        <h3 class="text-lg font-bold text-white mb-2">Croissance Exponentielle</h3>
+                        <p class="text-slate-400">Les pertes liées à la cybercriminalité sont passées de 3T$ en 2015 à une estimation de <strong>10,5T$ pour 2025</strong>.</p>
+                    </div>
+                    <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-rose-500 hover-card">
+                        <h3 class="text-lg font-bold text-white mb-2">Autres Fuites Financières</h3>
+                        <ul class="space-y-2 text-slate-400 text-sm">
+                            <li class="flex justify-between border-b border-slate-700 pb-2">
+                                <span>Blanchiment d'argent</span>
+                                <span class="font-mono text-rose-400">~2-5% PIB</span>
+                            </li>
+                            <li class="flex justify-between border-b border-slate-700 pb-2">
+                                <span>Corruption</span>
+                                <span class="font-mono text-rose-400">~3,6 T$</span>
+                            </li>
+                            <li class="flex justify-between pt-1">
+                                <span>Évasion Fiscale</span>
+                                <span class="font-mono text-rose-400">492 Md$</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Chart Area -->
+                <div class="lg:col-span-2 bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700">
+                    <h3 class="text-lg font-semibold text-slate-200 mb-6">Comparatif : Cybercriminalité vs PIB Nationaux (2024-2025)</h3>
+                    <div class="chart-container">
+                        <canvas id="cyberChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Workplace Absurdity -->
+    <section id="workplace" class="py-20 bg-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                
+                <!-- Chart Column -->
+                <div class="order-2 md:order-1 bg-slate-900 p-6 rounded-2xl shadow-lg border border-slate-700">
+                    <h3 class="text-center text-lg font-semibold text-slate-200 mb-4">L'État de l'Engagement au Travail (Gallup)</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="workChart"></canvas>
+                    </div>
+                    <div class="mt-6 text-center">
+                        <p class="text-2xl font-bold text-rose-500">Coût: 8,9 Trillions $</p>
+                        <p class="text-sm text-slate-500">Perte de productivité annuelle mondiale</p>
+                    </div>
+                </div>
+
+                <!-- Text Column -->
+                <div class="order-1 md:order-2">
+                    <h2 class="text-3xl font-bold text-white mb-6 border-l-4 border-yellow-500 pl-4">L'Absurdité Organisationnelle</h2>
+                    <p class="text-slate-300 text-lg mb-6">
+                        Les entreprises modernes sont rongées par des dysfonctionnements internes. Le "Problème XY" (résoudre le mauvais problème), la réunionite aiguë et la bureaucratie créent un environnement où <strong>85% des salariés</strong> sont psychologiquement absents.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-slate-700 p-4 rounded-lg">
+                            <div class="text-yellow-400 text-3xl font-black mb-1">72%</div>
+                            <div class="text-slate-300 font-semibold">Réunions Improductives</div>
+                            <p class="text-xs text-slate-400 mt-1">Source de frustration majeure et perte de temps colossal.</p>
+                        </div>
+                        <div class="bg-slate-700 p-4 rounded-lg">
+                            <div class="text-rose-400 text-3xl font-black mb-1">65%</div>
+                            <div class="text-slate-300 font-semibold">Burn-out</div>
+                            <p class="text-xs text-slate-400 mt-1">Employés déclarant avoir souffert de burn-out en 2023.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Simulator (Interactive) -->
+    <section id="simulator" class="py-24 bg-gradient-to-b from-slate-900 to-slate-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">
+                Le Coût de l'Inaction : <span class="text-emerald-400">Simulateur de Récupération</span>
+            </h2>
+            <p class="text-slate-400 text-lg mb-12 max-w-2xl mx-auto">
+                Les pertes sont astronomiques, mais les solutions sont à portée de main. Le ROI de la prévention est massif (ex: Clean Air Act = 30x). Si nous récupérions ne serait-ce qu'une fraction de ces pertes, que pourrions-nous financer ?
+            </p>
+
+            <!-- Simulator UI -->
+            <div class="bg-slate-800 rounded-3xl p-8 md:p-12 shadow-2xl border border-slate-700">
+                
+                <!-- Controls -->
+                <div class="mb-12">
+                    <label for="recovery-slider" class="block text-lg font-medium text-slate-200 mb-4">
+                        Si nous réduisions les pertes mondiales de <span id="percentage-display" class="text-emerald-400 font-bold text-2xl">5%</span>...
+                    </label>
+                    <input type="range" id="recovery-slider" min="1" max="25" value="5" step="1" 
+                        class="w-full h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500 hover:accent-emerald-400 transition-all">
+                    <div class="flex justify-between text-xs text-slate-500 mt-2 font-mono">
+                        <span>1% (Réaliste)</span>
+                        <span>10% (Ambitieux)</span>
+                        <span>25% (Révolutionnaire)</span>
+                    </div>
+                </div>
+
+                <!-- Result Display -->
+                <div class="mb-12 animate-pulse-once">
+                    <p class="text-slate-400 uppercase tracking-widest text-sm font-semibold mb-2">Fonds Disponibles Récupérés</p>
+                    <div class="text-5xl md:text-7xl font-black text-emerald-400 tracking-tight" id="amount-display">
+                        2 500 Md$
+                    </div>
+                    <p class="text-slate-500 text-sm mt-2">Basé sur une perte annuelle totale estimée à 50 000 Md$.</p>
+                </div>
+
+                <!-- Impact Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                    <!-- Project 1 -->
+                    <div id="card-hunger" class="bg-slate-700/50 p-6 rounded-xl border border-slate-600 opacity-50 transition-all duration-500">
+                        <div class="text-3xl mb-3">🍲</div>
+                        <h4 class="font-bold text-white">Faim Zéro</h4>
+                        <p class="text-xs text-slate-400 mt-1 mb-3">Coût: ~267 Md$/an</p>
+                        <div class="status-badge inline-block px-2 py-1 rounded text-xs font-bold bg-slate-600 text-slate-300">Fonds Insuffisants</div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div id="card-education" class="bg-slate-700/50 p-6 rounded-xl border border-slate-600 opacity-50 transition-all duration-500">
+                        <div class="text-3xl mb-3">🎓</div>
+                        <h4 class="font-bold text-white">Éducation Universelle</h4>
+                        <p class="text-xs text-slate-400 mt-1 mb-3">Coût: ~340 Md$/an</p>
+                        <div class="status-badge inline-block px-2 py-1 rounded text-xs font-bold bg-slate-600 text-slate-300">Fonds Insuffisants</div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div id="card-climate" class="bg-slate-700/50 p-6 rounded-xl border border-slate-600 opacity-50 transition-all duration-500">
+                        <div class="text-3xl mb-3">🌍</div>
+                        <h4 class="font-bold text-white">Transition Climat</h4>
+                        <p class="text-xs text-slate-400 mt-1 mb-3">Coût: ~2 000 Md$/an</p>
+                        <div class="status-badge inline-block px-2 py-1 rounded text-xs font-bold bg-slate-600 text-slate-300">Fonds Insuffisants</div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div id="card-health" class="bg-slate-700/50 p-6 rounded-xl border border-slate-600 opacity-50 transition-all duration-500">
+                        <div class="text-3xl mb-3">🏥</div>
+                        <h4 class="font-bold text-white">Santé Universelle</h4>
+                        <p class="text-xs text-slate-400 mt-1 mb-3">Coût: ~370 Md$/an</p>
+                        <div class="status-badge inline-block px-2 py-1 rounded text-xs font-bold bg-slate-600 text-slate-300">Fonds Insuffisants</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion/Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-2xl font-bold text-white mb-6">Conclusion</h3>
+            <p class="text-slate-400 max-w-2xl mx-auto mb-8">
+                L'enjeu n'est plus de démontrer l'ampleur des pertes, mais d'agir. Les interactions entre ces catégories suggèrent que des interventions systémiques (transparence, simplification, prévention) peuvent générer des effets multiplicateurs considérables.
+            </p>
+            <div class="text-xs text-slate-600 space-y-2">
+                <p>Sources: Institute for Economics and Peace, Cybersecurity Ventures, Gallup, OMS, FMI, Tax Justice Network, Rapports de synthèse fournis.</p>
+                <p>&copy; 2026 Infographie Interactive Générée.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- UTILITY: Label Wrapping for Chart.js ---
+        // Splits long strings into arrays of shorter strings for multiline labels
+        function wrapLabels(labels, maxLength = 16) {
+            return labels.map(label => {
+                if (label.length <= maxLength) return label;
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = words[0];
+
+                for (let i = 1; i < words.length; i++) {
+                    if (currentLine.length + 1 + words[i].length <= maxLength) {
+                        currentLine += ' ' + words[i];
+                    } else {
+                        lines.push(currentLine);
+                        currentLine = words[i];
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            });
+        }
+
+        // --- CHART GLOBAL CONFIG ---
+        Chart.defaults.color = '#94a3b8'; // Slate 400
+        Chart.defaults.font.family = 'Inter';
+        
+        const commonTooltip = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            },
+            backgroundColor: 'rgba(15, 23, 42, 0.9)', // Slate 900
+            titleColor: '#f8fafc',
+            bodyColor: '#cbd5e1',
+            borderColor: '#334155',
+            borderWidth: 1,
+            padding: 10
+        };
+
+        // --- CHART 1: Global Losses (Doughnut) ---
+        const ctxGlobal = document.getElementById('globalLossChart').getContext('2d');
+        const rawGlobalLabels = ['Violence & Conflits', 'Criminalité Économique', 'Inefficience Travail', 'Environnement & Santé', 'Autres/Non Classé'];
+        new Chart(ctxGlobal, {
+            type: 'doughnut',
+            data: {
+                labels: wrapLabels(rawGlobalLabels, 16),
+                datasets: [{
+                    data: [19.1, 15, 8.9, 9.1, 2.9], // Data from source material (approximations to fit ~55T total range)
+                    backgroundColor: [
+                        '#F43F5E', // Rose 500
+                        '#06B6D4', // Cyan 500
+                        '#EAB308', // Yellow 500
+                        '#10B981', // Emerald 500
+                        '#64748B'  // Slate 500
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: commonTooltip
+                },
+                cutout: '60%'
+            }
+        });
+
+        // --- CHART 2: Cybercrime vs GDP (Bar) ---
+        const ctxCyber = document.getElementById('cyberChart').getContext('2d');
+        const rawCyberLabels = ['Cybercriminalité (2025)', 'PIB Japon + Allemagne', 'Corruption (Est.)', 'PIB France'];
+        new Chart(ctxCyber, {
+            type: 'bar',
+            data: {
+                labels: wrapLabels(rawCyberLabels, 20),
+                datasets: [{
+                    label: 'Valeur en Trillions $',
+                    data: [10.5, 8.5, 3.6, 3.0], // Approx GDPs for context
+                    backgroundColor: [
+                        '#06B6D4', // Cyan (Cyber)
+                        '#475569', // Slate (Comparison)
+                        '#F43F5E', // Rose (Corruption)
+                        '#475569'  // Slate (Comparison)
+                    ],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#334155' } // Slate 700
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: commonTooltip
+                }
+            }
+        });
+
+        // --- CHART 3: Workplace Disengagement (Pie) ---
+        const ctxWork = document.getElementById('workChart').getContext('2d');
+        const rawWorkLabels = ['Désengagés / Activement Désengagés', 'Engagés'];
+        new Chart(ctxWork, {
+            type: 'pie',
+            data: {
+                labels: wrapLabels(rawWorkLabels, 20),
+                datasets: [{
+                    data: [85, 15], // Gallup 85% stat
+                    backgroundColor: [
+                        '#F43F5E', // Rose (Bad)
+                        '#10B981'  // Emerald (Good)
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: commonTooltip
+                }
+            }
+        });
+
+        // --- SIMULATOR LOGIC ---
+        const slider = document.getElementById('recovery-slider');
+        const percentageDisplay = document.getElementById('percentage-display');
+        const amountDisplay = document.getElementById('amount-display');
+        
+        const totalLosses = 50000; // 50 Trillion (in Billions for calc simplicity)
+        
+        // Project Costs in Billions
+        const projects = [
+            { id: 'card-hunger', cost: 267, badge: 'Faim Zéro' },
+            { id: 'card-education', cost: 340, badge: 'Éducation' },
+            { id: 'card-health', cost: 370, badge: 'Santé' },
+            { id: 'card-climate', cost: 2000, badge: 'Climat' }
+        ];
+
+        function updateSimulator() {
+            const percentage = parseInt(slider.value);
+            const recoveredAmount = totalLosses * (percentage / 100);
+            
+            // Update Text
+            percentageDisplay.textContent = percentage + '%';
+            amountDisplay.textContent = new Intl.NumberFormat('fr-FR').format(Math.round(recoveredAmount)) + ' Md$';
+            
+            // Update Cards logic
+            // We simulate "buying" projects in order of cost to check affordability individually
+            // Actually, let's just check if the TOTAL recovered amount covers the specific project cost individually (demonstrating purchasing power)
+            
+            projects.forEach(project => {
+                const card = document.getElementById(project.id);
+                const badge = card.querySelector('.status-badge');
+                
+                if (recoveredAmount >= project.cost) {
+                    card.classList.remove('opacity-50', 'border-slate-600', 'bg-slate-700/50');
+                    card.classList.add('opacity-100', 'border-emerald-500', 'bg-emerald-900/20', 'shadow-lg', 'shadow-emerald-500/10');
+                    badge.textContent = "Financé ✔";
+                    badge.classList.remove('bg-slate-600', 'text-slate-300');
+                    badge.classList.add('bg-emerald-500', 'text-white');
+                } else {
+                    card.classList.add('opacity-50', 'border-slate-600', 'bg-slate-700/50');
+                    card.classList.remove('opacity-100', 'border-emerald-500', 'bg-emerald-900/20', 'shadow-lg', 'shadow-emerald-500/10');
+                    badge.textContent = "Fonds Insuffisants";
+                    badge.classList.add('bg-slate-600', 'text-slate-300');
+                    badge.classList.remove('bg-emerald-500', 'text-white');
+                }
+            });
+        }
+
+        slider.addEventListener('input', updateSimulator);
+        
+        // Initialize
+        updateSimulator();
+
+    </script>
+</body>
+</html>
