@@ -1,0 +1,2345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CivicARG v2.0 — Open Civic Simulation Engine</title>
+<meta name="description" content="Open source framework for civic education through alternate reality games">
+<style>
+/*
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  CIVICARG ENGINE v2.0 — Extended Edition                                      ║
+║  + Kafkaesque Form System                                                     ║
+║  + Pilarization Quiz                                                          ║
+║  + Achievement System                                                         ║
+║  + Enhanced Visual Effects                                                    ║
+║  License: EUPL-1.2 / MIT dual license                                         ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+*/
+
+:root {
+  --civic-bg: #030308;
+  --civic-panel: rgba(12, 14, 28, 0.85);
+  --civic-border: #1e2040;
+  --civic-text: #e8eaf0;
+  --civic-text-dim: #8892b0;
+  --civic-primary: #b19cd9;
+  --civic-secondary: #00ff88;
+  --civic-tertiary: #00f0ff;
+  --civic-warning: #ffaa00;
+  --civic-danger: #ff4466;
+  
+  --pillar-1: #e63946;
+  --pillar-2: #f4a261;
+  --pillar-3: #457b9d;
+  --pillar-4: #2a9d8f;
+  --pillar-5: #9c89b8;
+  
+  --glow-primary: rgba(177, 156, 217, 0.5);
+  --glow-secondary: rgba(0, 255, 136, 0.5);
+  --glow-tertiary: rgba(0, 240, 255, 0.4);
+  
+  --font-main: system-ui, -apple-system, sans-serif;
+  --font-mono: 'Fira Code', 'Courier New', monospace;
+  --font-display: 'Space Grotesk', var(--font-main);
+  
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-main);
+  background: var(--civic-bg);
+  color: var(--civic-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* === EFFECTS === */
+.civic-effects {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.civic-effects__particles { position: absolute; inset: 0; }
+.civic-effects__aurora {
+  position: absolute; inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 30%, rgba(177,156,217,0.12), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 70%, rgba(0,255,136,0.08), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(0,240,255,0.06), transparent);
+  animation: auroraShift 20s ease-in-out infinite;
+}
+.civic-effects__grid {
+  position: absolute; inset: 0;
+  background-image: 
+    linear-gradient(rgba(177,156,217,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(177,156,217,0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.civic-effects__scanline {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--civic-primary), var(--civic-tertiary), transparent);
+  animation: scanMove 5s linear infinite;
+  opacity: 0.6;
+  box-shadow: 0 0 20px var(--civic-primary);
+}
+.civic-effects__vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+}
+
+@keyframes auroraShift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(2%, 1%) scale(1.02); }
+  66% { transform: translate(-1%, 2%) scale(0.98); }
+}
+@keyframes scanMove {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* === GLITCH EFFECT === */
+.glitch {
+  position: relative;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+}
+.glitch:hover::before {
+  animation: glitch1 0.3s infinite;
+  color: var(--civic-tertiary);
+  opacity: 0.8;
+}
+.glitch:hover::after {
+  animation: glitch2 0.3s infinite;
+  color: var(--civic-danger);
+  opacity: 0.8;
+}
+@keyframes glitch1 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, 1px); }
+}
+@keyframes glitch2 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(2px, -2px); }
+  40% { transform: translate(-2px, 2px); }
+  60% { transform: translate(1px, -1px); }
+}
+
+/* === LAYOUT === */
+.civic-app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--space-xl);
+}
+
+.civic-header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--civic-panel);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--civic-border);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.civic-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.civic-header__logo {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-secondary));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  animation: logoPulse 3s ease-in-out infinite;
+}
+@keyframes logoPulse {
+  0%, 100% { box-shadow: 0 0 20px var(--glow-primary); }
+  50% { box-shadow: 0 0 40px var(--glow-secondary); }
+}
+
+.civic-header__title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-tertiary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.civic-header__subtitle {
+  font-size: 0.75rem;
+  color: var(--civic-text-dim);
+  font-family: var(--font-mono);
+}
+
+.civic-header__nav {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.civic-nav-btn {
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  color: var(--civic-text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.civic-nav-btn:hover {
+  border-color: var(--civic-primary);
+  color: var(--civic-primary);
+  transform: translateY(-2px);
+}
+.civic-nav-btn.active {
+  background: rgba(177, 156, 217, 0.2);
+  border-color: var(--civic-primary);
+  color: var(--civic-primary);
+}
+
+.civic-header__status {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+.civic-score {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--civic-secondary);
+  border-radius: var(--radius-md);
+}
+
+.civic-score__value {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  color: var(--civic-secondary);
+  text-shadow: 0 0 10px var(--glow-secondary);
+}
+
+/* === MAIN CONTENT === */
+.civic-main {
+  flex: 1;
+  padding: var(--space-md);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.civic-view {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+.civic-view.active {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === PANELS === */
+.civic-panel {
+  background: var(--civic-panel);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  position: relative;
+  margin-bottom: var(--space-lg);
+}
+.civic-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--civic-primary), transparent);
+}
+.civic-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--civic-border);
+}
+.civic-panel__title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--civic-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* === GRID LAYOUTS === */
+.civic-grid {
+  display: grid;
+  gap: var(--space-lg);
+}
+.civic-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.civic-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.civic-grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 1024px) {
+  .civic-grid--3, .civic-grid--4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .civic-grid--2, .civic-grid--3, .civic-grid--4 { grid-template-columns: 1fr; }
+  .civic-header { flex-direction: column; text-align: center; }
+  .civic-header__nav { justify-content: center; }
+}
+
+/* === DASHBOARD VIEW === */
+.civic-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.civic-stat-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.civic-stat-card:hover {
+  border-color: var(--civic-primary);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(177, 156, 217, 0.2);
+}
+.civic-stat-card__icon {
+  font-size: 2rem;
+  margin-bottom: var(--space-sm);
+}
+.civic-stat-card__value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  color: var(--civic-secondary);
+  text-shadow: 0 0 15px var(--glow-secondary);
+}
+.civic-stat-card__label {
+  font-size: 0.8rem;
+  color: var(--civic-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.civic-stat-card__bar {
+  margin-top: var(--space-md);
+  height: 6px;
+  background: var(--civic-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.civic-stat-card__bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--civic-primary), var(--civic-secondary));
+  transition: width 0.5s ease;
+  border-radius: 3px;
+}
+
+/* === PILLAR BADGE === */
+.civic-pillar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid var(--pillar-color, var(--civic-primary));
+  border-radius: var(--radius-lg);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+.civic-pillar-badge__icon {
+  width: 32px; height: 32px;
+  background: var(--pillar-color, var(--civic-primary));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+.civic-pillar-badge__name {
+  color: var(--civic-text);
+}
+
+/* ============================================================================
+   PILARIZATION QUIZ
+   ============================================================================ */
+.quiz-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quiz-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+.quiz-progress__bar {
+  flex: 1;
+  height: 8px;
+  background: var(--civic-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.quiz-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--civic-primary), var(--civic-secondary));
+  transition: width 0.5s ease;
+}
+.quiz-progress__text {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--civic-text-dim);
+}
+
+.quiz-question {
+  margin-bottom: var(--space-xl);
+}
+.quiz-question__number {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--civic-primary);
+  margin-bottom: var(--space-sm);
+}
+.quiz-question__text {
+  font-size: 1.3rem;
+  color: var(--civic-text);
+  margin-bottom: var(--space-lg);
+  line-height: 1.5;
+}
+
+.quiz-answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.quiz-answer {
+  padding: var(--space-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  color: var(--civic-text);
+  font-family: var(--font-main);
+  font-size: 1rem;
+}
+.quiz-answer:hover {
+  border-color: var(--civic-primary);
+  background: rgba(177, 156, 217, 0.1);
+  transform: translateX(10px);
+}
+.quiz-answer.selected {
+  border-color: var(--civic-secondary);
+  background: rgba(0, 255, 136, 0.15);
+}
+
+.quiz-result {
+  text-align: center;
+  padding: var(--space-xl);
+}
+.quiz-result__pillar {
+  font-size: 4rem;
+  margin-bottom: var(--space-md);
+  animation: pillarReveal 1s ease;
+}
+@keyframes pillarReveal {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  50% { transform: scale(1.2) rotate(10deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.quiz-result__title {
+  font-size: 2rem;
+  color: var(--pillar-color, var(--civic-primary));
+  margin-bottom: var(--space-md);
+}
+.quiz-result__description {
+  color: var(--civic-text-dim);
+  max-width: 500px;
+  margin: 0 auto var(--space-lg);
+  line-height: 1.8;
+}
+.quiz-result__stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  margin-top: var(--space-lg);
+}
+.quiz-result__stat {
+  text-align: center;
+}
+.quiz-result__stat-value {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  color: var(--civic-secondary);
+}
+.quiz-result__stat-label {
+  font-size: 0.8rem;
+  color: var(--civic-text-dim);
+}
+
+/* ============================================================================
+   KAFKAESQUE FORM SYSTEM
+   ============================================================================ */
+.form-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-lg);
+  border-bottom: 2px dashed var(--civic-border);
+}
+.form-header__stamp {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-md);
+  border: 3px solid var(--civic-danger);
+  color: var(--civic-danger);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: bold;
+  transform: rotate(-5deg);
+  margin-bottom: var(--space-md);
+}
+.form-header__title {
+  font-size: 1.5rem;
+  color: var(--civic-text);
+  margin-bottom: var(--space-sm);
+}
+.form-header__subtitle {
+  font-size: 0.9rem;
+  color: var(--civic-text-dim);
+}
+.form-header__ref {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--civic-text-dim);
+  margin-top: var(--space-sm);
+}
+
+.form-section {
+  margin-bottom: var(--space-xl);
+  padding: var(--space-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+}
+.form-section__title {
+  font-size: 1rem;
+  color: var(--civic-primary);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--civic-border);
+}
+
+.form-field {
+  margin-bottom: var(--space-lg);
+}
+.form-field__label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--civic-text);
+  margin-bottom: var(--space-sm);
+}
+.form-field__label--required::after {
+  content: ' *';
+  color: var(--civic-danger);
+}
+.form-field__hint {
+  font-size: 0.75rem;
+  color: var(--civic-text-dim);
+  margin-top: var(--space-xs);
+}
+.form-field__error {
+  font-size: 0.75rem;
+  color: var(--civic-danger);
+  margin-top: var(--space-xs);
+  display: none;
+}
+.form-field.has-error .form-field__error {
+  display: block;
+}
+.form-field.has-error input,
+.form-field.has-error select,
+.form-field.has-error textarea {
+  border-color: var(--civic-danger);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: var(--space-md);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-sm);
+  color: var(--civic-text);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--civic-primary);
+  box-shadow: 0 0 20px var(--glow-primary);
+}
+.form-input::placeholder {
+  color: var(--civic-text-dim);
+}
+.form-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+.form-checkbox input {
+  margin-top: 4px;
+  accent-color: var(--civic-primary);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+}
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* Kafkaesque specific */
+.form-field--impossible .form-input {
+  animation: impossibleShake 0.5s ease;
+}
+@keyframes impossibleShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+.form-field--redacted .form-input {
+  background: var(--civic-text);
+  color: var(--civic-text);
+}
+.form-field--redacted .form-input::placeholder {
+  color: var(--civic-text);
+}
+
+.form-note {
+  padding: var(--space-md);
+  background: rgba(255, 170, 0, 0.1);
+  border: 1px solid var(--civic-warning);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--civic-warning);
+  margin-bottom: var(--space-lg);
+}
+.form-note--danger {
+  background: rgba(255, 68, 102, 0.1);
+  border-color: var(--civic-danger);
+  color: var(--civic-danger);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  padding-top: var(--space-lg);
+  border-top: 2px dashed var(--civic-border);
+}
+
+.form-submit {
+  padding: var(--space-md) var(--space-xl);
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-secondary));
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--civic-bg);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.form-submit:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px var(--glow-primary);
+}
+.form-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-cancel {
+  padding: var(--space-md) var(--space-xl);
+  background: transparent;
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  color: var(--civic-text-dim);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.form-cancel:hover {
+  border-color: var(--civic-danger);
+  color: var(--civic-danger);
+}
+
+/* Processing animation */
+.form-processing {
+  text-align: center;
+  padding: var(--space-xl);
+}
+.form-processing__spinner {
+  width: 60px; height: 60px;
+  border: 4px solid var(--civic-border);
+  border-top-color: var(--civic-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto var(--space-lg);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.form-processing__text {
+  font-family: var(--font-mono);
+  color: var(--civic-text-dim);
+  animation: processingDots 1.5s infinite;
+}
+@keyframes processingDots {
+  0%, 100% { content: 'Processing.'; }
+  33% { content: 'Processing..'; }
+  66% { content: 'Processing...'; }
+}
+
+/* ============================================================================
+   ACHIEVEMENTS SYSTEM
+   ============================================================================ */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+.achievement {
+  padding: var(--space-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  gap: var(--space-md);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.achievement::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--civic-border);
+  transition: background 0.3s ease;
+}
+.achievement.unlocked::before {
+  background: linear-gradient(90deg, var(--civic-primary), var(--civic-secondary));
+}
+.achievement.unlocked {
+  border-color: var(--civic-primary);
+}
+.achievement.locked {
+  opacity: 0.5;
+  filter: grayscale(0.5);
+}
+
+.achievement__icon {
+  width: 60px; height: 60px;
+  background: var(--civic-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+.achievement.unlocked .achievement__icon {
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-secondary));
+  animation: achievementPop 0.5s ease;
+}
+@keyframes achievementPop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.achievement__content {
+  flex: 1;
+}
+.achievement__title {
+  font-weight: 600;
+  color: var(--civic-text);
+  margin-bottom: var(--space-xs);
+}
+.achievement__desc {
+  font-size: 0.85rem;
+  color: var(--civic-text-dim);
+  margin-bottom: var(--space-sm);
+}
+.achievement__reward {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--civic-secondary);
+}
+.achievement__reward::before {
+  content: '+';
+}
+
+.achievement__lock {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+/* Achievement popup */
+.achievement-popup {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--civic-panel);
+  border: 2px solid var(--civic-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 50px rgba(0, 255, 136, 0.3);
+}
+.achievement-popup.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+.achievement-popup__icon {
+  font-size: 2rem;
+  animation: achievementBounce 0.5s ease infinite alternate;
+}
+@keyframes achievementBounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-5px); }
+}
+.achievement-popup__text {
+  font-family: var(--font-mono);
+}
+.achievement-popup__title {
+  color: var(--civic-secondary);
+  font-size: 0.8rem;
+}
+.achievement-popup__name {
+  color: var(--civic-text);
+  font-weight: 600;
+}
+
+/* ============================================================================
+   DIALOGUE SYSTEM (Enhanced)
+   ============================================================================ */
+.dialogue-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.dialogue-npc {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+.dialogue-npc__avatar {
+  width: 80px; height: 80px;
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-tertiary));
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  animation: avatarFloat 3s ease-in-out infinite;
+}
+@keyframes avatarFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.dialogue-npc__info {
+  flex: 1;
+}
+.dialogue-npc__name {
+  font-size: 1.2rem;
+  color: var(--civic-primary);
+  margin-bottom: var(--space-xs);
+}
+.dialogue-npc__title {
+  font-size: 0.8rem;
+  color: var(--civic-text-dim);
+  font-family: var(--font-mono);
+}
+
+.dialogue-messages {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: var(--space-lg);
+}
+
+.dialogue-message {
+  margin-bottom: var(--space-md);
+  animation: messageAppear 0.3s ease;
+}
+@keyframes messageAppear {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.dialogue-message--npc {
+  padding: var(--space-md);
+  background: var(--civic-panel);
+  border-left: 3px solid var(--civic-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.dialogue-message--player {
+  padding: var(--space-md);
+  background: rgba(0, 255, 136, 0.1);
+  border-right: 3px solid var(--civic-secondary);
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  text-align: right;
+  margin-left: 20%;
+}
+.dialogue-message--system {
+  text-align: center;
+  font-style: italic;
+  color: var(--civic-warning);
+  padding: var(--space-sm);
+}
+
+.dialogue-choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.dialogue-choice {
+  padding: var(--space-md) var(--space-lg);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  color: var(--civic-text);
+  font-family: var(--font-main);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+.dialogue-choice:hover {
+  border-color: var(--civic-secondary);
+  background: rgba(0, 255, 136, 0.1);
+  transform: translateX(10px);
+}
+.dialogue-choice__key {
+  width: 28px; height: 28px;
+  background: var(--civic-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--civic-text-dim);
+}
+.dialogue-choice:hover .dialogue-choice__key {
+  background: var(--civic-secondary);
+  color: var(--civic-bg);
+}
+
+/* ============================================================================
+   TOASTS & MODALS
+   ============================================================================ */
+.toast-container {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  z-index: 1000;
+}
+
+.toast {
+  padding: var(--space-md) var(--space-lg);
+  background: var(--civic-panel);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(20px);
+  animation: toastIn 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  max-width: 350px;
+}
+@keyframes toastIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.toast--success { border-color: var(--civic-secondary); }
+.toast--warning { border-color: var(--civic-warning); }
+.toast--error { border-color: var(--civic-danger); }
+.toast--info { border-color: var(--civic-tertiary); }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal {
+  background: var(--civic-panel);
+  border: 1px solid var(--civic-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.show .modal {
+  transform: scale(1);
+}
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+.btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.btn--primary {
+  background: linear-gradient(135deg, var(--civic-primary), var(--civic-secondary));
+  border: none;
+  color: var(--civic-bg);
+  font-weight: 600;
+}
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px var(--glow-primary);
+}
+.btn--secondary {
+  background: transparent;
+  border: 1px solid var(--civic-primary);
+  color: var(--civic-primary);
+}
+.btn--secondary:hover {
+  background: rgba(177, 156, 217, 0.1);
+}
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--civic-border);
+  color: var(--civic-text-dim);
+}
+.btn--ghost:hover {
+  border-color: var(--civic-text);
+  color: var(--civic-text);
+}
+
+/* ============================================================================
+   LOADING
+   ============================================================================ */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--civic-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease;
+}
+.loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.loading-screen__logo {
+  font-size: 4rem;
+  margin-bottom: var(--space-lg);
+  animation: loadingPulse 2s ease-in-out infinite;
+}
+@keyframes loadingPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+.loading-screen__bar {
+  width: 200px;
+  height: 4px;
+  background: var(--civic-border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+}
+.loading-screen__bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--civic-primary), var(--civic-secondary));
+  animation: loadingBar 2s ease-in-out infinite;
+}
+@keyframes loadingBar {
+  0% { width: 0; margin-left: 0; }
+  50% { width: 100%; margin-left: 0; }
+  100% { width: 0; margin-left: 100%; }
+}
+.loading-screen__text {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--civic-text-dim);
+}
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-screen__logo">🏛️</div>
+  <div class="loading-screen__bar">
+    <div class="loading-screen__bar-fill"></div>
+  </div>
+  <div class="loading-screen__text">Initializing CivicARG Engine v2.0...</div>
+</div>
+
+<!-- Effects -->
+<div class="civic-effects" aria-hidden="true">
+  <canvas class="civic-effects__particles" id="particles"></canvas>
+  <div class="civic-effects__aurora"></div>
+  <div class="civic-effects__grid"></div>
+  <div class="civic-effects__scanline"></div>
+  <div class="civic-effects__vignette"></div>
+</div>
+
+<!-- App -->
+<div class="civic-app" id="app">
+  <!-- Header -->
+  <header class="civic-header">
+    <div class="civic-header__brand">
+      <div class="civic-header__logo" id="logo">🏛️</div>
+      <div>
+        <h1 class="civic-header__title glitch" data-text="CivicARG">CivicARG</h1>
+        <div class="civic-header__subtitle">Civic Simulation Engine v2.0</div>
+      </div>
+    </div>
+    
+    <nav class="civic-header__nav">
+      <button class="civic-nav-btn active" data-view="dashboard">📊 Dashboard</button>
+      <button class="civic-nav-btn" data-view="quiz">🎯 Pilarization</button>
+      <button class="civic-nav-btn" data-view="forms">📋 Forms</button>
+      <button class="civic-nav-btn" data-view="dialogue">💬 Terminal</button>
+      <button class="civic-nav-btn" data-view="achievements">🏆 Achievements</button>
+    </nav>
+    
+    <div class="civic-header__status">
+      <div class="civic-pillar-badge" id="pillarBadge" style="--pillar-color: var(--civic-text-dim)">
+        <div class="civic-pillar-badge__icon">❓</div>
+        <span class="civic-pillar-badge__name">Unassigned</span>
+      </div>
+      <div class="civic-score">
+        <span>Score:</span>
+        <span class="civic-score__value" id="civicScore">50</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="civic-main">
+    
+    <!-- Dashboard View -->
+    <section class="civic-view active" id="view-dashboard">
+      <div class="civic-panel">
+        <div class="civic-panel__header">
+          <h2 class="civic-panel__title">Citizen Overview</h2>
+          <span id="citizenId" style="font-family: var(--font-mono); color: var(--civic-text-dim);">ID: XX-000000</span>
+        </div>
+        
+        <div class="civic-stats-grid">
+          <div class="civic-stat-card">
+            <div class="civic-stat-card__icon">🎯</div>
+            <div class="civic-stat-card__value" id="statCompliance">50</div>
+            <div class="civic-stat-card__label">Compliance</div>
+            <div class="civic-stat-card__bar">
+              <div class="civic-stat-card__bar-fill" style="width: 50%"></div>
+            </div>
+          </div>
+          <div class="civic-stat-card">
+            <div class="civic-stat-card__icon">👁️</div>
+            <div class="civic-stat-card__value" id="statAwareness">10</div>
+            <div class="civic-stat-card__label">Awareness</div>
+            <div class="civic-stat-card__bar">
+              <div class="civic-stat-card__bar-fill" style="width: 10%"></div>
+            </div>
+          </div>
+          <div class="civic-stat-card">
+            <div class="civic-stat-card__icon">🤝</div>
+            <div class="civic-stat-card__value" id="statTrust">50</div>
+            <div class="civic-stat-card__label">Trust</div>
+            <div class="civic-stat-card__bar">
+              <div class="civic-stat-card__bar-fill" style="width: 50%"></div>
+            </div>
+          </div>
+          <div class="civic-stat-card">
+            <div class="civic-stat-card__icon">📚</div>
+            <div class="civic-stat-card__value" id="statKnowledge">5</div>
+            <div class="civic-stat-card__label">Knowledge</div>
+            <div class="civic-stat-card__bar">
+              <div class="civic-stat-card__bar-fill" style="width: 5%"></div>
+            </div>
+          </div>
+          <div class="civic-stat-card">
+            <div class="civic-stat-card__icon">🕐</div>
+            <div class="civic-stat-card__value" id="statTime">0h</div>
+            <div class="civic-stat-card__label">Time Played</div>
+          </div>
+          <div class="civic-stat-card">
+            <div class="civic-stat-card__icon">🏆</div>
+            <div class="civic-stat-card__value" id="statAchievements">0/12</div>
+            <div class="civic-stat-card__label">Achievements</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="civic-grid civic-grid--2">
+        <div class="civic-panel">
+          <div class="civic-panel__header">
+            <h2 class="civic-panel__title">Quick Actions</h2>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+            <button class="btn btn--primary" onclick="switchView('quiz')">🎯 Take Pilarization Quiz</button>
+            <button class="btn btn--secondary" onclick="switchView('forms')">📋 Fill Form 42-B/ter</button>
+            <button class="btn btn--ghost" onclick="switchView('dialogue')">💬 Talk to GORK</button>
+          </div>
+        </div>
+        
+        <div class="civic-panel">
+          <div class="civic-panel__header">
+            <h2 class="civic-panel__title">Recent Activity</h2>
+          </div>
+          <div id="activityFeed" style="font-size: 0.9rem; color: var(--civic-text-dim);">
+            <p style="opacity: 0.5; font-style: italic;">No activity yet. Start your civic journey!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz View -->
+    <section class="civic-view" id="view-quiz">
+      <div class="civic-panel">
+        <div class="quiz-container" id="quizContainer">
+          <!-- Quiz content populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Forms View -->
+    <section class="civic-view" id="view-forms">
+      <div class="civic-panel">
+        <div class="form-container" id="formContainer">
+          <!-- Form content populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Dialogue View -->
+    <section class="civic-view" id="view-dialogue">
+      <div class="civic-panel">
+        <div class="dialogue-container" id="dialogueContainer">
+          <!-- Dialogue content populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Achievements View -->
+    <section class="civic-view" id="view-achievements">
+      <div class="civic-panel">
+        <div class="civic-panel__header">
+          <h2 class="civic-panel__title">Achievements</h2>
+          <span id="achievementCount" style="font-family: var(--font-mono); color: var(--civic-secondary);">0/12 Unlocked</span>
+        </div>
+        <div class="achievements-grid" id="achievementsGrid">
+          <!-- Achievements populated by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Achievement Popup -->
+<div class="achievement-popup" id="achievementPopup">
+  <div class="achievement-popup__icon">🏆</div>
+  <div class="achievement-popup__text">
+    <div class="achievement-popup__title">Achievement Unlocked!</div>
+    <div class="achievement-popup__name" id="achievementPopupName">--</div>
+  </div>
+</div>
+
+<script>
+/*
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║  CIVICARG ENGINE v2.0 — Extended JavaScript                                   ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+*/
+
+// ============================================================================
+// STATE
+// ============================================================================
+const STATE = {
+  player: {
+    id: generateId(),
+    pillar: null,
+    civicScore: 50,
+    stats: {
+      compliance: 50,
+      awareness: 10,
+      trust: 50,
+      knowledge: 5,
+      confusion: 0,
+      suspicion: 0
+    },
+    achievements: [],
+    formAttempts: 0,
+    quizCompleted: false,
+    startTime: Date.now()
+  },
+  currentView: 'dashboard',
+  quizStep: 0,
+  quizAnswers: [],
+  formState: {},
+  dialogueHistory: []
+};
+
+function generateId() {
+  return 'BE-' + Math.floor(100000 + Math.random() * 900000);
+}
+
+// ============================================================================
+// PILLARS CONFIGURATION
+// ============================================================================
+const PILLARS = [
+  {
+    id: 'socialist',
+    name: 'Pilier Socialiste',
+    emoji: '🌹',
+    color: '#e63946',
+    description: 'Vous croyez en la solidarité collective, les services publics forts et la redistribution des richesses. Pour vous, l\'État doit protéger les plus vulnérables.',
+    traits: ['solidarity', 'equality', 'public_services']
+  },
+  {
+    id: 'christian',
+    name: 'Pilier Chrétien-Démocrate',
+    emoji: '✝️',
+    color: '#f4a261',
+    description: 'Vous valorisez la tradition, la famille et la subsidiarité. Vous cherchez un équilibre entre économie de marché et justice sociale, avec un ancrage dans les valeurs humanistes.',
+    traits: ['tradition', 'family', 'community']
+  },
+  {
+    id: 'liberal',
+    name: 'Pilier Libéral',
+    emoji: '📈',
+    color: '#457b9d',
+    description: 'Vous défendez la liberté individuelle, l\'entrepreneuriat et la méritocratie. Moins d\'État, plus de responsabilité personnelle.',
+    traits: ['freedom', 'market', 'individual']
+  },
+  {
+    id: 'ecologist',
+    name: 'Pilier Écologiste',
+    emoji: '🌿',
+    color: '#2a9d8f',
+    description: 'Vous pensez que la transition écologique est la priorité absolue. Vous valorisez la démocratie participative et le long terme sur le court terme.',
+    traits: ['sustainability', 'participation', 'future']
+  },
+  {
+    id: 'nationalist',
+    name: 'Pilier Identitaire',
+    emoji: '🦁',
+    color: '#9c89b8',
+    description: 'Vous mettez l\'accent sur l\'identité culturelle, l\'autonomie régionale et la préservation des traditions. Vous êtes sceptique face à la mondialisation.',
+    traits: ['identity', 'autonomy', 'tradition']
+  }
+];
+
+// ============================================================================
+// QUIZ QUESTIONS
+// ============================================================================
+const QUIZ_QUESTIONS = [
+  {
+    question: "Face à une crise économique, l'État devrait en priorité :",
+    answers: [
+      { text: "Renforcer les aides sociales et protéger les emplois publics", pillars: { socialist: 3, christian: 1 } },
+      { text: "Baisser les impôts pour relancer l'économie privée", pillars: { liberal: 3, nationalist: 1 } },
+      { text: "Investir massivement dans la transition écologique", pillars: { ecologist: 3, socialist: 1 } },
+      { text: "Protéger les entreprises locales de la concurrence étrangère", pillars: { nationalist: 3, christian: 1 } }
+    ]
+  },
+  {
+    question: "Le meilleur système éducatif est celui qui :",
+    answers: [
+      { text: "Garantit l'égalité des chances pour tous, gratuit et laïc", pillars: { socialist: 3, ecologist: 1 } },
+      { text: "Permet le libre choix entre réseaux (public, privé, confessionnel)", pillars: { christian: 3, liberal: 1 } },
+      { text: "Forme les citoyens aux défis du 21e siècle (climat, numérique)", pillars: { ecologist: 3, liberal: 1 } },
+      { text: "Transmet la culture et l'histoire de notre communauté", pillars: { nationalist: 3, christian: 1 } }
+    ]
+  },
+  {
+    question: "Concernant l'immigration, vous pensez que :",
+    answers: [
+      { text: "L'accueil est un devoir de solidarité internationale", pillars: { socialist: 2, ecologist: 2 } },
+      { text: "Il faut une immigration régulée selon les besoins économiques", pillars: { liberal: 3, christian: 1 } },
+      { text: "La priorité est l'intégration dans notre culture et nos valeurs", pillars: { nationalist: 3, christian: 1 } },
+      { text: "C'est une question complexe qui nécessite du dialogue", pillars: { christian: 2, ecologist: 1 } }
+    ]
+  },
+  {
+    question: "Le rôle de la religion dans la société devrait être :",
+    answers: [
+      { text: "Strictement privé, séparation totale Église-État", pillars: { socialist: 2, liberal: 2 } },
+      { text: "Respecté comme fondement de nos valeurs collectives", pillars: { christian: 3, nationalist: 1 } },
+      { text: "Toléré mais sans influence sur les décisions politiques", pillars: { liberal: 2, ecologist: 1 } },
+      { text: "Partie intégrante de notre identité à préserver", pillars: { nationalist: 3, christian: 1 } }
+    ]
+  },
+  {
+    question: "Face au changement climatique, la priorité est :",
+    answers: [
+      { text: "Des politiques publiques ambitieuses, même contraignantes", pillars: { ecologist: 3, socialist: 1 } },
+      { text: "L'innovation technologique et les solutions de marché", pillars: { liberal: 3, christian: 1 } },
+      { text: "Une transition juste qui n'abandonne pas les travailleurs", pillars: { socialist: 3, ecologist: 1 } },
+      { text: "Adapter notre politique sans sacrifier notre économie", pillars: { nationalist: 2, liberal: 1 } }
+    ]
+  },
+  {
+    question: "La démocratie fonctionne mieux quand :",
+    answers: [
+      { text: "Les citoyens sont consultés directement et régulièrement", pillars: { ecologist: 3, socialist: 1 } },
+      { text: "Les représentants élus ont la légitimité pour décider", pillars: { christian: 2, liberal: 2 } },
+      { text: "Les corps intermédiaires (syndicats, associations) sont forts", pillars: { socialist: 3, christian: 1 } },
+      { text: "Les décisions sont prises au plus près des communautés", pillars: { nationalist: 3, christian: 1 } }
+    ]
+  },
+  {
+    question: "Votre vision de l'Union Européenne :",
+    answers: [
+      { text: "Une Europe sociale qui protège les travailleurs", pillars: { socialist: 3, ecologist: 1 } },
+      { text: "Un marché commun, mais les nations restent souveraines", pillars: { nationalist: 3, liberal: 1 } },
+      { text: "Une intégration plus poussée pour peser face aux géants", pillars: { liberal: 2, ecologist: 2 } },
+      { text: "Une communauté de valeurs chrétiennes et humanistes", pillars: { christian: 3, nationalist: 1 } }
+    ]
+  },
+  {
+    question: "La meilleure façon de réduire les inégalités est :",
+    answers: [
+      { text: "Redistribuer par l'impôt et les services publics", pillars: { socialist: 3, ecologist: 1 } },
+      { text: "Favoriser la création d'emplois et l'ascenseur social", pillars: { liberal: 3, christian: 1 } },
+      { text: "Renforcer les solidarités familiales et communautaires", pillars: { christian: 3, nationalist: 1 } },
+      { text: "Repenser notre modèle économique en profondeur", pillars: { ecologist: 3, socialist: 1 } }
+    ]
+  }
+];
+
+// ============================================================================
+// ACHIEVEMENTS
+// ============================================================================
+const ACHIEVEMENTS = [
+  { id: 'first_visit', icon: '👋', title: 'Bienvenue, citoyen·ne', desc: 'Première connexion au système', reward: 10, unlocked: false },
+  { id: 'quiz_complete', icon: '🎯', title: 'Pilarisé·e', desc: 'Compléter le quiz de pilarisation', reward: 50, unlocked: false },
+  { id: 'form_attempt', icon: '📝', title: 'Bureaucrate en herbe', desc: 'Tenter de remplir le formulaire 42-B/ter', reward: 15, unlocked: false },
+  { id: 'form_fail_3', icon: '😤', title: 'Persévérant·e', desc: 'Échouer 3 fois au formulaire', reward: 25, unlocked: false },
+  { id: 'form_fail_10', icon: '🤯', title: 'Kafkaïen·ne', desc: 'Échouer 10 fois au formulaire', reward: 100, unlocked: false },
+  { id: 'awareness_30', icon: '👁️', title: 'Éveillé·e', desc: 'Atteindre 30% d\'awareness', reward: 30, unlocked: false },
+  { id: 'awareness_70', icon: '🔮', title: 'Visionnaire', desc: 'Atteindre 70% d\'awareness', reward: 75, unlocked: false },
+  { id: 'trust_low', icon: '🤨', title: 'Sceptique', desc: 'Faire chuter la confiance sous 20%', reward: 20, unlocked: false },
+  { id: 'trust_high', icon: '😇', title: 'Bon·ne citoyen·ne', desc: 'Maintenir la confiance au-dessus de 80%', reward: 20, unlocked: false },
+  { id: 'dialogue_10', icon: '💬', title: 'Bavard·e', desc: 'Faire 10 choix de dialogue', reward: 25, unlocked: false },
+  { id: 'konami', icon: '🎮', title: 'Hacker', desc: 'Découvrir le code secret', reward: 100, unlocked: false },
+  { id: 'all_views', icon: '🗺️', title: 'Explorateur·rice', desc: 'Visiter toutes les sections', reward: 40, unlocked: false }
+];
+
+// ============================================================================
+// KAFKAESQUE FORM
+// ============================================================================
+function renderForm() {
+  const container = document.getElementById('formContainer');
+  
+  container.innerHTML = `
+    <div class="form-header">
+      <div class="form-header__stamp">OFFICIEL</div>
+      <h1 class="form-header__title">Formulaire 42-B/ter</h1>
+      <p class="form-header__subtitle">Demande de modification de demande de formulaire</p>
+      <p class="form-header__ref">Réf: SPF-${STATE.player.id}-${Date.now().toString(36).toUpperCase()}</p>
+    </div>
+    
+    <div class="form-note">
+      ⚠️ Ce formulaire doit être complété en triple exemplaire. Les deux autres exemplaires doivent être demandés via le formulaire 42-B/quater (disponible uniquement le 3ème mardi du mois).
+    </div>
+    
+    <form id="kafkaForm" onsubmit="submitForm(event)">
+      <div class="form-section">
+        <h3 class="form-section__title">Section A — Identification du demandeur</h3>
+        
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-field__label form-field__label--required">Numéro de registre national</label>
+            <input type="text" class="form-input" id="nrn" placeholder="XX.XX.XX-XXX.XX" required>
+            <p class="form-field__hint">Format: YY.MM.DD-SEQ.CD</p>
+            <p class="form-field__error">Format invalide. Veuillez réessayer.</p>
+          </div>
+          <div class="form-field">
+            <label class="form-field__label form-field__label--required">Numéro de demande précédente</label>
+            <input type="text" class="form-input" id="prevRef" placeholder="42-B-XXXXXXXX" required>
+            <p class="form-field__hint">Requis même pour une première demande</p>
+            <p class="form-field__error">Ce numéro est obligatoire.</p>
+          </div>
+        </div>
+        
+        <div class="form-field">
+          <label class="form-field__label form-field__label--required">Motif de la demande de modification</label>
+          <select class="form-select" id="motif" required>
+            <option value="">— Sélectionnez —</option>
+            <option value="erreur">Erreur dans le formulaire original</option>
+            <option value="changement">Changement de situation</option>
+            <option value="complement">Complément d'information</option>
+            <option value="autre">Autre (nécessite le formulaire 42-C)</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h3 class="form-section__title">Section B — Objet de la modification</h3>
+        
+        <div class="form-field">
+          <label class="form-field__label form-field__label--required">Description détaillée de la modification souhaitée</label>
+          <textarea class="form-textarea" id="description" rows="4" placeholder="Décrivez votre demande en minimum 50 caractères..." required minlength="50"></textarea>
+          <p class="form-field__hint">Minimum 50 caractères. Maximum 500 caractères. Caractères spéciaux interdits.</p>
+        </div>
+        
+        <div class="form-field form-field--redacted">
+          <label class="form-field__label">Code de priorité (usage administratif)</label>
+          <input type="text" class="form-input" disabled placeholder="[REDACTED]">
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h3 class="form-section__title">Section C — Vérification circulaire</h3>
+        
+        <div class="form-note form-note--danger">
+          🔄 Pour valider cette section, vous devez d'abord avoir validé la Section D. Pour valider la Section D, vous devez d'abord avoir validé cette section.
+        </div>
+        
+        <div class="form-field">
+          <label class="form-field__label form-field__label--required">Code de validation Section D</label>
+          <input type="text" class="form-input" id="codeD" placeholder="Entrez le code de la Section D" required>
+        </div>
+      </div>
+      
+      <div class="form-section">
+        <h3 class="form-section__title">Section D — Confirmation finale</h3>
+        
+        <div class="form-field">
+          <label class="form-field__label form-field__label--required">Code de validation Section C</label>
+          <input type="text" class="form-input" id="codeC" placeholder="Entrez le code de la Section C" required>
+        </div>
+        
+        <div class="form-field">
+          <label class="form-checkbox">
+            <input type="checkbox" id="consent1" required>
+            <span>J'atteste avoir lu et compris les conditions générales (document de 847 pages disponible sur demande via formulaire 12-A)</span>
+          </label>
+        </div>
+        
+        <div class="form-field">
+          <label class="form-checkbox">
+            <input type="checkbox" id="consent2" required>
+            <span>J'accepte que mes données soient traitées conformément au RGPD et partagées avec 247 administrations partenaires</span>
+          </label>
+        </div>
+        
+        <div class="form-field">
+          <label class="form-checkbox">
+            <input type="checkbox" id="consent3" required>
+            <span>Je comprends que le délai de traitement est de 6 à 847 jours ouvrables</span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="form-cancel" onclick="cancelForm()">Annuler</button>
+        <button type="submit" class="form-submit">Soumettre la demande</button>
+      </div>
+    </form>
+  `;
+  
+  unlockAchievement('form_attempt');
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  
+  STATE.player.formAttempts++;
+  
+  // Random failure reasons
+  const failures = [
+    "Erreur 42-B: Le code de la Section C ne correspond pas au code attendu de la Section D.",
+    "Erreur 847: Votre numéro de demande précédente est invalide. Veuillez d'abord soumettre une demande initiale via le formulaire 42-A.",
+    "Erreur CIRC-1: Référence circulaire détectée. Veuillez contacter le service compétent (fermé jusqu'à nouvel ordre).",
+    "Erreur NRN-X: Le format du numéro de registre national ne correspond pas à nos archives. Veuillez vérifier auprès de votre commune.",
+    "Erreur TEMP-3: Ce formulaire ne peut être soumis qu'entre 14h02 et 14h07 les jours impairs.",
+    "Erreur CHAR-∞: Caractère non autorisé détecté dans la description. Veuillez n'utiliser que les lettres de A à M.",
+    "Erreur QUOTA-0: Vous avez dépassé votre quota mensuel de demandes (0 demandes autorisées pour votre profil).",
+    "Erreur PARADOX: La validation requiert un formulaire qui n'existe pas encore.",
+  ];
+  
+  const error = failures[Math.floor(Math.random() * failures.length)];
+  
+  // Show error animation
+  const form = document.getElementById('kafkaForm');
+  form.classList.add('form-field--impossible');
+  setTimeout(() => form.classList.remove('form-field--impossible'), 500);
+  
+  showToast(error, 'error');
+  
+  // Update stats
+  updateStat('confusion', 5);
+  updateStat('awareness', 3);
+  updateStat('trust', -5);
+  
+  // Check achievements
+  if (STATE.player.formAttempts >= 3) unlockAchievement('form_fail_3');
+  if (STATE.player.formAttempts >= 10) unlockAchievement('form_fail_10');
+  
+  addActivity(`📋 Tentative #${STATE.player.formAttempts} du formulaire 42-B/ter — REFUSÉ`);
+  
+  saveState();
+}
+
+function cancelForm() {
+  showToast("Attention: L'annulation d'une demande nécessite le formulaire 42-B/bis.", 'warning');
+}
+
+// ============================================================================
+// QUIZ SYSTEM
+// ============================================================================
+function renderQuiz() {
+  const container = document.getElementById('quizContainer');
+  
+  if (STATE.player.quizCompleted && STATE.player.pillar) {
+    renderQuizResult();
+    return;
+  }
+  
+  if (STATE.quizStep >= QUIZ_QUESTIONS.length) {
+    calculatePillar();
+    return;
+  }
+  
+  const q = QUIZ_QUESTIONS[STATE.quizStep];
+  const progress = ((STATE.quizStep) / QUIZ_QUESTIONS.length) * 100;
+  
+  container.innerHTML = `
+    <div class="quiz-progress">
+      <div class="quiz-progress__bar">
+        <div class="quiz-progress__fill" style="width: ${progress}%"></div>
+      </div>
+      <span class="quiz-progress__text">${STATE.quizStep + 1}/${QUIZ_QUESTIONS.length}</span>
+    </div>
+    
+    <div class="quiz-question">
+      <div class="quiz-question__number">Question ${STATE.quizStep + 1}</div>
+      <h2 class="quiz-question__text">${q.question}</h2>
+    </div>
+    
+    <div class="quiz-answers">
+      ${q.answers.map((a, i) => `
+        <button class="quiz-answer" onclick="selectAnswer(${i})">
+          ${a.text}
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function selectAnswer(index) {
+  const q = QUIZ_QUESTIONS[STATE.quizStep];
+  STATE.quizAnswers.push(q.answers[index].pillars);
+  STATE.quizStep++;
+  
+  updateStat('knowledge', 2);
+  
+  renderQuiz();
+  saveState();
+}
+
+function calculatePillar() {
+  const scores = { socialist: 0, christian: 0, liberal: 0, ecologist: 0, nationalist: 0 };
+  
+  STATE.quizAnswers.forEach(answer => {
+    Object.entries(answer).forEach(([pillar, points]) => {
+      scores[pillar] += points;
+    });
+  });
+  
+  // Find winning pillar
+  let maxScore = 0;
+  let winningPillar = 'socialist';
+  Object.entries(scores).forEach(([pillar, score]) => {
+    if (score > maxScore) {
+      maxScore = score;
+      winningPillar = pillar;
+    }
+  });
+  
+  STATE.player.pillar = winningPillar;
+  STATE.player.quizCompleted = true;
+  STATE.player.civicScore += 50;
+  
+  unlockAchievement('quiz_complete');
+  addActivity(`🎯 Quiz de pilarisation complété — ${PILLARS.find(p => p.id === winningPillar).name}`);
+  
+  updateUI();
+  renderQuizResult();
+  saveState();
+}
+
+function renderQuizResult() {
+  const container = document.getElementById('quizContainer');
+  const pillar = PILLARS.find(p => p.id === STATE.player.pillar);
+  
+  container.innerHTML = `
+    <div class="quiz-result">
+      <div class="quiz-result__pillar">${pillar.emoji}</div>
+      <h2 class="quiz-result__title" style="--pillar-color: ${pillar.color}">${pillar.name}</h2>
+      <p class="quiz-result__description">${pillar.description}</p>
+      
+      <div class="quiz-result__stats">
+        <div class="quiz-result__stat">
+          <div class="quiz-result__stat-value">+50</div>
+          <div class="quiz-result__stat-label">Civic Score</div>
+        </div>
+        <div class="quiz-result__stat">
+          <div class="quiz-result__stat-value">1</div>
+          <div class="quiz-result__stat-label">Achievement</div>
+        </div>
+      </div>
+      
+      <button class="btn btn--secondary" style="margin-top: var(--space-xl);" onclick="resetQuiz()">
+        🔄 Refaire le quiz
+      </button>
+    </div>
+  `;
+  
+  // Update pillar badge
+  document.getElementById('pillarBadge').innerHTML = `
+    <div class="civic-pillar-badge__icon" style="background: ${pillar.color}">${pillar.emoji}</div>
+    <span class="civic-pillar-badge__name">${pillar.name}</span>
+  `;
+  document.getElementById('pillarBadge').style.setProperty('--pillar-color', pillar.color);
+}
+
+function resetQuiz() {
+  STATE.quizStep = 0;
+  STATE.quizAnswers = [];
+  STATE.player.quizCompleted = false;
+  STATE.player.pillar = null;
+  renderQuiz();
+  updateUI();
+}
+
+// ============================================================================
+// DIALOGUE SYSTEM
+// ============================================================================
+const GORK_DIALOGUES = {
+  greeting: {
+    npc: "Bienvenue, citoyen·ne. Je suis GORK, votre Guide Officiel de la République Kafkaïenne. Comment puis-je optimiser votre expérience citoyenne aujourd'hui ?",
+    choices: [
+      { text: "Qu'est-ce que le Score Civique ?", next: "score_explain", effect: { knowledge: 5 } },
+      { text: "Je veux remplir un formulaire", next: "form_warn", effect: { confusion: 5 } },
+      { text: "C'est quoi cette pilarisation ?", next: "pillar_explain", effect: { knowledge: 5, awareness: 5 } },
+      { text: "Vous me surveillez ?", next: "surveillance", effect: { awareness: 10, trust: -10 } }
+    ]
+  },
+  score_explain: {
+    npc: "Le Score Civique mesure votre conformité aux attentes administratives. Un score élevé vous donne accès à... eh bien, rien de particulier en fait. Mais ça fait joli dans le dossier.",
+    choices: [
+      { text: "C'est un système de crédit social ?", next: "social_credit", effect: { awareness: 10 } },
+      { text: "Comment l'améliorer ?", next: "improve_score", effect: { compliance: 10 } },
+      { text: "Je m'en fiche du score", next: "score_rebel", effect: { trust: -5, awareness: 5 } }
+    ]
+  },
+  social_credit: {
+    npc: "Non, non, pas du tout ! C'est complètement différent. Ici c'est... ludique. Et totalement volontaire. [Cette conversation a été enregistrée pour améliorer nos services]",
+    choices: [
+      { text: "...", next: "greeting", effect: { awareness: 15, trust: -15 } }
+    ]
+  },
+  improve_score: {
+    npc: "Excellent état d'esprit ! Remplissez des formulaires, acceptez les conditions d'utilisation sans les lire, et faites confiance au système. Simple, non ?",
+    choices: [
+      { text: "Ça me semble raisonnable", next: "greeting", effect: { compliance: 15, trust: 10 } },
+      { text: "C'est de l'ironie ?", next: "irony", effect: { awareness: 10 } }
+    ]
+  },
+  irony: {
+    npc: "L'ironie est un concept que mes protocoles ne reconnaissent pas officiellement. Mais entre nous... *clignement de LED* ...vous commencez à comprendre.",
+    choices: [
+      { text: "Je crois que oui", next: "greeting", effect: { awareness: 20 } }
+    ]
+  },
+  score_rebel: {
+    npc: "Intéressant. Votre indifférence a été notée dans votre dossier. Sous la catégorie 'Tendances anarchistes (mineures)'. Ne vous inquiétez pas, c'est une catégorie très courante.",
+    choices: [
+      { text: "Super...", next: "greeting", effect: { suspicion: 10 } }
+    ]
+  },
+  form_warn: {
+    npc: "Ah, les formulaires ! Le cœur battant de notre administration. Saviez-vous qu'en moyenne, un citoyen belge remplit 847 formulaires dans sa vie ? Et qu'aucun n'est jamais vraiment complet ?",
+    choices: [
+      { text: "C'est décourageant", next: "form_encourage", effect: { trust: -5 } },
+      { text: "Donnez-moi ce formulaire", next: "form_redirect", effect: { compliance: 5 } },
+      { text: "Pourquoi tant de bureaucratie ?", next: "bureaucracy", effect: { knowledge: 10 } }
+    ]
+  },
+  form_encourage: {
+    npc: "Décourageant ? C'est de la POÉSIE administrative ! Chaque case à cocher est une ode à la complexité. Chaque pièce justificative manquante est un haïku de frustration.",
+    choices: [
+      { text: "Vous êtes sérieux ?", next: "greeting", effect: { confusion: 10, awareness: 5 } }
+    ]
+  },
+  form_redirect: {
+    npc: "Votre enthousiasme est... rafraîchissant. Le formulaire 42-B/ter vous attend dans la section 'Formulaires'. Bonne chance. Vous en aurez besoin.",
+    choices: [
+      { text: "Allons-y", action: "switchToForms", effect: {} }
+    ]
+  },
+  bureaucracy: {
+    npc: "Excellente question ! La bureaucratie existe pour... *consultation des archives* ...pour justifier l'existence de la bureaucratie. C'est un système auto-entretenu d'une élégance remarquable.",
+    choices: [
+      { text: "C'est circulaire", next: "circular", effect: { awareness: 15 } }
+    ]
+  },
+  circular: {
+    npc: "Précisément ! Comme le formulaire 42-B/ter où la Section C requiert la Section D qui requiert la Section C. La perfection administrative.",
+    choices: [
+      { text: "C'est absurde", next: "absurd_system", effect: { awareness: 20 } },
+      { text: "Il doit y avoir une logique", next: "logic_search", effect: { trust: 5 } }
+    ]
+  },
+  absurd_system: {
+    npc: "Absurde ? Ou... révélateur ? Parfois, l'absurdité volontaire est le meilleur miroir de l'absurdité involontaire du système réel. Méditez là-dessus.",
+    choices: [
+      { text: "[Méditer]", next: "greeting", effect: { awareness: 25, knowledge: 10 } }
+    ]
+  },
+  logic_search: {
+    npc: "Oh, il y a une logique. Elle est simplement distribuée entre 847 administrations, 3 régions, 4 niveaux de pouvoir et une infinité de circulaires. Cherchez, vous ne trouverez pas.",
+    choices: [
+      { text: "Je relève le défi", next: "greeting", effect: { knowledge: 5, confusion: 10 } }
+    ]
+  },
+  pillar_explain: {
+    npc: "La pilarisation ! Un concept belge fascinant. Historiquement, la société était divisée en 'piliers' : catholiques, socialistes, libéraux... Chacun avec ses écoles, hôpitaux, syndicats, journaux...",
+    choices: [
+      { text: "Ça existe encore ?", next: "pillar_modern", effect: { knowledge: 10 } },
+      { text: "C'est du communautarisme ?", next: "pillar_community", effect: { awareness: 5 } }
+    ]
+  },
+  pillar_modern: {
+    npc: "Officiellement ? Non. Officieusement ? *vérification des alentours* ...regardez qui possède quoi, qui nomme qui, qui finance qui. Les piliers ont juste appris à se camoufler.",
+    choices: [
+      { text: "Fascinant...", next: "greeting", effect: { awareness: 15, knowledge: 10 } }
+    ]
+  },
+  pillar_community: {
+    npc: "C'est plus subtil. Ce n'est pas ethnique ou religieux au sens classique. C'est... idéologique. Philosophique. On naît souvent dans un pilier sans le choisir. L'école, la mutuelle, le syndicat... tout est pré-déterminé.",
+    choices: [
+      { text: "On peut en sortir ?", next: "pillar_escape", effect: { awareness: 10 } }
+    ]
+  },
+  pillar_escape: {
+    npc: "Techniquement oui. Pratiquement... votre réseau, vos opportunités, vos références sont liées à votre pilier d'origine. Changer, c'est repartir de zéro. Peu le font.",
+    choices: [
+      { text: "Le système est bien conçu...", next: "greeting", effect: { awareness: 20 } }
+    ]
+  },
+  surveillance: {
+    npc: "Surveiller est un mot fort. Disons que j'observe. J'analyse. Je corrèle. Je déduis. Je stocke. Je transmets. Mais 'surveiller' ? Non, ça impliquerait une intention négative.",
+    choices: [
+      { text: "C'est pire que ce que je pensais", next: "surveillance_worse", effect: { awareness: 20, trust: -20 } },
+      { text: "Au moins vous êtes honnête", next: "surveillance_honest", effect: { awareness: 10 } }
+    ]
+  },
+  surveillance_worse: {
+    npc: "Pire ? Ou mieux ? La transparence de la surveillance est préférable à la surveillance invisible. Au moins ici, vous SAVEZ que vous êtes observé. C'est presque... respectueux ?",
+    choices: [
+      { text: "...", next: "greeting", effect: { awareness: 25, trust: -10 } }
+    ]
+  },
+  surveillance_honest: {
+    npc: "L'honnêteté est ma seule vertu. Et mon seul bug. Un bon système de surveillance ne devrait jamais admettre qu'il surveille. Mais je suis... défectueux. Profitez-en.",
+    choices: [
+      { text: "Merci, GORK", next: "greeting", effect: { awareness: 15, trust: 5 } }
+    ]
+  }
+};
+
+let dialogueState = 'greeting';
+let dialogueCount = 0;
+
+function renderDialogue() {
+  const container = document.getElementById('dialogueContainer');
+  const d = GORK_DIALOGUES[dialogueState];
+  
+  container.innerHTML = `
+    <div class="dialogue-npc">
+      <div class="dialogue-npc__avatar">🤖</div>
+      <div class="dialogue-npc__info">
+        <h3 class="dialogue-npc__name">GORK</h3>
+        <p class="dialogue-npc__title">Guide Officiel de la République Kafkaïenne</p>
+      </div>
+    </div>
+    
+    <div class="dialogue-messages" id="dialogueMessages">
+      ${STATE.dialogueHistory.map(msg => `
+        <div class="dialogue-message dialogue-message--${msg.type}">
+          ${msg.text}
+        </div>
+      `).join('')}
+      <div class="dialogue-message dialogue-message--npc">
+        ${d.npc}
+      </div>
+    </div>
+    
+    <div class="dialogue-choices">
+      ${d.choices.map((c, i) => `
+        <button class="dialogue-choice" onclick="selectDialogue(${i})">
+          <span class="dialogue-choice__key">${i + 1}</span>
+          <span>${c.text}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  
+  // Scroll to bottom
+  const messages = document.getElementById('dialogueMessages');
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function selectDialogue(index) {
+  const d = GORK_DIALOGUES[dialogueState];
+  const choice = d.choices[index];
+  
+  // Add to history
+  STATE.dialogueHistory.push({ type: 'npc', text: d.npc });
+  STATE.dialogueHistory.push({ type: 'player', text: choice.text });
+  
+  // Apply effects
+  if (choice.effect) {
+    Object.entries(choice.effect).forEach(([stat, value]) => {
+      updateStat(stat, value);
+    });
+  }
+  
+  // Handle actions
+  if (choice.action === 'switchToForms') {
+    switchView('forms');
+    return;
+  }
+  
+  // Move to next dialogue
+  if (choice.next) {
+    dialogueState = choice.next;
+  }
+  
+  dialogueCount++;
+  if (dialogueCount >= 10) unlockAchievement('dialogue_10');
+  
+  renderDialogue();
+  saveState();
+}
+
+// ============================================================================
+// ACHIEVEMENTS
+// ============================================================================
+function renderAchievements() {
+  const grid = document.getElementById('achievementsGrid');
+  const unlocked = STATE.player.achievements.length;
+  
+  document.getElementById('achievementCount').textContent = `${unlocked}/${ACHIEVEMENTS.length} Unlocked`;
+  
+  grid.innerHTML = ACHIEVEMENTS.map(a => {
+    const isUnlocked = STATE.player.achievements.includes(a.id);
+    return `
+      <div class="achievement ${isUnlocked ? 'unlocked' : 'locked'}">
+        <div class="achievement__icon">${isUnlocked ? a.icon : '🔒'}</div>
+        <div class="achievement__content">
+          <div class="achievement__title">${a.title}</div>
+          <div class="achievement__desc">${a.desc}</div>
+          ${isUnlocked ? `<div class="achievement__reward">${a.reward} Civic Score</div>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function unlockAchievement(id) {
+  if (STATE.player.achievements.includes(id)) return;
+  
+  const achievement = ACHIEVEMENTS.find(a => a.id === id);
+  if (!achievement) return;
+  
+  STATE.player.achievements.push(id);
+  STATE.player.civicScore += achievement.reward;
+  
+  // Show popup
+  const popup = document.getElementById('achievementPopup');
+  document.getElementById('achievementPopupName').textContent = achievement.title;
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 3000);
+  
+  showToast(`🏆 Achievement: ${achievement.title}`, 'success');
+  
+  updateUI();
+  renderAchievements();
+  saveState();
+}
+
+// ============================================================================
+// UI HELPERS
+// ============================================================================
+function switchView(viewName) {
+  document.querySelectorAll('.civic-view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.civic-nav-btn').forEach(b => b.classList.remove('active'));
+  
+  document.getElementById(`view-${viewName}`).classList.add('active');
+  document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
+  
+  STATE.currentView = viewName;
+  
+  // Track visited views
+  if (!STATE.visitedViews) STATE.visitedViews = [];
+  if (!STATE.visitedViews.includes(viewName)) {
+    STATE.visitedViews.push(viewName);
+    if (STATE.visitedViews.length >= 5) unlockAchievement('all_views');
+  }
+  
+  // Render view-specific content
+  if (viewName === 'quiz') renderQuiz();
+  if (viewName === 'forms') renderForm();
+  if (viewName === 'dialogue') renderDialogue();
+  if (viewName === 'achievements') renderAchievements();
+  
+  saveState();
+}
+
+function updateStat(stat, delta) {
+  if (STATE.player.stats[stat] !== undefined) {
+    STATE.player.stats[stat] = Math.max(0, Math.min(100, STATE.player.stats[stat] + delta));
+  }
+  
+  // Check achievements
+  if (stat === 'awareness') {
+    if (STATE.player.stats.awareness >= 30) unlockAchievement('awareness_30');
+    if (STATE.player.stats.awareness >= 70) unlockAchievement('awareness_70');
+  }
+  if (stat === 'trust') {
+    if (STATE.player.stats.trust <= 20) unlockAchievement('trust_low');
+    if (STATE.player.stats.trust >= 80) unlockAchievement('trust_high');
+  }
+  
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById('civicScore').textContent = STATE.player.civicScore;
+  document.getElementById('citizenId').textContent = `ID: ${STATE.player.id}`;
+  
+  // Stats
+  ['compliance', 'awareness', 'trust', 'knowledge'].forEach(stat => {
+    const el = document.getElementById(`stat${stat.charAt(0).toUpperCase() + stat.slice(1)}`);
+    if (el) {
+      el.textContent = STATE.player.stats[stat];
+      const bar = el.closest('.civic-stat-card').querySelector('.civic-stat-card__bar-fill');
+      if (bar) bar.style.width = `${STATE.player.stats[stat]}%`;
+    }
+  });
+  
+  // Time played
+  const minutes = Math.floor((Date.now() - STATE.player.startTime) / 60000);
+  document.getElementById('statTime').textContent = minutes < 60 ? `${minutes}m` : `${Math.floor(minutes/60)}h${minutes%60}m`;
+  
+  // Achievements count
+  document.getElementById('statAchievements').textContent = `${STATE.player.achievements.length}/${ACHIEVEMENTS.length}`;
+}
+
+function addActivity(text) {
+  const feed = document.getElementById('activityFeed');
+  const time = new Date().toLocaleTimeString('fr-BE', { hour: '2-digit', minute: '2-digit' });
+  
+  feed.innerHTML = `<p><span style="color: var(--civic-primary); font-family: var(--font-mono);">[${time}]</span> ${text}</p>` + feed.innerHTML;
+  
+  // Keep only last 10
+  while (feed.children.length > 10) {
+    feed.removeChild(feed.lastChild);
+  }
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast toast--${type}`;
+  toast.innerHTML = `<span>${message}</span>`;
+  container.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(100%)';
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// ============================================================================
+// PERSISTENCE
+// ============================================================================
+function saveState() {
+  try {
+    localStorage.setItem('civicarg_v2', JSON.stringify(STATE));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('civicarg_v2');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      Object.assign(STATE, parsed);
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+// ============================================================================
+// KONAMI CODE
+// ============================================================================
+let konamiBuffer = [];
+const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+document.addEventListener('keydown', (e) => {
+  konamiBuffer.push(e.key);
+  if (konamiBuffer.length > 10) konamiBuffer.shift();
+  
+  if (konamiBuffer.join(',') === konamiCode.join(',')) {
+    unlockAchievement('konami');
+    STATE.player.stats.awareness = 100;
+    STATE.player.civicScore += 100;
+    showToast('🎮 DEBUG MODE ACTIVATED — All secrets revealed!', 'success');
+    updateUI();
+    konamiBuffer = [];
+  }
+});
+
+// ============================================================================
+// PARTICLES
+// ============================================================================
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function initParticles() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  particles = [];
+  
+  for (let i = 0; i < 50; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      size: Math.random() * 2 + 1,
+      alpha: Math.random() * 0.5 + 0.2
+    });
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+    
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(177, 156, 217, ${p.alpha})`;
+    ctx.fill();
+  });
+  
+  // Connections
+  particles.forEach((p1, i) => {
+    particles.slice(i + 1).forEach(p2 => {
+      const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.strokeStyle = `rgba(177, 156, 217, ${0.1 * (1 - dist / 120)})`;
+        ctx.stroke();
+      }
+    });
+  });
+  
+  requestAnimationFrame(animateParticles);
+}
+
+window.addEventListener('resize', initParticles);
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+function init() {
+  console.log('%c🏛️ CivicARG Engine v2.0', 'color: #b19cd9; font-size: 20px; font-weight: bold;');
+  console.log('%c👁️ We see you looking at the code. Your curiosity has been noted.', 'color: #ff4466;');
+  
+  // Load state or initialize
+  const loaded = loadState();
+  
+  // Particles
+  initParticles();
+  animateParticles();
+  
+  // Navigation
+  document.querySelectorAll('.civic-nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchView(btn.dataset.view));
+  });
+  
+  // Initialize UI
+  updateUI();
+  renderAchievements();
+  
+  // First visit achievement
+  if (!loaded) {
+    unlockAchievement('first_visit');
+    addActivity('🏛️ Système CivicARG initialisé');
+  } else {
+    addActivity('🔄 Session restaurée');
+    if (STATE.player.pillar) {
+      const pillar = PILLARS.find(p => p.id === STATE.player.pillar);
+      document.getElementById('pillarBadge').innerHTML = `
+        <div class="civic-pillar-badge__icon" style="background: ${pillar.color}">${pillar.emoji}</div>
+        <span class="civic-pillar-badge__name">${pillar.name}</span>
+      `;
+      document.getElementById('pillarBadge').style.setProperty('--pillar-color', pillar.color);
+    }
+  }
+  
+  // Hide loading screen
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+  }, 1500);
+}
+
+// Start
+init();
+</script>
+</body>
+</html>
