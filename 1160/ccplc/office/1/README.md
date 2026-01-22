@@ -115,10 +115,10 @@ Ceci est un paragraphe avec du **gras** et de l'*italique*.
 
 ## Code
 
-\`\`\`javascript
+```javascript
 const hello = "Hello World";
 console.log(hello);
-\`\`\`
+```
 
 ## Liste
 
@@ -132,11 +132,11 @@ console.log(hello);
 
 ## Diagramme Mermaid
 
-\`\`\`mermaid
+```mermaid
 graph LR
     A[Début] --> B[Milieu]
     B --> C[Fin]
-\`\`\`
+```
 
 ## Tableau
 
@@ -144,7 +144,7 @@ graph LR
 |-----------|-----------|
 | Valeur A  | Valeur B  |
 | Valeur C  | Valeur D  |
-```
+
 
 ---
 
@@ -191,11 +191,10 @@ Pour retirer un fichier :
 
 ### Mermaid ne s'affiche pas
 → Utilise la syntaxe :
-```
-\`\`\`mermaid
+
+```mermaid
 graph LR
     A --> B
-\`\`\`
 ```
 
 ---
