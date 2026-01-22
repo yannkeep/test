@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BN24 - L'info qu'on vous cache</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0d0d;
+            --bg-card: #1a1a1a;
+            --bg-header: #111111;
+            --red-live: #e50914;
+            --red-alert: #ff0033;
+            --blue-info: #0066cc;
+            --yellow-breaking: #ffcc00;
+            --green-bim: #00ff66;
+            --lilas: #9966ff;
+            --white: #ffffff;
+            --gray-text: #cccccc;
+            --gray-muted: #666666;
+            --ticker-bg: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--bg-dark);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* HEADER TV STYLE */
+        header {
+            background: var(--bg-header);
+            border-bottom: 3px solid var(--red-live);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 2rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--green-bim);
+        }
+
+        .logo-tagline {
+            font-size: 0.7rem;
+            color: var(--gray-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-left: 2px solid var(--red-live);
+            padding-left: 1rem;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--red-live);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse-live 2s infinite;
+        }
+
+        .live-badge::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--white);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes pulse-live {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .clock {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.5rem;
+            color: var(--green-bim);
+        }
+
+        .date {
+            font-size: 0.85rem;
+            color: var(--gray-text);
+        }
+
+        /* NAV */
+        .header-nav {
+            display: flex;
+            gap: 0;
+            background: #000;
+        }
+
+        .header-nav a {
+            color: var(--gray-text);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-right: 1px solid #222;
+            transition: all 0.2s;
+        }
+
+        .header-nav a:hover,
+        .header-nav a.active {
+            background: var(--red-live);
+            color: var(--white);
+        }
+
+        /* BREAKING NEWS TICKER */
+        .ticker-wrapper {
+            background: var(--red-alert);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ticker-label {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: #000;
+            color: var(--yellow-breaking);
+            font-weight: 700;
+            font-size: 0.8rem;
+            padding: 0.6rem 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ticker-label::before {
+            content: '⚡';
+        }
+
+        .ticker {
+            display: flex;
+            animation: ticker 60s linear infinite;
+            padding-left: 180px;
+        }
+
+        .ticker-item {
+            white-space: nowrap;
+            padding: 0.6rem 3rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ticker-item::after {
+            content: '•';
+            margin-left: 3rem;
+            color: var(--yellow-breaking);
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ALERT BAR */
+        .alert-bar {
+            background: linear-gradient(90deg, var(--yellow-breaking), #ff9900);
+            color: #000;
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 700;
+        }
+
+        .alert-tag {
+            background: #000;
+            color: var(--yellow-breaking);
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .alert-text {
+            font-size: 1rem;
+        }
+
+        /* MAIN GRID */
+        main {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* VIDEO PLAYER AREA */
+        .main-content {
+            background: #000;
+            position: relative;
+        }
+
+        .video-container {
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #1a1a2e, #0f0f1a);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.7);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .video-title {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .video-title .highlight {
+            color: var(--red-live);
+        }
+
+        .video-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray-text);
+            max-width: 600px;
+        }
+
+        .video-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--red-live);
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .video-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--white);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        /* LOWER THIRD */
+        .lower-third {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+            padding: 2rem;
+        }
+
+        .lower-third-content {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+        }
+
+        .lt-tag {
+            background: var(--red-live);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .lt-headline {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* INFO CARDS */
+        .info-panel {
+            background: var(--bg-card);
+            border-left: 1px solid #333;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        .panel-header {
+            background: #000;
+            padding: 1rem;
+            border-bottom: 3px solid var(--red-live);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .panel-live {
+            font-size: 0.7rem;
+            color: var(--red-live);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .panel-live::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--red-live);
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        .info-card {
+            padding: 1.25rem;
+            border-bottom: 1px solid #333;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .info-card:hover {
+            background: #252525;
+        }
+
+        .card-tag {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.25rem 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-tag.politique { background: var(--red-live); }
+        .card-tag.societe { background: var(--lilas); }
+        .card-tag.economie { background: var(--blue-info); }
+        .card-tag.institution { background: #ff6600; }
+        .card-tag.alerte { background: var(--yellow-breaking); color: #000; }
+
+        .card-headline {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-excerpt {
+            font-size: 0.85rem;
+            color: var(--gray-text);
+            line-height: 1.5;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.75rem;
+            font-size: 0.7rem;
+            color: var(--gray-muted);
+        }
+
+        .card-source {
+            color: var(--green-bim);
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            background: #000;
+            border-top: 1px solid #333;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .stat-item {
+            padding: 1rem;
+            text-align: center;
+            border-right: 1px solid #333;
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-value {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--red-live);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--gray-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+
+        /* SECTION DOSSIER */
+        .dossier-section {
+            background: var(--bg-card);
+            padding: 3rem 2rem;
+            border-top: 4px solid var(--red-live);
+        }
+
+        .dossier-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .dossier-tag {
+            background: var(--red-live);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .dossier-title {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .dossier-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .dossier-card {
+            background: var(--bg-dark);
+            border: 1px solid #333;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .dossier-card:hover {
+            border-color: var(--red-live);
+            transform: translateY(-5px);
+        }
+
+        .dossier-card-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .dossier-card-number {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--red-live);
+            line-height: 1;
+        }
+
+        .dossier-card-label {
+            font-size: 0.9rem;
+            color: var(--white);
+            margin-top: 0.25rem;
+        }
+
+        .dossier-card-body {
+            padding: 1.25rem;
+        }
+
+        .dossier-card-text {
+            font-size: 0.9rem;
+            color: var(--gray-text);
+            line-height: 1.6;
+        }
+
+        .dossier-card-source {
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: var(--green-bim);
+        }
+
+        /* EXPERT SECTION */
+        .expert-section {
+            background: #000;
+            padding: 2rem;
+            border-top: 1px solid #333;
+        }
+
+        .expert-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .expert-tag {
+            background: var(--lilas);
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .expert-title {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .quote-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--lilas);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quote-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--gray-text);
+            line-height: 1.7;
+        }
+
+        .quote-author {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--lilas);
+        }
+
+        /* TIMELINE */
+        .timeline-section {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-top: 1px solid #333;
+        }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-tag {
+            background: var(--yellow-breaking);
+            color: #000;
+            padding: 0.5rem 1rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--red-live);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.25rem;
+            width: 12px;
+            height: 12px;
+            background: var(--red-live);
+            border-radius: 50%;
+            border: 2px solid var(--bg-card);
+        }
+
+        .timeline-time {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--red-live);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-content {
+            font-size: 0.9rem;
+            color: var(--gray-text);
+        }
+
+        .timeline-content strong {
+            color: var(--white);
+        }
+
+        /* FOOTER */
+        footer {
+            background: #000;
+            border-top: 3px solid var(--red-live);
+            padding: 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-logo span {
+            color: var(--green-bim);
+        }
+
+        .footer-tagline {
+            font-size: 0.75rem;
+            color: var(--gray-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--gray-muted);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--green-bim);
+        }
+
+        .footer-disclaimer {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #333;
+            font-size: 0.75rem;
+            color: var(--gray-muted);
+            text-align: center;
+        }
+
+        /* PARTICLES */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ANIMATIONS */
+        .flash {
+            animation: flash 0.5s ease;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .header-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .header-nav {
+                flex-wrap: wrap;
+            }
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .info-panel {
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-top">
+            <div class="logo-container">
+                <a href="#" class="logo"><span>B</span>N24</a>
+                <span class="logo-tagline">L'info qu'on vous cache • #!BiM</span>
+            </div>
+            <div class="live-badge">En direct</div>
+            <div class="header-info">
+                <div class="clock" id="clock">--:--:--</div>
+                <div class="date" id="date">--</div>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="#" class="active">À la une</a>
+            <a href="#dossier-kern">Le Kern</a>
+            <a href="#dossier-caste">La Caste</a>
+            <a href="#dossier-opacite">L'Omerta</a>
+            <a href="#dossier-broyes">Les Broyés</a>
+            <a href="#sources">Sources</a>
+        </nav>
+    </header>
+
+    <!-- BREAKING NEWS TICKER -->
+    <div class="ticker-wrapper">
+        <div class="ticker-label">Alerte Info</div>
+        <div class="ticker">
+            <span class="ticker-item">🔴 EXCLUSIF : La Belgique 119e sur 136 au classement mondial de la transparence — derrière le Kazakhstan</span>
+            <span class="ticker-item">⚡ 31 806 mandataires politiques recensés — soit 1 par km² selon l'UCLouvain</span>
+            <span class="ticker-item">🔴 Le Kern dirige le pays SANS EXISTENCE LÉGALE ni obligation de transparence</span>
+            <span class="ticker-item">⚡ 500 000 malades longue durée : +20% en 4 ans, plus que les chômeurs</span>
+            <span class="ticker-item">🔴 75 millions € de financement public pour les partis chaque année — 75% de leurs revenus</span>
+            <span class="ticker-item">⚡ Gouvernement De Wever : 0 conférence de presse en 3 mois après 239 jours de formation</span>
+            <span class="ticker-item">🔴 EXCLUSIF : La Belgique 119e sur 136 au classement mondial de la transparence — derrière le Kazakhstan</span>
+            <span class="ticker-item">⚡ 31 806 mandataires politiques recensés — soit 1 par km² selon l'UCLouvain</span>
+            <span class="ticker-item">🔴 Le Kern dirige le pays SANS EXISTENCE LÉGALE ni obligation de transparence</span>
+            <span class="ticker-item">⚡ 500 000 malades longue durée : +20% en 4 ans, plus que les chômeurs</span>
+            <span class="ticker-item">🔴 75 millions € de financement public pour les partis chaque année — 75% de leurs revenus</span>
+            <span class="ticker-item">⚡ Gouvernement De Wever : 0 conférence de presse en 3 mois après 239 jours de formation</span>
+        </div>
+    </div>
+
+    <!-- ALERT BAR -->
+    <div class="alert-bar">
+        <span class="alert-tag">⚠️ Édition spéciale</span>
+        <span class="alert-text">DOSSIER : Anatomie d'un système — Tout ce qu'on ne vous dit pas sur le fonctionnement réel de la Belgique</span>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <div class="main-content">
+            <div class="video-container">
+                <div class="video-badge">Direct</div>
+                <div class="video-overlay">
+                    <h1 class="video-title">Le système est <span class="highlight">foutu</span><br>et ils le savent</h1>
+                    <p class="video-subtitle">Enquête exclusive sur les mécanismes cachés du pouvoir en Belgique. Données sourcées, analyse critique.</p>
+                </div>
+                <div class="lower-third">
+                    <div class="lower-third-content">
+                        <span class="lt-tag">Dossier</span>
+                        <span class="lt-headline">Partitocratie : comment les présidents de partis dirigent vraiment le pays</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS BAR -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value">119<sup style="font-size: 0.6em;">e</sup></div>
+                    <div class="stat-label">Classement transparence</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">31 806</div>
+                    <div class="stat-label">Mandataires</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">500K</div>
+                    <div class="stat-label">Malades longue durée</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">75M€</div>
+                    <div class="stat-label">Subsides partis/an</div>
+                </div>
+            </div>
+
+            <!-- DOSSIER KERN -->
+            <section class="dossier-section" id="dossier-kern">
+                <div class="dossier-header">
+                    <span class="dossier-tag">Enquête</span>
+                    <h2 class="dossier-title">Le Kern : le gouvernement fantôme</h2>
+                </div>
+                <div class="dossier-grid">
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">0</div>
+                            <div class="dossier-card-label">Existence légale</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                Le "Kern" — les bureaux de partis où se prennent les vraies décisions — 
+                                n'a <strong>aucune existence légale</strong>. Zéro obligation de transparence. 
+                                Zéro compte à rendre au Parlement.
+                            </p>
+                            <p class="dossier-card-source">Source : Analyse institutionnelle, Wikipedia</p>
+                        </div>
+                    </div>
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">75%</div>
+                            <div class="dossier-card-label">Revenus des partis = argent public</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                Avec 75M€ par an de financement public, les subsides représentent 
+                                <strong>75% des revenus totaux</strong> des partis. Deux fois plus qu'en Allemagne.
+                                Au-delà de 80%, on parle de "branche de l'État".
+                            </p>
+                            <p class="dossier-card-source">Source : CRISP, Weneedtotalk</p>
+                        </div>
+                    </div>
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">4</div>
+                            <div class="dossier-card-label">Mécanismes de contrôle</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                Discipline de vote imposée par : convergence naturelle, socialisation, 
+                                persuasion par les avantages, et <strong>coercition avec menaces de sanctions</strong>
+                                (exclusion du groupe, retrait d'investiture).
+                            </p>
+                            <p class="dossier-card-source">Source : Cairn.info, CRISP</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EXPERT -->
+            <section class="expert-section">
+                <div class="expert-header">
+                    <span class="expert-tag">Décryptage</span>
+                    <h3 class="expert-title">Ce que disent les sources</h3>
+                </div>
+                <div class="quote-box">
+                    <p class="quote-text">
+                        "Les véritables dirigeants du pays sont les présidents de partis, choisis exclusivement par leur propre parti. 
+                        Le vote d'un adhérent de parti compte plus que celui d'un électeur."
+                    </p>
+                    <p class="quote-author">— Observateur cité par le CRISP asbl</p>
+                </div>
+                <div class="quote-box">
+                    <p class="quote-text">
+                        "Les députés — et même les ministres — deviennent fréquemment des exécutants 
+                        de la ligne décidée par quelques dirigeants partisans."
+                    </p>
+                    <p class="quote-author">— Analyse de la partitocratie belge</p>
+                </div>
+            </section>
+
+            <!-- DOSSIER OPACITE -->
+            <section class="dossier-section" id="dossier-opacite" style="border-top-color: var(--yellow-breaking);">
+                <div class="dossier-header">
+                    <span class="dossier-tag" style="background: var(--yellow-breaking); color: #000;">Exclusif</span>
+                    <h2 class="dossier-title">L'Omerta : 119e sur 136 pays</h2>
+                </div>
+                <div class="dossier-grid">
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">119<sup style="font-size: 0.5em;">e</sup></div>
+                            <div class="dossier-card-label">Sur 136 pays</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                Au classement mondial du droit à l'information, la Belgique se place 
+                                <strong>derrière le Kazakhstan et l'Arabie Saoudite</strong>.
+                            </p>
+                            <p class="dossier-card-source">Source : RTBF, classement international</p>
+                        </div>
+                    </div>
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">0</div>
+                            <div class="dossier-card-label">Conférences de presse De Wever</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                Le gouvernement De Wever, formé en février 2025 après <strong>239 jours de négociations</strong>, 
+                                n'a organisé aucune conférence de presse en trois mois.
+                            </p>
+                            <p class="dossier-card-source">Source : La Libre, Wikipedia</p>
+                        </div>
+                    </div>
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">10-20%</div>
+                            <div class="dossier-card-label">Communes wallonnes qui streament</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                Paradoxalement, le niveau de pouvoir <strong>le plus proche des citoyens</strong> 
+                                reste le plus fermé. Seule une minorité de communes diffuse ses conseils.
+                            </p>
+                            <p class="dossier-card-source">Source : UVCW, Parlement wallon</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TIMELINE -->
+            <section class="timeline-section">
+                <div class="timeline-header">
+                    <span class="timeline-tag">Chronologie</span>
+                    <h3 class="expert-title">Mai 2024 : Le vote de la honte</h3>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">Mai 2024</div>
+                        <div class="timeline-content">
+                            <strong>PS, MR, Ecolo, CD&V, Vooruit, Open VLD</strong> votent CONTRE une Commission d'accès 
+                            aux documents administratifs (CADA) contraignante au niveau fédéral.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">Depuis 2019</div>
+                        <div class="timeline-content">
+                            Toutes les régions belges ont adopté la CADA. <strong>Sauf le fédéral.</strong>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">L'affaire Vandenbroucke</div>
+                        <div class="timeline-content">
+                            Le ministre de la Santé qui a <strong>bloqué personnellement la réforme</strong> 
+                            pour protéger ses propres secrets — puis reconduit au gouvernement suivant.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DOSSIER BROYES -->
+            <section class="dossier-section" id="dossier-broyes" style="border-top-color: var(--lilas);">
+                <div class="dossier-header">
+                    <span class="dossier-tag" style="background: var(--lilas);">Société</span>
+                    <h2 class="dossier-title">Les Broyés : 500 000 malades</h2>
+                </div>
+                <div class="dossier-grid">
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">500K+</div>
+                            <div class="dossier-card-label">Malades longue durée (2023)</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                En congé maladie depuis plus d'un an. <strong>+20% entre 2019 et 2023.</strong>
+                                Ce chiffre dépasse désormais le nombre de chômeurs (300 000 en 2022).
+                            </p>
+                            <p class="dossier-card-source">Source : Statistiques INAMI</p>
+                        </div>
+                    </div>
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">9 Mrd€</div>
+                            <div class="dossier-card-label">Coût annuel</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                Rien qu'en indemnités de sécurité sociale. Les pouvoirs publics considèrent 
+                                la situation comme <strong>"insoutenable" à terme</strong>.
+                            </p>
+                            <p class="dossier-card-source">Source : Analyse des réformes</p>
+                        </div>
+                    </div>
+                    <div class="dossier-card">
+                        <div class="dossier-card-header">
+                            <div class="dossier-card-number">69%</div>
+                            <div class="dossier-card-label">Femmes (burn-out/dépression)</div>
+                        </div>
+                        <div class="dossier-card-body">
+                            <p class="dossier-card-text">
+                                1/3 troubles de santé mentale (dépression, burn-out). 
+                                1/3 affections musculo-squelettiques. 63% ont plus de 50 ans.
+                                <strong>Ce n'est pas une épidémie médicale. C'est une épidémie sociale.</strong>
+                            </p>
+                            <p class="dossier-card-source">Source : Statistiques INAMI</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- SIDEBAR -->
+        <aside class="info-panel">
+            <div class="panel-header">
+                <span class="panel-title">Fil d'actualité</span>
+                <span class="panel-live">En continu</span>
+            </div>
+
+            <article class="info-card">
+                <span class="card-tag alerte">Alerte</span>
+                <h3 class="card-headline">31 806 mandataires : la densité record de la Belgique</h3>
+                <p class="card-excerpt">
+                    Une étude de l'UCLouvain recense littéralement "1 mandataire par km²". 
+                    Multiplication des niveaux de pouvoir oblige.
+                </p>
+                <div class="card-meta">
+                    <span class="card-source">UCLouvain / RTBF</span>
+                    <span>Il y a 2h</span>
+                </div>
+            </article>
+
+            <article class="info-card">
+                <span class="card-tag politique">Politique</span>
+                <h3 class="card-headline">Les partis "confectionnent" les listes sans aucune régulation légale</h3>
+                <p class="card-excerpt">
+                    Aucune loi n'encadre la sélection des candidats. Le CRISP parle de "secret" 
+                    autour des processus internes.
+                </p>
+                <div class="card-meta">
+                    <span class="card-source">CRISP asbl</span>
+                    <span>Il y a 3h</span>
+                </div>
+            </article>
+
+            <article class="info-card">
+                <span class="card-tag institution">Institution</span>
+                <h3 class="card-headline">7 parlements, 6 gouvernements, aucune hiérarchie des normes</h3>
+                <p class="card-excerpt">
+                    Chambre, Sénat, Parlement flamand, wallon, bruxellois, communautés française et germanophone. 
+                    Compétences exclusives sans hiérarchie.
+                </p>
+                <div class="card-meta">
+                    <span class="card-source">Belgium.be</span>
+                    <span>Il y a 4h</span>
+                </div>
+            </article>
+
+            <article class="info-card">
+                <span class="card-tag societe">Société</span>
+                <h3 class="card-headline">Pilarisation : du berceau au tombeau dans son "pilier"</h3>
+                <p class="card-excerpt">
+                    Catholique, socialiste ou libéral — chacun avec ses écoles, hôpitaux, syndicats, mutuelles. 
+                    Un cloisonnement qui persiste.
+                </p>
+                <div class="card-meta">
+                    <span class="card-source">Analyses sociologiques</span>
+                    <span>Il y a 5h</span>
+                </div>
+            </article>
+
+            <article class="info-card">
+                <span class="card-tag economie">Économie</span>
+                <h3 class="card-headline">Intelligence économique : les failles du dispositif belge</h3>
+                <p class="card-excerpt">
+                    La VSSE alerte sur l'espionnage chinois. Mais absence d'instance nationale unique, 
+                    informations partagées tardivement entre services.
+                </p>
+                <div class="card-meta">
+                    <span class="card-source">SPF Économie / VSSE</span>
+                    <span>Il y a 6h</span>
+                </div>
+            </article>
+
+            <article class="info-card">
+                <span class="card-tag alerte">Alerte</span>
+                <h3 class="card-headline">Droits sociaux remis en question face à l'austérité</h3>
+                <p class="card-excerpt">
+                    Depuis 2019, les réformes ont modifié le régime d'incapacité de travail. 
+                    On te rend malade, puis on te culpabilise.
+                </p>
+                <div class="card-meta">
+                    <span class="card-source">Analyse réformes</span>
+                    <span>Il y a 7h</span>
+                </div>
+            </article>
+
+            <article class="info-card">
+                <span class="card-tag politique">Politique</span>
+                <h3 class="card-headline">GRECO et Commission européenne multiplient les rappels à l'ordre</h3>
+                <p class="card-excerpt">
+                    Les instances européennes s'inquiètent. La société civile (Transparencia, Cumuleo, 
+                    Ligue des droits humains) reste mobilisée.
+                </p>
+                <div class="card-meta">
+                    <span class="card-source">RTBF</span>
+                    <span>Il y a 8h</span>
+                </div>
+            </article>
+        </aside>
+    </main>
+
+    <!-- SOURCES -->
+    <section id="sources" class="dossier-section" style="border-top-color: var(--green-bim);">
+        <div class="dossier-header">
+            <span class="dossier-tag" style="background: var(--green-bim); color: #000;">Vérification</span>
+            <h2 class="dossier-title">Nos sources</h2>
+        </div>
+        <div class="dossier-grid">
+            <div class="dossier-card">
+                <div class="dossier-card-body">
+                    <h4 style="color: var(--green-bim); margin-bottom: 0.5rem;">Institutionnel</h4>
+                    <p class="dossier-card-text">
+                        CRISP asbl • Belgium.be • Parlement wallon • Parlement flamand • 
+                        Brussels Hoofdstedelijk Gewest • UVCW • Lachambre • Senate of Belgium
+                    </p>
+                </div>
+            </div>
+            <div class="dossier-card">
+                <div class="dossier-card-body">
+                    <h4 style="color: var(--green-bim); margin-bottom: 0.5rem;">Médias</h4>
+                    <p class="dossier-card-text">
+                        RTBF • La Libre Belgique • DHnet • L'Avenir • Lesengages • Pouvoirs-locaux
+                    </p>
+                </div>
+            </div>
+            <div class="dossier-card">
+                <div class="dossier-card-body">
+                    <h4 style="color: var(--green-bim); margin-bottom: 0.5rem;">Académique</h4>
+                    <p class="dossier-card-text">
+                        UCLouvain • Cairn.info • Wikipedia (+ vérification croisée) • 
+                        Small Wars Journal • Civil Affairs Association
+                    </p>
+                </div>
+            </div>
+            <div class="dossier-card">
+                <div class="dossier-card-body">
+                    <h4 style="color: var(--green-bim); margin-bottom: 0.5rem;">Société civile</h4>
+                    <p class="dossier-card-text">
+                        Transparencia • Cumuleo • Ligue des droits humains • Weneedtotalk • OIDP • Freedom House
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <span class="footer-logo"><span>B</span>N24</span>
+                <span class="footer-tagline">#!BiM • Bénéficiaires d'Intelligence Mutante</span>
+            </div>
+            <div class="footer-links">
+                <a href="#dossier-kern">Le Kern</a>
+                <a href="#dossier-opacite">L'Omerta</a>
+                <a href="#dossier-broyes">Les Broyés</a>
+                <a href="#sources">Sources</a>
+            </div>
+        </div>
+        <div class="footer-disclaimer">
+            ⚠️ Toutes les données présentées sont sourcées et vérifiables. Ce site est une initiative citoyenne. 
+            Vérifiez les sources. Partagez l'information. Exigez la transparence.
+        </div>
+    </footer>
+
+    <script>
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('fr-BE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const date = now.toLocaleDateString('fr-BE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('clock').textContent = time;
+            document.getElementById('date').textContent = date.charAt(0).toUpperCase() + date.slice(1);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Particles
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                this.createParticles();
+                this.animate();
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            createParticles() {
+                const count = Math.floor((this.canvas.width * this.canvas.height) / 30000);
+                for (let i = 0; i < count; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 1.5 + 0.5,
+                        speedX: (Math.random() - 0.5) * 0.3,
+                        speedY: (Math.random() - 0.5) * 0.3,
+                        color: Math.random() > 0.8 ? '#e50914' : (Math.random() > 0.5 ? '#00ff66' : '#9966ff')
+                    });
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach(p => {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    if (p.x < 0 || p.x > this.canvas.width) p.speedX *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.speedY *= -1;
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.globalAlpha = 0.5;
+                    this.ctx.fill();
+                });
+                this.ctx.globalAlpha = 1;
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 150,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            new ParticleSystem(document.getElementById('particles'));
+        });
+    </script>
+</body>
+</html>
