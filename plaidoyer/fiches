@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#B!Mi — Fiches Méthodologiques des 15 Outils de Plaidoyer</title>
+    <style>
+        @page { size: A4; margin: 2cm; }
+        @media print { 
+            .fiche { page-break-after: always; }
+            .fiche:last-child { page-break-after: auto; }
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            font-size: 11pt;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: #f8f8f8;
+            padding: 20px;
+        }
+        
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .cover {
+            text-align: center;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+            color: white;
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .cover .logo {
+            font-size: 56px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #48bb78, #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .cover h1 { font-size: 28pt; margin-bottom: 15px; }
+        .cover p { color: #a0a0b8; font-size: 14pt; }
+        
+        .toc {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .toc h2 {
+            color: #9f7aea;
+            border-bottom: 2px solid #9f7aea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .toc-section {
+            margin-bottom: 20px;
+        }
+        
+        .toc-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .toc-section h3.voir { color: #63b3ed; }
+        .toc-section h3.juger { color: #f6ad55; }
+        .toc-section h3.agir { color: #68d391; }
+        
+        .toc-list {
+            list-style: none;
+            padding-left: 30px;
+        }
+        
+        .toc-list li {
+            padding: 5px 0;
+            border-bottom: 1px dotted #e0e0e0;
+        }
+        
+        .fiche {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        .fiche-header {
+            padding: 25px 30px;
+            color: white;
+        }
+        
+        .fiche-header.voir { background: linear-gradient(135deg, #3182ce, #63b3ed); }
+        .fiche-header.juger { background: linear-gradient(135deg, #dd6b20, #f6ad55); }
+        .fiche-header.agir { background: linear-gradient(135deg, #38a169, #68d391); }
+        
+        .fiche-header h2 {
+            font-size: 20pt;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .fiche-header .phase {
+            font-size: 10pt;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+        
+        .fiche-body { padding: 30px; }
+        
+        .fiche-section {
+            margin-bottom: 25px;
+        }
+        
+        .fiche-section h3 {
+            color: #9f7aea;
+            font-size: 12pt;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .fiche-section p, .fiche-section ul {
+            color: #444;
+        }
+        
+        .fiche-section ul {
+            padding-left: 20px;
+        }
+        
+        .fiche-section li {
+            margin-bottom: 8px;
+        }
+        
+        .example-box {
+            background: #f8f8fc;
+            border-left: 4px solid #9f7aea;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .example-box h4 {
+            color: #9f7aea;
+            font-size: 10pt;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .tip-box {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .tip-box h4 {
+            color: #38a169;
+            font-size: 10pt;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .warning-box {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .warning-box h4 {
+            color: #e53e3e;
+            font-size: 10pt;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .matrix-cell {
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 10pt;
+        }
+        
+        .matrix-cell h5 {
+            font-size: 11pt;
+            margin-bottom: 8px;
+        }
+        
+        .matrix-cell.green { background: #f0fff4; border: 1px solid #68d391; }
+        .matrix-cell.red { background: #fff5f5; border: 1px solid #fc8181; }
+        .matrix-cell.blue { background: #ebf8ff; border: 1px solid #63b3ed; }
+        .matrix-cell.orange { background: #fffaf0; border: 1px solid #f6ad55; }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-size: 10pt;
+        }
+        
+        .footer a {
+            color: #9f7aea;
+            text-decoration: none;
+        }
+        
+        @media screen and (max-width: 600px) {
+            body { padding: 10px; }
+            .fiche-header, .fiche-body { padding: 20px; }
+            .matrix { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- COUVERTURE -->
+        <div class="cover">
+            <div class="logo">#B!Mi</div>
+            <h1>Fiches Méthodologiques</h1>
+            <p>Les 15 Outils du Plaidoyer Citoyen<br>Méthodologie Voir — Juger — Agir</p>
+        </div>
+        
+        <!-- TABLE DES MATIÈRES -->
+        <div class="toc">
+            <h2>📋 Table des Matières</h2>
+            
+            <div class="toc-section">
+                <h3 class="voir">🔵 Phase VOIR (3 outils)</h3>
+                <ul class="toc-list">
+                    <li>1. 🎯 Domino du Changement</li>
+                    <li>2. 👤 Profil Citoyen</li>
+                    <li>3. 🌸 Fleur du Pouvoir</li>
+                </ul>
+            </div>
+            
+            <div class="toc-section">
+                <h3 class="juger">🟠 Phase JUGER (6 outils)</h3>
+                <ul class="toc-list">
+                    <li>4. 👥 Cartographie des Acteurs</li>
+                    <li>5. 🌳 Arbre à Problèmes</li>
+                    <li>6. ❓ 5 Pourquoi</li>
+                    <li>7. 📊 Analyse SWOT</li>
+                    <li>8. 🌍 Analyse PESTEL</li>
+                    <li>9. 🔄 Théorie du Changement</li>
+                </ul>
+            </div>
+            
+            <div class="toc-section">
+                <h3 class="agir">🟢 Phase AGIR (6 outils)</h3>
+                <ul class="toc-list">
+                    <li>10. ⚡ Avec / Sans / Contre</li>
+                    <li>11. 🎯 Cibles & Alliés</li>
+                    <li>12. ✅ Objectifs SMART</li>
+                    <li>13. 💬 Message Clé</li>
+                    <li>14. 📈 Suivi-Évaluation</li>
+                    <li>15. 📔 Journal de Bord</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- PHASE VOIR -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        
+        <!-- FICHE 1: DOMINO -->
+        <div class="fiche">
+            <div class="fiche-header voir">
+                <div class="phase">Phase VOIR • Outil 1/15</div>
+                <h2>🎯 Domino du Changement</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Le Domino du Changement est un outil de clarification stratégique qui vous aide à formuler votre vision du changement souhaité, identifier les obstacles qui s'y opposent, et recenser les ressources dont vous disposez.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>🎯 Objectif</h3>
+                    <p>Poser les fondations de votre plaidoyer en articulant clairement ce que vous voulez changer, ce qui vous en empêche, et ce sur quoi vous pouvez vous appuyer.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Comment remplir</h3>
+                    <ul>
+                        <li><strong>Vision :</strong> Décrivez le changement que vous voulez voir advenir. Soyez précis sur le "quoi", le "qui", le "quand" et le "comment".</li>
+                        <li><strong>Obstacles :</strong> Listez tout ce qui s'oppose à cette vision : blocages politiques, manque de ressources, opposants, contraintes légales, etc.</li>
+                        <li><strong>Ressources :</strong> Identifiez vos forces : compétences, réseaux, alliés, légitimité, précédents favorables, outils, budget...</li>
+                    </ul>
+                </div>
+                
+                <div class="example-box">
+                    <h4>💡 Exemple</h4>
+                    <p><strong>Vision :</strong> "D'ici 2027, obtenir l'annulation de la limitation des allocations de chômage à 24 mois."<br>
+                    <strong>Obstacles :</strong> "Majorité parlementaire solide, contrainte budgétaire UE de 23 Md€"<br>
+                    <strong>Ressources :</strong> "Front commun syndical de 1,5M membres, recours constitutionnel en cours"</p>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>✨ Conseil</h4>
+                    <p>Commencez par la vision, même si elle semble ambitieuse. Les obstacles et ressources vous aideront ensuite à la rendre réaliste et atteignable.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 2: PROFIL CITOYEN -->
+        <div class="fiche">
+            <div class="fiche-header voir">
+                <div class="phase">Phase VOIR • Outil 2/15</div>
+                <h2>👤 Profil Citoyen</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Le Profil Citoyen vous invite à une introspection honnête sur votre positionnement : pourquoi vous engagez-vous ? Quelles compétences apportez-vous ? De combien de temps disposez-vous ? Quelles sont vos limites ?</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 4 dimensions</h3>
+                    <ul>
+                        <li><strong>Motivations :</strong> Vécu personnel, convictions politiques, urgence sociale qui vous poussent à agir</li>
+                        <li><strong>Compétences :</strong> Savoir-faire mobilisables : analyse, communication, juridique, mobilisation, technique...</li>
+                        <li><strong>Temps :</strong> Disponibilité réaliste : heures/semaine, pics d'activité, horizon d'engagement</li>
+                        <li><strong>Limites :</strong> Contraintes financières, structurelles, risques d'épuisement</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Attention</h4>
+                    <p>Être honnête sur ses limites n'est pas un aveu de faiblesse, c'est une condition de durabilité. Un plaidoyer qui épuise ses porteurs échouera.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 3: FLEUR DU POUVOIR -->
+        <div class="fiche">
+            <div class="fiche-header voir">
+                <div class="phase">Phase VOIR • Outil 3/15</div>
+                <h2>🌸 Fleur du Pouvoir</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Adapté des outils de conscientisation féministe, la Fleur du Pouvoir explore trois dimensions de votre positionnement social : vos identités, les privilèges relatifs dont vous bénéficiez, et les oppressions systémiques que vous subissez.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 3 pétales</h3>
+                    <ul>
+                        <li><strong>Identités :</strong> Qui sont les personnes concernées par votre plaidoyer ? Quels sont leurs profils, leurs vécus, leurs caractéristiques communes ?</li>
+                        <li><strong>Privilèges :</strong> Quels avantages relatifs avez-vous dans ce combat ? Accès à l'information, capital social, légitimité de parole, ressources institutionnelles...</li>
+                        <li><strong>Oppressions :</strong> Quelles discriminations et violences systémiques subissez-vous ? Violence administrative, symbolique, économique, institutionnelle...</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>✨ Conseil</h4>
+                    <p>Cet outil aide à prendre conscience de sa place dans les rapports de domination, pour mieux construire des alliances inclusives et éviter de reproduire des oppressions.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- PHASE JUGER -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        
+        <!-- FICHE 4: CARTOGRAPHIE DES ACTEURS -->
+        <div class="fiche">
+            <div class="fiche-header juger">
+                <div class="phase">Phase JUGER • Outil 4/15</div>
+                <h2>👥 Cartographie des Acteurs</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>La cartographie des acteurs permet d'identifier et de positionner toutes les personnes et organisations qui ont un rôle dans votre plaidoyer : alliés, opposants, cibles à convaincre, acteurs neutres à surveiller.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Pour chaque acteur, renseigner</h3>
+                    <ul>
+                        <li><strong>Nom :</strong> Personne, organisation ou institution</li>
+                        <li><strong>Rôle :</strong> Sa fonction et son importance dans le dossier</li>
+                        <li><strong>Position :</strong> Allié 🤝, Opposant ⚔️, Neutre ⚖️, ou Cible 🎯</li>
+                        <li><strong>Pouvoir :</strong> Son niveau d'influence (1 à 5)</li>
+                    </ul>
+                </div>
+                
+                <div class="matrix">
+                    <div class="matrix-cell green">
+                        <h5>🤝 Alliés</h5>
+                        <p>Soutiennent votre cause. À mobiliser et coordonner.</p>
+                    </div>
+                    <div class="matrix-cell red">
+                        <h5>⚔️ Opposants</h5>
+                        <p>S'opposent à vos objectifs. À contrer ou neutraliser.</p>
+                    </div>
+                    <div class="matrix-cell blue">
+                        <h5>⚖️ Neutres</h5>
+                        <p>Indécis ou indifférents. À surveiller ou convaincre.</p>
+                    </div>
+                    <div class="matrix-cell orange">
+                        <h5>🎯 Cibles</h5>
+                        <p>Décideurs clés. À cibler prioritairement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 5: ARBRE À PROBLÈMES -->
+        <div class="fiche">
+            <div class="fiche-header juger">
+                <div class="phase">Phase JUGER • Outil 5/15</div>
+                <h2>🌳 Arbre à Problèmes</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>L'arbre à problèmes visualise la structure causale d'une situation : le tronc représente le problème central, les racines sont les causes profondes, et les branches sont les conséquences visibles.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 3 niveaux</h3>
+                    <ul>
+                        <li><strong>🌿 Branches (Conséquences) :</strong> Les effets visibles et mesurables du problème</li>
+                        <li><strong>🪵 Tronc (Problème central) :</strong> La situation problématique principale que vous voulez changer</li>
+                        <li><strong>🌱 Racines (Causes) :</strong> Les facteurs structurels qui produisent et maintiennent le problème</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>✨ Conseil</h4>
+                    <p>Agir sur les conséquences (branches) ne résout pas le problème. Un plaidoyer efficace cible les causes (racines) pour produire un changement durable.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 6: 5 POURQUOI -->
+        <div class="fiche">
+            <div class="fiche-header juger">
+                <div class="phase">Phase JUGER • Outil 6/15</div>
+                <h2>❓ 5 Pourquoi</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Technique d'analyse causale qui consiste à poser la question "Pourquoi ?" cinq fois de suite pour remonter d'un symptôme visible à sa cause racine.</p>
+                </div>
+                
+                <div class="example-box">
+                    <h4>💡 Exemple</h4>
+                    <p><strong>Problème :</strong> 978 000 personnes sont en inactivité contrainte<br>
+                    <strong>P1 :</strong> Parce que le système pénalise toute tentative de contribution<br>
+                    <strong>P2 :</strong> Parce que le droit belge ne connaît que salarié/indépendant/volontaire<br>
+                    <strong>P3 :</strong> Parce que les mécanismes de dégressivité sont brutaux<br>
+                    <strong>P4 :</strong> Parce que l'idéologie d'activation privilégie la sanction<br>
+                    <strong>P5 (Cause racine) :</strong> Parce que le rapport de force politique est défavorable aux formes alternatives de contribution</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 7: SWOT -->
+        <div class="fiche">
+            <div class="fiche-header juger">
+                <div class="phase">Phase JUGER • Outil 7/15</div>
+                <h2>📊 Analyse SWOT</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Matrice d'analyse stratégique qui croise les facteurs internes (Forces/Faiblesses) et externes (Opportunités/Menaces) pour évaluer votre position.</p>
+                </div>
+                
+                <div class="matrix">
+                    <div class="matrix-cell green">
+                        <h5>💪 Forces (interne +)</h5>
+                        <p>Vos atouts : compétences, réseau, légitimité, ressources...</p>
+                    </div>
+                    <div class="matrix-cell red">
+                        <h5>⚠️ Faiblesses (interne -)</h5>
+                        <p>Vos limites : manques, dépendances, vulnérabilités...</p>
+                    </div>
+                    <div class="matrix-cell blue">
+                        <h5>🌟 Opportunités (externe +)</h5>
+                        <p>Contexte favorable : fenêtres politiques, alliés, tendances...</p>
+                    </div>
+                    <div class="matrix-cell orange">
+                        <h5>🔥 Menaces (externe -)</h5>
+                        <p>Risques externes : adversaires, changements défavorables...</p>
+                    </div>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>✨ Conseil</h4>
+                    <p>Croisez les quadrants : Comment utiliser vos Forces pour saisir les Opportunités ? Comment pallier vos Faiblesses face aux Menaces ?</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 8: PESTEL -->
+        <div class="fiche">
+            <div class="fiche-header juger">
+                <div class="phase">Phase JUGER • Outil 8/15</div>
+                <h2>🌍 Analyse PESTEL</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Grille d'analyse macro-environnementale qui examine 6 dimensions du contexte externe influençant votre plaidoyer.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 6 dimensions</h3>
+                    <ul>
+                        <li><strong>🏛️ Politique :</strong> Gouvernement, coalitions, rapports de force, calendrier électoral</li>
+                        <li><strong>💰 Économique :</strong> Conjoncture, budget, emploi, contraintes financières</li>
+                        <li><strong>👥 Social :</strong> Démographie, inégalités, mouvements sociaux, opinion publique</li>
+                        <li><strong>💻 Technologique :</strong> Outils, plateformes, fracture numérique, innovations</li>
+                        <li><strong>🌱 Environnemental :</strong> Transition écologique, climat, ressources naturelles</li>
+                        <li><strong>⚖️ Légal :</strong> Cadre juridique, jurisprudence, recours possibles</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 9: THÉORIE DU CHANGEMENT -->
+        <div class="fiche">
+            <div class="fiche-header juger">
+                <div class="phase">Phase JUGER • Outil 9/15</div>
+                <h2>🔄 Théorie du Changement</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>La Théorie du Changement (TdC) modélise le chemin causal entre votre situation actuelle et la situation souhaitée, en explicitant les mécanismes de transformation et les hypothèses sous-jacentes.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 4 composantes</h3>
+                    <ul>
+                        <li><strong>Situation actuelle :</strong> Changements de conscience individuels nécessaires</li>
+                        <li><strong>Situation souhaitée :</strong> Changements de politiques collectives visés</li>
+                        <li><strong>Mécanismes :</strong> Actions et comportements qui produisent le changement</li>
+                        <li><strong>Hypothèses :</strong> Conditions supposées vraies pour que ça fonctionne</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Attention</h4>
+                    <p>Explicitez vos hypothèses risquées. Si elles s'avèrent fausses, votre stratégie s'effondre. Prévoyez des plans B.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- PHASE AGIR -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        
+        <!-- FICHE 10: AVEC/SANS/CONTRE -->
+        <div class="fiche">
+            <div class="fiche-header agir">
+                <div class="phase">Phase AGIR • Outil 10/15</div>
+                <h2>⚡ Avec / Sans / Contre</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Cet outil distingue trois postures stratégiques face au pouvoir, qui ne sont pas mutuellement exclusives mais complémentaires.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 3 postures</h3>
+                    <ul>
+                        <li><strong>🤝 AVEC le pouvoir :</strong> Dialogue, négociation, collaboration institutionnelle, auditions, concertation</li>
+                        <li><strong>🔄 SANS le pouvoir :</strong> Alternatives autonomes, projets pilotes, contre-pouvoirs, initiatives citoyennes</li>
+                        <li><strong>✊ CONTRE le pouvoir :</strong> Opposition, rapport de force, mobilisation, recours juridiques, désobéissance</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>✨ Conseil</h4>
+                    <p>Une stratégie complète combine souvent les trois postures : négocier tout en construisant des alternatives et en maintenant une pression.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 11: CIBLES & ALLIÉS -->
+        <div class="fiche">
+            <div class="fiche-header agir">
+                <div class="phase">Phase AGIR • Outil 11/15</div>
+                <h2>🎯 Cibles & Alliés</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Cet outil priorise vos efforts en distinguant les cibles principales (décideurs clés), les cibles secondaires (influenceurs) et les alliés stratégiques (partenaires de mobilisation).</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 3 catégories</h3>
+                    <ul>
+                        <li><strong>🎯 Cible principale :</strong> Le décideur qui a le pouvoir de réaliser votre demande. Qui signe ? Qui vote ? Qui tranche ?</li>
+                        <li><strong>🎯 Cibles secondaires :</strong> Ceux qui influencent la cible principale : conseillers, médias, opinion publique, institutions</li>
+                        <li><strong>💚 Alliés stratégiques :</strong> Organisations et personnes qui partagent vos objectifs et peuvent vous aider à les atteindre</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 12: SMART -->
+        <div class="fiche">
+            <div class="fiche-header agir">
+                <div class="phase">Phase AGIR • Outil 12/15</div>
+                <h2>✅ Objectifs SMART</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Les objectifs SMART transforment des intentions vagues en cibles concrètes et suivables.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 5 critères</h3>
+                    <ul>
+                        <li><strong>S — Spécifique :</strong> Quoi exactement ? Qui ? Où ?</li>
+                        <li><strong>M — Mesurable :</strong> Comment saurez-vous que c'est atteint ? Quel indicateur ?</li>
+                        <li><strong>A — Atteignable :</strong> Est-ce réaliste avec vos ressources actuelles ?</li>
+                        <li><strong>R — Relevant :</strong> Est-ce pertinent par rapport à votre vision globale ?</li>
+                        <li><strong>T — Temporel :</strong> Quelle échéance ? Quel calendrier ?</li>
+                    </ul>
+                </div>
+                
+                <div class="example-box">
+                    <h4>💡 Exemple</h4>
+                    <p>❌ "Sensibiliser l'opinion" (vague)<br>
+                    ✅ "Obtenir 50 000 signatures sur notre pétition d'ici le 1er mars 2026" (SMART)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 13: MESSAGE CLÉ -->
+        <div class="fiche">
+            <div class="fiche-header agir">
+                <div class="phase">Phase AGIR • Outil 13/15</div>
+                <h2>💬 Message Clé</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Le Message Clé structure votre communication en 5 composantes pour être percutant et mémorable.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 5 composantes</h3>
+                    <ul>
+                        <li><strong>🎣 Accroche :</strong> La phrase choc qui capte l'attention en 10 secondes</li>
+                        <li><strong>🔍 Problème :</strong> La situation problématique expliquée clairement</li>
+                        <li><strong>❗ Importance :</strong> Pourquoi c'est urgent, pourquoi ça vous concerne</li>
+                        <li><strong>🎯 Cible :</strong> À qui vous vous adressez spécifiquement</li>
+                        <li><strong>📢 Action :</strong> Ce que vous demandez concrètement</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>✨ Conseil</h4>
+                    <p>Testez votre message : pouvez-vous le délivrer en 2 minutes (elevator pitch) ? Est-il compréhensible par quelqu'un qui ne connaît pas le dossier ?</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 14: SUIVI-ÉVALUATION -->
+        <div class="fiche">
+            <div class="fiche-header agir">
+                <div class="phase">Phase AGIR • Outil 14/15</div>
+                <h2>📈 Suivi-Évaluation</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Le Suivi-Évaluation permet de mesurer l'avancement de votre plaidoyer, d'ajuster votre stratégie et de capitaliser sur les apprentissages.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>📝 Les 4 dimensions</h3>
+                    <ul>
+                        <li><strong>📊 Indicateurs :</strong> Quels chiffres et critères mesurent votre succès ? (quantitatifs et qualitatifs)</li>
+                        <li><strong>🔬 Méthodes :</strong> Comment collectez-vous les données ? Qui est responsable ?</li>
+                        <li><strong>📅 Calendrier :</strong> À quelle fréquence faites-vous le point ? Quels jalons ?</li>
+                        <li><strong>💡 Leçons :</strong> Quels apprentissages documentez-vous pour l'avenir ?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FICHE 15: JOURNAL DE BORD -->
+        <div class="fiche">
+            <div class="fiche-header agir">
+                <div class="phase">Phase AGIR • Outil 15/15</div>
+                <h2>📔 Journal de Bord</h2>
+            </div>
+            <div class="fiche-body">
+                <div class="fiche-section">
+                    <h3>📖 Description</h3>
+                    <p>Le Journal de Bord est une chronique datée de votre plaidoyer : événements marquants, décisions prises, avancées, blocages, réflexions.</p>
+                </div>
+                
+                <div class="fiche-section">
+                    <h3>🎯 À quoi ça sert</h3>
+                    <ul>
+                        <li>Garder une trace écrite de l'évolution du projet</li>
+                        <li>Faciliter la passation si des personnes changent</li>
+                        <li>Documenter les apprentissages pour de futurs plaidoyers</li>
+                        <li>Maintenir la motivation en visualisant le chemin parcouru</li>
+                        <li>Préparer le bilan final et la capitalisation</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-box">
+                    <h4>✨ Conseil</h4>
+                    <p>Prenez 5 minutes après chaque réunion ou événement important pour noter l'essentiel. Un journal régulier vaut mieux qu'un rapport rétrospectif.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>Fiches méthodologiques <strong>#B!Mi Plaidoyer Citoyen</strong></p>
+            <p>Basées sur la méthodologie Voir-Juger-Agir de l'éducation populaire</p>
+            <p><a href="https://bimi.tools/plaidoyer">bimi.tools/plaidoyer</a> • Licence CC BY-NC-SA 4.0</p>
+        </div>
+    </div>
+</body>
+</html>
