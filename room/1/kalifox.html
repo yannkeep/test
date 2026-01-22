@@ -3,514 +3,1406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARG & Régulation : L'Écosystème Belge</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>ARG Civiques en Belgique | Cadre Réglementaire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: rgba(22, 27, 34, 0.85);
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --green-soft: #7ee8a0;
+            --green-muted: #3fb950;
+            --green-glow: rgba(126, 232, 160, 0.15);
+            --lilac-soft: #d2a8ff;
+            --lilac-muted: #a371f7;
+            --lilac-glow: rgba(210, 168, 255, 0.15);
+            --border-color: rgba(139, 148, 158, 0.2);
+            --gradient-green: linear-gradient(135deg, var(--green-soft), var(--green-muted));
+            --gradient-lilac: linear-gradient(135deg, var(--lilac-soft), var(--lilac-muted));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Slate 50 */
-            color: #1e293b; /* Slate 800 */
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
         }
 
-        /* --- Chart Container Styling (MANDATORY) --- */
-        .chart-container {
-            position: relative;
+        /* Particle Canvas */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 600px; /* Constraint for readability */
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px; /* Mobile base height */
-            max-height: 400px;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px; /* Tablet/Desktop height */
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 0.75rem 2rem;
+            background: rgba(13, 17, 23, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-lilac);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--green-glow);
+            border: 1px solid var(--green-muted);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--green-soft);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero-badge::before {
+            content: '🇧🇪';
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.1s forwards;
+            opacity: 0;
+        }
+
+        .hero h1 .highlight-green {
+            background: var(--gradient-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero h1 .highlight-lilac {
+            background: var(--gradient-lilac);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-green);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--green-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--lilac-soft);
+            border: 1px solid var(--lilac-muted);
+        }
+
+        .btn-secondary:hover {
+            background: var(--lilac-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            background: var(--gradient-lilac);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.3;
+            line-height: 1;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Alert Box */
+        .alert-box {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 107, 107, 0.05));
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .alert-box.success {
+            background: linear-gradient(135deg, var(--green-glow), rgba(63, 185, 80, 0.05));
+            border-color: var(--green-muted);
+        }
+
+        .alert-box.info {
+            background: linear-gradient(135deg, var(--lilac-glow), rgba(163, 113, 247, 0.05));
+            border-color: var(--lilac-muted);
+        }
+
+        .alert-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .alert-box p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-green);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--green-muted);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:nth-child(even)::before {
+            background: var(--gradient-lilac);
+        }
+
+        .card:nth-child(even):hover {
+            border-color: var(--lilac-muted);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: var(--green-glow);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:nth-child(even) .card-icon {
+            background: var(--lilac-glow);
+        }
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .card ul {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            padding-left: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .card li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Timeline Section */
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--green-muted), var(--lilac-muted));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 3rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3rem;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            background: var(--green-soft);
+            border-radius: 50%;
+            transform: translateX(-6px);
+            box-shadow: 0 0 20px var(--green-glow);
+        }
+
+        .timeline-item:nth-child(even)::before {
+            background: var(--lilac-soft);
+            box-shadow: 0 0 20px var(--lilac-glow);
+        }
+
+        .timeline-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .timeline-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: var(--green-soft);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content h3 {
+            color: var(--lilac-soft);
+        }
+
+        .timeline-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--green-soft);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background: rgba(126, 232, 160, 0.05);
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+            border-color: var(--green-muted);
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item:nth-child(even) .stat-number {
+            background: var(--gradient-lilac);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .checklist li:hover {
+            border-color: var(--green-muted);
+            transform: translateX(10px);
+        }
+
+        .checklist-icon {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--green-glow);
+            color: var(--green-soft);
+            border-radius: 50%;
+            font-size: 0.9rem;
+        }
+
+        .checklist-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .checklist-content p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 4rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            background: var(--gradient-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .footer-links h4 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--green-soft);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* Custom Scrollbar for sleek look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #94a3b8;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
         }
 
-        .card-hover {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* Interactive toggle switch styling */
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: #3b82f6;
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .timeline::before {
+                left: 0;
+            }
+
+            .timeline-item::before {
+                left: -2rem;
+            }
         }
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: #3b82f6;
+
+        @media (max-width: 600px) {
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .hero {
+                padding: 8rem 1.5rem 4rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
         }
     </style>
-    <!-- Chosen Palette: Warm Corporate (Slate, Blue, Amber) - Minimalistic and trustworthy for legal/financial content -->
-    <!-- Application Structure Plan: 
-         1. Hero Section: Sets the context of the report (ARG, Profit, Law).
-         2. Market Context (Quantitative): Shows the financial stakes of the regulated market to contrast with social value.
-         3. Regulatory Core (Interactive Logic): The heart of the app. Users inputs game parameters to see if they need a CJH license.
-         4. ARG Value Analysis (Comparative): Radar chart comparing "Gambling" vs "Social ARG" models.
-         5. Recommendations: Textual synthesis of the "Source Report" findings.
-    -->
-    <!-- Visualization & Content Choices:
-         - Market Data -> Goal: Context -> Bar Chart -> Shows growth of sector.
-         - Regulatory Logic -> Goal: Understanding Law -> Interactive JS Logic (No chart) -> Simulates CJH decision tree.
-         - Value Comparison -> Goal: Compare Models -> Radar Chart -> Shows multi-dimensional trade-offs (Profit vs Social vs Risk).
-         - Justification: Radar charts are excellent for multi-variable qualitative scoring.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
-<body class="flex flex-col min-h-screen">
+<body>
+    <canvas id="particles-canvas"></canvas>
 
-    <!-- Navigation -->
-    <nav class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <span class="text-xl font-bold tracking-tight text-blue-400">Compliance</span>
-                <span class="text-xl font-light">Navigator BE</span>
-            </div>
-            <div class="hidden md:flex space-x-6 text-sm font-medium">
-                <a href="#market" class="hover:text-blue-300 transition-colors">Marché & Profits</a>
-                <a href="#regulation" class="hover:text-blue-300 transition-colors">Cadre Légal</a>
-                <a href="#arg-model" class="hover:text-blue-300 transition-colors">Modèle ARG</a>
-                <a href="#recommendations" class="hover:text-blue-300 transition-colors">Synthèse</a>
-            </div>
-            <button onclick="document.getElementById('about-modal').classList.remove('hidden')" class="md:hidden text-gray-300 hover:text-white">
-                INFO
-            </button>
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">ARG Belgique</div>
+            <ul class="nav-links">
+                <li><a href="#overview">Vue d'ensemble</a></li>
+                <li><a href="#gambling">Jeux de hasard</a></li>
+                <li><a href="#structure">Structure juridique</a></li>
+                <li><a href="#funding">Financement</a></li>
+                <li><a href="#compliance">Conformité</a></li>
+                <li><a href="#contacts">Contacts</a></li>
+            </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="bg-white border-b border-gray-200">
-        <div class="container mx-auto px-4 py-12 md:py-20 text-center max-w-4xl">
-            <h1 class="text-3xl md:text-5xl font-bold text-slate-800 mb-6">
-                Jeux en Ligne & Réalité Alternée (ARG)
+    <header class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Cadre réglementaire 2025-2026</div>
+            <h1>
+                <span class="highlight-green">Jeux en Réalité Alternée</span><br>
+                à <span class="highlight-lilac">Valeur Sociale</span><br>
+                en Belgique
             </h1>
-            <p class="text-lg md:text-xl text-slate-600 leading-relaxed mb-8">
-                Analyse du cadre réglementaire belge, des mécanismes de profit et du potentiel de valeur sociale. Comment innover sans enfreindre la Loi sur les Jeux de Hasard ?
+            <p class="hero-subtitle">
+                Guide complet des cadres juridiques, fiscaux et réglementaires pour lancer un ARG civique 
+                générant de la valeur sociale et économique sur le territoire belge.
             </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="#regulation" class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition">
-                    Tester la Conformité
-                </a>
-                <a href="#arg-model" class="px-6 py-3 bg-slate-100 text-slate-700 font-semibold rounded-lg hover:bg-slate-200 transition">
-                    Voir l'Analyse d'Impact
-                </a>
+            <div class="hero-cta">
+                <a href="#overview" class="btn btn-primary">Découvrir le cadre légal</a>
+                <a href="#compliance" class="btn btn-secondary">Checklist conformité</a>
             </div>
         </div>
     </header>
 
-    <!-- Section 1: Market Context -->
-    <section id="market" class="py-16 bg-slate-50">
-        <div class="container mx-auto px-4">
-            <div class="mb-10 text-center max-w-3xl mx-auto">
-                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">Le Poids Économique du Jeu en Belgique</h2>
-                <p class="text-slate-600">
-                    Avant d'aborder les ARGs (Alternate Reality Games), il est crucial de comprendre le paysage financier réglementé par la Commission des Jeux de Hasard (CJH). Le secteur génère des revenus massifs, attirant une surveillance stricte.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                
-                <!-- Chart 1: Revenue Evolution -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-semibold text-slate-700 mb-2">Évolution du Produit Brut des Jeux (PBJ)</h3>
-                    <p class="text-sm text-slate-500 mb-6">Revenus estimés du secteur en ligne (en Millions €).</p>
-                    <div class="chart-container">
-                        <canvas id="marketChart"></canvas>
-                    </div>
-                    <div class="mt-4 p-4 bg-blue-50 rounded-lg text-sm text-blue-800">
-                        <strong>Insight :</strong> La croissance continue du jeu en ligne (+10-15% par an) pousse le législateur à durcir les règles pour protéger les joueurs, impactant par ricochet les nouveaux formats comme les ARGs.
-                    </div>
+    <main>
+        <!-- Overview Section -->
+        <section id="overview">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-number">01</div>
+                    <h2 class="section-title">Vue d'ensemble</h2>
+                    <p class="section-subtitle">
+                        La Belgique applique l'un des cadres les plus restrictifs d'Europe pour les jeux en ligne, 
+                        particulièrement depuis sa décision de 2018 interdisant les loot boxes.
+                    </p>
                 </div>
 
-                <!-- Contextual Stats -->
-                <div class="space-y-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 card-hover">
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-lg font-semibold text-slate-700">Licences Actives</h3>
-                            <span class="text-2xl font-bold text-amber-500">A+ / B+ / F1</span>
-                        </div>
-                        <p class="text-slate-600 mb-4">
-                            Pour opérer légalement un jeu d'argent, une licence est obligatoire. Les ARGs doivent éviter cette classification pour survivre économiquement sans les coûts de licence.
+                <div class="alert-box info fade-in">
+                    <div class="alert-title">💡 Point clé</div>
+                    <p>
+                        Un ARG à valeur sociale peut prospérer légalement en <strong>évitant tout mécanisme aléatoire payant</strong>, 
+                        en adoptant la structure de <strong>société coopérative agréée comme entreprise sociale (SC agréée ES)</strong>, 
+                        et en obtenant les autorisations municipales pour les activités en espace public.
+                    </p>
+                </div>
+
+                <div class="stats-grid fade-in">
+                    <div class="stat-item">
+                        <div class="stat-number">800K€</div>
+                        <div class="stat-label">Amende maximale pour jeu de hasard illégal</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">21 ans</div>
+                        <div class="stat-label">Âge minimum pour les jeux de hasard (2024)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">13 ans</div>
+                        <div class="stat-label">Âge du consentement numérique (RGPD belge)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">421%</div>
+                        <div class="stat-label">Exemption fiscale Tax Shelter Gaming</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gambling Section -->
+        <section id="gambling" style="background: var(--bg-secondary);">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-number">02</div>
+                    <h2 class="section-title">Jeux de Hasard : La Ligne Rouge</h2>
+                    <p class="section-subtitle">
+                        Avant même de parler impôts, la qualification juridique de vos revenus est cruciale.
+                    </p>
+                </div>
+
+                <div class="alert-box fade-in">
+                    <div class="alert-title">⚠️ Danger des Loot Boxes</div>
+                    <p>
+                        Si votre modèle économique inclut des mécanismes aléatoires payants (ex: acheter un coffre sans savoir 
+                        ce qu'il contient), vous tombez sous le coup de la <strong>Loi sur les jeux de hasard</strong>. 
+                        En Belgique, ces mécanismes sont <strong>illégaux sans licence de classe B+ ou A+</strong>, 
+                        quasi impossibles à obtenir pour un jeu vidéo standard.
+                    </p>
+                </div>
+
+                <div class="cards-grid fade-in">
+                    <div class="card">
+                        <div class="card-icon">📜</div>
+                        <h3>Loi du 7 mai 1999</h3>
+                        <p>
+                            La Commission des Jeux de Hasard définit un jeu de hasard selon quatre critères cumulatifs :
                         </p>
-                        <ul class="space-y-2 text-sm text-slate-500">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Licence A+ : Casinos en ligne (Prestige, Coût élevé)</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>Licence B+ : Salles de jeux automatiques en ligne</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-gray-400 rounded-full mr-2"></span>Licence F1 : Organisateurs de paris</li>
+                        <ul>
+                            <li>Élément ludique</li>
+                            <li>Mise de toute nature</li>
+                            <li>Possibilité de gain ou perte</li>
+                            <li>Élément de hasard <strong>même accessoire</strong></li>
                         </ul>
                     </div>
-
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 card-hover">
-                        <h3 class="text-lg font-semibold text-slate-700 mb-2">La Frontière "Loot Box"</h3>
-                        <p class="text-sm text-slate-600">
-                            La Belgique est pionnière dans l'interdiction des "Loot Boxes" (coffres à butin) payants, les qualifiant de jeux de hasard. <br><br>
-                            <em class="text-red-500 font-medium">Risque pour les ARGs :</em> Si votre jeu contient des éléments aléatoires achetables avec de l'argent réel, il devient illégal sans licence.
+                    <div class="card">
+                        <div class="card-icon">⚖️</div>
+                        <h3>Décision historique 2018</h3>
+                        <p>
+                            La Commission a classifié les loot boxes payantes comme jeux de hasard illégaux, 
+                            analysant FIFA 18, Overwatch et CS:GO.
                         </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 2: Interactive Regulation Framework -->
-    <section id="regulation" class="py-16 bg-white border-t border-slate-200">
-        <div class="container mx-auto px-4">
-            <div class="mb-12 text-center max-w-3xl mx-auto">
-                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">Le Radar Réglementaire (Loi de 1999)</h2>
-                <p class="text-slate-600">
-                    Votre projet de Jeu en Réalité Alternée (ARG) est-il un "Jeu de Hasard" selon la loi belge ? Utilisez ce simulateur interactif basé sur les 3 piliers cumulatifs de la définition légale.
-                </p>
-            </div>
-
-            <!-- Interaction Container -->
-            <div class="max-w-4xl mx-auto bg-slate-900 rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
-                
-                <!-- Input Panel -->
-                <div class="p-8 md:w-1/2 bg-slate-800 text-white">
-                    <h3 class="text-xl font-bold mb-6 text-blue-400">Paramètres du Jeu</h3>
-                    
-                    <div class="space-y-6">
-                        <!-- Switch 1 -->
-                        <div class="flex items-center justify-between">
-                            <div class="pr-4">
-                                <h4 class="font-semibold">Mise (Stake)</h4>
-                                <p class="text-xs text-gray-400">Le joueur doit-il engager une valeur financière pour participer ?</p>
-                            </div>
-                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" name="toggle" id="stakeToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none transition-all duration-300"/>
-                                <label for="stakeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
-                            </div>
-                        </div>
-
-                        <!-- Switch 2 -->
-                        <div class="flex items-center justify-between">
-                            <div class="pr-4">
-                                <h4 class="font-semibold">Hasard (Chance)</h4>
-                                <p class="text-xs text-gray-400">Le résultat dépend-il, même partiellement, du hasard ?</p>
-                            </div>
-                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" name="toggle" id="chanceToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none transition-all duration-300"/>
-                                <label for="chanceToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
-                            </div>
-                        </div>
-
-                        <!-- Switch 3 -->
-                        <div class="flex items-center justify-between">
-                            <div class="pr-4">
-                                <h4 class="font-semibold">Perte/Profit (Prize)</h4>
-                                <p class="text-xs text-gray-400">Y a-t-il un gain ou une perte de valeur possible pour le joueur ?</p>
-                            </div>
-                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
-                                <input type="checkbox" name="toggle" id="prizeToggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer outline-none transition-all duration-300"/>
-                                <label for="prizeToggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-600 cursor-pointer"></label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button id="checkBtn" class="mt-8 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded transition">
-                        Analyser la Classification
-                    </button>
-                </div>
-
-                <!-- Result Panel -->
-                <div class="p-8 md:w-1/2 bg-slate-50 flex flex-col justify-center items-center text-center relative">
-                    <div id="resultIcon" class="text-6xl mb-4 transition-all duration-500 transform scale-100">⚖️</div>
-                    <h3 id="resultTitle" class="text-2xl font-bold text-slate-800 mb-2">En Attente</h3>
-                    <p id="resultDesc" class="text-slate-600 text-sm mb-6">Configurez les paramètres à gauche pour voir le verdict réglementaire.</p>
-                    
-                    <div id="complianceBar" class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-300 hidden">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
-                    </div>
-                </div>
-            </div>
-            
-            <p class="text-center text-xs text-slate-400 mt-6 max-w-2xl mx-auto">
-                *Cet outil est une simulation simplifiée. En Belgique, la CJH a un pouvoir d'appréciation souverain. La présence de ces trois éléments qualifie presque toujours le jeu comme "Jeu de Hasard", nécessitant une licence.
-            </p>
-        </div>
-    </section>
-
-    <!-- Section 3: ARG & Value Model -->
-    <section id="arg-model" class="py-16 bg-slate-50">
-        <div class="container mx-auto px-4">
-            <div class="mb-10 text-center max-w-3xl mx-auto">
-                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4">ARGs : Innovation vs Régulation</h2>
-                <p class="text-slate-600">
-                    Comment un ARG (Jeu en Réalité Alternée) peut-il générer de la valeur (sociale et économique) sans tomber sous le coup de la loi sur les jeux de hasard ? Analyse comparative des modèles.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                
-                <!-- Text Content -->
-                <div class="space-y-6 order-2 lg:order-1">
-                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">Modèle 1 : L'ARG "Social & Skill"</h3>
-                        <p class="text-slate-600 text-sm">
-                            Ce modèle supprime la composante "Hasard". Le progrès dépend des compétences (énigmes, géolocalisation).
-                        </p>
-                        <ul class="mt-3 space-y-1 text-sm text-slate-500 list-disc list-inside">
-                            <li><strong>Revenus :</strong> Partenariats, Tourisme, Freemium (cosmétique).</li>
-                            <li><strong>Valeur Sociale :</strong> Découverte du patrimoine, éducation, team building.</li>
-                            <li><strong>Risque Légal :</strong> Faible (Jeu d'adresse).</li>
+                        <ul>
+                            <li>Les objets virtuels = « gain » au sens de la loi</li>
+                            <li>Même sans conversion en argent réel</li>
+                            <li>Confirmé par le tribunal d'Anvers (janvier 2025)</li>
                         </ul>
                     </div>
-
-                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-500">
-                        <h3 class="text-xl font-bold text-slate-800 mb-2">Modèle 2 : L'ARG "Gambling Hybride"</h3>
-                        <p class="text-slate-600 text-sm">
-                            Intègre des coffres aléatoires ou des paris sur des événements réels.
+                    <div class="card">
+                        <div class="card-icon">✅</div>
+                        <h3>Alternatives Conformes</h3>
+                        <p>
+                            Pour rester dans la légalité et le droit commercial classique, vos transactions doivent être transparentes :
                         </p>
-                        <ul class="mt-3 space-y-1 text-sm text-slate-500 list-disc list-inside">
-                            <li><strong>Revenus :</strong> Très élevés (micro-transactions addictives).</li>
-                            <li><strong>Valeur Sociale :</strong> Controversée (Risque d'addiction).</li>
-                            <li><strong>Risque Légal :</strong> Critique. Illégal sans licence B+ ou A+.</li>
+                        <ul>
+                            <li>Achats directs d'objets connus</li>
+                            <li>Battle passes à progression définie</li>
+                            <li>Récompenses gratuites par gameplay</li>
+                            <li>Affichage des prix en euros obligatoire</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🚨</div>
+                        <h3>Sanctions</h3>
+                        <p>
+                            L'exploitation de jeux de hasard sans licence entraîne :
+                        </p>
+                        <ul>
+                            <li><strong>800 000 €</strong> d'amende maximale</li>
+                            <li><strong>5 ans</strong> d'emprisonnement</li>
+                            <li>Sanctions <strong>doublées</strong> si mineurs impliqués</li>
+                            <li>Loteries interdites (art. 301-304 Code pénal)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Legal Structure Section -->
+        <section id="structure">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-number">03</div>
+                    <h2 class="section-title">Structure Juridique & Fiscalité</h2>
+                    <p class="section-subtitle">
+                        La nature « civique » de votre ARG influence le choix de la structure et donc son imposition.
+                    </p>
+                </div>
+
+                <div class="cards-grid fade-in">
+                    <div class="card">
+                        <div class="card-icon">🏢</div>
+                        <h3>SC Agréée Entreprise Sociale</h3>
+                        <p><strong>Structure optimale recommandée</strong></p>
+                        <ul>
+                            <li>Activité commerciale complète autorisée</li>
+                            <li>Accès aux subsides gaming ET économie sociale</li>
+                            <li>Dividendes plafonnés à <strong>6%</strong> max</li>
+                            <li>ISoc standard (25%, ou 20% PME)</li>
+                            <li>Gouvernance démocratique</li>
+                            <li>Agrément via SPF Économie (2-3 mois)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🤝</div>
+                        <h3>ASBL</h3>
+                        <p><strong>Alternative possible mais limitée</strong></p>
+                        <ul>
+                            <li>Peut exercer des activités commerciales</li>
+                            <li>Bénéfices réinvestis dans le but désintéressé</li>
+                            <li>Régime IPM (avantageux) si activités accessoires</li>
+                            <li>⚠️ Risque de requalification en ISoc si activités commerciales prépondérantes</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Radar Chart -->
-                <div class="order-1 lg:order-2">
-                    <div class="bg-white p-4 rounded-xl shadow-lg border border-slate-100">
-                        <h3 class="text-center font-semibold text-slate-700 mb-4">Analyse Multidimensionnelle</h3>
-                        <div class="chart-container">
-                            <canvas id="radarChart"></canvas>
+                <div class="alert-box success fade-in" style="margin-top: 3rem;">
+                    <div class="alert-title">📅 Changements fiscaux 2026</div>
+                    <p>
+                        <strong>Accord d'été 2025 :</strong> Le seuil de rémunération du dirigeant pour bénéficier du taux réduit d'ISoc (20%) 
+                        passera de <strong>45 000 €</strong> à <strong>50 000 €</strong> dès 2026.
+                    </p>
+                </div>
+
+                <div class="table-container fade-in">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Région</th>
+                                <th>Cadre spécifique</th>
+                                <th>Avantages</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Wallonie</strong></td>
+                                <td>Décret du 20 octobre 2016</td>
+                                <td>Jusqu'à 36 000 € par travailleur désavantagé</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bruxelles</strong></td>
+                                <td>Ordonnance du 23 juillet 2018</td>
+                                <td>Agrément entreprise sociale + programme ECOSOC</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Flandre</strong></td>
+                                <td>VLAIO + Maatwerkdecreet</td>
+                                <td>Soutien emploi personnes éloignées du marché</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Funding Section -->
+        <section id="funding" style="background: var(--bg-secondary);">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-number">04</div>
+                    <h2 class="section-title">Financement & Subsides</h2>
+                    <p class="section-subtitle">
+                        Le Tax Shelter gaming et les fonds régionaux constituent les leviers principaux.
+                    </p>
+                </div>
+
+                <div class="timeline fade-in">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>Tax Shelter Gaming (depuis 2023)</h3>
+                            <p>
+                                Des investisseurs tiers mettent de l'argent dans votre production et bénéficient d'une 
+                                <strong>exemption fiscale de 421%</strong> de leur investissement, soit un rendement net de 105,25%.
+                                Plafond de <strong>2,5 millions €</strong> par jeu. Un ARG civique a de grandes chances de satisfaire 
+                                les critères culturels requis.
+                            </p>
                         </div>
-                        <div class="flex justify-center mt-4 text-xs space-x-4">
-                            <span class="flex items-center"><span class="w-3 h-3 bg-blue-500 rounded-full mr-1"></span> ARG Social (Recommandé)</span>
-                            <span class="flex items-center"><span class="w-3 h-3 bg-red-400 rounded-full mr-1"></span> Gambling Classique (Risqué)</span>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>Wallimage Gaming</h3>
+                            <p>
+                                Jusqu'à <strong>100 000 €</strong> en préproduction et <strong>500 000 €</strong> en production 
+                                sous forme d'avances récupérables pour les projets de jeux vidéo en Wallonie.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>VAF/Game Fund (Flandre)</h3>
+                            <p>
+                                Fonds flamand couvrant le prototypage, la production et la promotion des jeux vidéo 
+                                développés par des studios basés en Flandre.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>Screen.brussels</h3>
+                            <p>
+                                Fonds d'investissement bruxellois avec un maximum de <strong>400 000 €</strong> par projet 
+                                pour les productions audiovisuelles et gaming.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>Creative Europe MEDIA (UE)</h3>
+                            <p>
+                                Programme européen allouant jusqu'à <strong>200 000 €</strong> (60% des coûts éligibles) 
+                                pour le développement de jeux narratifs et expériences immersives. Appel annuel en février.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h3>Fonds ESF+ (2021-2027)</h3>
+                            <p>
+                                <strong>1,3 milliard €</strong> pour la Belgique pour les projets à impact social, 
+                                accessibles via l'Agence FSE (Wallonie-Bruxelles) et WEWIS (Flandre).
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Section 4: Strategic Recommendations -->
-    <section id="recommendations" class="py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-8 text-center">Synthèse & Recommandations Stratégiques</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Card 1 -->
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 font-bold text-xl mb-4">1</div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-3">Éviter le "Hasard"</h3>
-                    <p class="text-slate-600 text-sm">
-                        Pour éviter la régulation CJH, le mécanisme central doit reposer sur l'habileté (Skill) ou la connaissance, jamais sur un RNG (Générateur de Nombres Aléatoires) pour l'attribution de gains de valeur.
-                    </p>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xl mb-4">2</div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-3">Valoriser l'Impact Social</h3>
-                    <p class="text-slate-600 text-sm">
-                        Les ARGs à valeur sociale (éducation, culture) peuvent bénéficier de subsides ou de partenariats publics/privés, offrant un modèle économique alternatif aux micro-transactions prédatrices.
-                    </p>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-bold text-xl mb-4">3</div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-3">Transparence Totale</h3>
-                    <p class="text-slate-600 text-sm">
-                        Si des achats in-app existent, le joueur doit savoir exactement ce qu'il achète. L'opacité (type Loot Box) est la cible principale des régulateurs belges.
+                <div class="alert-box info fade-in" style="margin-top: 3rem;">
+                    <div class="alert-title">💶 TVA & Services numériques</div>
+                    <p>
+                        Les jeux en ligne vendus en B2C sont soumis au taux de TVA standard de <strong>21%</strong> en Belgique. 
+                        Le système <strong>One Stop Shop (OSS)</strong> permet de gérer les ventes transfrontalières B2C dans toute l'UE 
+                        via une déclaration trimestrielle unique. Seuil de déclenchement : <strong>10 000 €</strong> de ventes transfrontalières annuelles.
+                        Exonération petites entreprises : jusqu'à <strong>25 000 €</strong> de CA annuel en Belgique.
                     </p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-sm">© 2024 Analyse Réglementaire & Gaming.</p>
-            <p class="text-xs mt-2 text-slate-500">
-                Ce document est une simulation interactive à but informatif et ne constitue pas un avis juridique formel. Veuillez consulter un avocat spécialisé ou la CJH pour des projets réels.
-            </p>
+        <!-- Compliance Section -->
+        <section id="compliance">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-number">05</div>
+                    <h2 class="section-title">Conformité & Checklist</h2>
+                    <p class="section-subtitle">
+                        Recommandations pratiques pour un ARG civique pérenne en Belgique.
+                    </p>
+                </div>
+
+                <ul class="checklist fade-in">
+                    <li>
+                        <div class="checklist-icon">1</div>
+                        <div class="checklist-content">
+                            <h4>Bannir le hasard payant</h4>
+                            <p>Pas de loot boxes, gacha, ou tout mécanisme aléatoire payant pour éviter le droit pénal et la Commission des Jeux de Hasard.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="checklist-icon">2</div>
+                        <div class="checklist-content">
+                            <h4>Utiliser le Tax Shelter</h4>
+                            <p>Financer la production via le Tax Shelter gaming — le caractère civique facilite l'éligibilité culturelle.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="checklist-icon">3</div>
+                        <div class="checklist-content">
+                            <h4>Choisir la bonne structure</h4>
+                            <p>SC agréée ES recommandée. Si ASBL, veiller à ce que les ventes ingame restent accessoires au but social.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="checklist-icon">4</div>
+                        <div class="checklist-content">
+                            <h4>Conformité e-commerce & TVA</h4>
+                            <p>Affichage des prix en euros, système OSS pour les ventes transfrontalières, respect du Code de droit économique.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="checklist-icon">5</div>
+                        <div class="checklist-content">
+                            <h4>Protection des données (RGPD)</h4>
+                            <p>DPIA obligatoire si géolocalisation + mineurs. Consentement parental vérifiable pour les moins de 13 ans. Politique de confidentialité trilingue.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="checklist-icon">6</div>
+                        <div class="checklist-content">
+                            <h4>Autorisations espace public</h4>
+                            <p>Demande au Bourgmestre 8 semaines avant l'événement (Bruxelles). Vérifier les règlements par commune.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="checklist-icon">7</div>
+                        <div class="checklist-content">
+                            <h4>Assurance RC Organisateur</h4>
+                            <p>Indispensable pour les activités physiques. Couverture typique jusqu'à 2,5 millions € par sinistre.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="checklist-icon">8</div>
+                        <div class="checklist-content">
+                            <h4>Publicité & Marketing</h4>
+                            <p>Mentions « publicité » obligatoires pour l'influence marketing. Interdiction de cibler les mineurs avec des incitations directes à l'achat.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="alert-box fade-in" style="margin-top: 3rem;">
+                    <div class="alert-title">🎮 Si les joueurs gagnent de l'argent (Play-to-Earn)</div>
+                    <p>
+                        <strong>Pour le joueur :</strong> Gains occasionnels taxés à 33% (revenus divers). Activité professionnelle : taux progressifs jusqu'à 50%.<br><br>
+                        <strong>Obligation DAC7 :</strong> En tant que plateforme, déclarer les vendeurs réalisant plus de 30 ventes ou 2 000 € de CA annuel.<br><br>
+                        <strong>Crypto-actifs (MiCA) :</strong> Si jetons ou NFT, règles strictes sauf si NFT « uniques et non fongibles » au sens strict.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contacts Section -->
+        <section id="contacts" style="background: var(--bg-secondary);">
+            <div class="container">
+                <div class="section-header fade-in">
+                    <div class="section-number">06</div>
+                    <h2 class="section-title">Autorités Compétentes</h2>
+                    <p class="section-subtitle">
+                        Contacts et ressources pour chaque domaine réglementaire.
+                    </p>
+                </div>
+
+                <div class="table-container fade-in">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Domaine</th>
+                                <th>Autorité</th>
+                                <th>Site web</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Jeux de hasard</td>
+                                <td>Commission des Jeux de Hasard</td>
+                                <td>gamingcommission.be</td>
+                            </tr>
+                            <tr>
+                                <td>Protection consommateurs</td>
+                                <td>SPF Économie - Inspection économique</td>
+                                <td>economie.fgov.be</td>
+                            </tr>
+                            <tr>
+                                <td>Protection données</td>
+                                <td>Autorité de Protection des Données</td>
+                                <td>autoriteprotectiondonnees.be</td>
+                            </tr>
+                            <tr>
+                                <td>Agrément entreprise sociale</td>
+                                <td>SPF Économie</td>
+                                <td>auc.economie.fgov.be</td>
+                            </tr>
+                            <tr>
+                                <td>Tax Shelter Gaming</td>
+                                <td>Centre du Cinéma et de l'Audiovisuel</td>
+                                <td>audiovisuel.cfwb.be</td>
+                            </tr>
+                            <tr>
+                                <td>Marques Benelux</td>
+                                <td>OBPI</td>
+                                <td>boip.int</td>
+                            </tr>
+                            <tr>
+                                <td>Publicité</td>
+                                <td>Jury d'Éthique Publicitaire</td>
+                                <td>jep.be</td>
+                            </tr>
+                            <tr>
+                                <td>Subsides Wallonie</td>
+                                <td>Wallimage</td>
+                                <td>wallimage.be</td>
+                            </tr>
+                            <tr>
+                                <td>Subsides Flandre</td>
+                                <td>VAF</td>
+                                <td>vaf.be</td>
+                            </tr>
+                            <tr>
+                                <td>Subsides Bruxelles</td>
+                                <td>screen.brussels</td>
+                                <td>screen.brussels</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="alert-box success fade-in" style="margin-top: 3rem;">
+                    <div class="alert-title">📚 Bases légales principales</div>
+                    <p>
+                        • Loi du 7 mai 1999 sur les jeux de hasard<br>
+                        • Code de droit économique (Livres VI, XI, XII, XV)<br>
+                        • Loi du 30 juillet 2018 sur la protection des données<br>
+                        • Code des sociétés et des associations (articles 8:4-8:5)<br>
+                        • Arrêté royal du 28 juin 2019 sur l'agrément des entreprises sociales<br><br>
+                        Tous ces textes sont accessibles sur <strong>ejustice.just.fgov.be</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>ARG Belgique</h3>
+                <p>
+                    Guide complet des cadres juridiques, fiscaux et réglementaires pour les jeux en réalité alternée 
+                    à vocation civique en Belgique. Informations à jour 2025-2026.
+                </p>
+            </div>
+            <div class="footer-links">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="#overview">Vue d'ensemble</a></li>
+                    <li><a href="#gambling">Jeux de hasard</a></li>
+                    <li><a href="#structure">Structure juridique</a></li>
+                    <li><a href="#funding">Financement</a></li>
+                    <li><a href="#compliance">Conformité</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Ressources</h4>
+                <ul>
+                    <li><a href="https://gamingcommission.be" target="_blank">Commission des Jeux</a></li>
+                    <li><a href="https://economie.fgov.be" target="_blank">SPF Économie</a></li>
+                    <li><a href="https://audiovisuel.cfwb.be" target="_blank">Tax Shelter</a></li>
+                    <li><a href="https://ejustice.just.fgov.be" target="_blank">Législation belge</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Guide ARG Belgique. Information à but éducatif — consultez un avocat pour des conseils juridiques personnalisés.</p>
+            <p>Dernière mise à jour : Janvier 2026</p>
         </div>
     </footer>
 
-    <!-- JavaScript Logic -->
     <script>
-        // --- 1. Market Data Visualization (Chart.js) ---
-        const initMarketChart = () => {
-            const ctx = document.getElementById('marketChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['2019', '2020', '2021', '2022', '2023 (Est.)'],
-                    datasets: [{
-                        label: 'Revenus (Millions €)',
-                        data: [280, 310, 350, 420, 480], // Simulated Data representative of growth
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 4,
-                        barThickness: 30
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (context) => `${context.raw} Millions €`
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { borderDash: [2, 2], color: '#e2e8f0' }
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
+        // Particle Animation
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.color = Math.random() > 0.5 ? 
+                    `rgba(126, 232, 160, ${this.opacity})` : 
+                    `rgba(210, 168, 255, ${this.opacity})`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width || 
+                    this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        const opacity = (1 - distance / 150) * 0.15;
+                        const gradient = ctx.createLinearGradient(
+                            particles[i].x, particles[i].y,
+                            particles[j].x, particles[j].y
+                        );
+                        gradient.addColorStop(0, `rgba(126, 232, 160, ${opacity})`);
+                        gradient.addColorStop(1, `rgba(210, 168, 255, ${opacity})`);
+                        
+                        ctx.beginPath();
+                        ctx.strokeStyle = gradient;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
                     }
                 }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
             });
-        };
+            
+            connectParticles();
+            animationId = requestAnimationFrame(animate);
+        }
 
-        // --- 2. Regulatory Logic (Compliance Checker) ---
-        const initComplianceChecker = () => {
-            const stakeToggle = document.getElementById('stakeToggle');
-            const chanceToggle = document.getElementById('chanceToggle');
-            const prizeToggle = document.getElementById('prizeToggle');
-            const checkBtn = document.getElementById('checkBtn');
-            const resultIcon = document.getElementById('resultIcon');
-            const resultTitle = document.getElementById('resultTitle');
-            const resultDesc = document.getElementById('resultDesc');
-            const complianceBar = document.getElementById('complianceBar');
+        // Initialize
+        resizeCanvas();
+        initParticles();
+        animate();
 
-            checkBtn.addEventListener('click', () => {
-                const hasStake = stakeToggle.checked;
-                const hasChance = chanceToggle.checked;
-                const hasPrize = prizeToggle.checked;
-
-                // Animation reset
-                resultIcon.style.transform = "scale(0.5)";
-                setTimeout(() => resultIcon.style.transform = "scale(1)", 200);
-
-                // Belgian Law Logic: The 3 elements must be present for it to be a "Game of Chance"
-                if (hasStake && hasChance && hasPrize) {
-                    // It is a Game of Chance -> STRICT REGULATION
-                    resultIcon.innerHTML = "🛑";
-                    resultTitle.innerHTML = "Licence Requise (Risque Élevé)";
-                    resultTitle.className = "text-2xl font-bold text-red-600 mb-2";
-                    resultDesc.innerHTML = "Votre projet cumule Mise, Hasard et Gain. Il tombe sous la définition stricte de la CJH. Vous devez obtenir une licence (B+ ou A+) pour opérer légalement.";
-                } else if (hasStake && hasPrize && !hasChance) {
-                    // Skill Game
-                    resultIcon.innerHTML = "✅";
-                    resultTitle.innerHTML = "Jeu d'Adresse (Skill Game)";
-                    resultTitle.className = "text-2xl font-bold text-green-600 mb-2";
-                    resultDesc.innerHTML = "L'absence de hasard est votre protection. Si le gain dépend exclusivement de la compétence, ce n'est pas un jeu de hasard. Attention aux zones grises.";
-                } else if (!hasStake && (hasChance || hasPrize)) {
-                    // Free to play / Contest
-                    resultIcon.innerHTML = "🆓";
-                    resultTitle.innerHTML = "Jeu Social / Concours";
-                    resultTitle.className = "text-2xl font-bold text-blue-500 mb-2";
-                    resultDesc.innerHTML = "Sans mise financière de départ, la loi sur les jeux de hasard s'applique rarement, sauf règlementations spécifiques aux concours (Sweepstakes).";
-                } else {
-                    // Other variations
-                    resultIcon.innerHTML = "⚠️";
-                    resultTitle.innerHTML = "Zone Grise / Non-Qualifié";
-                    resultTitle.className = "text-2xl font-bold text-amber-500 mb-2";
-                    resultDesc.innerHTML = "Combinaison inhabituelle. Assurez-vous que la mécanique est claire pour l'utilisateur.";
-                }
-            });
-        };
-
-        // --- 3. ARG Value Model (Radar Chart) ---
-        const initRadarChart = () => {
-            const ctx = document.getElementById('radarChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: [
-                        'Potentiel Profit', 
-                        'Impact Social', 
-                        'Simplicité Légale', 
-                        'Engagement Joueur', 
-                        'Coût Mise en Place'
-                    ],
-                    datasets: [{
-                        label: 'ARG Social & Skill',
-                        data: [60, 90, 85, 80, 70],
-                        fill: true,
-                        backgroundColor: 'rgba(59, 130, 246, 0.2)', // Blue
-                        borderColor: 'rgb(59, 130, 246)',
-                        pointBackgroundColor: 'rgb(59, 130, 246)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgb(59, 130, 246)'
-                    }, {
-                        label: 'Gambling Classique',
-                        data: [95, 20, 10, 65, 40],
-                        fill: true,
-                        backgroundColor: 'rgba(248, 113, 113, 0.2)', // Red
-                        borderColor: 'rgb(248, 113, 113)',
-                        pointBackgroundColor: 'rgb(248, 113, 113)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgb(248, 113, 113)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    elements: {
-                        line: { borderWidth: 3 }
-                    },
-                    scales: {
-                        r: {
-                            angleLines: { display: true },
-                            suggestedMin: 0,
-                            suggestedMax: 100,
-                            grid: { color: '#e2e8f0' },
-                            pointLabels: {
-                                font: { size: 12, family: "'Inter', sans-serif" },
-                                color: '#475569'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
-                }
-            });
-        };
-
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initMarketChart();
-            initComplianceChecker();
-            initRadarChart();
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
         });
 
+        // Navigation scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Fade in on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        fadeElements.forEach(el => observer.observe(el));
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
