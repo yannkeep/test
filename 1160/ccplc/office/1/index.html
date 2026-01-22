@@ -248,7 +248,7 @@ function drawConnections(){for(let i=0;i<particles.length;i++){for(let j=i+1;j<p
 
 function animateParticles(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.update();p.draw()});drawConnections();requestAnimationFrame(animateParticles)}animateParticles();
 
-const MARKDOWN_FOLDER='markdown/';
+const MARKDOWN_FOLDER='./markdown/';
 let files=[];let currentFile=null;let currentView='split';
 
 // ========== LISTE DES FICHIERS À PRÉCHARGER ==========
