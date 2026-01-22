@@ -1,0 +1,1995 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#!BiM - Découvrez la Belgique</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --green-tender: #7dd3a0;
+            --green-light: #a8e6c3;
+            --green-glow: rgba(125, 211, 160, 0.3);
+            --lilas: #b8a9d9;
+            --lilas-light: #d4c9ed;
+            --lilas-glow: rgba(184, 169, 217, 0.3);
+            --text-primary: #f0f0f5;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606075;
+            --gradient-main: linear-gradient(135deg, var(--green-tender), var(--lilas));
+            --gradient-reverse: linear-gradient(135deg, var(--lilas), var(--green-tender));
+            --card-bg: rgba(18, 18, 26, 0.8);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-accent: rgba(125, 211, 160, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* Canvas Particles */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(10, 10, 15, 0.95), transparent);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        nav.scrolled {
+            padding: 1rem 3rem;
+            background: rgba(10, 10, 15, 0.98);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-main);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-main);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-accent);
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px var(--green-glow);
+            }
+            50% {
+                box-shadow: 0 0 40px var(--green-glow), 0 0 60px var(--lilas-glow);
+            }
+        }
+
+        .hero-badge span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--green-tender);
+            letter-spacing: 1px;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--green-tender) 50%, var(--lilas) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .hero-title .highlight {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-title .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0.1em;
+            left: 0;
+            width: 100%;
+            height: 0.15em;
+            background: var(--gradient-main);
+            opacity: 0.6;
+            transform: skewX(-12deg);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-main);
+            color: var(--bg-primary);
+            border: none;
+            box-shadow: 0 4px 25px var(--green-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 40px var(--green-glow), 0 0 60px var(--lilas-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--card-bg);
+            border-color: var(--green-tender);
+            transform: translateY(-3px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .scroll-indicator span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .scroll-indicator .arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid var(--green-tender);
+            border-bottom: 2px solid var(--green-tender);
+            transform: rotate(45deg);
+        }
+
+        /* Section Styles */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 8rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--green-tender);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(180deg, transparent, var(--bg-secondary), transparent);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-main);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--border-accent);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px var(--green-glow);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Regions Section */
+        .regions-section {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .regions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .regions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .region-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .region-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4), 0 0 50px var(--lilas-glow);
+        }
+
+        .region-visual {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .region-card:nth-child(1) .region-visual {
+            background: linear-gradient(135deg, #1e3a2f 0%, #2d5a4a 100%);
+        }
+
+        .region-card:nth-child(2) .region-visual {
+            background: linear-gradient(135deg, #3a2f1e 0%, #5a4a2d 100%);
+        }
+
+        .region-card:nth-child(3) .region-visual {
+            background: linear-gradient(135deg, #2f1e3a 0%, #4a2d5a 100%);
+        }
+
+        .region-visual::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to top, var(--card-bg), transparent);
+        }
+
+        .region-emblem {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 30px rgba(125, 211, 160, 0.5));
+        }
+
+        .region-content {
+            padding: 2rem;
+        }
+
+        .region-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .region-capital {
+            font-size: 0.9rem;
+            color: var(--green-tender);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .region-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .region-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .region-stat {
+            text-align: center;
+        }
+
+        .region-stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--lilas);
+        }
+
+        .region-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* History Timeline */
+        .timeline-section {
+            background: linear-gradient(180deg, transparent, var(--bg-tertiary), transparent);
+        }
+
+        .timeline {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gradient-main);
+            transform: translateX(-50%);
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            position: relative;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: slideInTimeline 0.6s forwards;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+            transform: translateX(50px);
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                padding-left: 60px;
+                padding-right: 0;
+                justify-content: flex-start;
+            }
+        }
+
+        @keyframes slideInTimeline {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-primary);
+            border: 3px solid var(--green-tender);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-dot {
+                left: 20px;
+            }
+        }
+
+        .timeline-item:hover .timeline-dot {
+            background: var(--green-tender);
+            box-shadow: 0 0 20px var(--green-glow);
+        }
+
+        .timeline-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            max-width: 400px;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            border-color: var(--border-accent);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .timeline-year {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green-tender);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Culture Section */
+        .culture-section {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .culture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .culture-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .culture-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .culture-card:hover::before {
+            opacity: 0.3;
+        }
+
+        .culture-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--border-accent);
+        }
+
+        .culture-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .culture-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .culture-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Gastronomy */
+        .gastro-section {
+            background: linear-gradient(180deg, transparent, var(--bg-secondary), transparent);
+        }
+
+        .gastro-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gastro-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .gastro-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .gastro-visual {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+            position: relative;
+        }
+
+        .gastro-visual::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--lilas-glow), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gastro-item:hover .gastro-visual::after {
+            opacity: 1;
+        }
+
+        .gastro-info {
+            padding: 1.5rem;
+        }
+
+        .gastro-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .gastro-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Languages */
+        .languages-section {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .languages-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .language-bubble {
+            background: var(--card-bg);
+            border: 2px solid var(--border-accent);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .language-bubble:nth-child(1) {
+            width: 220px;
+            height: 220px;
+        }
+
+        .language-bubble:nth-child(2) {
+            width: 180px;
+            height: 180px;
+        }
+
+        .language-bubble:nth-child(3) {
+            width: 140px;
+            height: 140px;
+        }
+
+        .language-bubble:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px var(--green-glow);
+            border-color: var(--green-tender);
+        }
+
+        .language-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .language-percent {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .language-region {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        /* Famous Belgians */
+        .famous-section {
+            background: linear-gradient(180deg, transparent, var(--bg-tertiary), transparent);
+        }
+
+        .famous-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .famous-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .famous-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--lilas);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px var(--lilas-glow);
+        }
+
+        .famous-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradient-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+        }
+
+        .famous-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .famous-field {
+            color: var(--green-tender);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .famous-desc {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 2;
+            padding: 5rem 2rem 2rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        @media (max-width: 900px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer-brand .logo {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .footer-brand .slogan {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column h4 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--green-tender);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 4rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--green-tender);
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 900px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 100%;
+                height: 100vh;
+                background: var(--bg-primary);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.4s ease;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-main);
+            border-radius: 4px;
+        }
+
+        /* Selection */
+        ::selection {
+            background: var(--green-tender);
+            color: var(--bg-primary);
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            animation: glitch-1 0.3s infinite linear alternate-reverse;
+            color: var(--green-tender);
+            z-index: -1;
+        }
+
+        .glitch::after {
+            animation: glitch-2 0.3s infinite linear alternate-reverse;
+            color: var(--lilas);
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
+            20% { clip-path: inset(10% 0 70% 0); transform: translate(2px, -2px); }
+            40% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 2px); }
+            100% { clip-path: inset(40% 0 40% 0); transform: translate(2px, -2px); }
+        }
+
+        @keyframes glitch-2 {
+            0% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -2px); }
+            20% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 2px); }
+            40% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -2px); }
+            60% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(2px, -2px); }
+            100% { clip-path: inset(40% 0 40% 0); transform: translate(-2px, 2px); }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">#!BiM</a>
+        <ul class="nav-links">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#stats">Chiffres</a></li>
+            <li><a href="#regions">Régions</a></li>
+            <li><a href="#histoire">Histoire</a></li>
+            <li><a href="#culture">Culture</a></li>
+            <li><a href="#gastronomie">Gastronomie</a></li>
+        </ul>
+        <button class="mobile-menu-btn" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>🇧🇪</span>
+                <span>Bénéficiaires d'Intelligence Mutante</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="glitch" data-text="Belgique">Belgique</span>
+            </h1>
+            <p class="hero-subtitle">
+                Au cœur de l'Europe, un royaume où trois cultures s'entremêlent, 
+                où le chocolat est un art et où les bandes dessinées prennent vie.
+            </p>
+            <div class="cta-group">
+                <a href="#regions" class="btn btn-primary">
+                    Explorer les régions
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#histoire" class="btn btn-secondary">
+                    Découvrir l'histoire
+                </a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="arrow"></div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section" id="stats">
+        <div class="section-header fade-in">
+            <span class="section-tag">// La Belgique en chiffres</span>
+            <h2 class="section-title">Un petit pays, un grand impact</h2>
+            <p class="section-desc">Découvrez les statistiques qui font de la Belgique un pays unique au monde</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card fade-in">
+                <span class="stat-icon">👥</span>
+                <div class="stat-value">11.6M</div>
+                <div class="stat-label">Habitants</div>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-icon">📐</span>
+                <div class="stat-value">30,689</div>
+                <div class="stat-label">km² de superficie</div>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-icon">🏛️</span>
+                <div class="stat-value">1830</div>
+                <div class="stat-label">Année d'indépendance</div>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-icon">🌍</span>
+                <div class="stat-value">3</div>
+                <div class="stat-label">Langues officielles</div>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-icon">🍫</span>
+                <div class="stat-value">220K</div>
+                <div class="stat-label">Tonnes de chocolat/an</div>
+            </div>
+            <div class="stat-card fade-in">
+                <span class="stat-icon">🍺</span>
+                <div class="stat-value">1,500+</div>
+                <div class="stat-label">Variétés de bières</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Regions Section -->
+    <section class="regions-section" id="regions">
+        <div class="section-header fade-in">
+            <span class="section-tag">// Structure fédérale</span>
+            <h2 class="section-title">Trois régions, une nation</h2>
+            <p class="section-desc">La Belgique est un État fédéral composé de trois régions aux identités distinctes</p>
+        </div>
+        <div class="regions-grid">
+            <div class="region-card fade-in">
+                <div class="region-visual">
+                    <span class="region-emblem">🦁</span>
+                </div>
+                <div class="region-content">
+                    <h3 class="region-name">Flandre</h3>
+                    <p class="region-capital">Capitale : Bruxelles (siège du gouvernement)</p>
+                    <p class="region-desc">
+                        Région néerlandophone au nord, la Flandre est le moteur économique de la Belgique. 
+                        Elle abrite des villes historiques comme Bruges, Gand et Anvers, 
+                        célèbres pour leur patrimoine médiéval et leur dynamisme culturel.
+                    </p>
+                    <div class="region-stats">
+                        <div class="region-stat">
+                            <div class="region-stat-value">6.7M</div>
+                            <div class="region-stat-label">Habitants</div>
+                        </div>
+                        <div class="region-stat">
+                            <div class="region-stat-value">13,625</div>
+                            <div class="region-stat-label">km²</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="region-card fade-in">
+                <div class="region-visual">
+                    <span class="region-emblem">🐓</span>
+                </div>
+                <div class="region-content">
+                    <h3 class="region-name">Wallonie</h3>
+                    <p class="region-capital">Capitale : Namur</p>
+                    <p class="region-desc">
+                        Région francophone au sud, la Wallonie offre des paysages verdoyants 
+                        et un riche patrimoine industriel. Les Ardennes, ses forêts profondes 
+                        et ses villages pittoresques en font une destination prisée.
+                    </p>
+                    <div class="region-stats">
+                        <div class="region-stat">
+                            <div class="region-stat-value">3.6M</div>
+                            <div class="region-stat-label">Habitants</div>
+                        </div>
+                        <div class="region-stat">
+                            <div class="region-stat-value">16,844</div>
+                            <div class="region-stat-label">km²</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="region-card fade-in">
+                <div class="region-visual">
+                    <span class="region-emblem">🏛️</span>
+                </div>
+                <div class="region-content">
+                    <h3 class="region-name">Bruxelles-Capitale</h3>
+                    <p class="region-capital">Capitale de la Belgique et de l'UE</p>
+                    <p class="region-desc">
+                        Région bilingue au cœur du pays, Bruxelles est le siège des institutions européennes. 
+                        Cosmopolite et multiculturelle, elle accueille plus de 180 nationalités 
+                        et constitue un carrefour diplomatique mondial.
+                    </p>
+                    <div class="region-stats">
+                        <div class="region-stat">
+                            <div class="region-stat-value">1.2M</div>
+                            <div class="region-stat-label">Habitants</div>
+                        </div>
+                        <div class="region-stat">
+                            <div class="region-stat-value">161</div>
+                            <div class="region-stat-label">km²</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History Section -->
+    <section class="timeline-section" id="histoire">
+        <div class="section-header fade-in">
+            <span class="section-tag">// À travers les âges</span>
+            <h2 class="section-title">Histoire de la Belgique</h2>
+            <p class="section-desc">Des Celtes à l'Union européenne, une terre au destin singulier</p>
+        </div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">57 av. J.-C.</div>
+                    <h3 class="timeline-title">La Gaule Belgique</h3>
+                    <p class="timeline-desc">
+                        Jules César conquiert la région et la nomme "Gallia Belgica". 
+                        Il décrit les Belges comme "les plus braves de tous les Gaulois".
+                    </p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">1830</div>
+                    <h3 class="timeline-title">Indépendance</h3>
+                    <p class="timeline-desc">
+                        La Révolution belge éclate en août. Le 4 octobre, l'indépendance est proclamée. 
+                        Léopold Ier devient le premier roi des Belges en 1831.
+                    </p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">1914-1918</div>
+                    <h3 class="timeline-title">Première Guerre mondiale</h3>
+                    <p class="timeline-desc">
+                        Malgré sa neutralité, la Belgique est envahie par l'Allemagne. 
+                        La résistance héroïque de l'armée belge marque l'histoire.
+                    </p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">1957</div>
+                    <h3 class="timeline-title">Traité de Rome</h3>
+                    <p class="timeline-desc">
+                        La Belgique est membre fondateur de la CEE. 
+                        Bruxelles devient progressivement la capitale de l'Europe.
+                    </p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">1993</div>
+                    <h3 class="timeline-title">État fédéral</h3>
+                    <p class="timeline-desc">
+                        La Constitution est révisée : la Belgique devient officiellement 
+                        un État fédéral composé de régions et de communautés.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Culture Section -->
+    <section class="culture-section" id="culture">
+        <div class="section-header fade-in">
+            <span class="section-tag">// Art de vivre</span>
+            <h2 class="section-title">Culture & Patrimoine</h2>
+            <p class="section-desc">Un héritage artistique et culturel d'une richesse exceptionnelle</p>
+        </div>
+        <div class="culture-grid">
+            <div class="culture-card fade-in">
+                <div class="culture-icon">🎨</div>
+                <h3 class="culture-title">Les Primitifs flamands</h3>
+                <p class="culture-text">
+                    Jan van Eyck, Rogier van der Weyden, Hans Memling... 
+                    Les maîtres flamands du XVe siècle ont révolutionné la peinture 
+                    avec leur technique de l'huile et leur réalisme saisissant.
+                </p>
+            </div>
+            <div class="culture-card fade-in">
+                <div class="culture-icon">💬</div>
+                <h3 class="culture-title">Bande dessinée</h3>
+                <p class="culture-text">
+                    Tintin, les Schtroumpfs, Lucky Luke, Spirou... 
+                    La Belgique est le berceau du 9e art. Bruxelles compte plus de 
+                    50 fresques murales et un musée dédié au comic strip.
+                </p>
+            </div>
+            <div class="culture-card fade-in">
+                <div class="culture-icon">🎭</div>
+                <h3 class="culture-title">Surréalisme</h3>
+                <p class="culture-text">
+                    René Magritte et Paul Delvaux ont fait de la Belgique 
+                    un haut lieu du surréalisme. "Ceci n'est pas une pipe" 
+                    reste une icône de l'art du XXe siècle.
+                </p>
+            </div>
+            <div class="culture-card fade-in">
+                <div class="culture-icon">🏰</div>
+                <h3 class="culture-title">Patrimoine UNESCO</h3>
+                <p class="culture-text">
+                    La Grand-Place de Bruxelles, les beffrois de Flandre et Wallonie, 
+                    les béguinages flamands... 15 sites belges sont inscrits 
+                    au patrimoine mondial de l'UNESCO.
+                </p>
+            </div>
+            <div class="culture-card fade-in">
+                <div class="culture-icon">🎵</div>
+                <h3 class="culture-title">Musique électronique</h3>
+                <p class="culture-text">
+                    Tomorrowland, le plus grand festival de musique électronique au monde, 
+                    se tient chaque année à Boom. La Belgique est aussi le berceau 
+                    de la New Beat et de l'EBM.
+                </p>
+            </div>
+            <div class="culture-card fade-in">
+                <div class="culture-icon">⚽</div>
+                <h3 class="culture-title">Diables Rouges</h3>
+                <p class="culture-text">
+                    L'équipe nationale de football, les "Diables Rouges", 
+                    a atteint la 1ère place du classement FIFA. Kevin De Bruyne, 
+                    Eden Hazard et Thibaut Courtois sont des stars mondiales.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Languages Section -->
+    <section class="languages-section" id="langues">
+        <div class="section-header fade-in">
+            <span class="section-tag">// Multilinguisme</span>
+            <h2 class="section-title">Trois langues officielles</h2>
+            <p class="section-desc">Une diversité linguistique unique qui façonne l'identité nationale</p>
+        </div>
+        <div class="languages-visual fade-in">
+            <div class="language-bubble">
+                <span class="language-name">Néerlandais</span>
+                <span class="language-percent">~60%</span>
+                <span class="language-region">Flandre</span>
+            </div>
+            <div class="language-bubble">
+                <span class="language-name">Français</span>
+                <span class="language-percent">~39%</span>
+                <span class="language-region">Wallonie & Bruxelles</span>
+            </div>
+            <div class="language-bubble">
+                <span class="language-name">Allemand</span>
+                <span class="language-percent">~1%</span>
+                <span class="language-region">Cantons de l'Est</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gastronomy Section -->
+    <section class="gastro-section" id="gastronomie">
+        <div class="section-header fade-in">
+            <span class="section-tag">// Saveurs belges</span>
+            <h2 class="section-title">Gastronomie</h2>
+            <p class="section-desc">Une cuisine généreuse reconnue dans le monde entier</p>
+        </div>
+        <div class="gastro-showcase">
+            <div class="gastro-item fade-in">
+                <div class="gastro-visual">🍫</div>
+                <div class="gastro-info">
+                    <h3 class="gastro-name">Chocolat belge</h3>
+                    <p class="gastro-desc">
+                        Plus de 2000 chocolatiers artisanaux. La praline a été inventée 
+                        à Bruxelles en 1912 par Jean Neuhaus.
+                    </p>
+                </div>
+            </div>
+            <div class="gastro-item fade-in">
+                <div class="gastro-visual">🍺</div>
+                <div class="gastro-info">
+                    <h3 class="gastro-name">Bières trappistes</h3>
+                    <p class="gastro-desc">
+                        6 des 14 brasseries trappistes au monde sont belges. 
+                        La culture brassicole belge est inscrite à l'UNESCO.
+                    </p>
+                </div>
+            </div>
+            <div class="gastro-item fade-in">
+                <div class="gastro-visual">🍟</div>
+                <div class="gastro-info">
+                    <h3 class="gastro-name">Frites belges</h3>
+                    <p class="gastro-desc">
+                        Les vraies frites sont belges ! Double cuisson et variétés 
+                        de pommes de terre spécifiques pour un résultat incomparable.
+                    </p>
+                </div>
+            </div>
+            <div class="gastro-item fade-in">
+                <div class="gastro-visual">🧇</div>
+                <div class="gastro-info">
+                    <h3 class="gastro-name">Gaufres</h3>
+                    <p class="gastro-desc">
+                        Gaufre de Bruxelles légère ou gaufre de Liège caramélisée 
+                        au sucre perlé : deux traditions, deux plaisirs.
+                    </p>
+                </div>
+            </div>
+            <div class="gastro-item fade-in">
+                <div class="gastro-visual">🦪</div>
+                <div class="gastro-info">
+                    <h3 class="gastro-name">Moules-frites</h3>
+                    <p class="gastro-desc">
+                        Plat national par excellence, servi dans une cocotte 
+                        avec des frites croustillantes. Tradition depuis le XIXe siècle.
+                    </p>
+                </div>
+            </div>
+            <div class="gastro-item fade-in">
+                <div class="gastro-visual">🥬</div>
+                <div class="gastro-info">
+                    <h3 class="gastro-name">Chicons au gratin</h3>
+                    <p class="gastro-desc">
+                        Les chicons (endives) ont été découverts par hasard 
+                        à Bruxelles vers 1830. Le gratin est un classique familial.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Famous Belgians -->
+    <section class="famous-section" id="celebrites">
+        <div class="section-header fade-in">
+            <span class="section-tag">// Belges célèbres</span>
+            <h2 class="section-title">Ils ont marqué l'histoire</h2>
+            <p class="section-desc">Des personnalités qui ont rayonné bien au-delà des frontières</p>
+        </div>
+        <div class="famous-grid">
+            <div class="famous-card fade-in">
+                <div class="famous-avatar">🎨</div>
+                <h3 class="famous-name">René Magritte</h3>
+                <p class="famous-field">Peintre surréaliste</p>
+                <p class="famous-desc">
+                    Maître du surréalisme belge, ses œuvres interrogent 
+                    la relation entre image et réalité.
+                </p>
+            </div>
+            <div class="famous-card fade-in">
+                <div class="famous-avatar">🎬</div>
+                <h3 class="famous-name">Jean-Claude Van Damme</h3>
+                <p class="famous-field">Acteur & artiste martial</p>
+                <p class="famous-desc">
+                    "Les Muscles de Bruxelles", star internationale 
+                    des films d'action des années 80-90.
+                </p>
+            </div>
+            <div class="famous-card fade-in">
+                <div class="famous-avatar">✏️</div>
+                <h3 class="famous-name">Hergé</h3>
+                <p class="famous-field">Créateur de Tintin</p>
+                <p class="famous-desc">
+                    Georges Remi a créé le reporter à la houppe, 
+                    vendu à plus de 250 millions d'exemplaires.
+                </p>
+            </div>
+            <div class="famous-card fade-in">
+                <div class="famous-avatar">🎤</div>
+                <h3 class="famous-name">Jacques Brel</h3>
+                <p class="famous-field">Chanteur & poète</p>
+                <p class="famous-desc">
+                    "Ne me quitte pas", "Amsterdam"... 
+                    L'un des plus grands auteurs-compositeurs francophones.
+                </p>
+            </div>
+            <div class="famous-card fade-in">
+                <div class="famous-avatar">🎹</div>
+                <h3 class="famous-name">Stromae</h3>
+                <p class="famous-field">Auteur-compositeur</p>
+                <p class="famous-desc">
+                    Paul Van Haver a conquis le monde avec "Alors on danse" 
+                    et "Papaoutai", mêlant électro et textes profonds.
+                </p>
+            </div>
+            <div class="famous-card fade-in">
+                <div class="famous-avatar">🔬</div>
+                <h3 class="famous-name">Georges Lemaître</h3>
+                <p class="famous-field">Astrophysicien</p>
+                <p class="famous-desc">
+                    Père de la théorie du Big Bang, ce prêtre et physicien 
+                    a révolutionné notre compréhension de l'univers.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo">#!BiM</a>
+                <p class="slogan">Bénéficiaires d'Intelligence Mutante</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">
+                    Un projet dédié à la découverte de la Belgique, 
+                    pays au carrefour de l'Europe.
+                </p>
+            </div>
+            <div class="footer-column">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="#home">Accueil</a></li>
+                    <li><a href="#stats">Chiffres clés</a></li>
+                    <li><a href="#regions">Régions</a></li>
+                    <li><a href="#histoire">Histoire</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Découvrir</h4>
+                <ul>
+                    <li><a href="#culture">Culture</a></li>
+                    <li><a href="#langues">Langues</a></li>
+                    <li><a href="#gastronomie">Gastronomie</a></li>
+                    <li><a href="#celebrites">Célébrités</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Sources</h4>
+                <ul>
+                    <li><a href="https://statbel.fgov.be" target="_blank">Statbel</a></li>
+                    <li><a href="https://belgium.be" target="_blank">Belgium.be</a></li>
+                    <li><a href="https://unesco.org" target="_blank">UNESCO</a></li>
+                    <li><a href="https://visitbelgium.com" target="_blank">Visit Belgium</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-copy">© 2025 #!BiM — Fait avec 💚 et 💜 en Belgique</p>
+            <div class="footer-links">
+                <a href="#">Mentions légales</a>
+                <a href="#">Confidentialité</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // PARTICLE SYSTEM - Advanced Animation
+        // ============================================
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: null, y: null, radius: 150 };
+                this.colors = [
+                    'rgba(125, 211, 160, 0.6)',
+                    'rgba(184, 169, 217, 0.6)',
+                    'rgba(125, 211, 160, 0.3)',
+                    'rgba(184, 169, 217, 0.3)',
+                ];
+                
+                this.init();
+                this.animate();
+                this.setupEvents();
+            }
+
+            init() {
+                this.resize();
+                this.createParticles();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            createParticles() {
+                const particleCount = Math.min(Math.floor((this.canvas.width * this.canvas.height) / 15000), 150);
+                this.particles = [];
+
+                for (let i = 0; i < particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        size: Math.random() * 3 + 1,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5,
+                        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+                        originalX: 0,
+                        originalY: 0,
+                    });
+                    this.particles[i].originalX = this.particles[i].x;
+                    this.particles[i].originalY = this.particles[i].y;
+                }
+            }
+
+            setupEvents() {
+                window.addEventListener('resize', () => {
+                    this.resize();
+                    this.createParticles();
+                });
+
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.x = e.clientX;
+                    this.mouse.y = e.clientY;
+                });
+
+                window.addEventListener('mouseout', () => {
+                    this.mouse.x = null;
+                    this.mouse.y = null;
+                });
+            }
+
+            drawParticles() {
+                this.particles.forEach((particle, index) => {
+                    // Mouse interaction
+                    if (this.mouse.x !== null && this.mouse.y !== null) {
+                        const dx = this.mouse.x - particle.x;
+                        const dy = this.mouse.y - particle.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < this.mouse.radius) {
+                            const force = (this.mouse.radius - distance) / this.mouse.radius;
+                            const angle = Math.atan2(dy, dx);
+                            particle.x -= Math.cos(angle) * force * 3;
+                            particle.y -= Math.sin(angle) * force * 3;
+                        }
+                    }
+
+                    // Movement
+                    particle.x += particle.speedX;
+                    particle.y += particle.speedY;
+
+                    // Boundary check with wrap-around
+                    if (particle.x < 0) particle.x = this.canvas.width;
+                    if (particle.x > this.canvas.width) particle.x = 0;
+                    if (particle.y < 0) particle.y = this.canvas.height;
+                    if (particle.y > this.canvas.height) particle.y = 0;
+
+                    // Draw particle
+                    this.ctx.beginPath();
+                    this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = particle.color;
+                    this.ctx.fill();
+
+                    // Connect particles
+                    this.connectParticles(particle, index);
+                });
+            }
+
+            connectParticles(particle, index) {
+                for (let j = index + 1; j < this.particles.length; j++) {
+                    const dx = particle.x - this.particles[j].x;
+                    const dy = particle.y - this.particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 120) {
+                        const opacity = 1 - distance / 120;
+                        this.ctx.beginPath();
+                        this.ctx.strokeStyle = `rgba(125, 211, 160, ${opacity * 0.2})`;
+                        this.ctx.lineWidth = 1;
+                        this.ctx.moveTo(particle.x, particle.y);
+                        this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.drawParticles();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+        class ScrollAnimations {
+            constructor() {
+                this.nav = document.querySelector('nav');
+                this.fadeElements = document.querySelectorAll('.fade-in');
+                this.init();
+            }
+
+            init() {
+                this.observeFadeElements();
+                this.handleScroll();
+                window.addEventListener('scroll', () => this.handleScroll());
+            }
+
+            handleScroll() {
+                if (window.scrollY > 100) {
+                    this.nav.classList.add('scrolled');
+                } else {
+                    this.nav.classList.remove('scrolled');
+                }
+            }
+
+            observeFadeElements() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => {
+                                entry.target.classList.add('visible');
+                            }, index * 100);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+                this.fadeElements.forEach(el => observer.observe(el));
+            }
+        }
+
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
+        class SmoothScroll {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const target = document.querySelector(anchor.getAttribute('href'));
+                        if (target) {
+                            const offset = 80;
+                            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        class MobileMenu {
+            constructor() {
+                this.btn = document.querySelector('.mobile-menu-btn');
+                this.nav = document.querySelector('.nav-links');
+                this.init();
+            }
+
+            init() {
+                this.btn.addEventListener('click', () => {
+                    this.nav.classList.toggle('active');
+                });
+
+                this.nav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        this.nav.classList.remove('active');
+                    });
+                });
+            }
+        }
+
+        // ============================================
+        // COUNTER ANIMATION
+        // ============================================
+        class CounterAnimation {
+            constructor() {
+                this.counters = document.querySelectorAll('.stat-value');
+                this.init();
+            }
+
+            init() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            this.animateCounter(entry.target);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                this.counters.forEach(counter => observer.observe(counter));
+            }
+
+            animateCounter(element) {
+                const text = element.textContent;
+                const match = text.match(/[\d,.]+/);
+                if (!match) return;
+
+                const numStr = match[0].replace(/,/g, '');
+                const target = parseFloat(numStr);
+                const suffix = text.replace(match[0], '');
+                const hasDecimal = numStr.includes('.');
+                const duration = 2000;
+                const startTime = performance.now();
+
+                const animate = (currentTime) => {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    const current = target * easeOut;
+
+                    if (hasDecimal) {
+                        element.textContent = current.toFixed(1) + suffix;
+                    } else if (target >= 1000) {
+                        element.textContent = Math.floor(current).toLocaleString() + suffix;
+                    } else {
+                        element.textContent = Math.floor(current) + suffix;
+                    }
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        element.textContent = text;
+                    }
+                };
+
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('particles-canvas');
+            new ParticleSystem(canvas);
+            new ScrollAnimations();
+            new SmoothScroll();
+            new MobileMenu();
+            new CounterAnimation();
+        });
+    </script>
+</body>
+</html>
