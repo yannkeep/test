@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>50 000 Milliards $ — Les Pertes Mondiales de l'Humanité</title>
+    <meta name="description" content="Chaque année, l'humanité gaspille 50 000 milliards de dollars. Découvrez l'ampleur du gaspillage mondial et agissez.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+           CSS VARIABLES & THEME
+        ============================================ */
+        :root {
+            /* Dark Theme */
+            --bg-deep: #06060a;
+            --bg-primary: #0a0a10;
+            --bg-elevated: #111118;
+            --bg-card: rgba(18, 18, 26, 0.7);
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            
+            /* Vert Tendre */
+            --mint-50: #f0fdf4;
+            --mint-100: #dcfce7;
+            --mint-200: #bbf7d0;
+            --mint-300: #86efac;
+            --mint-400: #4ade80;
+            --mint-500: #22c55e;
+            --mint-glow: rgba(134, 239, 172, 0.15);
+            
+            /* Lilas */
+            --lilas-50: #faf5ff;
+            --lilas-100: #f3e8ff;
+            --lilas-200: #e9d5ff;
+            --lilas-300: #d8b4fe;
+            --lilas-400: #c084fc;
+            --lilas-500: #a855f7;
+            --lilas-glow: rgba(192, 132, 252, 0.15);
+            
+            /* Text */
+            --text-primary: #f8f8fc;
+            --text-secondary: #a8a8b8;
+            --text-muted: #68687a;
+            
+            /* Gradients */
+            --gradient-hero: linear-gradient(135deg, var(--mint-400) 0%, var(--lilas-400) 100%);
+            --gradient-mint: linear-gradient(135deg, var(--mint-500) 0%, var(--mint-300) 100%);
+            --gradient-lilas: linear-gradient(135deg, var(--lilas-500) 0%, var(--lilas-300) 100%);
+            
+            /* Typography */
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'DM Sans', system-ui, sans-serif;
+            
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 2rem;
+            --space-lg: 4rem;
+            --space-xl: 8rem;
+            
+            /* Transitions */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* ============================================
+           RESET & BASE
+        ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--bg-elevated) var(--bg-deep);
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-deep);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--lilas-400);
+            color: var(--bg-deep);
+        }
+
+        /* Noise Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--bg-elevated); 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* ============================================
+           TYPOGRAPHY
+        ============================================ */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .text-gradient {
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ============================================
+           NAVIGATION
+        ============================================ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: var(--space-sm) var(--space-md);
+            background: rgba(6, 6, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .nav.scrolled {
+            padding: 0.75rem var(--space-md);
+            background: rgba(6, 6, 10, 0.95);
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-md);
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--gradient-hero);
+            transition: width 0.3s var(--ease-out-expo);
+        }
+
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-cta {
+            background: var(--gradient-hero);
+            color: var(--bg-deep) !important;
+            padding: 0.6rem 1.25rem;
+            border-radius: 100px;
+            font-weight: 600 !important;
+        }
+
+        .nav-cta::after { display: none !important; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+        }
+
+        /* ============================================
+           HERO SECTION
+        ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: var(--space-xl) var(--space-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 25% 25%, var(--mint-glow) 0%, transparent 50%),
+                radial-gradient(ellipse at 75% 75%, var(--lilas-glow) 0%, transparent 50%);
+            animation: heroFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(2%, 2%) rotate(2deg); }
+            50% { transform: translate(0, 4%) rotate(0deg); }
+            75% { transform: translate(-2%, 2%) rotate(-2deg); }
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-glass);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--mint-300);
+            margin-bottom: var(--space-md);
+            animation: fadeUp 1s var(--ease-out-expo) backwards;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--mint-400);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
+        }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 12vw, 10rem);
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: var(--space-sm);
+            animation: fadeUp 1s var(--ease-out-expo) 0.1s backwards;
+        }
+
+        .hero-title .amount {
+            display: block;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title .currency {
+            font-size: 0.35em;
+            color: var(--text-muted);
+            vertical-align: top;
+            margin-left: 0.1em;
+            -webkit-text-fill-color: initial;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto var(--space-lg);
+            animation: fadeUp 1s var(--ease-out-expo) 0.2s backwards;
+        }
+
+        .hero-subtitle strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+            animation: fadeUp 1s var(--ease-out-expo) 0.3s backwards;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--mint-300);
+            line-height: 1;
+        }
+
+        .hero-stat-value.lilas { color: var(--lilas-300); }
+
+        .hero-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.25rem;
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            animation: bounce 2s infinite;
+        }
+
+        .hero-scroll svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-muted);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        /* ============================================
+           SECTION BASE
+        ============================================ */
+        section {
+            padding: var(--space-xl) var(--space-md);
+            position: relative;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin: 0 auto var(--space-lg);
+            text-align: center;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--lilas-400);
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: var(--space-sm);
+        }
+
+        .section-desc {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+        }
+
+        /* ============================================
+           LIVE COUNTER SECTION
+        ============================================ */
+        .live-section {
+            background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-primary) 100%);
+        }
+
+        .live-counter-wrapper {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 32px;
+            padding: var(--space-lg);
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .live-counter-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: conic-gradient(from 180deg, var(--mint-glow), transparent, var(--lilas-glow), transparent);
+            opacity: 0.5;
+            animation: rotate 15s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .live-counter-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 100px;
+            color: #f87171;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-md);
+        }
+
+        .live-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .live-amount {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .live-label {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .live-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+
+        .live-item {
+            text-align: center;
+        }
+
+        .live-item-value {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--mint-300);
+        }
+
+        .live-item-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           STATS CARDS
+        ============================================ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: var(--space-md);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-hero);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.1);
+            box-shadow: 
+                0 25px 50px -12px rgba(0,0,0,0.5),
+                0 0 100px var(--mint-glow);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .stat-icon.mint {
+            background: linear-gradient(135deg, var(--mint-glow), transparent);
+            box-shadow: inset 0 0 20px var(--mint-glow);
+        }
+
+        .stat-icon.lilas {
+            background: linear-gradient(135deg, var(--lilas-glow), transparent);
+            box-shadow: inset 0 0 20px var(--lilas-glow);
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 2.75rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value.mint { color: var(--mint-300); }
+        .stat-value.lilas { color: var(--lilas-300); }
+
+        .stat-label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           BAR CHART
+        ============================================ */
+        .chart-section {
+            background: var(--bg-primary);
+            border-radius: 32px;
+            padding: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+
+        .chart-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            margin-bottom: var(--space-md);
+            color: var(--text-secondary);
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .bar-item {
+            display: grid;
+            grid-template-columns: 180px 1fr 100px;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        @media (max-width: 768px) {
+            .bar-item {
+                grid-template-columns: 1fr;
+                gap: var(--space-xs);
+            }
+        }
+
+        .bar-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .bar-track {
+            height: 48px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 12px;
+            width: 0;
+            transition: width 1.5s var(--ease-out-expo);
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: var(--space-sm);
+        }
+
+        .bar-fill.mint {
+            background: var(--gradient-mint);
+            box-shadow: 0 0 40px var(--mint-glow);
+        }
+
+        .bar-fill.lilas {
+            background: var(--gradient-lilas);
+            box-shadow: 0 0 40px var(--lilas-glow);
+        }
+
+        .bar-fill.mixed {
+            background: var(--gradient-hero);
+        }
+
+        .bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+
+        .bar-amount {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* ============================================
+           DONUT CHARTS
+        ============================================ */
+        .donut-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .donut-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: var(--space-md);
+            text-align: center;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+
+        .donut-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .donut-chart {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto var(--space-sm);
+            position: relative;
+        }
+
+        .donut-chart svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .donut-track {
+            fill: none;
+            stroke: var(--bg-elevated);
+            stroke-width: 10;
+        }
+
+        .donut-fill {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 0 283;
+            transition: stroke-dasharray 1.5s var(--ease-out-expo);
+        }
+
+        .donut-fill.mint { stroke: url(#gradientMint); }
+        .donut-fill.lilas { stroke: url(#gradientLilas); }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .donut-value {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .donut-unit {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .donut-label {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .donut-sublabel {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           QUOTE SECTION
+        ============================================ */
+        .quote-section {
+            text-align: center;
+            padding: var(--space-xl) var(--space-md);
+            background: radial-gradient(ellipse at center, var(--bg-primary) 0%, var(--bg-deep) 100%);
+        }
+
+        .quote-mark {
+            font-family: var(--font-display);
+            font-size: 8rem;
+            line-height: 0.5;
+            background: var(--gradient-hero);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.5;
+        }
+
+        .quote-text {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-style: italic;
+            color: var(--text-primary);
+            max-width: 900px;
+            margin: var(--space-md) auto;
+            line-height: 1.4;
+        }
+
+        .quote-author {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* ============================================
+           INFOGRAPHIC SECTION
+        ============================================ */
+        .infographic {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: var(--space-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .info-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: var(--bg-glass);
+        }
+
+        .info-card-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+        }
+
+        .info-card-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .info-card-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .info-card-stat:last-child {
+            border-bottom: none;
+        }
+
+        .info-card-stat-label {
+            color: var(--text-muted);
+        }
+
+        .info-card-stat-value {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .info-card-stat-value.mint { color: var(--mint-300); }
+        .info-card-stat-value.lilas { color: var(--lilas-300); }
+
+        /* ============================================
+           CTA SECTION
+        ============================================ */
+        .cta-section {
+            background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-primary) 100%);
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .cta-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 24px;
+            padding: var(--space-lg);
+            transition: all 0.5s var(--ease-out-expo);
+        }
+
+        .cta-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .cta-card.featured {
+            background: var(--gradient-hero);
+            border: none;
+        }
+
+        .cta-card.featured * {
+            color: var(--bg-deep);
+        }
+
+        .cta-card-title {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .cta-card-text {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        .cta-card.featured .cta-card-text {
+            color: rgba(0,0,0,0.7);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.3s var(--ease-out-expo);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--bg-deep);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn:hover {
+            transform: translateX(4px);
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* ============================================
+           FOOTER
+        ============================================ */
+        footer {
+            background: var(--bg-deep);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: var(--space-lg) var(--space-md);
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-sources {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto var(--space-md);
+            line-height: 1.8;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--mint-300);
+        }
+
+        /* ============================================
+           SCROLL ANIMATIONS
+        ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s var(--ease-out-expo);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ============================================
+           UTILITY CLASSES
+        ============================================ */
+        .bg-primary { background: var(--bg-primary); }
+        .text-mint { color: var(--mint-300); }
+        .text-lilas { color: var(--lilas-300); }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 768px) {
+            section { padding: var(--space-lg) var(--space-sm); }
+            .hero { padding: var(--space-lg) var(--space-sm); }
+            .hero-stats { gap: var(--space-md); }
+            .live-breakdown { gap: var(--space-sm); }
+            .chart-section { padding: var(--space-md); }
+            .cta-card { padding: var(--space-md); }
+        }
+
+        /* ============================================
+           ACCESSIBILITY
+        ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles */
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--mint-400);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Gradients -->
+    <svg width="0" height="0" aria-hidden="true">
+        <defs>
+            <linearGradient id="gradientMint" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#22c55e"/>
+                <stop offset="100%" style="stop-color:#86efac"/>
+            </linearGradient>
+            <linearGradient id="gradientLilas" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#a855f7"/>
+                <stop offset="100%" style="stop-color:#d8b4fe"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="Navigation principale">
+        <div class="nav-logo text-gradient">Pertes Mondiales</div>
+        <ul class="nav-links">
+            <li><a href="#criminalite">Criminalité</a></li>
+            <li><a href="#travail">Travail</a></li>
+            <li><a href="#environnement">Environnement</a></li>
+            <li><a href="#conflits">Conflits</a></li>
+            <li><a href="#agir" class="nav-cta">Agir</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-bg">
+            <div class="hero-grid"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                Données 2024-2025
+            </div>
+            <h1 id="hero-title" class="hero-title">
+                <span class="amount" id="heroAmount">50 000</span>
+                <span class="currency">milliards $</span>
+            </h1>
+            <p class="hero-subtitle">
+                Chaque année, l'humanité <strong>gaspille près de 50% du PIB mondial</strong> en inefficiences systémiques, conflits, pollutions et dysfonctionnements institutionnels.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value" id="perSecond">$1,58M</div>
+                    <div class="hero-stat-label">Perdu par seconde</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value lilas" id="sincePage">$0</div>
+                    <div class="hero-stat-label">Depuis cette page</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value">$137 Md</div>
+                    <div class="hero-stat-label">Perdu par jour</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll" aria-hidden="true">
+            <span>Découvrir</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Live Counter Section -->
+    <section class="live-section" aria-labelledby="live-title">
+        <div class="container">
+            <div class="live-counter-wrapper reveal">
+                <div class="live-counter-inner">
+                    <div class="live-badge">
+                        <span class="live-badge-dot"></span>
+                        EN TEMPS RÉEL
+                    </div>
+                    <h2 id="live-title" class="live-amount" id="liveTotal">$0</h2>
+                    <p class="live-label">perdus depuis que vous avez ouvert cette page</p>
+                    <div class="live-breakdown">
+                        <div class="live-item">
+                            <div class="live-item-value" id="liveViolence">$0</div>
+                            <div class="live-item-label">Violence & Conflits</div>
+                        </div>
+                        <div class="live-item">
+                            <div class="live-item-value" id="liveCyber">$0</div>
+                            <div class="live-item-label">Cybercriminalité</div>
+                        </div>
+                        <div class="live-item">
+                            <div class="live-item-value" id="liveClimate">$0</div>
+                            <div class="live-item-label">Environnement</div>
+                        </div>
+                        <div class="live-item">
+                            <div class="live-item-value" id="liveWork">$0</div>
+                            <div class="live-item-label">Désengagement</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Economic Crime Section -->
+    <section id="criminalite" aria-labelledby="crime-title">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">01 — Criminalité Économique</div>
+                <h2 id="crime-title" class="section-title">
+                    <span class="text-gradient">15 000 milliards $</span><br>
+                    prélevés silencieusement
+                </h2>
+                <p class="section-desc">
+                    La cybercriminalité, la corruption et le blanchiment d'argent représentent 15% du PIB mondial — un prélèvement invisible sur la richesse collective.
+                </p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-icon mint">💻</div>
+                    <div class="stat-value mint">10,5 T$</div>
+                    <div class="stat-label">Cybercriminalité</div>
+                    <p class="stat-desc">Plus que le PIB combiné du Japon et de l'Allemagne. +33% de pertes aux États-Unis en un an.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-1">
+                    <div class="stat-icon lilas">🏛️</div>
+                    <div class="stat-value lilas">5,75 T$</div>
+                    <div class="stat-label">Corruption mondiale</div>
+                    <p class="stat-desc">5% du PIB mondial. 10× l'aide au développement versée aux pays pauvres.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-2">
+                    <div class="stat-icon mint">💸</div>
+                    <div class="stat-value mint">5,5 T$</div>
+                    <div class="stat-label">Blanchiment d'argent</div>
+                    <p class="stat-desc">2-5% du PIB mondial blanchi. Seulement 0,1% récupéré par les autorités.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-3">
+                    <div class="stat-icon lilas">📊</div>
+                    <div class="stat-value lilas">5%</div>
+                    <div class="stat-label">Fraude interne</div>
+                    <p class="stat-desc">5% des revenus des entreprises perdus en détournements et falsifications comptables.</p>
+                </div>
+            </div>
+
+            <div class="chart-section reveal">
+                <h3 class="chart-title">Répartition des pertes économiques criminelles</h3>
+                <div class="bar-chart" role="img" aria-label="Graphique des pertes économiques">
+                    <div class="bar-item">
+                        <span class="bar-label">Cybercriminalité</span>
+                        <div class="bar-track">
+                            <div class="bar-fill mint" data-width="70"></div>
+                        </div>
+                        <span class="bar-amount text-mint">10,5 T$</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Corruption</span>
+                        <div class="bar-track">
+                            <div class="bar-fill lilas" data-width="38"></div>
+                        </div>
+                        <span class="bar-amount text-lilas">5,75 T$</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Blanchiment</span>
+                        <div class="bar-track">
+                            <div class="bar-fill mixed" data-width="37"></div>
+                        </div>
+                        <span class="bar-amount">5,5 T$</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Fraude professionnelle</span>
+                        <div class="bar-track">
+                            <div class="bar-fill mint" data-width="33"></div>
+                        </div>
+                        <span class="bar-amount text-mint">5 T$</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Engagement Section -->
+    <section id="travail" class="bg-primary" aria-labelledby="work-title">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">02 — Désengagement au Travail</div>
+                <h2 id="work-title" class="section-title">
+                    <span class="text-gradient">8,9 trillions $</span><br>
+                    de potentiel gaspillé
+                </h2>
+                <p class="section-desc">
+                    9% du PIB mondial perdu à cause du désengagement. Seul 1 travailleur sur 5 se dit véritablement engagé dans son travail.
+                </p>
+            </div>
+
+            <div class="donut-grid">
+                <div class="donut-card reveal">
+                    <div class="donut-chart">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="donut-track" cx="50" cy="50" r="45"/>
+                            <circle class="donut-fill mint" cx="50" cy="50" r="45" data-percent="21"/>
+                        </svg>
+                        <div class="donut-center">
+                            <div class="donut-value text-mint">21%</div>
+                            <div class="donut-unit">engagés</div>
+                        </div>
+                    </div>
+                    <div class="donut-label">Engagement mondial</div>
+                    <div class="donut-sublabel">Gallup 2024</div>
+                </div>
+                <div class="donut-card reveal reveal-delay-1">
+                    <div class="donut-chart">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="donut-track" cx="50" cy="50" r="45"/>
+                            <circle class="donut-fill lilas" cx="50" cy="50" r="45" data-percent="13"/>
+                        </svg>
+                        <div class="donut-center">
+                            <div class="donut-value text-lilas">13%</div>
+                            <div class="donut-unit">engagés</div>
+                        </div>
+                    </div>
+                    <div class="donut-label">Europe</div>
+                    <div class="donut-sublabel">Taux le plus bas</div>
+                </div>
+                <div class="donut-card reveal reveal-delay-2">
+                    <div class="donut-chart">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="donut-track" cx="50" cy="50" r="45"/>
+                            <circle class="donut-fill mint" cx="50" cy="50" r="45" data-percent="71"/>
+                        </svg>
+                        <div class="donut-center">
+                            <div class="donut-value text-mint">71%</div>
+                            <div class="donut-unit">inutiles</div>
+                        </div>
+                    </div>
+                    <div class="donut-label">Réunions</div>
+                    <div class="donut-sublabel">Jugées improductives</div>
+                </div>
+                <div class="donut-card reveal reveal-delay-3">
+                    <div class="donut-chart">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="donut-track" cx="50" cy="50" r="45"/>
+                            <circle class="donut-fill lilas" cx="50" cy="50" r="45" data-percent="68"/>
+                        </svg>
+                        <div class="donut-center">
+                            <div class="donut-value text-lilas">68%</div>
+                            <div class="donut-unit">manquent</div>
+                        </div>
+                    </div>
+                    <div class="donut-label">Temps de concentration</div>
+                    <div class="donut-sublabel">Microsoft 2025</div>
+                </div>
+            </div>
+
+            <div class="infographic reveal">
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-card-icon">⏰</div>
+                        <h3 class="info-card-title">La journée de travail fragmentée</h3>
+                    </div>
+                    <div class="info-card-content">
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Interruptions par jour</span>
+                            <span class="info-card-stat-value mint">275</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Messages Teams quotidiens</span>
+                            <span class="info-card-stat-value lilas">153</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Emails quotidiens</span>
+                            <span class="info-card-stat-value mint">117</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Fréquence d'interruption</span>
+                            <span class="info-card-stat-value lilas">2 min</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-card-icon">📋</div>
+                        <h3 class="info-card-title">Le coût de la bureaucratie</h3>
+                    </div>
+                    <div class="info-card-content">
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Conformité réglementaire (US)</span>
+                            <span class="info-card-stat-value mint">2,15 T$</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">% du PIB américain</span>
+                            <span class="info-card-stat-value lilas">7%</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Coût par ménage/an</span>
+                            <span class="info-card-stat-value mint">$16 016</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Heures de conformité fiscale</span>
+                            <span class="info-card-stat-value lilas">7,9 Md</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Environment Section -->
+    <section id="environnement" aria-labelledby="env-title">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">03 — Dégradation Environnementale</div>
+                <h2 id="env-title" class="section-title">
+                    <span class="text-gradient">12-20 trillions $</span><br>
+                    de destruction annuelle
+                </h2>
+                <p class="section-desc">
+                    La pollution tue 8 millions de personnes par an. Le changement climatique coûte 16 millions de dollars par heure.
+                </p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-icon lilas">🌫️</div>
+                    <div class="stat-value lilas">8,1 T$</div>
+                    <div class="stat-label">Pollution atmosphérique</div>
+                    <p class="stat-desc">6,1% du PIB mondial. 8 millions de décès prématurés par an.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-1">
+                    <div class="stat-icon mint">🌡️</div>
+                    <div class="stat-value mint">38 T$</div>
+                    <div class="stat-label">Dommages climatiques 2050</div>
+                    <p class="stat-desc">Projection: -19% du PIB mondial. 6× le coût d'atténuation nécessaire.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-2">
+                    <div class="stat-icon lilas">🌍</div>
+                    <div class="stat-value lilas">23 T$</div>
+                    <div class="stat-label">Dégradation des terres</div>
+                    <p class="stat-desc">40% de la surface terrestre dégradée. Pertes projetées d'ici 2050.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-3">
+                    <div class="stat-icon mint">🐟</div>
+                    <div class="stat-value mint">83 Md$</div>
+                    <div class="stat-label">Surpêche mondiale</div>
+                    <p class="stat-desc">37,7% des stocks surexploités. 34% des pêcheries opèrent à perte.</p>
+                </div>
+            </div>
+
+            <div class="chart-section reveal">
+                <h3 class="chart-title">Dépendance économique à la nature</h3>
+                <div class="bar-chart">
+                    <div class="bar-item">
+                        <span class="bar-label">PIB dépendant de la nature</span>
+                        <div class="bar-track">
+                            <div class="bar-fill mint" data-width="55"></div>
+                        </div>
+                        <span class="bar-amount text-mint">55%</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Externalités non comptées</span>
+                        <div class="bar-track">
+                            <div class="bar-fill lilas" data-width="25"></div>
+                        </div>
+                        <span class="bar-amount text-lilas">10-25 T$</span>
+                    </div>
+                    <div class="bar-item">
+                        <span class="bar-label">Pertes assurées 2024</span>
+                        <div class="bar-track">
+                            <div class="bar-fill mixed" data-width="15"></div>
+                        </div>
+                        <span class="bar-amount">$146 Md</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote -->
+    <section class="quote-section" aria-labelledby="quote">
+        <div class="container reveal">
+            <div class="quote-mark" aria-hidden="true">"</div>
+            <blockquote id="quote" class="quote-text">
+                L'humanité dispose des moyens de résoudre la plupart de ses défis — pauvreté, maladies évitables, changement climatique — mais gaspille une fraction substantielle de ses ressources en inefficiences, conflits et prédations.
+            </blockquote>
+            <cite class="quote-author">— Synthèse des rapports Gallup, OMS, FMI & SIPRI 2024</cite>
+        </div>
+    </section>
+
+    <!-- Conflicts Section -->
+    <section id="conflits" class="bg-primary" aria-labelledby="conflict-title">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">04 — Violence & Conflits</div>
+                <h2 id="conflict-title" class="section-title">
+                    <span class="text-gradient">19,1 trillions $</span><br>
+                    le prix de la discorde
+                </h2>
+                <p class="section-desc">
+                    13,5% du PIB mondial. 56 conflits actifs — le niveau le plus élevé depuis 1945. 110 millions de personnes déplacées.
+                </p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card reveal">
+                    <div class="stat-icon mint">⚔️</div>
+                    <div class="stat-value mint">2 718 Md$</div>
+                    <div class="stat-label">Dépenses militaires 2024</div>
+                    <p class="stat-desc">+9,4% en un an. La plus forte hausse depuis la Guerre froide.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-1">
+                    <div class="stat-icon lilas">🧠</div>
+                    <div class="stat-value lilas">1 T$</div>
+                    <div class="stat-label">Santé mentale</div>
+                    <p class="stat-desc">16 T$ cumulés projetés d'ici 2030. 1 milliard de personnes touchées.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-2">
+                    <div class="stat-icon mint">👥</div>
+                    <div class="stat-value mint">110 M</div>
+                    <div class="stat-label">Personnes déplacées</div>
+                    <p class="stat-desc">Record historique de déplacements forcés dans le monde.</p>
+                </div>
+                <div class="stat-card reveal reveal-delay-3">
+                    <div class="stat-icon lilas">⚖️</div>
+                    <div class="stat-value lilas">12-28 T$</div>
+                    <div class="stat-label">Inégalité de genre</div>
+                    <p class="stat-desc">Manque à gagner mondial. +26% PIB si parité économique atteinte.</p>
+                </div>
+            </div>
+
+            <div class="infographic reveal">
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-card-icon">🏛️</div>
+                        <h3 class="info-card-title">Érosion institutionnelle</h3>
+                    </div>
+                    <div class="info-card-content">
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Population en autocratie</span>
+                            <span class="info-card-stat-value lilas">72%</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Années de déclin démocratique</span>
+                            <span class="info-card-stat-value mint">19</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Confiance institutionnelle</span>
+                            <span class="info-card-stat-value lilas">-25 pts</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <div class="info-card-icon">💰</div>
+                        <h3 class="info-card-title">Évasion fiscale mondiale</h3>
+                    </div>
+                    <div class="info-card-content">
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Pertes fiscales annuelles</span>
+                            <span class="info-card-stat-value mint">$492 Md</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Richesse offshore</span>
+                            <span class="info-card-stat-value lilas">8 T$</span>
+                        </div>
+                        <div class="info-card-stat">
+                            <span class="info-card-stat-label">Profits en paradis fiscaux</span>
+                            <span class="info-card-stat-value mint">30-40%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="agir" class="cta-section" aria-labelledby="cta-title">
+        <div class="container">
+            <div class="section-header reveal">
+                <div class="section-tag">05 — Passer à l'Action</div>
+                <h2 id="cta-title" class="section-title">
+                    Chaque <span class="text-gradient">amélioration marginale</span><br>
+                    représente des milliards
+                </h2>
+                <p class="section-desc">
+                    Le rendement des investissements préventifs est systématiquement positif. 1$ dans le Clean Air Act = 30$ de bénéfices. Les coûts d'atténuation climatique sont 6× inférieurs aux dommages évités.
+                </p>
+            </div>
+
+            <div class="cta-grid">
+                <div class="cta-card reveal">
+                    <h3 class="cta-card-title">Pour les citoyens</h3>
+                    <p class="cta-card-text">
+                        Exigez la transparence, soutenez les lanceurs d'alerte, votez pour des politiques anti-corruption et pro-climat. Chaque voix compte.
+                    </p>
+                    <a href="#" class="btn btn-secondary">
+                        S'informer
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="cta-card featured reveal reveal-delay-1">
+                    <h3 class="cta-card-title">Pour les décideurs</h3>
+                    <p class="cta-card-text">
+                        Téléchargez le rapport complet avec méthodologie, données sources et recommandations de politiques publiques basées sur les preuves.
+                    </p>
+                    <a href="#" class="btn btn-primary">
+                        Télécharger le rapport
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="cta-card reveal reveal-delay-2">
+                    <h3 class="cta-card-title">Pour les entreprises</h3>
+                    <p class="cta-card-text">
+                        L'engagement des employés, la conformité éthique et la durabilité ne sont pas des coûts — ce sont des investissements rentables.
+                    </p>
+                    <a href="#" class="btn btn-secondary">
+                        Études de cas
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo text-gradient">Pertes Mondiales de l'Humanité</div>
+            <p class="footer-sources">
+                <strong>Sources :</strong> Gallup State of the Global Workplace 2024, Institute for Economics & Peace, SIPRI, OMS, FMI, Banque mondiale, Tax Justice Network, Cybersecurity Ventures, Swiss Re, IPBES, CNULCD, Edelman Trust Barometer, Microsoft Work Trend Index, ACFE Report to the Nations.
+            </p>
+            <div class="footer-links">
+                <a href="#">Méthodologie</a>
+                <a href="#">Sources complètes</a>
+                <a href="#">Données ouvertes</a>
+                <a href="#">Contact</a>
+                <a href="#">Partager</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================
+        // LIVE COUNTER SYSTEM
+        // ============================================
+        
+        // Rates per second (based on annual ~50T$)
+        const RATES = {
+            total: 1585489,      // $50T/year ≈ $1.58M/sec
+            violence: 605800,    // $19.1T/year
+            cyber: 333000,       // $10.5T/year
+            climate: 380000,     // $12T/year
+            work: 282000         // $8.9T/year
+        };
+
+        const startTime = Date.now();
+        
+        function formatCurrency(num, short = false) {
+            if (num >= 1e12) return '$' + (num / 1e12).toFixed(2) + ' T';
+            if (num >= 1e9) return '$' + (num / 1e9).toFixed(2) + ' Md';
+            if (num >= 1e6) return '$' + (num / 1e6).toFixed(short ? 1 : 2) + ' M';
+            if (num >= 1e3) return '$' + (num / 1e3).toFixed(0) + ' K';
+            return '$' + num.toFixed(0);
+        }
+
+        function updateCounters() {
+            const elapsed = (Date.now() - startTime) / 1000;
+            
+            // Live section counters
+            const liveTotal = document.getElementById('liveTotal');
+            if (liveTotal) liveTotal.textContent = formatCurrency(elapsed * RATES.total);
+            
+            const liveViolence = document.getElementById('liveViolence');
+            if (liveViolence) liveViolence.textContent = formatCurrency(elapsed * RATES.violence, true);
+            
+            const liveCyber = document.getElementById('liveCyber');
+            if (liveCyber) liveCyber.textContent = formatCurrency(elapsed * RATES.cyber, true);
+            
+            const liveClimate = document.getElementById('liveClimate');
+            if (liveClimate) liveClimate.textContent = formatCurrency(elapsed * RATES.climate, true);
+            
+            const liveWork = document.getElementById('liveWork');
+            if (liveWork) liveWork.textContent = formatCurrency(elapsed * RATES.work, true);
+            
+            // Hero counter
+            const sincePage = document.getElementById('sincePage');
+            if (sincePage) sincePage.textContent = formatCurrency(elapsed * RATES.total, true);
+            
+            requestAnimationFrame(updateCounters);
+        }
+        
+        updateCounters();
+
+        // ============================================
+        // HERO NUMBER ANIMATION
+        // ============================================
+        
+        function animateNumber(element, target, duration = 2500) {
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 4);
+                const current = Math.floor(target * easeOut);
+                
+                element.textContent = current.toLocaleString('fr-FR');
+                
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Animate hero number
+        const heroAmount = document.getElementById('heroAmount');
+        if (heroAmount) {
+            setTimeout(() => animateNumber(heroAmount, 50000), 300);
+        }
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate bars
+                    entry.target.querySelectorAll('.bar-fill').forEach(bar => {
+                        const width = bar.dataset.width;
+                        setTimeout(() => bar.style.width = width + '%', 200);
+                    });
+                    
+                    // Animate donuts
+                    entry.target.querySelectorAll('.donut-fill').forEach(donut => {
+                        const percent = donut.dataset.percent;
+                        const circumference = 2 * Math.PI * 45;
+                        const dashArray = (percent / 100) * circumference;
+                        setTimeout(() => {
+                            donut.style.strokeDasharray = `${dashArray} ${circumference}`;
+                        }, 200);
+                    });
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        
+        const nav = document.querySelector('.nav');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ============================================
+        // PARALLAX (subtle)
+        // ============================================
+        
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.2}px)`;
+                hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.3;
+            }
+        });
+
+        console.log('🌍 Pertes Mondiales — Site chargé');
+        console.log('📊 Données: Gallup, IEP, SIPRI, OMS, FMI, Banque mondiale');
+    </script>
+</body>
+</html>
