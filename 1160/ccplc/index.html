@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCPLC — Solutions indépendantes</title>
+<style>
+:root{
+  --bg:#050508;
+  --panel:rgba(16,18,30,0.8);
+  --border:#1f2238;
+  --text:#eef0f6;
+  --muted:#a6aac8;
+  --green:#7cffc4;
+  --lilas:#cbb7ff;
+  --cyan:#7cf5ff;
+  --glow-green:rgba(124,255,196,0.5);
+  --glow-lilas:rgba(203,183,255,0.5);
+  --radius:16px;
+  --font:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ========== CANVAS PARTICULES ========== */
+#particles{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ========== GRILLE ========== */
+.grid-bg{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  background-image:
+    linear-gradient(rgba(124,255,196,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(203,183,255,0.02) 1px, transparent 1px);
+  background-size:80px 80px;
+  pointer-events:none;
+}
+
+/* ========== ORBES FLOTTANTES ========== */
+.orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(120px);
+  pointer-events:none;
+  z-index:1;
+  opacity:0.6;
+}
+.orb-1{
+  width:800px;height:800px;
+  background:radial-gradient(circle,rgba(124,255,196,0.2),transparent 70%);
+  top:-300px;left:-300px;
+  animation:orbFloat1 25s ease-in-out infinite;
+}
+.orb-2{
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(203,183,255,0.18),transparent 70%);
+  bottom:-200px;right:-200px;
+  animation:orbFloat2 30s ease-in-out infinite;
+}
+.orb-3{
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(124,245,255,0.15),transparent 70%);
+  top:40%;left:60%;
+  animation:orbFloat3 20s ease-in-out infinite;
+}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(150px,100px) scale(1.1)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-120px,-80px) scale(1.15)}}
+@keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.3)}}
+
+/* ========== NOISE TEXTURE ========== */
+.noise{
+  position:fixed;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  opacity:0.03;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ========== CONTENT WRAPPER ========== */
+.content-wrapper{
+  position:relative;
+  z-index:10;
+}
+
+.container{max-width:1100px;margin:auto;padding:0 1rem}
+
+/* ========== HEADER ========== */
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:var(--panel);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(124,255,196,0.1);
+  box-shadow:0 0 60px rgba(0,0,0,0.5);
+}
+header::before{
+  content:"";
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--green),var(--lilas),transparent);
+  opacity:0.5;
+}
+
+.header-inner{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  min-height:70px;
+}
+
+.brand{
+  font-weight:900;
+  font-size:1.4rem;
+  letter-spacing:.15em;
+  background:linear-gradient(135deg,var(--green),var(--lilas));
+  -webkit-background-clip:text;
+  color:transparent;
+  text-shadow:none;
+  position:relative;
+}
+.brand::after{
+  content:"CCPLC";
+  position:absolute;
+  left:0;top:0;
+  background:linear-gradient(135deg,var(--green),var(--lilas));
+  -webkit-background-clip:text;
+  color:transparent;
+  filter:blur(20px);
+  opacity:0.5;
+}
+
+nav a{
+  margin-left:1.5rem;
+  color:var(--muted);
+  text-decoration:none;
+  font-size:.9rem;
+  font-weight:500;
+  transition:all 0.3s;
+  position:relative;
+}
+nav a:hover{
+  color:var(--green);
+  text-shadow:0 0 20px var(--glow-green);
+}
+nav a::after{
+  content:"";
+  position:absolute;
+  bottom:-4px;left:0;
+  width:0;height:2px;
+  background:var(--green);
+  box-shadow:0 0 10px var(--green);
+  transition:width 0.3s;
+}
+nav a:hover::after{width:100%}
+
+/* ========== HERO ========== */
+.hero-screen{
+  padding:5rem 1rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2.5rem;
+  min-height:100vh;
+}
+
+.hero-title{
+  font-size:clamp(2.2rem,5vw,3.5rem);
+  text-align:center;
+  background:linear-gradient(135deg,var(--green) 0%,var(--cyan) 50%,var(--lilas) 100%);
+  background-size:200% 200%;
+  animation:gradientShift 8s ease infinite;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  margin:0;
+  letter-spacing:.1em;
+  font-weight:900;
+  line-height:1.2;
+  text-shadow:none;
+  position:relative;
+}
+.hero-title::after{
+  content:attr(data-text);
+  position:absolute;
+  left:0;top:0;
+  width:100%;
+  background:inherit;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  filter:blur(30px);
+  opacity:0.4;
+  z-index:-1;
+}
+@keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+.hero-subtitle{
+  max-width:750px;
+  text-align:center;
+  color:var(--muted);
+  font-size:1.1rem;
+  margin:0;
+}
+
+/* ========== SCREEN CRT AMÉLIORÉ ========== */
+.screen-wrapper{
+  perspective:1400px;
+  cursor:pointer;
+  width:100%;
+  max-width:750px;
+}
+.screen-container{
+  transform:rotateX(8deg);
+  transform-style:preserve-3d;
+  transition:transform 1s cubic-bezier(.23,1,.32,1);
+}
+.screen-container:hover{
+  transform:rotateX(3deg) scale(1.02);
+}
+.screen-container.folded{
+  transform:rotateX(30deg) rotateY(-8deg) scale(0.95);
+}
+
+.screen-frame{
+  background:linear-gradient(145deg,#151828,#0a0c14);
+  border-radius:16px;
+  padding:24px;
+  box-shadow:
+    0 0 0 2px #252840,
+    0 0 0 4px rgba(124,255,196,0.1),
+    0 0 50px rgba(124,255,196,0.2),
+    0 0 100px rgba(203,183,255,0.15),
+    0 50px 100px rgba(0,0,0,0.8),
+    inset 0 0 80px rgba(0,0,0,0.6);
+  position:relative;
+}
+.screen-frame::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--green),var(--lilas),transparent);
+  border-radius:16px 16px 0 0;
+}
+
+.screen-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+  padding-bottom:12px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.led{width:10px;height:10px;border-radius:50%;transition:all 0.2s}
+.led-green{
+  background:var(--green);
+  box-shadow:0 0 15px var(--green),0 0 30px var(--glow-green);
+  animation:ledPulse 2s ease-in-out infinite;
+}
+@keyframes ledPulse{0%,100%{opacity:1;box-shadow:0 0 15px var(--green)}50%{opacity:0.6;box-shadow:0 0 8px var(--green)}}
+.led-red{background:#252840;box-shadow:none}
+.led-red.active{background:#ff4757;box-shadow:0 0 15px #ff4757}
+.led-purple{background:var(--lilas);opacity:.5;box-shadow:0 0 10px var(--lilas)}
+
+.screen-status{
+  margin-left:auto;
+  font-size:11px;
+  color:var(--green);
+  font-family:var(--mono);
+  text-shadow:0 0 10px var(--glow-green);
+  letter-spacing:0.1em;
+}
+
+.screen-display{
+  position:relative;
+  aspect-ratio:16/10;
+  border-radius:8px;
+  overflow:hidden;
+  background:#000;
+  cursor:zoom-in;
+  box-shadow:inset 0 0 50px rgba(0,0,0,0.8);
+}
+
+.media-container{position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.media-container.loaded{opacity:1}
+.media-container.glitching{filter:hue-rotate(90deg) saturate(2) brightness(1.2);animation:glitchShake .08s infinite}
+.media-container img,.media-container video,.media-container iframe{width:100%;height:100%;object-fit:cover;display:block;border:0}
+
+.screen-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#000;z-index:5}
+.screen-loader.hidden{display:none}
+.loader-spinner{
+  width:50px;height:50px;
+  border:3px solid #252840;
+  border-top-color:var(--green);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  box-shadow:0 0 20px var(--glow-green);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{font-size:12px;color:var(--muted);font-family:var(--mono);letter-spacing:0.1em}
+.loader-progress{width:150px;height:5px;background:#252840;border-radius:3px;overflow:hidden}
+.loader-bar{height:100%;background:linear-gradient(90deg,var(--green),var(--lilas));width:0%;transition:width .3s;box-shadow:0 0 15px var(--glow-green)}
+
+.scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);pointer-events:none;z-index:3}
+.mire{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 4px,rgba(255,255,255,0.015) 4px,rgba(255,255,255,0.015) 8px);pointer-events:none;z-index:3}
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.7) 100%);pointer-events:none;z-index:3}
+.reflet{position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.06) 0%,transparent 100%);pointer-events:none;z-index:3}
+.glitch-line{position:absolute;left:0;right:0;height:4px;background:var(--green);box-shadow:0 0 30px var(--green),0 0 60px var(--glow-green);opacity:0;pointer-events:none;z-index:4}
+.glitch-overlay{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;pointer-events:none;z-index:4}
+
+.media-label{
+  position:absolute;
+  bottom:12px;left:12px;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(10px);
+  padding:6px 14px;
+  border-radius:6px;
+  font-size:11px;
+  font-family:var(--mono);
+  color:var(--green);
+  border:1px solid rgba(124,255,196,0.3);
+  text-shadow:0 0 10px var(--glow-green);
+  z-index:5;
+}
+
+.screen-nav{display:flex;gap:8px;margin-top:16px;justify-content:center}
+.nav-dot{
+  width:10px;height:10px;
+  border-radius:5px;
+  border:none;
+  background:#252840;
+  cursor:pointer;
+  transition:all .3s cubic-bezier(.23,1,.32,1);
+}
+.nav-dot:hover{background:#3a3d5a}
+.nav-dot.active{
+  width:30px;
+  background:linear-gradient(90deg,var(--green),var(--lilas));
+  box-shadow:0 0 15px var(--glow-green);
+}
+
+.thumbnails{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:750px}
+.thumb{
+  width:65px;height:44px;
+  border-radius:6px;
+  overflow:hidden;
+  border:2px solid #252840;
+  cursor:pointer;
+  opacity:.5;
+  transition:all .3s cubic-bezier(.23,1,.32,1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#151828;
+  color:var(--green);
+  font-size:11px;
+  font-family:var(--mono);
+}
+.thumb:hover{
+  opacity:0.8;
+  transform:translateY(-4px);
+  border-color:#3a3d5a;
+}
+.thumb.active{
+  border:2px solid var(--green);
+  opacity:1;
+  box-shadow:0 0 20px var(--glow-green);
+}
+.thumb img{width:100%;height:100%;object-fit:cover}
+
+.hint{
+  color:var(--muted);
+  font-size:12px;
+  text-align:center;
+  font-family:var(--mono);
+  opacity:0.7;
+}
+
+@keyframes glitchShake{
+  0%{transform:translate(0)}
+  20%{transform:translate(-6px,3px)}
+  40%{transform:translate(4px,-4px)}
+  60%{transform:translate(-3px,2px)}
+  80%{transform:translate(5px,-2px)}
+  100%{transform:translate(0)}
+}
+
+/* ========== SECTIONS ========== */
+section{padding:5rem 0}
+
+.section-title{
+  text-align:center;
+  font-size:2rem;
+  font-weight:800;
+  background:linear-gradient(135deg,var(--lilas),var(--green));
+  -webkit-background-clip:text;
+  color:transparent;
+  margin-bottom:3.5rem;
+  letter-spacing:0.05em;
+  position:relative;
+}
+.section-title::after{
+  content:"";
+  display:block;
+  width:80px;
+  height:3px;
+  background:linear-gradient(90deg,var(--green),var(--lilas));
+  margin:1rem auto 0;
+  border-radius:2px;
+  box-shadow:0 0 15px var(--glow-green);
+}
+
+/* ========== OFFRES 3D ========== */
+.offers{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1.8rem;
+}
+@media(min-width:900px){.offers{grid-template-columns:repeat(3,1fr)}}
+
+.offer{
+  background:var(--panel);
+  backdrop-filter:blur(15px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:2rem;
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+  position:relative;
+  overflow:hidden;
+  transition:all 0.4s cubic-bezier(.23,1,.32,1);
+  transform-style:preserve-3d;
+  perspective:1000px;
+}
+.offer::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(124,255,196,0.3),transparent);
+}
+.offer::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),rgba(124,255,196,0.1),transparent 50%);
+  opacity:0;
+  transition:opacity 0.3s;
+  pointer-events:none;
+}
+.offer:hover::after{opacity:1}
+.offer:hover{
+  transform:translateY(-10px) rotateX(5deg);
+  border-color:rgba(124,255,196,0.3);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.5),
+    0 0 40px rgba(124,255,196,0.1);
+}
+
+.offer small{
+  font-family:var(--mono);
+  color:var(--lilas);
+  letter-spacing:.12em;
+  font-size:0.75rem;
+  text-shadow:0 0 10px var(--glow-lilas);
+}
+.offer h3{margin:0;font-size:1.15rem;font-weight:700}
+.offer p{margin:0;font-size:.9rem;color:var(--muted)}
+.offer .price{
+  margin-top:.8rem;
+  font-size:1.6rem;
+  font-weight:900;
+  background:linear-gradient(90deg,var(--green),var(--cyan));
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.offer.high{
+  border-color:var(--lilas);
+  box-shadow:0 0 40px rgba(203,183,255,0.15);
+}
+.offer.high::before{
+  background:linear-gradient(90deg,transparent,var(--lilas),transparent);
+}
+
+.offer .btn{
+  margin-top:auto;
+  align-self:flex-start;
+  padding:.6rem 1.5rem;
+  border-radius:999px;
+  font-weight:700;
+  font-size:.8rem;
+  background:linear-gradient(135deg,var(--green),var(--lilas));
+  color:#000;
+  text-decoration:none;
+  transition:all 0.3s;
+  box-shadow:0 4px 20px rgba(124,255,196,0.2);
+}
+.offer .btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px rgba(124,255,196,0.4);
+}
+.offer .btn.alt{
+  background:transparent;
+  border:1px solid var(--lilas);
+  color:var(--lilas);
+  box-shadow:none;
+}
+.offer .btn.alt:hover{
+  background:rgba(203,183,255,0.1);
+  box-shadow:0 0 20px var(--glow-lilas);
+}
+
+.text-block{max-width:820px;margin:auto;color:var(--muted);text-align:center}
+
+/* ========== PARTENAIRES ========== */
+#cibles{padding:6rem 0}
+
+.partners-box{
+  background:
+    radial-gradient(1400px 400px at 50% -15%, rgba(124,255,196,.15), transparent 60%),
+    radial-gradient(1000px 400px at 50% 115%, rgba(203,183,255,.15), transparent 60%),
+    var(--panel);
+  backdrop-filter:blur(15px);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:4rem 2rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.partners-box::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--green),var(--lilas),transparent);
+}
+
+.partners-title{
+  font-size:clamp(2rem,4vw,3rem);
+  margin:0;
+  font-weight:900;
+  letter-spacing:.03em;
+  background:linear-gradient(135deg,var(--green),var(--cyan),var(--lilas));
+  background-size:200% 200%;
+  animation:gradientShift 6s ease infinite;
+  -webkit-background-clip:text;
+  color:transparent;
+  line-height:1.3;
+}
+
+.partners-subtitle{
+  margin:1.5rem auto 4rem;
+  max-width:720px;
+  color:var(--muted);
+  font-size:1.1rem;
+}
+
+.partners-grid{
+  display:grid;
+  gap:1.6rem;
+  grid-template-columns:1fr;
+}
+@media(min-width:900px){.partners-grid{grid-template-columns:repeat(4,1fr)}}
+
+.partner-card{
+  background:rgba(255,255,255,.02);
+  border:1px dashed rgba(255,255,255,0.1);
+  border-radius:var(--radius);
+  padding:2rem 1.5rem;
+  transition:all 0.4s cubic-bezier(.23,1,.32,1);
+  position:relative;
+  overflow:hidden;
+}
+.partner-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(124,255,196,0.05),rgba(203,183,255,0.05));
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.partner-card:hover::before{opacity:1}
+.partner-card:hover{
+  transform:translateY(-8px) scale(1.02);
+  border-color:var(--lilas);
+  border-style:solid;
+  box-shadow:0 20px 50px rgba(0,0,0,0.4),0 0 30px rgba(203,183,255,0.1);
+}
+
+.partner-icon{
+  display:block;
+  font-size:2.5rem;
+  margin-bottom:1rem;
+  filter:drop-shadow(0 0 10px currentColor);
+}
+
+.partner-card h3{
+  margin:.5rem 0;
+  font-size:1.1rem;
+  color:var(--text);
+  font-weight:700;
+}
+
+.partner-card p{
+  margin:0;
+  font-size:.9rem;
+  color:var(--muted);
+}
+
+.partner-card.ghost{
+  border-style:dotted;
+  opacity:.7;
+}
+.partner-card.ghost:hover{opacity:1}
+
+/* ========== FOOTER ========== */
+footer{
+  border-top:1px solid var(--border);
+  padding:4rem 0;
+  text-align:center;
+  font-size:.9rem;
+  color:var(--muted);
+  background:var(--panel);
+  backdrop-filter:blur(15px);
+  position:relative;
+}
+footer::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--green),var(--lilas),transparent);
+  opacity:0.5;
+}
+
+/* ========== MODAL ========== */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.95);
+  backdrop-filter:blur(10px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+  padding:20px;
+}
+.modal-overlay.open{display:flex}
+
+.modal-content{
+  width:100%;
+  max-width:950px;
+  max-height:85vh;
+  background:var(--panel);
+  backdrop-filter:blur(20px);
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 0 100px rgba(124,255,196,.25),0 0 200px rgba(203,183,255,.15);
+}
+.modal-header{
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(0,0,0,0.3);
+}
+.modal-title{
+  color:var(--green);
+  font-family:var(--mono);
+  font-size:14px;
+  text-shadow:0 0 10px var(--glow-green);
+}
+.modal-close{
+  background:none;
+  border:none;
+  color:#ff4757;
+  font-size:28px;
+  cursor:pointer;
+  transition:all 0.3s;
+  line-height:1;
+}
+.modal-close:hover{
+  transform:scale(1.2);
+  text-shadow:0 0 20px #ff4757;
+}
+.modal-body{aspect-ratio:16/9;background:#000}
+.modal-body img,.modal-body video,.modal-body iframe{width:100%;height:100%;object-fit:contain;border:0}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--green),var(--lilas));border-radius:4px}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="noise"></div>
+
+<div class="content-wrapper">
+
+<header>
+  <div class="container header-inner">
+    <div class="brand">CCPLC</div>
+    <nav>
+      <a href="#offres">Offres</a>
+      <a href="#cibles">Cibles</a>
+      <a href="https://ouaisfieu.github.io/offre/">Jobs</a>
+      <a href="https://ouaisfieu.github.io/confiance/">NYXO</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+<section class="hero-screen" id="ecran">
+  <h1 class="hero-title" data-text="CCPLC">CCPLC</h1>
+  <h2 class="hero-title" data-text="AISBL de fait · Solutions indépendantes">AISBL de fait<br>Solutions indépendantes</h2>
+  <p class="hero-subtitle">Le CCPLC accompagne les personnes, collectifs et organisations qui veulent comprendre, reprendre le contrôle et agir dans leur environnement</p>
+  
+  <div class="screen-wrapper" onclick="toggleFold()">
+    <div class="screen-container" id="screenContainer">
+      <div class="screen-frame">
+        <div class="screen-header">
+          <div class="led led-green"></div>
+          <div class="led led-red" id="ledRed"></div>
+          <div class="led led-purple"></div>
+          <span class="screen-status" id="screenStatus">INIT...</span>
+        </div>
+        <div class="screen-display" onclick="event.stopPropagation(); openModal()">
+          <div class="screen-loader" id="screenLoader">
+            <div class="loader-spinner"></div>
+            <div class="loader-text" id="loaderText">Synchronisation...</div>
+            <div class="loader-progress"><div class="loader-bar" id="loaderBar"></div></div>
+          </div>
+          <div class="media-container" id="mediaContainer"></div>
+          <div class="scanlines"></div>
+          <div class="mire"></div>
+          <div class="vignette"></div>
+          <div class="reflet"></div>
+          <div class="glitch-line" id="glitchLine"></div>
+          <div class="glitch-overlay" id="glitchOverlay"></div>
+          <div class="media-label" id="mediaLabel">—</div>
+        </div>
+        <div class="screen-nav" id="screenNav"></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint">[ clic écran → ouvrir en grand ]</p>
+  <div class="thumbnails" id="thumbnails"></div>
+</section>
+
+<section id="offres">
+  <h2 class="section-title">Offres</h2>
+  <div class="offers">
+    <article class="offer">
+      <small>0 · TRACE</small>
+      <h3>Ping NYXO</h3>
+      <p>Signal symbolique.<br>Trace VOLONTAIRE dans LE système.</p>
+      <div class="price">0,125 €</div>
+      <a href="https://ouaisfieu.github.io/ccplc/nyxo.html" target="_blank" class="btn">Démo</a>
+    </article>
+    <article class="offer">
+      <small>1 · DÉCOUVERTE</small>
+      <h3>Module Découverte</h3>
+      <p>Exploration de cibles<br>+ Dataset PREMIUM</p>
+      <div class="price">1.250 €</div>
+      <a href="https://ouaisfieu.github.io/ccplc/shop/CRM/" target="_blank" class="btn">Démo</a>
+    </article>
+    <article class="offer">
+      <small>2 · EXPRESS</small>
+      <h3>Audit Express</h3>
+      <p>Analyse rapide d'un usage, outil ou pratique.</p>
+      <div class="price">125 €</div>
+      <a href="https://ouaisfieu.github.io/ccplc/shop/s/1/bim/index.html" target="_blank" class="btn">Commander</a>
+    </article>
+    <article class="offer">
+      <small>3 · PERSONNEL</small>
+      <h3>Diagnostic Personnel</h3>
+      <p>Cartographie individuelle commentée.</p>
+      <div class="price">1.250 €</div>
+      <a href="https://ouaisfieu.github.io/ccplc/shop/s/1/bim/as/auron-perso.html" target="_blank" class="btn">Démo</a>
+    </article>
+    <article class="offer">
+      <small>4 · ACCOMPAGNEMENT</small>
+      <h3>Accompagnement NYXO</h3>
+      <p>Suivi stratégique, scénarios et recommandations.</p>
+      <div class="price">12.500 €</div>
+      <a href="https://ouaisfieu.github.io/ccplc/shop/s/1/" target="_blank" class="btn">Négocier</a>
+    </article>
+    <article class="offer high">
+      <small>6 · STRUCTURE</small>
+      <h3>Audit Organisationnel Global</h3>
+      <p>Cartographie complète, risques systémiques, priorisation.</p>
+      <div class="price">125.000 €</div>
+      <a href="https://ouaisfieu.github.io/ccplc/shop/OS/index.html" target="_blank" class="btn">Contact direct</a>
+    </article>
+  </div>
+</section>
+
+<section id="methode">
+  <h2 class="section-title">Méthode & positionnement</h2>
+  <div class="text-block">
+    <p class="hero-subtitle">CCPLC privilégie la compréhension, l'autonomie et la capacité d'agir plutôt que la dépendance</p>
+  </div>
+</section>
+
+<section id="nyxo">
+  <h2 class="section-title">Pourquoi ?</h2>
+  <div class="text-block">
+    <p class="hero-subtitle">On ne comprend pas les systèmes complexes en lisant des notices.<br>Il faut les manipuler, les explorer, parfois les casser.</p>
+  </div>
+</section>
+
+<section id="cibles">
+  <div class="partners-box">
+    <h2 class="partners-title">
+      >>>> 👍👍👍<br>ON LEUR FAIT CONFIANCE<br>👍👍👍 <<<<
+    </h2>
+    <p class="partners-subtitle">Les Bienvenues<br>De nous, à vous<br><i>. - L'équipe</i></p>
+    <div class="partners-grid">
+      <div class="partner-card">
+        <span class="partner-icon">🛰️</span>
+        <h3>Institutions ouvertes</h3>
+        <p>Structures publiques, para-publiques ou hybrides capables d'expérimenter sans dogme.</p>
+      </div>
+      <div class="partner-card">
+        <span class="partner-icon">🔍</span>
+        <h3>Cellules de veille</h3>
+        <p>Groupes autonomes de recherche, pédagogues, à l'assaut du réel.</p>
+      </div>
+      <div class="partner-card">
+        <span class="partner-icon">🧪</span>
+        <h3>Labos improbables</h3>
+        <p>Ceux qui testent, cassent, documentent et recommencent — proprement.</p>
+      </div>
+      <div class="partner-card ghost">
+        <span class="partner-icon">❓</span>
+        <h3>Vous ?</h3>
+        <p>Peut-être. Si vous avez compris pourquoi cette section existe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>© CCPLC — Collectif Citoyen pour la Participation Libre<br>(et Consciente)</p>
+</footer>
+
+</div>
+
+<div class="modal-overlay" id="modal" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">—</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ========== PARTICLES ==========
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let mouse = {x:null,y:null};
+
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resize();
+window.addEventListener('resize',resize);
+window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+window.addEventListener('mouseout',()=>{mouse.x=null;mouse.y=null});
+
+class Particle{
+  constructor(){
+    this.x=Math.random()*canvas.width;
+    this.y=Math.random()*canvas.height;
+    this.vx=(Math.random()-0.5)*0.6;
+    this.vy=(Math.random()-0.5)*0.6;
+    this.size=Math.random()*2.5+0.5;
+    this.color=Math.random()>0.5?'#7cffc4':'#cbb7ff';
+    this.alpha=Math.random()*0.5+0.2;
+  }
+  update(){
+    if(mouse.x!==null){
+      const dx=mouse.x-this.x,dy=mouse.y-this.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<150){
+        const force=(150-dist)/150;
+        this.vx-=(dx/dist)*force*1.2;
+        this.vy-=(dy/dist)*force*1.2;
+      }
+    }
+    this.x+=this.vx;this.y+=this.vy;
+    this.vx*=0.99;this.vy*=0.99;
+    if(this.x<-50)this.x=canvas.width+50;
+    if(this.x>canvas.width+50)this.x=-50;
+    if(this.y<-50)this.y=canvas.height+50;
+    if(this.y>canvas.height+50)this.y=-50;
+  }
+  draw(){
+    ctx.save();
+    ctx.globalAlpha=this.alpha;
+    ctx.shadowBlur=20;
+    ctx.shadowColor=this.color;
+    ctx.fillStyle=this.color;
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+const count=Math.min(80,Math.floor((window.innerWidth*window.innerHeight)/18000));
+for(let i=0;i<count;i++)particles.push(new Particle());
+
+function drawConnections(){
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<130){
+        ctx.save();
+        ctx.globalAlpha=(1-dist/130)*0.25;
+        ctx.strokeStyle=particles[i].color;
+        ctx.lineWidth=0.5;
+        ctx.shadowBlur=5;
+        ctx.shadowColor=particles[i].color;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+}
+
+function animateParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw()});
+  drawConnections();
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ========== OFFER CARDS MOUSE TRACKING ==========
+document.querySelectorAll('.offer').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const rect=card.getBoundingClientRect();
+    const x=((e.clientX-rect.left)/rect.width)*100;
+    const y=((e.clientY-rect.top)/rect.height)*100;
+    card.style.setProperty('--mouse-x',x+'%');
+    card.style.setProperty('--mouse-y',y+'%');
+  });
+});
+
+// ========== MEDIA SCREEN ==========
+const mediaItems=[
+  {type:'image',src:'https://picsum.photos/800/600?random=1',title:'Signal 001'},
+  {type:'gif',src:'https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif',title:'Glitch GIF'},
+  {type:'video',src:'https://www.w3schools.com/html/mov_bbb.mp4',title:'Stream 003'},
+  {type:'image',src:'https://picsum.photos/800/600?random=2',title:'Data 004'},
+  {type:'iframe',src:'https://en.wikipedia.org/wiki/Glitch_art',title:'Wiki Glitch'},
+  {type:'gif',src:'https://media.giphy.com/media/l0HlNaQ6gWfllcjDO/giphy.gif',title:'Static GIF'},
+];
+
+let currentIndex=0,isReady=false,loadedMedia={},autoInterval=null;
+
+function preloadMedia(item,index){
+  return new Promise(resolve=>{
+    const type=item.type==='gif'?'image':item.type;
+    if(type==='image'){
+      const img=new Image();
+      img.onload=()=>{loadedMedia[index]=img;resolve(true)};
+      img.onerror=()=>resolve(false);
+      img.src=item.src;
+    }else if(type==='video'){
+      const video=document.createElement('video');
+      video.muted=true;video.preload='auto';
+      video.oncanplaythrough=()=>{loadedMedia[index]=video;resolve(true)};
+      video.onerror=()=>resolve(false);
+      video.src=item.src;video.load();
+    }else if(type==='iframe'){
+      loadedMedia[index]=true;resolve(true);
+    }else{resolve(false)}
+  });
+}
+
+async function preloadAll(){
+  const loader=document.getElementById('screenLoader');
+  const loaderText=document.getElementById('loaderText');
+  const loaderBar=document.getElementById('loaderBar');
+  const status=document.getElementById('screenStatus');
+  let loaded=0;const total=mediaItems.length;
+  for(let i=0;i<total;i++){
+    loaderText.textContent=`Flux ${i+1}/${total}...`;
+    await preloadMedia(mediaItems[i],i);
+    loaded++;
+    loaderBar.style.width=(loaded/total*100)+'%';
+  }
+  loaderText.textContent='Flux synchronisés';
+  await new Promise(r=>setTimeout(r,500));
+  loader.classList.add('hidden');
+  status.textContent='SIG:001 | LOCK';
+  isReady=true;
+  showMedia(0);
+  startAutoRotation();
+}
+
+function renderMedia(item,forModal=false){
+  const type=item.type==='gif'?'image':item.type;
+  if(type==='image')return`<img src="${item.src}" alt="${item.title}">`;
+  if(type==='video')return`<video src="${item.src}" ${forModal?'controls':'autoplay muted loop'} playsinline></video>`;
+  if(type==='iframe')return`<iframe src="${item.src}" title="${item.title}"></iframe>`;
+  return'';
+}
+
+function showMedia(index){
+  if(!isReady)return;
+  currentIndex=index;
+  const item=mediaItems[index];
+  const container=document.getElementById('mediaContainer');
+  container.classList.remove('loaded');
+  container.innerHTML=renderMedia(item);
+  requestAnimationFrame(()=>container.classList.add('loaded'));
+  document.getElementById('mediaLabel').textContent=`${item.title} [${item.type.toUpperCase()}]`;
+  document.getElementById('screenStatus').textContent=`SIG:${String(index+1).padStart(3,'0')} | LOCK`;
+  document.querySelectorAll('.nav-dot').forEach((dot,i)=>dot.classList.toggle('active',i===index));
+  document.querySelectorAll('.thumb').forEach((thumb,i)=>thumb.classList.toggle('active',i===index));
+}
+
+function triggerGlitch(){
+  if(!isReady)return;
+  const container=document.getElementById('mediaContainer');
+  const line=document.getElementById('glitchLine');
+  const overlay=document.getElementById('glitchOverlay');
+  const led=document.getElementById('ledRed');
+  const status=document.getElementById('screenStatus');
+  container.classList.add('glitching');
+  line.style.opacity='1';
+  line.style.top=Math.random()*80+'%';
+  overlay.style.opacity='0.6';
+  overlay.style.background=`linear-gradient(${Math.random()*360}deg,transparent 30%,rgba(255,0,100,0.4) 50%,transparent 70%)`;
+  led.classList.add('active');
+  status.textContent=`SIG:${String(currentIndex+1).padStart(3,'0')} | SYNC...`;
+  setTimeout(()=>{
+    container.classList.remove('glitching');
+    line.style.opacity='0';
+    overlay.style.opacity='0';
+    led.classList.remove('active');
+    status.textContent=`SIG:${String(currentIndex+1).padStart(3,'0')} | LOCK`;
+  },180);
+}
+
+function startAutoRotation(){
+  autoInterval=setInterval(()=>{
+    triggerGlitch();
+    setTimeout(()=>showMedia((currentIndex+1)%mediaItems.length),180);
+  },4500);
+  setInterval(()=>{if(Math.random()>0.75)triggerGlitch()},1000);
+}
+
+function toggleFold(){document.getElementById('screenContainer').classList.toggle('folded')}
+
+function openModal(){
+  if(!isReady)return;
+  const item=mediaItems[currentIndex];
+  document.getElementById('modalTitle').textContent=item.title;
+  document.getElementById('modalBody').innerHTML=renderMedia(item,true);
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('modalBody').innerHTML='';
+}
+
+function init(){
+  const nav=document.getElementById('screenNav');
+  const thumbs=document.getElementById('thumbnails');
+  mediaItems.forEach((item,i)=>{
+    const dot=document.createElement('button');
+    dot.className='nav-dot';
+    dot.onclick=e=>{e.stopPropagation();showMedia(i)};
+    nav.appendChild(dot);
+    const thumb=document.createElement('div');
+    thumb.className='thumb';
+    thumb.onclick=()=>{showMedia(i);openModal()};
+    if(item.type==='image'||item.type==='gif'){
+      thumb.innerHTML=`<img src="${item.src}" alt="">`;
+    }else if(item.type==='video'){
+      thumb.textContent='▶';
+    }else{
+      thumb.textContent='HTML';
+      thumb.style.color='#cbb7ff';
+    }
+    thumbs.appendChild(thumb);
+  });
+  preloadAll();
+}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+init();
+</script>
+</body>
+</html>
