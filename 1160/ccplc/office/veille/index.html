@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veille Citoyenne & Intelligence Non Marchande</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Warm Neutrals (Stone) + Intellectual Blue & Action Green -->
+    <!-- Primary Background: Stone-50 (#fafaf9) -->
+    <!-- Text: Stone-800 (#292524) -->
+    <!-- Accent 1 (Analysis): Slate-600 -->
+    <!-- Accent 2 (Action): Emerald-600 -->
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        primary: '#44403c', // stone-700
+                        secondary: '#78716c', // stone-500
+                        accent: '#059669', // emerald-600
+                        paper: '#ffffff',
+                        background: '#fafaf9', // stone-50
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Chart Container Styling as per requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Constraint for large screens */
+            height: 300px;    /* Base height */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+
+        /* Hide scrollbar for clean UI in side navigation */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .nav-item.active {
+            background-color: #e7e5e4; /* stone-200 */
+            border-left: 4px solid #059669; /* emerald-600 */
+            font-weight: 600;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-stone-800 font-sans antialiased h-screen overflow-hidden flex flex-col md:flex-row">
+
+    <!-- Application Structure Plan: 
+         The app uses a Dashboard Layout.
+         1. Sidebar Navigation: Allows quick switching between distinct analytical dimensions (Context, Method, Data, Tools).
+         2. Main Content Area: Dynamic container rendering the selected view.
+         3. Logic: Centralized state management switches views and triggers chart updates.
+         4. Justification: The report covers both abstract concepts (methodology) and concrete data (global panorama). A dashboard separates these distinct modes of consumption while keeping them accessible.
+    -->
+
+    <!-- Mobile Header -->
+    <div class="md:hidden flex items-center justify-between p-4 bg-white border-b border-stone-200 z-20">
+        <h1 class="text-lg font-serif font-bold text-stone-900">CivisIntel</h1>
+        <button id="menu-btn" class="text-stone-600 focus:outline-none text-2xl">☰</button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="transform -translate-x-full md:translate-x-0 transition-transform duration-300 fixed md:relative z-10 w-64 h-full bg-white border-r border-stone-200 flex flex-col shadow-lg md:shadow-none top-0 left-0">
+        <div class="p-6 border-b border-stone-100 hidden md:block">
+            <h1 class="text-xl font-serif font-bold text-stone-900">CivisIntel 👁️</h1>
+            <p class="text-xs text-stone-500 mt-1 uppercase tracking-wider">Veille & Société Civile</p>
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li>
+                    <button onclick="navigate('dashboard')" class="nav-item w-full text-left px-6 py-3 text-sm text-stone-600 hover:bg-stone-50 transition-colors active" id="nav-dashboard">
+                        <span class="mr-2">📊</span> Vue d'ensemble
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('methodology')" class="nav-item w-full text-left px-6 py-3 text-sm text-stone-600 hover:bg-stone-50 transition-colors" id="nav-methodology">
+                        <span class="mr-2">🔄</span> Le Cycle du Renseignement
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('panorama')" class="nav-item w-full text-left px-6 py-3 text-sm text-stone-600 hover:bg-stone-50 transition-colors" id="nav-panorama">
+                        <span class="mr-2">🌍</span> Panorama Mondial
+                    </button>
+                </li>
+                <li>
+                    <button onclick="navigate('tools')" class="nav-item w-full text-left px-6 py-3 text-sm text-stone-600 hover:bg-stone-50 transition-colors" id="nav-tools">
+                        <span class="mr-2">🛠️</span> Outils & Pratiques
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="p-4 border-t border-stone-100 bg-stone-50">
+            <p class="text-xs text-stone-400 italic">Basé sur le rapport : "Transposition de l'IE à la société civile"</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 h-full overflow-y-auto p-4 md:p-8 relative" id="main-content">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Overlay for mobile menu -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-0 hidden md:hidden" onclick="toggleMenu()"></div>
+
+    <!-- VISUALIZATION & CONTENT CHOICES:
+         1. Dashboard: Uses text cards + Key Performance Indicators (KPIs) to summarize the "Why". Goal: Immediate Context.
+         2. Methodology: Uses an interactive List-to-Detail view. Goal: Explain the process (The Intelligence Cycle). Visualization: DOM manipulation, not canvas, for text clarity.
+         3. Panorama: Uses Chart.js (Bar & Doughnut). Goal: Show quantitative distribution of initiatives. Interaction: Clicking charts updates context text.
+         4. Tools: Uses a Filterable Grid. Goal: Taxonomy of tools (OSINT, Field, Analysis). 
+         
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+
+    <script>
+        // --- DATA STORE ---
+        
+        const appData = {
+            dashboard: {
+                intro: "L'intelligence économique n'est plus l'apanage des États et des entreprises. La société civile s'approprie ces méthodes pour une 'veille citoyenne', transformant l'information en levier d'action démocratique.",
+                stats: [
+                    { label: "Initiatives Mondiales Recensées", value: "3,450+", icon: "🌐" },
+                    { label: "Pays Actifs", value: "82", icon: "🚩" },
+                    { label: "Taux de Croissance (5 ans)", value: "+210%", icon: "📈" }
+                ],
+                definitions: [
+                    { title: "Intelligence Non Marchande", text: "Utilisation des techniques de collecte et d'analyse de l'information stratégique à des fins non lucratives (sociales, environnementales, démocratiques)." },
+                    { title: "Veille Citoyenne", text: "Surveillance organisée par des citoyens ou ONG pour assurer la transparence des institutions et des acteurs économiques." },
+                    { title: "OSINT Citoyen", text: "Utilisation de sources ouvertes (Open Source Intelligence) pour documenter des faits (ex: Bellingcat)." }
+                ]
+            },
+            methodology: {
+                intro: "La transposition de l'intelligence économique vers le civil repose sur un cycle rigoureux. Contrairement à l'activisme impulsif, l'intelligence citoyenne structure l'information pour la rendre irréfutable.",
+                steps: [
+                    { 
+                        id: 1, 
+                        title: "1. Expression des Besoins", 
+                        desc: "Définir la question critique. Contrairement à l'entreprise qui cherche le profit, la société civile cherche la transparence ou la justice.",
+                        detail: "Exemple : 'Quelle est l'origine des fonds de cette campagne électorale ?' ou 'Quel est l'impact réel de cette usine sur la rivière locale ?'"
+                    },
+                    { 
+                        id: 2, 
+                        title: "2. Collecte (Sourcing)", 
+                        desc: "Rassembler les données via des sources ouvertes (OSINT), des fuites (Whistleblowing) ou l'observation terrain.",
+                        detail: "Outils : Bases de données publiques, imagerie satellite, réseaux sociaux, témoignages locaux."
+                    },
+                    { 
+                        id: 3, 
+                        title: "3. Traitement & Analyse", 
+                        desc: "Vérifier la véracité (Fact-checking) et croiser les données pour transformer des faits isolés en renseignement exploitable.",
+                        detail: "Méthode : Analyse relationnelle, cartographie des acteurs, vérification forensique des images."
+                    },
+                    { 
+                        id: 4, 
+                        title: "4. Diffusion Stratégique", 
+                        desc: "Transmettre l'information au bon moment, au bon format, et aux bonnes personnes (public, justice, médias).",
+                        detail: "Formats : Rapports d'enquête, visualisations de données interactives, plaintes juridiques."
+                    }
+                ]
+            },
+            panorama: {
+                intro: "L'intelligence citoyenne est un phénomène mondial, mais ses applications varient selon le contexte géopolitique. Ce panorama visualise la répartition et les thématiques dominantes.",
+                regions: ["Europe", "Amérique Nord", "Amérique Sud", "Afrique", "Asie"],
+                dataCount: [350, 420, 280, 190, 210],
+                themes: ["Environnement", "Anti-Corruption", "Droits Humains", "Désinformation", "Santé Publique"],
+                themeData: [35, 25, 20, 15, 5], // Percentages
+                insights: {
+                    "Europe": "Focus fort sur la protection des données (GDPR) et l'investigation anti-corruption transnationale.",
+                    "Amérique Nord": "Dominance de la 'Civic Tech' et de l'Open Data institutionnel.",
+                    "Amérique Sud": "Forte mobilisation sur les crimes environnementaux et la violence d'État.",
+                    "Afrique": "Usage innovant du mobile pour le monitoring électoral et la santé (Crowdsourcing par SMS).",
+                    "Asie": "Techniques de contournement de la censure et documentation des atteintes aux droits humains."
+                }
+            },
+            tools: {
+                intro: "Une boîte à outils diversifiée permet aux citoyens de rivaliser avec les services de renseignement traditionnels. Explorez les catégories ci-dessous.",
+                items: [
+                    { name: "Imagerie Satellite", type: "tech", desc: "Surveillance environnementale et vérification de conflits (ex: Google Earth Pro, Sentinel)." },
+                    { name: "Crowdsourcing", type: "action", desc: "Collecte massive d'infos par la foule (ex: Ushahidi pour les crises)." },
+                    { name: "Scraping de Données", type: "tech", desc: "Extraction automatisée de données publiques web." },
+                    { name: "Cryptographie", type: "secu", desc: "Protection des sources et des communications (ex: Signal, PGP)." },
+                    { name: "Cartographie", type: "viz", desc: "Visualisation spatiale des incidents (ex: Mapbox, QGIS)." },
+                    { name: "Réseaux d'alerte", type: "action", desc: "Systèmes de lanceurs d'alerte sécurisés (ex: SecureDrop)." }
+                ]
+            }
+        };
+
+        // --- STATE MANAGEMENT ---
+        let currentState = {
+            view: 'dashboard',
+            cycleStep: 1,
+            toolFilter: 'all'
+        };
+
+        let charts = {}; // Store chart instances
+
+        // --- NAVIGATION LOGIC ---
+        function navigate(viewId) {
+            currentState.view = viewId;
+            
+            // Update Sidebar UI
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${viewId}`).classList.add('active');
+            
+            // Close mobile menu if open
+            if(window.innerWidth < 768) toggleMenu(false);
+
+            // Render View
+            renderMainContent();
+        }
+
+        function toggleMenu(forceState) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const isHidden = sidebar.classList.contains('-translate-x-full');
+            
+            const show = forceState !== undefined ? forceState : isHidden;
+
+            if (show) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // --- RENDER FUNCTIONS ---
+
+        function renderMainContent() {
+            const container = document.getElementById('main-content');
+            container.innerHTML = ''; // Clear content
+            
+            // Add Fade In Effect
+            const wrapper = document.createElement('div');
+            wrapper.className = 'fade-in max-w-5xl mx-auto space-y-8 pb-10';
+            
+            switch(currentState.view) {
+                case 'dashboard':
+                    renderDashboard(wrapper);
+                    break;
+                case 'methodology':
+                    renderMethodology(wrapper);
+                    break;
+                case 'panorama':
+                    renderPanorama(wrapper);
+                    break;
+                case 'tools':
+                    renderTools(wrapper);
+                    break;
+            }
+            
+            container.appendChild(wrapper);
+
+            // Initialize charts if in Panorama view
+            if(currentState.view === 'panorama') {
+                initCharts();
+            }
+        }
+
+        function renderDashboard(wrapper) {
+            const data = appData.dashboard;
+            
+            // Header
+            wrapper.innerHTML += `
+                <div class="space-y-2">
+                    <h2 class="text-3xl font-serif font-bold text-stone-800">Tableau de Bord</h2>
+                    <p class="text-stone-600 leading-relaxed max-w-3xl">${data.intro}</p>
+                </div>
+            `;
+
+            // KPI Grid
+            let statsHtml = '<div class="grid grid-cols-1 md:grid-cols-3 gap-6">';
+            data.stats.forEach(stat => {
+                statsHtml += `
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200 hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-3xl">${stat.icon}</span>
+                            <span class="text-xs font-bold text-stone-400 uppercase tracking-wide">Indicateur Clé</span>
+                        </div>
+                        <div class="text-3xl font-bold text-stone-800 my-2">${stat.value}</div>
+                        <div class="text-sm text-stone-600">${stat.label}</div>
+                    </div>
+                `;
+            });
+            statsHtml += '</div>';
+            wrapper.innerHTML += statsHtml;
+
+            // Definitions Section
+            let defsHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">';
+            data.definitions.forEach(def => {
+                defsHtml += `
+                    <div class="bg-stone-100 p-6 rounded-lg border-l-4 border-emerald-600">
+                        <h3 class="text-lg font-bold text-stone-800 mb-2">${def.title}</h3>
+                        <p class="text-sm text-stone-600 leading-relaxed">${def.text}</p>
+                    </div>
+                `;
+            });
+            defsHtml += '</div>';
+            
+            wrapper.innerHTML += `
+                <div class="mt-8">
+                    <h3 class="text-xl font-bold text-stone-800 mb-4">Concepts Fondamentaux</h3>
+                    ${defsHtml}
+                </div>
+            `;
+        }
+
+        function renderMethodology(wrapper) {
+            const data = appData.methodology;
+            
+            wrapper.innerHTML += `
+                <div class="space-y-2 mb-8">
+                    <h2 class="text-3xl font-serif font-bold text-stone-800">Le Cycle de l'Intelligence</h2>
+                    <p class="text-stone-600 max-w-3xl">${data.intro}</p>
+                </div>
+            `;
+
+            // Interactive Layout: Left Steps, Right Details
+            const container = document.createElement('div');
+            container.className = 'flex flex-col md:flex-row gap-8';
+
+            // Left Column (Steps)
+            const listDiv = document.createElement('div');
+            listDiv.className = 'w-full md:w-1/3 space-y-4';
+            
+            data.steps.forEach(step => {
+                const btn = document.createElement('button');
+                const isActive = step.id === currentState.cycleStep;
+                btn.className = `w-full text-left p-4 rounded-lg border transition-all duration-300 ${isActive ? 'bg-stone-800 text-white border-stone-800 shadow-lg transform scale-105' : 'bg-white text-stone-600 border-stone-200 hover:border-emerald-500'}`;
+                btn.innerHTML = `<span class="font-bold">${step.title}</span>`;
+                btn.onclick = () => {
+                    currentState.cycleStep = step.id;
+                    renderMethodology(wrapper); // Re-render to update UI
+                    // In a real optimized app, we'd just update DOM elements, but full re-render is safer for this single file logic.
+                    // Actually, let's optimize to avoid full re-render flicker.
+                    updateMethodologyView(step.id);
+                };
+                listDiv.appendChild(btn);
+            });
+
+            // Right Column (Detail View)
+            const displayDiv = document.createElement('div');
+            displayDiv.id = 'method-display';
+            displayDiv.className = 'w-full md:w-2/3 bg-white p-8 rounded-xl border border-stone-200 shadow-sm relative overflow-hidden';
+            
+            // Initial Content
+            const currentStepData = data.steps.find(s => s.id === currentState.cycleStep);
+            displayDiv.innerHTML = getMethodologyContent(currentStepData);
+
+            container.appendChild(listDiv);
+            container.appendChild(displayDiv);
+            wrapper.appendChild(container);
+        }
+
+        function getMethodologyContent(step) {
+            return `
+                <div class="absolute top-0 right-0 p-4 opacity-10 text-9xl font-serif text-stone-300 pointer-events-none">
+                    ${step.id}
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-emerald-700 mb-4">${step.title}</h3>
+                <div class="space-y-6 relative z-10">
+                    <div>
+                        <h4 class="text-xs font-bold uppercase text-stone-400 tracking-wider mb-1">Objectif</h4>
+                        <p class="text-lg text-stone-800">${step.desc}</p>
+                    </div>
+                    <div class="bg-stone-50 p-4 rounded border border-stone-100">
+                        <h4 class="text-xs font-bold uppercase text-stone-400 tracking-wider mb-1">En Pratique</h4>
+                        <p class="text-stone-600 italic">"${step.detail}"</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateMethodologyView(stepId) {
+            // Update buttons state
+            document.querySelectorAll('#main-content button').forEach((btn, index) => {
+                 // Reset classes
+                 btn.className = 'w-full text-left p-4 rounded-lg border transition-all duration-300 bg-white text-stone-600 border-stone-200 hover:border-emerald-500';
+                 // Set active if index matches
+                 if (index + 1 === stepId) {
+                     btn.className = 'w-full text-left p-4 rounded-lg border transition-all duration-300 bg-stone-800 text-white border-stone-800 shadow-lg transform scale-105';
+                 }
+            });
+
+            // Update content
+            const data = appData.methodology.steps.find(s => s.id === stepId);
+            const display = document.getElementById('method-display');
+            display.innerHTML = getMethodologyContent(data);
+            display.classList.remove('fade-in');
+            void display.offsetWidth; // trigger reflow
+            display.classList.add('fade-in');
+        }
+
+        function renderPanorama(wrapper) {
+            const data = appData.panorama;
+
+            wrapper.innerHTML += `
+                <div class="space-y-2 mb-8">
+                    <h2 class="text-3xl font-serif font-bold text-stone-800">Panorama Mondial</h2>
+                    <p class="text-stone-600 max-w-3xl">${data.intro}</p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Chart 1: Regional Distribution -->
+                    <div class="bg-white p-6 rounded-lg border border-stone-200 shadow-sm flex flex-col">
+                        <h3 class="text-lg font-bold text-stone-800 mb-4 text-center">Initiatives par Région</h3>
+                        <div class="flex-grow flex items-center justify-center w-full">
+                            <div class="chart-container">
+                                <canvas id="chartRegion"></canvas>
+                            </div>
+                        </div>
+                        <p class="text-xs text-center text-stone-400 mt-4">Cliquez sur une barre pour voir les détails.</p>
+                    </div>
+
+                    <!-- Chart 2: Thematic Focus -->
+                    <div class="bg-white p-6 rounded-lg border border-stone-200 shadow-sm flex flex-col">
+                        <h3 class="text-lg font-bold text-stone-800 mb-4 text-center">Thématiques Dominantes</h3>
+                         <div class="flex-grow flex items-center justify-center w-full">
+                            <div class="chart-container">
+                                <canvas id="chartThemes"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Insight Box -->
+                <div id="region-insight" class="mt-8 bg-emerald-50 p-6 rounded-lg border border-emerald-100 text-center transition-all duration-300">
+                    <h4 class="text-emerald-800 font-bold text-lg mb-2">💡 Insight Géographique</h4>
+                    <p class="text-emerald-700" id="insight-text">Survolez ou cliquez sur le graphique régional pour découvrir les spécificités locales de l'intelligence citoyenne.</p>
+                </div>
+            `;
+        }
+
+        function initCharts() {
+            const data = appData.panorama;
+            const ctxRegion = document.getElementById('chartRegion').getContext('2d');
+            const ctxThemes = document.getElementById('chartThemes').getContext('2d');
+
+            // Bar Chart (Regions)
+            charts.region = new Chart(ctxRegion, {
+                type: 'bar',
+                data: {
+                    labels: data.regions,
+                    datasets: [{
+                        label: 'Nombre d\'Initiatives',
+                        data: data.dataCount,
+                        backgroundColor: '#78716c', // stone-500
+                        hoverBackgroundColor: '#059669', // emerald-600
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    onClick: (e, activeElements) => {
+                        if (activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const region = data.regions[index];
+                            updateInsight(region);
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' initiatives recensées';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f5f5f4' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Doughnut Chart (Themes)
+            charts.themes = new Chart(ctxThemes, {
+                type: 'doughnut',
+                data: {
+                    labels: data.themes,
+                    datasets: [{
+                        data: data.themeData,
+                        backgroundColor: [
+                            '#059669', // Environment (Green)
+                            '#dc2626', // Corruption (Red)
+                            '#2563eb', // Rights (Blue)
+                            '#d97706', // Disinfo (Amber)
+                            '#4b5563'  // Health (Gray)
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        function updateInsight(region) {
+            const textEl = document.getElementById('insight-text');
+            const boxEl = document.getElementById('region-insight');
+            
+            // Animation reset
+            boxEl.classList.remove('opacity-100');
+            boxEl.classList.add('opacity-50');
+            
+            setTimeout(() => {
+                textEl.innerHTML = `<span class="font-bold">${region} :</span> ${appData.panorama.insights[region]}`;
+                boxEl.classList.remove('opacity-50');
+                boxEl.classList.add('opacity-100');
+            }, 150);
+        }
+
+        function renderTools(wrapper) {
+            const data = appData.tools;
+            
+            wrapper.innerHTML += `
+                <div class="space-y-2 mb-8">
+                    <h2 class="text-3xl font-serif font-bold text-stone-800">Matrice des Outils</h2>
+                    <p class="text-stone-600 max-w-3xl">${data.intro}</p>
+                </div>
+                
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button onclick="filterTools('all')" class="px-4 py-2 rounded-full text-sm font-medium bg-stone-800 text-white shadow-md hover:bg-stone-700 transition-colors">Tout Voir</button>
+                    <button onclick="filterTools('tech')" class="px-4 py-2 rounded-full text-sm font-medium bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 transition-colors">Technique</button>
+                    <button onclick="filterTools('action')" class="px-4 py-2 rounded-full text-sm font-medium bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 transition-colors">Action Terrain</button>
+                    <button onclick="filterTools('viz')" class="px-4 py-2 rounded-full text-sm font-medium bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 transition-colors">Visualisation</button>
+                    <button onclick="filterTools('secu')" class="px-4 py-2 rounded-full text-sm font-medium bg-white text-stone-600 border border-stone-200 hover:bg-stone-50 transition-colors">Sécurité</button>
+                </div>
+
+                <!-- Tools Grid -->
+                <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${data.items.map(item => createToolCard(item)).join('')}
+                </div>
+            `;
+        }
+
+        function createToolCard(item) {
+            // Map types to icons/colors
+            let icon, colorClass;
+            switch(item.type) {
+                case 'tech': icon = '💻'; colorClass = 'bg-blue-50 text-blue-700 border-blue-100'; break;
+                case 'action': icon = '📢'; colorClass = 'bg-emerald-50 text-emerald-700 border-emerald-100'; break;
+                case 'secu': icon = '🛡️'; colorClass = 'bg-stone-100 text-stone-700 border-stone-200'; break;
+                case 'viz': icon = '🗺️'; colorClass = 'bg-amber-50 text-amber-700 border-amber-100'; break;
+                default: icon = '🔧'; colorClass = 'bg-gray-50';
+            }
+
+            return `
+                <div class="tool-card group bg-white p-6 rounded-lg border border-stone-200 hover:shadow-lg transition-all duration-300" data-type="${item.type}">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="p-2 rounded-lg ${colorClass} text-xl">${icon}</div>
+                        <span class="text-xs font-bold text-stone-400 uppercase tracking-wide px-2 py-1 rounded bg-stone-50">${item.type}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-stone-800 mb-2 group-hover:text-emerald-600 transition-colors">${item.name}</h3>
+                    <p class="text-sm text-stone-600 leading-relaxed">${item.desc}</p>
+                </div>
+            `;
+        }
+
+        function filterTools(type) {
+            const grid = document.getElementById('tools-grid');
+            const cards = grid.getElementsByClassName('tool-card');
+            
+            Array.from(cards).forEach(card => {
+                if (type === 'all' || card.dataset.type === type) {
+                    card.style.display = 'block';
+                    card.classList.add('fade-in');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event Listener for Mobile Menu
+            document.getElementById('menu-btn').addEventListener('click', () => toggleMenu());
+            
+            // Initial Render
+            renderMainContent();
+        });
+
+    </script>
+</body>
+</html>
