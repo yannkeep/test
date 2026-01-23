@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographie : Veille Citoyenne & Intelligence Non Marchande</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: "Electric Civic" -->
+    <!-- Primary: Indigo-900 (#312e81) - Depth & Authority -->
+    <!-- Secondary: Cyan-500 (#06b6d4) - Tech & Openness -->
+    <!-- Accent: Lime-400 (#a3e635) - Action & Vitality -->
+    <!-- Background: Slate-50 to White -->
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        mono: ['Roboto Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#312e81', // indigo-900
+                            primary: '#4f46e5', // indigo-600
+                            light: '#06b6d4', // cyan-500
+                            accent: '#a3e635', // lime-400
+                            surface: '#f8fafc', // slate-50
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 350px; /* Base height */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+                max-height: 450px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #312e81;
+        }
+
+        /* Flowchart Connector Styles (Pure CSS, No SVG) */
+        .flow-step {
+            position: relative;
+        }
+        .flow-connector::after {
+            content: '▼';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #06b6d4;
+            font-size: 20px;
+        }
+        @media (min-width: 768px) {
+            .flow-connector::after {
+                content: '▶';
+                bottom: auto;
+                right: -20px;
+                top: 50%;
+                left: auto;
+                transform: translateY(-50%);
+            }
+        }
+        .last-step::after {
+            content: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+
+    <!-- Application Structure Plan:
+         1. Hero Section: Hook the user with the definition and scale of the phenomenon.
+         2. Evolution Trends (Line Chart): Show the explosion of initiatives (Change).
+         3. The Methodology (CSS Flow): Explain *how* it works (Organize/Process).
+         4. Global Panorama (Bar Chart): Where is it happening? (Compare/Location).
+         5. The Skills Matrix (Radar Chart): What capabilities are required? (Composition).
+         6. Thematic Impact (Doughnut): What are the targets? (Inform/Proportion).
+         7. Conclusion/Call to Action.
+    -->
+
+    <!-- Hero Section -->
+    <header class="bg-brand-dark text-white pt-16 pb-24 px-6 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-light via-brand-primary to-brand-accent"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <span class="inline-block py-1 px-3 rounded-full bg-brand-primary bg-opacity-30 text-brand-light font-mono text-sm mb-4 border border-brand-light">RAPPORT 2024-2025</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
+                L'Ère de la <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-brand-accent">Veille Citoyenne</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto mb-10">
+                La transposition des méthodes de renseignement économique vers la société civile. Une révolution silencieuse qui transforme l'information en contre-pouvoir.
+            </p>
+            
+            <!-- Big Stats Row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mt-12">
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 border border-white border-opacity-20 transform hover:-translate-y-1 transition-transform">
+                    <div class="text-4xl md:text-5xl font-bold text-brand-accent mb-2">3 450+</div>
+                    <div class="text-sm font-semibold uppercase tracking-wider text-slate-300">Initiatives Mondiales</div>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 border border-white border-opacity-20 transform hover:-translate-y-1 transition-transform">
+                    <div class="text-4xl md:text-5xl font-bold text-brand-light mb-2">82</div>
+                    <div class="text-sm font-semibold uppercase tracking-wider text-slate-300">Pays Actifs</div>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 border border-white border-opacity-20 transform hover:-translate-y-1 transition-transform">
+                    <div class="text-4xl md:text-5xl font-bold text-white mb-2">210%</div>
+                    <div class="text-sm font-semibold uppercase tracking-wider text-slate-300">Croissance (5 ans)</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Growth Trend (Change) -->
+    <section class="max-w-5xl mx-auto px-6 py-16 -mt-12 relative z-20">
+        <div class="bg-white rounded-2xl shadow-xl p-8 mb-12">
+            <div class="mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-brand-dark mb-4 border-l-8 border-brand-primary pl-4">Une Mobilisation Exponentielle</h2>
+                <p class="text-slate-600 mb-4">
+                    L'intelligence non marchande n'est plus un phénomène de niche. Depuis 2015, l'accès aux outils numériques et la demande de transparence ont catalysé une explosion des initiatives citoyennes. Ce graphique illustre l'accélération du nombre d'organisations structurées (ONG, collectifs, laboratoires citoyens) pratiquant activement le renseignement en source ouverte (OSINT).
+                </p>
+            </div>
+            
+            <div class="w-full">
+                <!-- Visualization & Content Choices:
+                     Goal: Change (Trend over time).
+                     Viz: Line Chart. Shows clear upward trajectory.
+                     Constraint: Chart.js Canvas. No SVG.
+                -->
+                <div class="chart-container">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: The Cycle of Intelligence (Process/Organize) -->
+    <section class="bg-slate-100 py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-brand-dark mb-4">Le Cycle du Renseignement Citoyen</h2>
+                <p class="max-w-2xl mx-auto text-slate-600">
+                    Contrairement à l'activisme traditionnel basé sur l'émotion, la veille citoyenne repose sur une méthodologie rigoureuse transposée du monde du renseignement militaire et économique.
+                </p>
+            </div>
+
+            <!-- CSS Grid Flowchart (No SVG) -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Step 1 -->
+                <div class="flow-step flow-connector bg-white p-6 rounded-xl shadow-md border-t-4 border-brand-primary">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-2">Expression des Besoins</h3>
+                    <p class="text-sm text-slate-600">Définition de la question critique. Que cherchons-nous à prouver ? Identification des cibles et des zones d'ombre.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="flow-step flow-connector bg-white p-6 rounded-xl shadow-md border-t-4 border-brand-light">
+                    <div class="text-4xl mb-4">📡</div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-2">Collecte (Sourcing)</h3>
+                    <p class="text-sm text-slate-600">Recherche d'information en source ouverte (OSINT), imagerie satellite, scraping de données publiques et témoignages.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="flow-step flow-connector bg-white p-6 rounded-xl shadow-md border-t-4 border-brand-dark">
+                    <div class="text-4xl mb-4">🧩</div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-2">Analyse & Traitement</h3>
+                    <p class="text-sm text-slate-600">Vérification (Fact-checking), croisement des sources, structuration des bases de données et analyse relationnelle.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="flow-step last-step bg-white p-6 rounded-xl shadow-md border-t-4 border-brand-accent">
+                    <div class="text-4xl mb-4">📢</div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-2">Diffusion Stratégique</h3>
+                    <p class="text-sm text-slate-600">Transformation du renseignement en action : rapports, plaidoyers juridiques, articles de presse ou visualisations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Geographic Distribution (Compare/Location) -->
+    <section class="max-w-6xl mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="order-2 lg:order-1">
+                <div class="chart-container">
+                    <canvas id="geoChart"></canvas>
+                </div>
+            </div>
+            <div class="order-1 lg:order-2">
+                <h2 class="text-3xl font-bold text-brand-dark mb-6">Panorama Géographique</h2>
+                <p class="text-slate-600 mb-6 text-lg">
+                    La répartition mondiale des initiatives révèle des dynamiques distinctes. Si l'Europe et l'Amérique du Nord dominent en volume grâce à l'accès technologique, les pays du Sud (Amérique Latine, Afrique) développent des méthodes innovantes axées sur le mobile et la surveillance électorale.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="text-brand-light mr-2 font-bold text-xl">01.</span>
+                        <span class="text-slate-700"><strong>Europe :</strong> Forte orientation sur la protection des données (GDPR) et l'anti-corruption.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-brand-light mr-2 font-bold text-xl">02.</span>
+                        <span class="text-slate-700"><strong>Amériques :</strong> Polarisation entre Civic Tech institutionnelle (Nord) et défense des droits (Sud).</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-brand-light mr-2 font-bold text-xl">03.</span>
+                        <span class="text-slate-700"><strong>Asie :</strong> Techniques de contournement de la censure et documentation des violations.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Skills & Tools (Composition/Radar) -->
+    <section class="bg-brand-dark text-white py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div>
+                    <h2 class="text-3xl font-bold mb-6 text-white">L'Arsenal de l'Enquêteur Citoyen</h2>
+                    <p class="text-slate-300 mb-8 leading-relaxed">
+                        L'efficacité de l'intelligence non marchande repose sur l'hybridation des compétences. Il ne s'agit pas seulement de technologie ; c'est la convergence entre le juridique, le technique et le terrain qui crée l'impact.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white bg-opacity-5 p-4 rounded-lg border border-brand-primary">
+                            <h4 class="font-bold text-brand-accent mb-1">OSINT & Tech</h4>
+                            <p class="text-xs text-slate-400">Imagerie satellite, scraping, géolocalisation.</p>
+                        </div>
+                        <div class="bg-white bg-opacity-5 p-4 rounded-lg border border-brand-primary">
+                            <h4 class="font-bold text-brand-accent mb-1">Juridique</h4>
+                            <p class="text-xs text-slate-400">Contentieux stratégique, accès aux documents administratifs.</p>
+                        </div>
+                        <div class="bg-white bg-opacity-5 p-4 rounded-lg border border-brand-primary">
+                            <h4 class="font-bold text-brand-accent mb-1">Terrain</h4>
+                            <p class="text-xs text-slate-400">Enquêtes participatives, capteurs citoyens.</p>
+                        </div>
+                        <div class="bg-white bg-opacity-5 p-4 rounded-lg border border-brand-primary">
+                            <h4 class="font-bold text-brand-accent mb-1">Média</h4>
+                            <p class="text-xs text-slate-400">Data storytelling, communication d'influence.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-center bg-white bg-opacity-5 rounded-2xl p-6">
+                    <!-- Visualization Choice: Radar Chart
+                         Goal: Compare multiple variables (skills).
+                         Justification: Shows the multi-disciplinary nature perfectly.
+                    -->
+                    <div class="chart-container">
+                        <canvas id="radarSkills"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Thematic Impact (Proportion/Donut) -->
+    <section class="max-w-5xl mx-auto px-6 py-20">
+        <h2 class="text-3xl font-bold text-brand-dark mb-10 text-center">Champs d'Action Prioritaires</h2>
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2">
+                <div class="p-8 flex flex-col justify-center">
+                    <p class="text-slate-600 mb-6">
+                        Où cette intelligence est-elle appliquée ? L'analyse des données montre une prédominance claire des questions environnementales et de la lutte contre la corruption. Ces domaines, où les données sont souvent opaques ou complexes, bénéficient grandement de l'approche structurée de la veille citoyenne.
+                    </p>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded">
+                            <span class="font-semibold text-slate-700">Environnement & Climat</span>
+                            <span class="font-bold text-brand-primary">35%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded">
+                            <span class="font-semibold text-slate-700">Anti-Corruption</span>
+                            <span class="font-bold text-brand-light">25%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded">
+                            <span class="font-semibold text-slate-700">Droits Humains</span>
+                            <span class="font-bold text-brand-dark">20%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-8 bg-slate-50 flex items-center justify-center">
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="themeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12 text-center">
+        <p class="mb-4 text-sm uppercase tracking-widest font-bold">CivisIntel Observatoire</p>
+        <p class="text-xs max-w-md mx-auto leading-relaxed opacity-60">
+            Ce document est une synthèse interactive basée sur le rapport "Transposition de l'intelligence économique à la société civile". Généré pour analyse et visualisation.
+        </p>
+    </footer>
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <script>
+        // --- UTILITY FUNCTIONS ---
+
+        // 16-char Label Wrapping Logic
+        function formatLabel(str, maxwidth) {
+            if (typeof str !== 'string') return str;
+            if (str.length <= maxwidth) return str;
+            
+            const sections = [];
+            const words = str.split(' ');
+            let temp = '';
+
+            words.forEach(function(item, index) {
+                if (temp.length > 0) {
+                    const concat = temp + ' ' + item;
+                    if (concat.length > maxwidth) {
+                        sections.push(temp);
+                        temp = item;
+                    } else {
+                        temp = concat;
+                    }
+                } else {
+                    temp = item;
+                }
+                if (index === words.length - 1) {
+                    sections.push(temp);
+                }
+            });
+            return sections;
+        }
+
+        // Common Chart Options
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: { family: "'Montserrat', sans-serif", size: 12 },
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(49, 46, 129, 0.9)', // brand-dark
+                    titleFont: { family: "'Montserrat', sans-serif", size: 14 },
+                    bodyFont: { family: "'Roboto Mono', monospace", size: 12 },
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: false,
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // --- CHART GENERATION ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Growth Line Chart
+            const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+            new Chart(ctxGrowth, {
+                type: 'line',
+                data: {
+                    labels: ['2015', '2017', '2019', '2021', '2023', '2025 (Est.)'],
+                    datasets: [{
+                        label: 'Nombre d\'Initiatives Recensées',
+                        data: [850, 1200, 1800, 2400, 3100, 3450],
+                        borderColor: '#06b6d4', // brand-light
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#312e81', // brand-dark
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { family: "'Roboto Mono', monospace" } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: "'Roboto Mono', monospace" } }
+                        }
+                    }
+                }
+            });
+
+            // 2. Geographic Bar Chart
+            const labelsGeo = ['Europe', 'Amérique du Nord', 'Amérique Latine', 'Asie', 'Afrique', 'Moyen-Orient'];
+            const formattedLabelsGeo = labelsGeo.map(l => formatLabel(l, 16));
+            
+            const ctxGeo = document.getElementById('geoChart').getContext('2d');
+            new Chart(ctxGeo, {
+                type: 'bar',
+                data: {
+                    labels: formattedLabelsGeo,
+                    datasets: [{
+                        label: 'Organisations Actives',
+                        data: [350, 420, 280, 210, 190, 80],
+                        backgroundColor: [
+                            '#312e81', // Europe
+                            '#4f46e5', // NA
+                            '#06b6d4', // SA
+                            '#22d3ee', // Asia
+                            '#a3e635', // Africa
+                            '#bef264'  // ME
+                        ],
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    indexAxis: 'y', // Horizontal Bar
+                    scales: {
+                        x: {
+                            grid: { color: '#f1f5f9' },
+                            ticks: { font: { family: "'Roboto Mono', monospace" } }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { family: "'Montserrat', sans-serif", weight: '600' } }
+                        }
+                    },
+                    plugins: {
+                        ...commonOptions.plugins,
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // 3. Radar Skills Chart
+            const labelsRadar = ['Investigation OSINT', 'Analyse de Données', 'Expertise Juridique', 'Enquête Terrain', 'Communication', 'Sécurité Numérique'];
+            const formattedLabelsRadar = labelsRadar.map(l => formatLabel(l, 16));
+
+            const ctxRadar = document.getElementById('radarSkills').getContext('2d');
+            new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: formattedLabelsRadar,
+                    datasets: [{
+                        label: 'Profil Idéal de l\'Organisation',
+                        data: [90, 75, 60, 80, 70, 85],
+                        fill: true,
+                        backgroundColor: 'rgba(163, 230, 53, 0.2)', // lime-400
+                        borderColor: '#a3e635',
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#a3e635'
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            pointLabels: {
+                                color: '#fff',
+                                font: { family: "'Montserrat', sans-serif", size: 11, weight: '600' }
+                            },
+                            ticks: { display: false, backdropColor: 'transparent' }
+                        }
+                    },
+                    plugins: {
+                        ...commonOptions.plugins,
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // 4. Thematic Doughnut Chart
+            const labelsTheme = ['Environnement', 'Anti-Corruption', 'Droits Humains', 'Désinformation', 'Santé Publique'];
+            // No wrapping needed for short labels, but good practice to apply if dynamic
+            const formattedLabelsTheme = labelsTheme.map(l => formatLabel(l, 16));
+
+            const ctxTheme = document.getElementById('themeChart').getContext('2d');
+            new Chart(ctxTheme, {
+                type: 'doughnut',
+                data: {
+                    labels: formattedLabelsTheme,
+                    datasets: [{
+                        data: [35, 25, 20, 15, 5],
+                        backgroundColor: [
+                            '#4f46e5', // Primary
+                            '#06b6d4', // Light
+                            '#312e81', // Dark
+                            '#a3e635', // Accent
+                            '#94a3b8'  // Slate
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    cutout: '70%',
+                    plugins: {
+                        ...commonOptions.plugins,
+                        legend: { display: false } // Hidden to use custom HTML legend
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
