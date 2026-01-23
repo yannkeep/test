@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEILLEUR · Le Jeu</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0c;
+            color: #e8e8ed;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #game-container {
+            position: relative;
+        }
+        canvas {
+            border: 2px solid #8ecf9d;
+            background: linear-gradient(180deg, #0a0a0c 0%, #12121a 100%);
+        }
+        #ui {
+            display: flex;
+            justify-content: space-between;
+            width: 600px;
+            padding: 1rem 0;
+            font-size: 1.1rem;
+        }
+        .score { color: #8ecf9d; }
+        .lives { color: #c9a7eb; }
+        .level { color: #6ee7a0; }
+        #start-screen, #game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 600px;
+            height: 500px;
+            background: rgba(10,10,12,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+        }
+        #game-over { display: none; }
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #8ecf9d, #c9a7eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        .subtitle { color: #888; margin-bottom: 2rem; font-size: 0.9rem; }
+        .instructions {
+            text-align: left;
+            margin: 1rem 2rem;
+            line-height: 1.8;
+        }
+        .instructions span.good { color: #8ecf9d; }
+        .instructions span.bad { color: #ff6b6b; }
+        .instructions span.bonus { color: #ffd93d; }
+        button {
+            background: linear-gradient(135deg, #8ecf9d, #6ee7a0);
+            border: none;
+            color: #0a0a0c;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.05); }
+        #final-score { font-size: 3rem; color: #8ecf9d; margin: 1rem 0; }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="ui">
+            <span class="score">DONNÉES: <span id="score">0</span></span>
+            <span class="level">NIVEAU: <span id="level">1</span></span>
+            <span class="lives">CRÉDIBILITÉ: <span id="lives">●●●</span></span>
+        </div>
+        <canvas id="game" width="600" height="500"></canvas>
+        
+        <div id="start-screen">
+            <h1>VEILLEUR</h1>
+            <p class="subtitle">Intelligence Citoyenne Arcade</p>
+            <div class="instructions">
+                <p><span class="good">■ VERT</span> → Données fiables (+10 pts)</p>
+                <p><span class="bad">■ ROUGE</span> → Fake news (éviter!)</p>
+                <p><span class="bonus">■ JAUNE</span> → Scoop OSINT (+50 pts)</p>
+                <p style="margin-top:1rem; color:#888;">← → pour bouger · Espace pour dash</p>
+            </div>
+            <button onclick="startGame()">OBSERVER</button>
+        </div>
+        
+        <div id="game-over">
+            <h1>GAME OVER</h1>
+            <p class="subtitle">La désinformation a gagné...</p>
+            <div id="final-score">0</div>
+            <p>données collectées</p>
+            <button onclick="startGame()">RÉESSAYER</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('game');
+        const ctx = canvas.getContext('2d');
+        
+        let player, items, particles, score, lives, level, gameLoop, keys, dashCooldown;
+        
+        const COLORS = {
+            good: '#8ecf9d',
+            bad: '#ff6b6b',
+            bonus: '#ffd93d',
+            player: '#c9a7eb',
+            particle: ['#8ecf9d', '#c9a7eb', '#6ee7a0']
+        };
+        
+        function init() {
+            player = { x: 300, y: 450, w: 50, h: 20, speed: 8, dash: false };
+            items = [];
+            particles = [];
+            score = 0;
+            lives = 3;
+            level = 1;
+            dashCooldown = 0;
+            keys = { left: false, right: false, space: false };
+            updateUI();
+        }
+        
+        function updateUI() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('level').textContent = level;
+            document.getElementById('lives').textContent = '●'.repeat(lives) + '○'.repeat(3-lives);
+        }
+        
+        function spawnItem() {
+            const rand = Math.random();
+            let type, color;
+            if (rand < 0.6) { type = 'good'; color = COLORS.good; }
+            else if (rand < 0.9) { type = 'bad'; color = COLORS.bad; }
+            else { type = 'bonus'; color = COLORS.bonus; }
+            
+            items.push({
+                x: Math.random() * (canvas.width - 30) + 15,
+                y: -20,
+                r: type === 'bonus' ? 12 : 10,
+                speed: 2 + level * 0.5 + Math.random() * 2,
+                type, color,
+                angle: 0
+            });
+        }
+        
+        function spawnParticles(x, y, color, count = 10) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x, y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    r: Math.random() * 4 + 2,
+                    color,
+                    life: 1
+                });
+            }
+        }
+        
+        function update() {
+            // Player movement
+            if (keys.left) player.x -= player.speed * (player.dash ? 2.5 : 1);
+            if (keys.right) player.x += player.speed * (player.dash ? 2.5 : 1);
+            player.x = Math.max(player.w/2, Math.min(canvas.width - player.w/2, player.x));
+            
+            if (dashCooldown > 0) dashCooldown--;
+            if (keys.space && dashCooldown === 0) {
+                player.dash = true;
+                dashCooldown = 60;
+                setTimeout(() => player.dash = false, 200);
+            }
+            
+            // Spawn items
+            if (Math.random() < 0.02 + level * 0.005) spawnItem();
+            
+            // Update items
+            items.forEach((item, i) => {
+                item.y += item.speed;
+                item.angle += 0.1;
+                
+                // Collision with player
+                const dx = item.x - player.x;
+                const dy = item.y - player.y;
+                if (Math.abs(dx) < player.w/2 + item.r && Math.abs(dy) < player.h/2 + item.r) {
+                    if (item.type === 'good') {
+                        score += 10;
+                        spawnParticles(item.x, item.y, item.color);
+                    } else if (item.type === 'bonus') {
+                        score += 50;
+                        spawnParticles(item.x, item.y, item.color, 20);
+                    } else {
+                        lives--;
+                        spawnParticles(item.x, item.y, item.color, 15);
+                        if (lives <= 0) gameOver();
+                    }
+                    items.splice(i, 1);
+                    updateUI();
+                    
+                    // Level up
+                    if (score > level * 100) {
+                        level++;
+                        updateUI();
+                    }
+                }
+                
+                // Remove off-screen
+                if (item.y > canvas.height + 20) items.splice(i, 1);
+            });
+            
+            // Update particles
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.02;
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+                if (p.life <= 0) particles.splice(i, 1);
+            });
+        }
+        
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Grid background
+            ctx.strokeStyle = 'rgba(142, 207, 157, 0.05)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < canvas.height; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+            
+            // Items
+            items.forEach(item => {
+                ctx.save();
+                ctx.translate(item.x, item.y);
+                ctx.rotate(item.angle);
+                ctx.fillStyle = item.color;
+                ctx.shadowColor = item.color;
+                ctx.shadowBlur = 15;
+                
+                if (item.type === 'bonus') {
+                    // Diamond shape for bonus
+                    ctx.beginPath();
+                    ctx.moveTo(0, -item.r);
+                    ctx.lineTo(item.r, 0);
+                    ctx.lineTo(0, item.r);
+                    ctx.lineTo(-item.r, 0);
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    // Square for others
+                    ctx.fillRect(-item.r, -item.r, item.r*2, item.r*2);
+                }
+                ctx.restore();
+            });
+            
+            // Particles
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+            
+            // Player
+            ctx.fillStyle = COLORS.player;
+            ctx.shadowColor = COLORS.player;
+            ctx.shadowBlur = player.dash ? 30 : 15;
+            
+            // Player shape (satellite dish)
+            ctx.beginPath();
+            ctx.moveTo(player.x - player.w/2, player.y + player.h/2);
+            ctx.quadraticCurveTo(player.x, player.y - player.h, player.x + player.w/2, player.y + player.h/2);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Antenna
+            ctx.strokeStyle = COLORS.player;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(player.x, player.y);
+            ctx.lineTo(player.x, player.y - 15);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(player.x, player.y - 18, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.shadowBlur = 0;
+            
+            // Dash indicator
+            if (dashCooldown > 0) {
+                ctx.fillStyle = 'rgba(201, 167, 235, 0.3)';
+                ctx.fillRect(10, canvas.height - 15, (60 - dashCooldown) / 60 * 100, 8);
+                ctx.strokeStyle = '#c9a7eb';
+                ctx.strokeRect(10, canvas.height - 15, 100, 8);
+            }
+        }
+        
+        function gameOver() {
+            cancelAnimationFrame(gameLoop);
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('game-over').style.display = 'flex';
+        }
+        
+        function loop() {
+            update();
+            draw();
+            gameLoop = requestAnimationFrame(loop);
+        }
+        
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-over').style.display = 'none';
+            init();
+            loop();
+        }
+        
+        // Controls
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') keys.left = true;
+            if (e.key === 'ArrowRight') keys.right = true;
+            if (e.key === ' ') { keys.space = true; e.preventDefault(); }
+        });
+        document.addEventListener('keyup', e => {
+            if (e.key === 'ArrowLeft') keys.left = false;
+            if (e.key === 'ArrowRight') keys.right = false;
+            if (e.key === ' ') keys.space = false;
+        });
+    </script>
+</body>
+</html>
