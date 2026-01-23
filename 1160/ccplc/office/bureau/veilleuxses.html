@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script type='text/javascript' src='https://ouaisfieu.github.io/T9NJOrEKhuz-gPIASHqcBdPNJUo8UuUIjSQeDAhqsFw3TjDp60f0eA-IGBdi0yxto23B5CKOkQx-YLqIl0muDE5TxpzvKG7tQ4sshzz1Rj3czZ076YPUC_pbELtvxR04i0aG7kHRolAgoWTthMrAmOc1oGtjA6tFSm7oG4xZWKMSdHCRpYF-b2bopEe-MTujwqRI_r58AsHae-7nnx-5ezW9_ct3VJ7NxTB2fgtlrl_3whE0Z7l7xsJS0ohSMq5WES3JLaHXeRS2c1umYCthuX3PgsvCtZOKBMW0wXu1ItisvCUaY9Zu_H0qRYsy2rv2zATxyubS5ouUdyK4G7ZSN5R66fG_-KnxfHgKuR1MaO_Zv-nI1xnIqK2TbrX2IjalCh8eHAbWaIxwUmSmkgBUR_CHasAin3MPGGlR65d91n8jMCWbaFoSDflCkxEMSGmk77jcZ7b7fhBf4NRK5lMYbbQ8eBhS50egFVAujRhtWL48-clfNzOsSMDQ83g'></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Œil de Sauron - Quadrant Politique</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --card-bg: #12121a;
+  --border: rgba(134, 239, 172, 0.3);
+  --text: #a7f3d0;
+  --accent: #c4b5fd;
+  --lilas: #ddd6fe;
+  --green: #86efac;
+  --eye: #ef4444;
+  --eye-glow: rgba(239, 68, 68, 0.5);
+  --auth-left: #ef4444;
+  --auth-right: #3b82f6;
+  --lib-left: #22c55e;
+  --lib-right: #eab308;
+}
+[data-theme="light"] {
+  --bg: #f0fdf4;
+  --card-bg: #ffffff;
+  --border: rgba(192, 132, 252, 0.4);
+  --text: #166534;
+  --accent: #7c3aed;
+  --eye: #ea580c;
+  --eye-glow: rgba(234, 88, 12, 0.4);
+}
+[data-theme="matrix"] {
+  --bg: #000;
+  --card-bg: #001100;
+  --border: #00ff00;
+  --text: #00ff00;
+  --accent: #00ff00;
+  --eye: #00ff00;
+  --eye-glow: rgba(0, 255, 0, 0.6);
+  --auth-left: #00ff00;
+  --auth-right: #00aa00;
+  --lib-left: #00dd00;
+  --lib-right: #008800;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: all 0.4s;
+}
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.eye-container {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+.eye {
+  width: 36px;
+  height: 18px;
+  border: 3px solid var(--eye);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 15px var(--eye-glow), inset 0 0 10px var(--eye-glow);
+}
+.pupil {
+  width: 8px;
+  height: 8px;
+  background: var(--eye);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--eye-glow);
+  animation: look 4s infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 15px var(--eye-glow), inset 0 0 10px var(--eye-glow); }
+  50% { box-shadow: 0 0 30px var(--eye-glow), inset 0 0 20px var(--eye-glow); }
+}
+@keyframes look {
+  0%, 100% { transform: translate(-50%, -50%); }
+  25% { transform: translate(-80%, -50%); }
+  75% { transform: translate(-20%, -50%); }
+}
+.controls {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.2s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.active { background: var(--accent); color: var(--bg); }
+.search-bar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  flex-wrap: wrap;
+}
+.search-bar input, .search-bar select {
+  padding: 0.4rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+.search-bar input { flex: 1; min-width: 120px; }
+.compass-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0.5rem;
+}
+.compass {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  background: var(--border);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.quadrant {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 2px;
+  padding: 2px;
+}
+.quadrant.auth-left { background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05)); }
+.quadrant.auth-right { background: linear-gradient(225deg, rgba(59,130,246,0.15), rgba(59,130,246,0.05)); }
+.quadrant.lib-left { background: linear-gradient(45deg, rgba(34,197,94,0.15), rgba(34,197,94,0.05)); }
+.quadrant.lib-right { background: linear-gradient(315deg, rgba(234,179,8,0.15), rgba(234,179,8,0.05)); }
+.quadrant-label {
+  position: absolute;
+  font-size: 0.6rem;
+  font-weight: bold;
+  opacity: 0.7;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.auth-left .quadrant-label { top: 4px; left: 4px; color: var(--auth-left); }
+.auth-right .quadrant-label { top: 4px; right: 4px; color: var(--auth-right); text-align: right; }
+.lib-left .quadrant-label { bottom: 4px; left: 4px; color: var(--lib-left); }
+.lib-right .quadrant-label { bottom: 4px; right: 4px; color: var(--lib-right); text-align: right; }
+.axis-label {
+  position: absolute;
+  font-size: 0.65rem;
+  color: var(--accent);
+  font-weight: bold;
+  opacity: 0.8;
+}
+.axis-label.top { top: -18px; left: 50%; transform: translateX(-50%); }
+.axis-label.bottom { bottom: -18px; left: 50%; transform: translateX(-50%); }
+.axis-label.left { left: -24px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+.axis-label.right { right: -24px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+.cell {
+  aspect-ratio: 1;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  font-size: 0.5rem;
+}
+.cell:hover {
+  border-color: var(--accent);
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 0 12px var(--eye-glow);
+}
+.cell.filled {
+  border-width: 2px;
+}
+.cell-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cell-initial {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--accent);
+}
+.cell-number {
+  opacity: 0.4;
+}
+.sauron-eye {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  z-index: 100;
+  pointer-events: none;
+}
+.sauron-eye .eye-ring {
+  width: 60px;
+  height: 30px;
+  border: 4px solid var(--eye);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 20px var(--eye-glow), 0 0 40px var(--eye-glow), inset 0 0 15px var(--eye-glow);
+  animation: pulse 2s infinite;
+}
+.sauron-eye .eye-pupil {
+  width: 16px;
+  height: 16px;
+  background: var(--eye);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px var(--eye-glow);
+  animation: look 4s infinite;
+}
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card-bg);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--card-bg);
+  z-index: 10;
+}
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.modal-body { padding: 1rem; }
+.form-group { margin-bottom: 0.8rem; }
+.form-group label {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: var(--accent);
+  font-size: 0.75rem;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+.form-group textarea { min-height: 60px; resize: vertical; }
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.range-group label {
+  display: flex;
+  justify-content: space-between;
+}
+.range-group input[type="range"] {
+  width: 100%;
+  margin-top: 0.3rem;
+}
+.color-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.color-row input[type="color"] {
+  width: 50px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+.media-preview {
+  margin-top: 0.3rem;
+  padding: 0.3rem;
+  background: var(--bg);
+  border-radius: 4px;
+  max-height: 100px;
+  overflow: hidden;
+}
+.media-preview img { max-width: 100%; max-height: 90px; border-radius: 4px; }
+.modal-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border);
+  position: sticky;
+  bottom: 0;
+  background: var(--card-bg);
+}
+.btn-danger { border-color: #ef4444; color: #ef4444; }
+.btn-danger:hover { background: #ef4444; color: white; }
+.btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.stats {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.legend {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.65rem;
+  border-bottom: 1px solid var(--border);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+.position-preview {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--bg);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.75rem;
+}
+.position-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+</style>
+</head>
+<body data-theme="dark">
+
+<header>
+  <div class="logo">
+    <div class="eye-container">
+      <div class="eye"><div class="pupil"></div></div>
+    </div>
+    <span>SAURON INTEL</span>
+  </div>
+  <div class="controls">
+    <button class="btn active" onclick="setTheme('dark')">🌙</button>
+    <button class="btn" onclick="setTheme('light')">☀️</button>
+    <button class="btn" onclick="setTheme('matrix')">🟢</button>
+    <button class="btn" onclick="exportData('json')">JSON</button>
+    <button class="btn" onclick="exportData('csv')">CSV</button>
+    <button class="btn" onclick="exportData('md')">MD</button>
+    <button class="btn" onclick="exportData('html')">HTML</button>
+    <button class="btn" onclick="importData()">📤</button>
+  </div>
+</header>
+
+<div class="search-bar">
+  <input type="text" id="search" placeholder="🔍 Rechercher..." oninput="filterCells()">
+  <select id="categoryFilter" onchange="filterCells()">
+    <option value="">Toutes catégories</option>
+    <option value="personne">👤 Personne</option>
+    <option value="entreprise">🏢 Entreprise</option>
+    <option value="organisation">🌐 Organisation</option>
+    <option value="media">📺 Média</option>
+    <option value="parti">🏛️ Parti</option>
+    <option value="autre">📁 Autre</option>
+  </select>
+  <select id="quadrantFilter" onchange="filterCells()">
+    <option value="">Tous quadrants</option>
+    <option value="auth-left">🔴 Auth-Gauche</option>
+    <option value="auth-right">🔵 Auth-Droite</option>
+    <option value="lib-left">🟢 Lib-Gauche</option>
+    <option value="lib-right">🟡 Lib-Droite</option>
+  </select>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-color" style="background:#ef4444"></div>Autoritaire-Gauche</div>
+  <div class="legend-item"><div class="legend-color" style="background:#3b82f6"></div>Autoritaire-Droite</div>
+  <div class="legend-item"><div class="legend-color" style="background:#22c55e"></div>Libertaire-Gauche</div>
+  <div class="legend-item"><div class="legend-color" style="background:#eab308"></div>Libertaire-Droite</div>
+</div>
+
+<div class="stats" id="stats">0/300 fiches</div>
+
+<div class="compass-container">
+  <div class="compass">
+    <span class="axis-label top">AUTORITAIRE</span>
+    <span class="axis-label bottom">LIBERTAIRE</span>
+    <span class="axis-label left">GAUCHE</span>
+    <span class="axis-label right">DROITE</span>
+    
+    <div class="quadrant auth-left" id="q-auth-left">
+      <span class="quadrant-label">Auth-Gauche</span>
+    </div>
+    <div class="quadrant auth-right" id="q-auth-right">
+      <span class="quadrant-label">Auth-Droite</span>
+    </div>
+    <div class="quadrant lib-left" id="q-lib-left">
+      <span class="quadrant-label">Lib-Gauche</span>
+    </div>
+    <div class="quadrant lib-right" id="q-lib-right">
+      <span class="quadrant-label">Lib-Droite</span>
+    </div>
+    
+    <div class="sauron-eye">
+      <div class="eye-ring"></div>
+      <div class="eye-pupil"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modalTitle">Fiche</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Nom / Titre *</label>
+        <input type="text" id="fName" placeholder="Nom de l'entité">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select id="fCategory">
+            <option value="">-- Choisir --</option>
+            <option value="personne">👤 Personne</option>
+            <option value="entreprise">🏢 Entreprise</option>
+            <option value="organisation">🌐 Organisation</option>
+            <option value="media">📺 Média</option>
+            <option value="parti">🏛️ Parti</option>
+            <option value="autre">📁 Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Couleur</label>
+          <div class="color-row">
+            <input type="color" id="fColor" value="#86efac">
+            <span id="colorHex">#86efac</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group range-group">
+          <label>Économie <span id="ecoVal">0</span></label>
+          <input type="range" id="fEco" min="-10" max="10" value="0" oninput="updatePosition()">
+          <small style="display:flex;justify-content:space-between;font-size:0.6rem;opacity:0.6"><span>← Gauche</span><span>Droite →</span></small>
+        </div>
+        <div class="form-group range-group">
+          <label>Autorité <span id="authVal">0</span></label>
+          <input type="range" id="fAuth" min="-10" max="10" value="0" oninput="updatePosition()">
+          <small style="display:flex;justify-content:space-between;font-size:0.6rem;opacity:0.6"><span>← Libertaire</span><span>Autoritaire →</span></small>
+        </div>
+      </div>
+      <div class="position-preview" id="positionPreview">
+        Quadrant: <strong>Centre</strong> <span class="position-dot" style="background:#888"></span>
+      </div>
+      
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="fDescription" placeholder="Description..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Logo / Photo (URL)</label>
+        <input type="url" id="fLogo" placeholder="https://..." oninput="previewMedia()">
+        <div class="media-preview" id="logoPreview"></div>
+      </div>
+      <div class="form-group">
+        <label>Média embed (URL)</label>
+        <input type="url" id="fMedia" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label>Fichiers liés (URLs séparées par virgule)</label>
+        <input type="text" id="fFiles" placeholder="https://doc1.pdf, https://doc2.pdf">
+      </div>
+      <div class="form-group">
+        <label>Tags</label>
+        <input type="text" id="fTags" placeholder="manipulation, politique...">
+      </div>
+      <div class="form-group">
+        <label>Relations (IDs séparés par virgule)</label>
+        <input type="text" id="fLinks" placeholder="12, 45, 89">
+      </div>
+      <div class="form-group">
+        <label>Notes privées</label>
+        <textarea id="fNotes" placeholder="Notes..."></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveCard()">💾 Sauver</button>
+      <button class="btn btn-danger" onclick="deleteCard()">🗑️</button>
+      <button class="btn" onclick="exportCard('json')">JSON</button>
+      <button class="btn" onclick="exportCard('md')">MD</button>
+      <button class="btn" onclick="exportCard('html')">HTML</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<script>
+const CELLS_PER_QUADRANT = 75;
+const TOTAL_CELLS = 300;
+let cards = {};
+let currentCell = null;
+
+const quadrantColors = {
+  'auth-left': '#ef4444',
+  'auth-right': '#3b82f6',
+  'lib-left': '#22c55e',
+  'lib-right': '#eab308'
+};
+
+const quadrantNames = {
+  'auth-left': 'Autoritaire-Gauche',
+  'auth-right': 'Autoritaire-Droite',
+  'lib-left': 'Libertaire-Gauche',
+  'lib-right': 'Libertaire-Droite'
+};
+
+function init() {
+  loadData();
+  renderGrid();
+  updateStats();
+  document.getElementById('fColor').addEventListener('input', e => {
+    document.getElementById('colorHex').textContent = e.target.value;
+  });
+}
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem('sauronCards');
+    if (saved) cards = JSON.parse(saved);
+  } catch(e) { cards = {}; }
+}
+
+function saveData() {
+  localStorage.setItem('sauronCards', JSON.stringify(cards));
+  updateStats();
+}
+
+function getQuadrant(eco, auth) {
+  if (auth >= 0 && eco < 0) return 'auth-left';
+  if (auth >= 0 && eco >= 0) return 'auth-right';
+  if (auth < 0 && eco < 0) return 'lib-left';
+  return 'lib-right';
+}
+
+function getQuadrantPosition(eco, auth) {
+  const absEco = Math.abs(eco);
+  const absAuth = Math.abs(auth);
+  const col = Math.min(4, Math.floor(absEco / 2.1));
+  const row = Math.min(4, Math.floor(absAuth / 2.1));
+  return { row, col };
+}
+
+function renderGrid() {
+  const quadrants = {
+    'auth-left': document.getElementById('q-auth-left'),
+    'auth-right': document.getElementById('q-auth-right'),
+    'lib-left': document.getElementById('q-lib-left'),
+    'lib-right': document.getElementById('q-lib-right')
+  };
+  
+  // Clear quadrants (keep labels)
+  Object.values(quadrants).forEach(q => {
+    const label = q.querySelector('.quadrant-label');
+    q.innerHTML = '';
+    q.appendChild(label);
+  });
+  
+  // Create cell grid for each quadrant
+  const cellsByQuadrant = { 'auth-left': [], 'auth-right': [], 'lib-left': [], 'lib-right': [] };
+  const usedPositions = { 'auth-left': {}, 'auth-right': {}, 'lib-left': {}, 'lib-right': {} };
+  
+  // First pass: place cards with political positions
+  Object.entries(cards).forEach(([id, card]) => {
+    if (card.eco !== undefined && card.auth !== undefined) {
+      const quadrant = getQuadrant(card.eco, card.auth);
+      let { row, col } = getQuadrantPosition(card.eco, card.auth);
+      
+      // Adjust column direction based on quadrant
+      if (quadrant === 'auth-left' || quadrant === 'lib-left') {
+        col = 4 - col; // Invert for left quadrants
+      }
+      if (quadrant === 'lib-left' || quadrant === 'lib-right') {
+        row = 4 - row; // Invert for bottom quadrants
+      }
+      
+      // Find available position
+      let posKey = `${row}-${col}`;
+      while (usedPositions[quadrant][posKey]) {
+        col = (col + 1) % 5;
+        if (col === 0) row = (row + 1) % 5;
+        posKey = `${row}-${col}`;
+      }
+      usedPositions[quadrant][posKey] = true;
+      
+      cellsByQuadrant[quadrant].push({ id, card, row, col });
+    }
+  });
+  
+  // Create 5x5 grid for each quadrant
+  Object.entries(quadrants).forEach(([qName, qEl]) => {
+    const grid = [];
+    for (let r = 0; r < 5; r++) {
+      for (let c = 0; c < 5; c++) {
+        grid.push({ row: r, col: c, card: null, id: null });
+      }
+    }
+    
+    // Place cards
+    cellsByQuadrant[qName].forEach(item => {
+      const idx = item.row * 5 + item.col;
+      if (grid[idx]) {
+        grid[idx].card = item.card;
+        grid[idx].id = item.id;
+      }
+    });
+    
+    // Assign IDs to empty cells
+    const baseId = { 'auth-left': 1, 'auth-right': 76, 'lib-left': 151, 'lib-right': 226 }[qName];
+    let emptyIdx = 0;
+    grid.forEach((cell, idx) => {
+      if (!cell.id) {
+        while (cards[baseId + emptyIdx]) emptyIdx++;
+        cell.id = baseId + emptyIdx;
+        emptyIdx++;
+      }
+    });
+    
+    // Render cells
+    grid.forEach(cell => {
+      const div = document.createElement('div');
+      div.className = 'cell' + (cell.card ? ' filled' : '');
+      div.dataset.id = cell.id;
+      div.dataset.quadrant = qName;
+      div.onclick = () => openModal(cell.id, qName);
+      
+      if (cell.card) {
+        if (cell.card.logo) {
+          div.innerHTML = `<img class="cell-logo" src="${cell.card.logo}" alt="">`;
+        } else if (cell.card.name) {
+          div.innerHTML = `<span class="cell-initial">${cell.card.name.charAt(0).toUpperCase()}</span>`;
+        }
+        div.style.borderColor = cell.card.color || quadrantColors[qName];
+        div.style.boxShadow = `inset 0 0 8px ${cell.card.color || quadrantColors[qName]}44`;
+      } else {
+        div.innerHTML = `<span class="cell-number">${cell.id}</span>`;
+      }
+      
+      qEl.appendChild(div);
+    });
+  });
+}
+
+function openModal(id, quadrant) {
+  currentCell = id;
+  const card = cards[id] || {};
+  
+  document.getElementById('modalTitle').textContent = `Fiche #${id}`;
+  document.getElementById('fName').value = card.name || '';
+  document.getElementById('fCategory').value = card.category || '';
+  document.getElementById('fDescription').value = card.description || '';
+  document.getElementById('fColor').value = card.color || '#86efac';
+  document.getElementById('colorHex').textContent = card.color || '#86efac';
+  document.getElementById('fEco').value = card.eco ?? 0;
+  document.getElementById('fAuth').value = card.auth ?? 0;
+  document.getElementById('fLogo').value = card.logo || '';
+  document.getElementById('fMedia').value = card.media || '';
+  document.getElementById('fFiles').value = (card.files || []).join(', ');
+  document.getElementById('fTags').value = (card.tags || []).join(', ');
+  document.getElementById('fLinks').value = (card.links || []).join(', ');
+  document.getElementById('fNotes').value = card.notes || '';
+  
+  previewMedia();
+  updatePosition();
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function updatePosition() {
+  const eco = parseInt(document.getElementById('fEco').value);
+  const auth = parseInt(document.getElementById('fAuth').value);
+  document.getElementById('ecoVal').textContent = eco;
+  document.getElementById('authVal').textContent = auth;
+  
+  const quadrant = getQuadrant(eco, auth);
+  const color = quadrantColors[quadrant];
+  const name = quadrantNames[quadrant];
+  
+  document.getElementById('positionPreview').innerHTML = 
+    `Quadrant: <strong>${name}</strong> <span class="position-dot" style="background:${color}"></span>`;
+}
+
+function closeModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('modalOverlay').classList.remove('open');
+  currentCell = null;
+}
+
+function saveCard() {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) { alert('Le nom est requis'); return; }
+  
+  cards[currentCell] = {
+    name,
+    category: document.getElementById('fCategory').value,
+    description: document.getElementById('fDescription').value,
+    color: document.getElementById('fColor').value,
+    eco: parseInt(document.getElementById('fEco').value),
+    auth: parseInt(document.getElementById('fAuth').value),
+    logo: document.getElementById('fLogo').value,
+    media: document.getElementById('fMedia').value,
+    files: document.getElementById('fFiles').value.split(',').map(s => s.trim()).filter(Boolean),
+    tags: document.getElementById('fTags').value.split(',').map(s => s.trim()).filter(Boolean),
+    links: document.getElementById('fLinks').value.split(',').map(s => s.trim()).filter(Boolean),
+    notes: document.getElementById('fNotes').value,
+    updated: new Date().toISOString()
+  };
+  saveData();
+  renderGrid();
+  closeModal();
+}
+
+function deleteCard() {
+  if (!confirm('Supprimer cette fiche ?')) return;
+  delete cards[currentCell];
+  saveData();
+  renderGrid();
+  closeModal();
+}
+
+function previewMedia() {
+  const url = document.getElementById('fLogo').value.trim();
+  const preview = document.getElementById('logoPreview');
+  if (!url) { preview.innerHTML = ''; return; }
+  preview.innerHTML = `<img src="${url}" alt="preview" onerror="this.style.display='none'">`;
+}
+
+function filterCells() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const category = document.getElementById('categoryFilter').value;
+  const quadrantFilter = document.getElementById('quadrantFilter').value;
+  
+  document.querySelectorAll('.cell').forEach(cell => {
+    const id = cell.dataset.id;
+    const qName = cell.dataset.quadrant;
+    const card = cards[id];
+    let show = true;
+    
+    if (quadrantFilter && qName !== quadrantFilter) show = false;
+    
+    if (card && show) {
+      if (search && !card.name.toLowerCase().includes(search) && 
+          !(card.tags || []).some(t => t.toLowerCase().includes(search))) {
+        show = false;
+      }
+      if (category && card.category !== category) show = false;
+    } else if (!card && (search || category)) {
+      show = false;
+    }
+    
+    cell.style.display = show ? '' : 'none';
+  });
+}
+
+function updateStats() {
+  const filled = Object.keys(cards).length;
+  const byQuadrant = { 'auth-left': 0, 'auth-right': 0, 'lib-left': 0, 'lib-right': 0 };
+  
+  Object.values(cards).forEach(c => {
+    if (c.eco !== undefined && c.auth !== undefined) {
+      byQuadrant[getQuadrant(c.eco, c.auth)]++;
+    }
+  });
+  
+  document.getElementById('stats').innerHTML = 
+    `<span>${filled}/${TOTAL_CELLS} fiches</span>
+     <span>🔴 ${byQuadrant['auth-left']}</span>
+     <span>🔵 ${byQuadrant['auth-right']}</span>
+     <span>🟢 ${byQuadrant['lib-left']}</span>
+     <span>🟡 ${byQuadrant['lib-right']}</span>`;
+}
+
+function setTheme(theme) {
+  document.body.dataset.theme = theme;
+  document.querySelectorAll('.controls .btn').forEach((b, i) => {
+    b.classList.toggle('active', i === ['dark', 'light', 'matrix'].indexOf(theme));
+  });
+}
+
+function exportData(format) {
+  let content, filename, type;
+  
+  if (format === 'json') {
+    content = JSON.stringify(cards, null, 2);
+    filename = 'sauron-intel.json';
+    type = 'application/json';
+  } else if (format === 'csv') {
+    const headers = ['ID','Nom','Catégorie','Éco','Auth','Quadrant','Description','Couleur','Logo','Tags','MàJ'];
+    const rows = Object.entries(cards).map(([id, c]) => [
+      id, c.name, c.category, c.eco, c.auth, getQuadrant(c.eco, c.auth), c.description, c.color, c.logo, 
+      (c.tags||[]).join(';'), c.updated
+    ].map(v => `"${(v||'').toString().replace(/"/g, '""')}"`).join(','));
+    content = [headers.join(','), ...rows].join('\n');
+    filename = 'sauron-intel.csv';
+    type = 'text/csv';
+  } else if (format === 'md') {
+    content = `# 🔴 SAURON INTEL - Quadrant Politique\n\n`;
+    content += `> Exporté le ${new Date().toLocaleString('fr-FR')}\n\n---\n\n`;
+    Object.entries(cards).forEach(([id, c]) => {
+      const q = getQuadrant(c.eco, c.auth);
+      content += `## #${id} - ${c.name}\n\n`;
+      content += `**Quadrant:** ${quadrantNames[q]} | **Éco:** ${c.eco} | **Auth:** ${c.auth}\n\n`;
+      if (c.category) content += `**Catégorie:** ${c.category}\n\n`;
+      if (c.description) content += `${c.description}\n\n`;
+      if (c.tags?.length) content += `**Tags:** ${c.tags.map(t => `\`${t}\``).join(' ')}\n\n`;
+      content += `---\n\n`;
+    });
+    filename = 'sauron-intel.md';
+    type = 'text/markdown';
+  } else if (format === 'html') {
+    content = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>SAURON INTEL</title>
+<style>body{font-family:system-ui;background:#0a0a0f;color:#a7f3d0;padding:2rem;max-width:900px;margin:auto}
+h1{color:#ef4444;text-align:center}h2{color:#c4b5fd;border-bottom:1px solid #333;padding-bottom:0.5rem}
+.card{background:#12121a;border-left:4px solid;border-radius:8px;padding:1rem;margin:1rem 0}
+.tag{background:#7c3aed33;padding:2px 8px;border-radius:4px;margin:2px;display:inline-block;font-size:0.8rem}
+.quadrant{font-size:0.8rem;opacity:0.8}</style></head><body>
+<h1>🔴 SAURON INTEL - Quadrant Politique</h1>`;
+    Object.entries(cards).forEach(([id, c]) => {
+      const q = getQuadrant(c.eco, c.auth);
+      content += `<div class="card" style="border-color:${quadrantColors[q]}">`;
+      content += `<h2>#${id} - ${c.name}</h2>`;
+      content += `<p class="quadrant">${quadrantNames[q]} | Éco: ${c.eco} | Auth: ${c.auth}</p>`;
+      if (c.description) content += `<p>${c.description}</p>`;
+      if (c.tags?.length) content += `<p>${c.tags.map(t => `<span class="tag">${t}</span>`).join(' ')}</p>`;
+      content += `</div>`;
+    });
+    content += `</body></html>`;
+    filename = 'sauron-intel.html';
+    type = 'text/html';
+  }
+  
+  const blob = new Blob([content], {type});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function exportCard(format) {
+  const card = cards[currentCell];
+  if (!card) { alert('Aucune fiche'); return; }
+  
+  let content, filename, type;
+  const safeName = card.name.replace(/[^a-zA-Z0-9]/g, '_');
+  const q = getQuadrant(card.eco, card.auth);
+  
+  if (format === 'json') {
+    content = JSON.stringify({[currentCell]: card}, null, 2);
+    filename = `fiche-${currentCell}-${safeName}.json`;
+    type = 'application/json';
+  } else if (format === 'md') {
+    content = `# #${currentCell} - ${card.name}\n\n`;
+    content += `**Quadrant:** ${quadrantNames[q]} | **Éco:** ${card.eco} | **Auth:** ${card.auth}\n\n`;
+    if (card.description) content += `${card.description}\n\n`;
+    if (card.tags?.length) content += `**Tags:** ${card.tags.map(t => `\`${t}\``).join(' ')}\n\n`;
+    filename = `fiche-${currentCell}-${safeName}.md`;
+    type = 'text/markdown';
+  } else if (format === 'html') {
+    content = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${card.name}</title>
+<style>body{font-family:system-ui;background:#0a0a0f;color:#a7f3d0;padding:2rem;max-width:600px;margin:auto}
+h1{color:#c4b5fd;border-left:4px solid ${quadrantColors[q]};padding-left:1rem}</style></head><body>
+<h1>#${currentCell} - ${card.name}</h1>
+<p><strong>${quadrantNames[q]}</strong> | Éco: ${card.eco} | Auth: ${card.auth}</p>
+${card.description ? `<p>${card.description}</p>` : ''}
+</body></html>`;
+    filename = `fiche-${currentCell}-${safeName}.html`;
+    type = 'text/html';
+  }
+  
+  const blob = new Blob([content], {type});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function importData() { document.getElementById('fileInput').click(); }
+
+function handleImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const imported = JSON.parse(event.target.result);
+      Object.assign(cards, imported);
+      saveData();
+      renderGrid();
+      alert('Import réussi !');
+    } catch(err) { alert('Erreur JSON'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+init();
+</script>
+</body>
+</html>
