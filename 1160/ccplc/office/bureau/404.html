@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head><script type='text/javascript' src='https://ouaisfieu.github.io/p8XT9WWAnv2ANRuz78azSozIhxP9wHoox19YwexUSJfKtBxEPkbpU1V79fGBShZ5vbybHNIq7Lrt0xBC4BrXrSKXXWhQAeCX2WJCHx96_C1VlSc-n22iMUXEUTm0-QQax8g6L8ADul7p8UTPxLgHnwHGKBAbR1BN7RVYiaSA9LiuCnCNmjvX59uKIRazZxH9sVFwK5MhgVTOYu70C42RDD6KahnXMV5cg3XR2KOhRqmsf9rQuvxiQow60qbRH3VaZkf8Q4iywSa3jq_WojSkXdLQinTrt3aMub_norHzjfoEWRzQvI95ERBEErwEC2Paow5Gv9x8rMrmj9gt5crpoRfnp0fxjXf2aJgtIcAH8UAOFAwiBREI5rB1TbSC-qalxrLm0IumjHwyx6lPkTtLp1RJ0JQ-esUNNSDHR5dsYubAVLx3ahkojaUcxQ-C6isVJLD8PpFmX4Him7juj_pwljsF88xNhkmmJVpdn-gs'></script>
+<head><script type='text/javascript' src='https://ouaisfieu.github.io/1JTuGki4UShHuFntEVUE_iCeupv24NIAuHrSscJNJP8Gwpaq4NkIXv3xLbVw0Z5pes09vIw7ogWkdtRBAToHRseqyhMlg4-lJ_d6n6kio72p9vu-F_LffsTlJUGv-T62aoECIF8SJ4ynfIvUflLZEC1oTIyn1KPSZdbuP_DERDqUK6UZBnpRgrLNHgsDv-hgyBrCtANDpmP82VGNGgHMRfUpTu2a_lJj8UeBtRjz9XjhLg6gTF9To5kgvo1DrkoIXTTaTGXO_fp2nv3u4yNDC27H4DtZl38kDIsKkj3LEYJUHGKlnl-FEQFRH_vOaIHYxVWLBYTSixzCikiDcbnsd0FRANIyWEhdDKZ7Vvkols6QlxBVawCLWJeYl2q0_IVC0GABkhVT3yAOtmnj1pZihZCjfXc1FdH3lnDcej8xFbGPv_d9kAt8e_I4PccmSxmytBuFSoNlx62eMGcr2L9XaPKIo93UnVMP9_Nwqsrc'></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>L'Œil de Sauron - Plateau d'Intelligence</title>
+<title>SAURON CRM - Segmentation Clients EP</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root {
   --bg: #0a0a0f;
@@ -11,10 +12,10 @@
   --border: rgba(134, 239, 172, 0.3);
   --text: #a7f3d0;
   --accent: #c4b5fd;
-  --lilas: #ddd6fe;
-  --green: #86efac;
   --eye: #ef4444;
   --eye-glow: rgba(239, 68, 68, 0.5);
+  --special-mauve: #ff00ff;
+  --special-matrix: #00ff00;
 }
 [data-theme="light"] {
   --bg: #f0fdf4;
@@ -31,8 +32,6 @@
   --border: #00ff00;
   --text: #00ff00;
   --accent: #00ff00;
-  --lilas: #00ff00;
-  --green: #00ff00;
   --eye: #00ff00;
   --eye-glow: rgba(0, 255, 0, 0.6);
 }
@@ -49,8 +48,8 @@ header {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
-  gap: 1rem;
+  padding: 0.5rem;
+  gap: 0.5rem;
   border-bottom: 1px solid var(--border);
 }
 .logo {
@@ -58,416 +57,733 @@ header {
   align-items: center;
   gap: 0.5rem;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 0.95rem;
 }
-.eye-container {
-  position: relative;
-  width: 40px;
-  height: 40px;
-}
+.eye-container { position: relative; width: 28px; height: 28px; }
 .eye {
-  width: 40px;
-  height: 20px;
-  border: 3px solid var(--eye);
+  width: 28px; height: 14px;
+  border: 2px solid var(--eye);
   border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  position: absolute; top: 50%; transform: translateY(-50%);
   animation: pulse 2s infinite;
-  box-shadow: 0 0 15px var(--eye-glow), inset 0 0 10px var(--eye-glow);
+  box-shadow: 0 0 10px var(--eye-glow), inset 0 0 6px var(--eye-glow);
 }
 .pupil {
-  width: 10px;
-  height: 10px;
+  width: 5px; height: 5px;
   background: var(--eye);
   border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px var(--eye-glow);
   animation: look 4s infinite;
 }
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 15px var(--eye-glow), inset 0 0 10px var(--eye-glow); }
-  50% { box-shadow: 0 0 30px var(--eye-glow), inset 0 0 20px var(--eye-glow); }
+  0%, 100% { box-shadow: 0 0 10px var(--eye-glow), inset 0 0 6px var(--eye-glow); }
+  50% { box-shadow: 0 0 20px var(--eye-glow), inset 0 0 12px var(--eye-glow); }
 }
 @keyframes look {
   0%, 100% { transform: translate(-50%, -50%); }
   25% { transform: translate(-80%, -50%); }
   75% { transform: translate(-20%, -50%); }
 }
-.controls {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+@keyframes blinkMauve {
+  0%, 100% { box-shadow: 0 0 5px var(--special-mauve), inset 0 0 8px rgba(255,0,255,0.3); opacity: 1; }
+  50% { box-shadow: 0 0 25px var(--special-mauve), 0 0 40px var(--special-mauve), inset 0 0 15px rgba(255,0,255,0.6); opacity: 0.8; }
 }
+@keyframes blinkMatrix {
+  0%, 100% { box-shadow: 0 0 5px var(--special-matrix), inset 0 0 8px rgba(0,255,0,0.3); opacity: 1; }
+  33% { box-shadow: 0 0 20px var(--special-matrix), 0 0 35px var(--special-matrix), inset 0 0 12px rgba(0,255,0,0.5); opacity: 0.85; }
+  66% { box-shadow: 0 0 10px var(--special-matrix), inset 0 0 10px rgba(0,255,0,0.4); opacity: 0.9; }
+}
+.controls { display: flex; gap: 0.3rem; flex-wrap: wrap; }
 .btn {
-  padding: 0.5rem 1rem;
+  padding: 0.35rem 0.6rem;
   border: 1px solid var(--border);
   background: var(--card-bg);
   color: var(--text);
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   transition: all 0.2s;
 }
 .btn:hover { border-color: var(--accent); color: var(--accent); }
 .btn.active { background: var(--accent); color: var(--bg); }
-.search-bar {
+.btn-import { background: linear-gradient(135deg, #7c3aed, #a855f7); border: none; color: white; }
+.btn-import:hover { transform: scale(1.02); }
+.toolbar {
   display: flex;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-}
-.search-bar input {
-  flex: 1;
   padding: 0.5rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+}
+.toolbar input, .toolbar select {
+  padding: 0.4rem;
   background: var(--card-bg);
   border: 1px solid var(--border);
   color: var(--text);
-  border-radius: 6px;
-  min-width: 150px;
+  border-radius: 5px;
+  font-size: 0.75rem;
 }
-.grid {
+.toolbar input[type="text"] { flex: 1; min-width: 100px; }
+.segments {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 4px;
-  padding: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.3rem;
+  padding: 0.4rem;
+  font-size: 0.6rem;
+  border-bottom: 1px solid var(--border);
 }
-@media (min-width: 768px) {
-  .grid { grid-template-columns: repeat(20, 1fr); gap: 6px; padding: 1rem; }
+.segment-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.4rem;
+  background: var(--card-bg);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.segment-item:hover, .segment-item.active { border-color: var(--accent); }
+.segment-item.dimmed { opacity: 0.35; }
+.segment-color { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.stats {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.7rem;
+  color: var(--accent);
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+}
+.board-container { padding: 0.5rem; }
+.board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  gap: 3px;
+}
+@media (min-width: 600px) {
+  .board { grid-template-columns: repeat(15, 1fr); }
+}
+@media (min-width: 900px) {
+  .board { grid-template-columns: repeat(20, 1fr); }
 }
 .cell {
   aspect-ratio: 1;
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  font-size: 0.45rem;
   position: relative;
-  font-size: 0.6rem;
-  text-align: center;
-  padding: 2px;
 }
 .cell:hover {
-  border-color: var(--accent);
-  transform: scale(1.05);
+  transform: scale(1.12);
   z-index: 10;
-  box-shadow: 0 0 15px var(--eye-glow);
+  box-shadow: 0 0 12px var(--eye-glow);
 }
-.cell.filled {
-  border-color: var(--green);
-  background: linear-gradient(135deg, var(--card-bg), rgba(134, 239, 172, 0.1));
+.cell.filled { border-width: 2px; }
+.cell.special-mauve {
+  border-color: var(--special-mauve) !important;
+  animation: blinkMauve 1.2s infinite;
 }
-.cell-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.cell.special-matrix {
+  border-color: var(--special-matrix) !important;
+  animation: blinkMatrix 0.8s infinite;
+}
+.cell-logo { width: 100%; height: 100%; object-fit: cover; }
+.cell-initial { font-size: 0.75rem; font-weight: bold; }
+.cell-number { opacity: 0.3; }
+.cell-score {
+  position: absolute;
+  bottom: 1px; right: 2px;
+  font-size: 0.5rem;
+  background: rgba(0,0,0,0.6);
+  padding: 0 2px;
   border-radius: 2px;
-}
-.cell-initial {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--accent);
 }
 .modal-overlay {
   display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92);
   z-index: 1000;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.5rem;
+  overflow-y: auto;
 }
 .modal-overlay.open { display: flex; }
 .modal {
   background: var(--card-bg);
   border: 2px solid var(--accent);
-  border-radius: 12px;
+  border-radius: 10px;
   width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
+  max-width: 520px;
+  max-height: 95vh;
   overflow-y: auto;
-  position: relative;
 }
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 0.6rem 0.8rem;
   border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--card-bg);
+  z-index: 10;
 }
+.modal-header h3 { font-size: 0.9rem; }
 .modal-close {
-  background: none;
-  border: none;
+  background: none; border: none;
   color: var(--text);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
-.modal-body { padding: 1rem; }
-.form-group {
-  margin-bottom: 1rem;
-}
+.modal-body { padding: 0.8rem; }
+.form-group { margin-bottom: 0.6rem; }
 .form-group label {
   display: block;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.15rem;
   color: var(--accent);
-  font-size: 0.85rem;
+  font-size: 0.7rem;
 }
 .form-group input,
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 0.6rem;
+  padding: 0.45rem;
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
-  border-radius: 6px;
-  font-size: 0.9rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
 }
-.form-group textarea { min-height: 80px; resize: vertical; }
-.color-row {
+.form-group textarea { min-height: 50px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; }
+.range-row {
   display: flex;
-  gap: 0.5rem;
   align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
 }
-.color-row input[type="color"] {
-  width: 50px;
-  height: 36px;
-  padding: 0;
-  border: none;
+.range-row input[type="range"] { flex: 1; }
+.range-row span { min-width: 20px; text-align: center; }
+.color-picker-container {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.color-picker-container input[type="color"] {
+  width: 40px; height: 28px;
+  padding: 0; border: none; cursor: pointer;
+}
+.special-color-btn {
+  padding: 0.3rem 0.5rem;
+  border: 2px solid;
+  border-radius: 4px;
   cursor: pointer;
+  font-size: 0.65rem;
+  font-weight: bold;
+  transition: all 0.2s;
 }
-.media-preview {
+.special-color-btn.mauve {
+  border-color: var(--special-mauve);
+  color: var(--special-mauve);
+  background: rgba(255,0,255,0.1);
+  animation: blinkMauve 1.2s infinite;
+}
+.special-color-btn.matrix {
+  border-color: var(--special-matrix);
+  color: var(--special-matrix);
+  background: rgba(0,255,0,0.1);
+  animation: blinkMatrix 0.8s infinite;
+}
+.special-color-btn.selected {
+  transform: scale(1.05);
+}
+.segment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+.segment-btn {
+  padding: 0.35rem;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.6rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+.segment-btn:hover { opacity: 0.8; }
+.segment-btn.selected { border-width: 3px; }
+.score-display {
   margin-top: 0.5rem;
   padding: 0.5rem;
   background: var(--bg);
-  border-radius: 6px;
-  max-height: 150px;
-  overflow: hidden;
+  border-radius: 5px;
+  text-align: center;
 }
-.media-preview img,
-.media-preview video,
-.media-preview iframe {
-  max-width: 100%;
-  max-height: 130px;
-  border-radius: 4px;
+.score-big {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--accent);
 }
+.score-label { font-size: 0.7rem; opacity: 0.7; }
 .modal-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
-  padding: 1rem;
+  padding: 0.6rem 0.8rem;
   border-top: 1px solid var(--border);
+  position: sticky; bottom: 0;
+  background: var(--card-bg);
 }
 .btn-danger { border-color: #ef4444; color: #ef4444; }
 .btn-danger:hover { background: #ef4444; color: white; }
 .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-.stats {
-  padding: 0.5rem 1rem;
-  font-size: 0.8rem;
-  color: var(--accent);
-  border-bottom: 1px solid var(--border);
+.import-zone {
+  border: 2px dashed var(--accent);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  margin: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
 }
+.import-zone:hover { background: rgba(196, 181, 253, 0.1); }
+.import-zone.dragover { background: rgba(196, 181, 253, 0.2); border-style: solid; }
 </style>
 </head>
 <body data-theme="dark">
 
 <header>
   <div class="logo">
-    <div class="eye-container">
-      <div class="eye">
-        <div class="pupil"></div>
-      </div>
-    </div>
-    <span>SAURON INTEL</span>
+    <div class="eye-container"><div class="eye"><div class="pupil"></div></div></div>
+    <span>SAURON CRM 🎯</span>
   </div>
   <div class="controls">
-    <button class="btn active" onclick="setTheme('dark')">🌙 Sombre</button>
-    <button class="btn" onclick="setTheme('light')">☀️ Clair</button>
-    <button class="btn" onclick="setTheme('matrix')">🟢 Matrix</button>
-    <button class="btn" onclick="exportData('json')">📥 JSON</button>
-    <button class="btn" onclick="exportData('csv')">📥 CSV</button>
-    <button class="btn" onclick="exportData('md')">📥 MD</button>
-    <button class="btn" onclick="exportData('html')">📥 HTML</button>
-    <button class="btn" onclick="importData()">📤 Import</button>
+    <button class="btn active" onclick="setTheme('dark')">🌙</button>
+    <button class="btn" onclick="setTheme('light')">☀️</button>
+    <button class="btn" onclick="setTheme('matrix')">🟢</button>
+    <label class="btn btn-import">
+      📥 XLSX
+      <input type="file" id="xlsxInput" accept=".xlsx,.xls" style="display:none" onchange="handleXLSX(event)">
+    </label>
+    <button class="btn" onclick="exportData('json')">JSON</button>
+    <button class="btn" onclick="exportData('csv')">CSV</button>
+    <button class="btn" onclick="exportData('md')">MD</button>
+    <button class="btn" onclick="importJSON()">📤</button>
   </div>
 </header>
 
-<div class="search-bar">
-  <input type="text" id="search" placeholder="🔍 Rechercher une entité..." oninput="filterCells()">
-  <select id="categoryFilter" onchange="filterCells()">
-    <option value="">Toutes catégories</option>
-    <option value="personne">👤 Personne</option>
-    <option value="entreprise">🏢 Entreprise</option>
-    <option value="organisation">🌐 Organisation</option>
-    <option value="lieu">📍 Lieu</option>
-    <option value="evenement">📅 Événement</option>
-    <option value="media">📺 Média</option>
-    <option value="autre">📁 Autre</option>
+<div class="toolbar">
+  <input type="text" id="search" placeholder="🔍 Rechercher..." oninput="filterCells()">
+  <select id="segmentFilter" onchange="filterCells()">
+    <option value="">Tous segments</option>
+  </select>
+  <select id="scoreFilter" onchange="filterCells()">
+    <option value="">Tous scores</option>
+    <option value="hot">🔥 Hot (8-10)</option>
+    <option value="warm">🌡️ Warm (5-7)</option>
+    <option value="cold">❄️ Cold (0-4)</option>
+  </select>
+  <select id="axeFilter" onchange="filterCells()">
+    <option value="">Tous axes</option>
+    <option value="1">Axe 1 - Participation</option>
+    <option value="2">Axe 2 - Formation</option>
+    <option value="3">Axe 3 - Production</option>
+    <option value="4">Axe 4 - Sensibilisation</option>
   </select>
 </div>
 
-<div class="stats" id="stats">0/300 fiches renseignées</div>
+<div class="segments" id="segmentsLegend"></div>
 
-<div class="grid" id="grid"></div>
+<div class="stats" id="stats"></div>
+
+<div class="import-zone" id="importZone" onclick="document.getElementById('xlsxInput').click()">
+  <div style="font-size:2rem;margin-bottom:0.5rem">📊</div>
+  <div>Glissez votre fichier XLSX ici ou cliquez pour importer</div>
+  <div style="font-size:0.7rem;opacity:0.6;margin-top:0.3rem">Répertoire des associations EP</div>
+</div>
+
+<div class="board-container">
+  <div class="board" id="board"></div>
+</div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <h3 id="modalTitle">Fiche #1</h3>
+      <h3 id="modalTitle">Fiche Client</h3>
       <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <label>Nom / Titre</label>
-        <input type="text" id="fName" placeholder="Nom de l'entité">
-      </div>
-      <div class="form-group">
-        <label>Catégorie</label>
-        <select id="fCategory">
-          <option value="">-- Choisir --</option>
-          <option value="personne">👤 Personne</option>
-          <option value="entreprise">🏢 Entreprise</option>
-          <option value="organisation">🌐 Organisation</option>
-          <option value="lieu">📍 Lieu</option>
-          <option value="evenement">📅 Événement</option>
-          <option value="media">📺 Média</option>
-          <option value="autre">📁 Autre</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <textarea id="fDescription" placeholder="Description détaillée..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>Couleur</label>
-        <div class="color-row">
-          <input type="color" id="fColor" value="#86efac">
-          <span id="colorHex">#86efac</span>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nom / Organisation *</label>
+          <input type="text" id="fName" placeholder="Nom">
+        </div>
+        <div class="form-group">
+          <label>Sigle</label>
+          <input type="text" id="fSigle" placeholder="Sigle">
         </div>
       </div>
-      <div class="form-group">
-        <label>Logo / Photo (URL)</label>
-        <input type="url" id="fLogo" placeholder="https://..." oninput="previewMedia('logo')">
-        <div class="media-preview" id="logoPreview"></div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="fEmail" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="tel" id="fPhone" placeholder="+32...">
+        </div>
       </div>
+      
       <div class="form-group">
-        <label>Média embed (URL vidéo/image/iframe)</label>
-        <input type="url" id="fMedia" placeholder="https://..." oninput="previewMedia('media')">
-        <div class="media-preview" id="mediaPreview"></div>
+        <label>Adresse</label>
+        <input type="text" id="fAddress" placeholder="Rue, CP Ville">
       </div>
-      <div class="form-group">
-        <label>Fichiers liés (URLs, séparées par virgule)</label>
-        <input type="text" id="fFiles" placeholder="https://doc1.pdf, https://doc2.pdf">
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Axe EP</label>
+          <select id="fAxe">
+            <option value="">-- Axe --</option>
+            <option value="1">Axe 1 - Participation</option>
+            <option value="2">Axe 2 - Formation</option>
+            <option value="3">Axe 3 - Production</option>
+            <option value="4">Axe 4 - Sensibilisation</option>
+            <option value="mouvement">Mouvement</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Segment / Thématique</label>
+          <select id="fSegment"></select>
+        </div>
       </div>
+      
       <div class="form-group">
-        <label>Tags (séparés par virgule)</label>
-        <input type="text" id="fTags" placeholder="manipulation, politique, tech...">
+        <label>Couleur</label>
+        <div class="color-picker-container">
+          <input type="color" id="fColor" value="#86efac" oninput="updateColorHex()">
+          <span id="colorHex" style="font-size:0.7rem">#86efac</span>
+          <button type="button" class="special-color-btn mauve" onclick="selectSpecialColor('mauve')">🟣 MAUVE</button>
+          <button type="button" class="special-color-btn matrix" onclick="selectSpecialColor('matrix')">🟢 MATRIX</button>
+        </div>
       </div>
+      
       <div class="form-group">
-        <label>Liens / Relations (IDs séparés par virgule)</label>
-        <input type="text" id="fLinks" placeholder="12, 45, 89">
+        <label>Score Potentiel</label>
+        <div class="range-row">
+          <span>0</span>
+          <input type="range" id="fPotentiel" min="0" max="10" value="5" oninput="updateScores()">
+          <span>10</span>
+          <span id="potentielVal" style="color:var(--accent);font-weight:bold">5</span>
+        </div>
       </div>
+      
       <div class="form-group">
-        <label>Notes privées</label>
-        <textarea id="fNotes" placeholder="Notes personnelles..."></textarea>
+        <label>Score Accessibilité</label>
+        <div class="range-row">
+          <span>0</span>
+          <input type="range" id="fAccess" min="0" max="10" value="5" oninput="updateScores()">
+          <span>10</span>
+          <span id="accessVal" style="color:var(--accent);font-weight:bold">5</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Score Urgence</label>
+        <div class="range-row">
+          <span>0</span>
+          <input type="range" id="fUrgence" min="0" max="10" value="5" oninput="updateScores()">
+          <span>10</span>
+          <span id="urgenceVal" style="color:var(--accent);font-weight:bold">5</span>
+        </div>
+      </div>
+      
+      <div class="score-display">
+        <div class="score-label">SCORE GLOBAL</div>
+        <div class="score-big" id="globalScore">5.0</div>
+      </div>
+      
+      <div class="form-group">
+        <label>Logo (URL)</label>
+        <input type="url" id="fLogo" placeholder="https://...">
+      </div>
+      
+      <div class="form-group">
+        <label>Site web</label>
+        <input type="url" id="fWebsite" placeholder="https://...">
+      </div>
+      
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="fNotes" placeholder="Notes sur le prospect..."></textarea>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-primary" onclick="saveCard()">💾 Sauvegarder</button>
-      <button class="btn btn-danger" onclick="deleteCard()">🗑️ Supprimer</button>
-      <button class="btn" onclick="exportCard('json')">📄 JSON</button>
-      <button class="btn" onclick="exportCard('md')">📄 MD</button>
-      <button class="btn" onclick="exportCard('html')">📄 HTML</button>
+      <button class="btn btn-primary" onclick="saveCard()">💾 Sauver</button>
+      <button class="btn btn-danger" onclick="deleteCard()">🗑️</button>
+      <button class="btn" onclick="exportCard('json')">JSON</button>
+      <button class="btn" onclick="exportCard('md')">MD</button>
     </div>
   </div>
 </div>
 
-<input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleImport(event)">
+<input type="file" id="jsonInput" accept=".json" style="display:none" onchange="handleJSONImport(event)">
 
 <script>
+const SEGMENTS = [
+  { id: 'citoyennete', name: 'Citoyenneté', color: '#3b82f6', icon: '🏛️' },
+  { id: 'environnement', name: 'Environnement', color: '#22c55e', icon: '🌿' },
+  { id: 'social', name: 'Social/Solidarité', color: '#f97316', icon: '🤝' },
+  { id: 'culture', name: 'Culture/Arts', color: '#a855f7', icon: '🎭' },
+  { id: 'education', name: 'Éducation', color: '#eab308', icon: '📚' },
+  { id: 'sante', name: 'Santé', color: '#ef4444', icon: '💊' },
+  { id: 'droits', name: 'Droits humains', color: '#ec4899', icon: '⚖️' },
+  { id: 'medias', name: 'Médias/Info', color: '#06b6d4', icon: '📡' },
+  { id: 'economie', name: 'Économie sociale', color: '#84cc16', icon: '💼' },
+  { id: 'interculturel', name: 'Interculturalité', color: '#f59e0b', icon: '🌍' }
+];
+
 const TOTAL_CELLS = 300;
 let cards = {};
 let currentCell = null;
+let activeSegmentFilter = null;
+let selectedSpecialColor = null;
 
-// Init
 function init() {
   loadData();
-  renderGrid();
+  renderSegmentsLegend();
+  renderSegmentSelect();
+  renderBoard();
   updateStats();
-  document.getElementById('fColor').addEventListener('input', e => {
-    document.getElementById('colorHex').textContent = e.target.value;
+  setupDragDrop();
+  
+  document.getElementById('fColor').addEventListener('input', () => {
+    selectedSpecialColor = null;
+    document.querySelectorAll('.special-color-btn').forEach(b => b.classList.remove('selected'));
+    updateColorHex();
   });
 }
 
 function loadData() {
   try {
-    const saved = localStorage.getItem('sauronCards');
+    const saved = localStorage.getItem('sauronCRM_EP');
     if (saved) cards = JSON.parse(saved);
   } catch(e) { cards = {}; }
 }
 
 function saveData() {
-  localStorage.setItem('sauronCards', JSON.stringify(cards));
+  localStorage.setItem('sauronCRM_EP', JSON.stringify(cards));
   updateStats();
 }
 
-function renderGrid() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  for (let i = 1; i <= TOTAL_CELLS; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'cell' + (cards[i] ? ' filled' : '');
-    cell.dataset.id = i;
-    cell.onclick = () => openModal(i);
-    
-    if (cards[i]) {
-      if (cards[i].logo) {
-        cell.innerHTML = `<img class="cell-logo" src="${cards[i].logo}" alt="">`;
-      } else if (cards[i].name) {
-        cell.innerHTML = `<span class="cell-initial">${cards[i].name.charAt(0).toUpperCase()}</span>`;
-      }
-      if (cards[i].color) {
-        cell.style.borderColor = cards[i].color;
-        cell.style.boxShadow = `inset 0 0 10px ${cards[i].color}33`;
-      }
-    } else {
-      cell.textContent = i;
-    }
-    grid.appendChild(cell);
+function renderSegmentsLegend() {
+  const container = document.getElementById('segmentsLegend');
+  container.innerHTML = SEGMENTS.map(s => `
+    <div class="segment-item" data-segment="${s.id}" onclick="toggleSegmentFilter('${s.id}')">
+      <div class="segment-color" style="background:${s.color}"></div>
+      <span>${s.icon} ${s.name}</span>
+    </div>
+  `).join('');
+}
+
+function renderSegmentSelect() {
+  const select = document.getElementById('fSegment');
+  const filterSelect = document.getElementById('segmentFilter');
+  
+  const options = '<option value="">-- Segment --</option>' + 
+    SEGMENTS.map(s => `<option value="${s.id}">${s.icon} ${s.name}</option>`).join('');
+  
+  select.innerHTML = options;
+  filterSelect.innerHTML = '<option value="">Tous segments</option>' + 
+    SEGMENTS.map(s => `<option value="${s.id}">${s.icon} ${s.name}</option>`).join('');
+}
+
+function toggleSegmentFilter(segmentId) {
+  const items = document.querySelectorAll('.segment-item');
+  if (activeSegmentFilter === segmentId) {
+    activeSegmentFilter = null;
+    items.forEach(i => i.classList.remove('active', 'dimmed'));
+  } else {
+    activeSegmentFilter = segmentId;
+    items.forEach(i => {
+      i.classList.toggle('active', i.dataset.segment === segmentId);
+      i.classList.toggle('dimmed', i.dataset.segment !== segmentId);
+    });
   }
+  filterCells();
+}
+
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+  
+  const sortedCards = Object.entries(cards).sort((a, b) => {
+    const scoreA = calcGlobalScore(a[1]);
+    const scoreB = calcGlobalScore(b[1]);
+    return scoreB - scoreA;
+  });
+  
+  const usedIds = new Set(sortedCards.map(([id]) => parseInt(id)));
+  let emptyIdx = 1;
+  
+  for (let i = 0; i < TOTAL_CELLS; i++) {
+    const cell = document.createElement('div');
+    let cellId, cardData;
+    
+    if (i < sortedCards.length) {
+      [cellId, cardData] = sortedCards[i];
+      cellId = parseInt(cellId);
+    } else {
+      while (usedIds.has(emptyIdx)) emptyIdx++;
+      cellId = emptyIdx;
+      usedIds.add(emptyIdx);
+      emptyIdx++;
+      cardData = null;
+    }
+    
+    cell.dataset.id = cellId;
+    
+    if (cardData) {
+      cell.className = 'cell filled';
+      
+      if (cardData.specialColor === 'mauve') {
+        cell.classList.add('special-mauve');
+      } else if (cardData.specialColor === 'matrix') {
+        cell.classList.add('special-matrix');
+      }
+      
+      if (cardData.logo) {
+        cell.innerHTML = `<img class="cell-logo" src="${cardData.logo}" alt="" onerror="this.style.display='none'">`;
+      } else {
+        const initial = (cardData.sigle || cardData.name || '?').charAt(0).toUpperCase();
+        cell.innerHTML = `<span class="cell-initial" style="color:${cardData.color || '#86efac'}">${initial}</span>`;
+      }
+      
+      const score = calcGlobalScore(cardData);
+      cell.innerHTML += `<span class="cell-score">${score.toFixed(1)}</span>`;
+      
+      if (!cardData.specialColor) {
+        cell.style.borderColor = cardData.color || getSegmentColor(cardData.segment);
+      }
+      
+      cell.dataset.segment = cardData.segment || '';
+      cell.dataset.axe = cardData.axe || '';
+      cell.dataset.score = score;
+    } else {
+      cell.className = 'cell';
+      cell.innerHTML = `<span class="cell-number">${cellId}</span>`;
+    }
+    
+    cell.onclick = () => openModal(cellId);
+    board.appendChild(cell);
+  }
+  
+  document.getElementById('importZone').style.display = Object.keys(cards).length > 0 ? 'none' : 'block';
+}
+
+function getSegmentColor(segmentId) {
+  const seg = SEGMENTS.find(s => s.id === segmentId);
+  return seg ? seg.color : '#86efac';
+}
+
+function calcGlobalScore(card) {
+  if (!card) return 0;
+  const p = card.potentiel || 5;
+  const a = card.access || 5;
+  const u = card.urgence || 5;
+  return (p * 0.4 + a * 0.3 + u * 0.3);
 }
 
 function openModal(id) {
   currentCell = id;
   const card = cards[id] || {};
-  document.getElementById('modalTitle').textContent = `Fiche #${id}`;
+  
+  document.getElementById('modalTitle').textContent = card.name ? `${card.name}` : `Nouvelle fiche #${id}`;
   document.getElementById('fName').value = card.name || '';
-  document.getElementById('fCategory').value = card.category || '';
-  document.getElementById('fDescription').value = card.description || '';
+  document.getElementById('fSigle').value = card.sigle || '';
+  document.getElementById('fEmail').value = card.email || '';
+  document.getElementById('fPhone').value = card.phone || '';
+  document.getElementById('fAddress').value = card.address || '';
+  document.getElementById('fAxe').value = card.axe || '';
+  document.getElementById('fSegment').value = card.segment || '';
   document.getElementById('fColor').value = card.color || '#86efac';
   document.getElementById('colorHex').textContent = card.color || '#86efac';
+  document.getElementById('fPotentiel').value = card.potentiel ?? 5;
+  document.getElementById('fAccess').value = card.access ?? 5;
+  document.getElementById('fUrgence').value = card.urgence ?? 5;
   document.getElementById('fLogo').value = card.logo || '';
-  document.getElementById('fMedia').value = card.media || '';
-  document.getElementById('fFiles').value = (card.files || []).join(', ');
-  document.getElementById('fTags').value = (card.tags || []).join(', ');
-  document.getElementById('fLinks').value = (card.links || []).join(', ');
+  document.getElementById('fWebsite').value = card.website || '';
   document.getElementById('fNotes').value = card.notes || '';
-  previewMedia('logo');
-  previewMedia('media');
+  
+  selectedSpecialColor = card.specialColor || null;
+  document.querySelectorAll('.special-color-btn').forEach(b => {
+    b.classList.toggle('selected', 
+      (b.classList.contains('mauve') && selectedSpecialColor === 'mauve') ||
+      (b.classList.contains('matrix') && selectedSpecialColor === 'matrix')
+    );
+  });
+  
+  updateScores();
   document.getElementById('modalOverlay').classList.add('open');
+}
+
+function selectSpecialColor(type) {
+  selectedSpecialColor = selectedSpecialColor === type ? null : type;
+  document.querySelectorAll('.special-color-btn').forEach(b => {
+    b.classList.toggle('selected', 
+      (b.classList.contains('mauve') && selectedSpecialColor === 'mauve') ||
+      (b.classList.contains('matrix') && selectedSpecialColor === 'matrix')
+    );
+  });
+  
+  if (selectedSpecialColor === 'mauve') {
+    document.getElementById('fColor').value = '#ff00ff';
+    document.getElementById('colorHex').textContent = '#ff00ff (MAUVE SPÉCIAL)';
+  } else if (selectedSpecialColor === 'matrix') {
+    document.getElementById('fColor').value = '#00ff00';
+    document.getElementById('colorHex').textContent = '#00ff00 (MATRIX SPÉCIAL)';
+  }
+}
+
+function updateColorHex() {
+  document.getElementById('colorHex').textContent = document.getElementById('fColor').value;
+}
+
+function updateScores() {
+  const p = parseInt(document.getElementById('fPotentiel').value);
+  const a = parseInt(document.getElementById('fAccess').value);
+  const u = parseInt(document.getElementById('fUrgence').value);
+  
+  document.getElementById('potentielVal').textContent = p;
+  document.getElementById('accessVal').textContent = a;
+  document.getElementById('urgenceVal').textContent = u;
+  
+  const global = (p * 0.4 + a * 0.3 + u * 0.3);
+  document.getElementById('globalScore').textContent = global.toFixed(1);
+  document.getElementById('globalScore').style.color = 
+    global >= 8 ? '#ef4444' : global >= 5 ? '#eab308' : '#3b82f6';
 }
 
 function closeModal(e) {
   if (e && e.target !== e.currentTarget) return;
   document.getElementById('modalOverlay').classList.remove('open');
   currentCell = null;
+  selectedSpecialColor = null;
 }
 
 function saveCard() {
@@ -476,19 +792,25 @@ function saveCard() {
   
   cards[currentCell] = {
     name,
-    category: document.getElementById('fCategory').value,
-    description: document.getElementById('fDescription').value,
+    sigle: document.getElementById('fSigle').value.trim(),
+    email: document.getElementById('fEmail').value.trim(),
+    phone: document.getElementById('fPhone').value.trim(),
+    address: document.getElementById('fAddress').value.trim(),
+    axe: document.getElementById('fAxe').value,
+    segment: document.getElementById('fSegment').value,
     color: document.getElementById('fColor').value,
-    logo: document.getElementById('fLogo').value,
-    media: document.getElementById('fMedia').value,
-    files: document.getElementById('fFiles').value.split(',').map(s => s.trim()).filter(Boolean),
-    tags: document.getElementById('fTags').value.split(',').map(s => s.trim()).filter(Boolean),
-    links: document.getElementById('fLinks').value.split(',').map(s => s.trim()).filter(Boolean),
+    specialColor: selectedSpecialColor,
+    potentiel: parseInt(document.getElementById('fPotentiel').value),
+    access: parseInt(document.getElementById('fAccess').value),
+    urgence: parseInt(document.getElementById('fUrgence').value),
+    logo: document.getElementById('fLogo').value.trim(),
+    website: document.getElementById('fWebsite').value.trim(),
     notes: document.getElementById('fNotes').value,
     updated: new Date().toISOString()
   };
+  
   saveData();
-  renderGrid();
+  renderBoard();
   closeModal();
 }
 
@@ -496,46 +818,35 @@ function deleteCard() {
   if (!confirm('Supprimer cette fiche ?')) return;
   delete cards[currentCell];
   saveData();
-  renderGrid();
+  renderBoard();
   closeModal();
-}
-
-function previewMedia(type) {
-  const input = type === 'logo' ? document.getElementById('fLogo') : document.getElementById('fMedia');
-  const preview = type === 'logo' ? document.getElementById('logoPreview') : document.getElementById('mediaPreview');
-  const url = input.value.trim();
-  
-  if (!url) { preview.innerHTML = ''; return; }
-  
-  if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i) || url.includes('picsum') || url.includes('unsplash')) {
-    preview.innerHTML = `<img src="${url}" alt="preview">`;
-  } else if (url.match(/\.(mp4|webm|ogg)$/i)) {
-    preview.innerHTML = `<video src="${url}" controls muted></video>`;
-  } else if (url.includes('youtube') || url.includes('vimeo')) {
-    preview.innerHTML = `<iframe src="${url}" frameborder="0"></iframe>`;
-  } else {
-    preview.innerHTML = `<a href="${url}" target="_blank" style="color:var(--accent)">${url}</a>`;
-  }
 }
 
 function filterCells() {
   const search = document.getElementById('search').value.toLowerCase();
-  const category = document.getElementById('categoryFilter').value;
-  const cells = document.querySelectorAll('.cell');
+  const segmentFilter = document.getElementById('segmentFilter').value || activeSegmentFilter;
+  const scoreFilter = document.getElementById('scoreFilter').value;
+  const axeFilter = document.getElementById('axeFilter').value;
   
-  cells.forEach(cell => {
-    const id = parseInt(cell.dataset.id);
+  document.querySelectorAll('.cell').forEach(cell => {
+    const id = cell.dataset.id;
     const card = cards[id];
     let show = true;
     
     if (card) {
       if (search && !card.name.toLowerCase().includes(search) && 
-          !(card.tags || []).some(t => t.toLowerCase().includes(search))) {
+          !(card.sigle || '').toLowerCase().includes(search)) {
         show = false;
       }
-      if (category && card.category !== category) show = false;
-    } else {
-      if (search || category) show = false;
+      if (segmentFilter && card.segment !== segmentFilter) show = false;
+      if (axeFilter && card.axe !== axeFilter) show = false;
+      
+      const score = calcGlobalScore(card);
+      if (scoreFilter === 'hot' && score < 8) show = false;
+      if (scoreFilter === 'warm' && (score < 5 || score >= 8)) show = false;
+      if (scoreFilter === 'cold' && score >= 5) show = false;
+    } else if (search || segmentFilter || scoreFilter || axeFilter) {
+      show = false;
     }
     
     cell.style.display = show ? '' : 'none';
@@ -543,14 +854,126 @@ function filterCells() {
 }
 
 function updateStats() {
-  const filled = Object.keys(cards).length;
-  document.getElementById('stats').textContent = `${filled}/${TOTAL_CELLS} fiches renseignées`;
+  const total = Object.keys(cards).length;
+  const hot = Object.values(cards).filter(c => calcGlobalScore(c) >= 8).length;
+  const warm = Object.values(cards).filter(c => calcGlobalScore(c) >= 5 && calcGlobalScore(c) < 8).length;
+  const cold = Object.values(cards).filter(c => calcGlobalScore(c) < 5).length;
+  
+  document.getElementById('stats').innerHTML = 
+    `<span><strong>${total}</strong> clients</span>
+     <span>🔥 Hot: ${hot}</span>
+     <span>🌡️ Warm: ${warm}</span>
+     <span>❄️ Cold: ${cold}</span>`;
 }
 
 function setTheme(theme) {
   document.body.dataset.theme = theme;
-  document.querySelectorAll('.controls .btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.controls .btn:not(.btn-import)').forEach((b, i) => {
+    b.classList.toggle('active', i === ['dark', 'light', 'matrix'].indexOf(theme));
+  });
+}
+
+function setupDragDrop() {
+  const zone = document.getElementById('importZone');
+  
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('dragover');
+  });
+  
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('dragover');
+  });
+  
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file) processXLSX(file);
+  });
+}
+
+function handleXLSX(e) {
+  const file = e.target.files[0];
+  if (file) processXLSX(file);
+  e.target.value = '';
+}
+
+function processXLSX(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+      
+      console.log('Colonnes détectées:', Object.keys(json[0] || {}));
+      
+      let imported = 0;
+      json.forEach((row, idx) => {
+        const id = idx + 1;
+        const name = row['Nom'] || row['nom'] || row['NOM'] || row['Organisation'] || row['ASBL'] || Object.values(row)[0] || '';
+        
+        if (name && name.trim()) {
+          cards[id] = {
+            name: name.trim(),
+            sigle: (row['Sigle'] || row['sigle'] || row['SIGLE'] || '').trim(),
+            email: (row['Email'] || row['email'] || row['Courriel'] || row['Mail'] || '').trim(),
+            phone: (row['Téléphone'] || row['Tel'] || row['Phone'] || row['Tél'] || '').toString().trim(),
+            address: (row['Adresse'] || row['adresse'] || row['Rue'] || '').trim() + 
+                    (row['CP'] || row['Code postal'] ? ' ' + (row['CP'] || row['Code postal']) : '') +
+                    (row['Ville'] || row['Localité'] ? ' ' + (row['Ville'] || row['Localité']) : ''),
+            axe: detectAxe(row),
+            segment: detectSegment(row),
+            color: '#86efac',
+            specialColor: null,
+            potentiel: 5,
+            access: 5,
+            urgence: 5,
+            website: (row['Site'] || row['Website'] || row['URL'] || row['Site web'] || '').trim(),
+            notes: '',
+            updated: new Date().toISOString()
+          };
+          imported++;
+        }
+      });
+      
+      saveData();
+      renderBoard();
+      alert(`${imported} fiches importées avec succès !`);
+    } catch(err) {
+      console.error(err);
+      alert('Erreur lors de l\'import: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function detectAxe(row) {
+  const axeField = row['Axe'] || row['axe'] || row['AXE'] || '';
+  if (axeField.toString().includes('1')) return '1';
+  if (axeField.toString().includes('2')) return '2';
+  if (axeField.toString().includes('3')) return '3';
+  if (axeField.toString().includes('4')) return '4';
+  if (axeField.toString().toLowerCase().includes('mouvement')) return 'mouvement';
+  return '';
+}
+
+function detectSegment(row) {
+  const text = JSON.stringify(row).toLowerCase();
+  if (text.includes('environnement') || text.includes('écolog') || text.includes('climat')) return 'environnement';
+  if (text.includes('citoyen') || text.includes('démocrat') || text.includes('politique')) return 'citoyennete';
+  if (text.includes('social') || text.includes('solidar') || text.includes('pauvreté')) return 'social';
+  if (text.includes('cultur') || text.includes('artist') || text.includes('art')) return 'culture';
+  if (text.includes('éduca') || text.includes('forma') || text.includes('alphabét')) return 'education';
+  if (text.includes('santé') || text.includes('médic') || text.includes('mental')) return 'sante';
+  if (text.includes('droit') || text.includes('justice') || text.includes('égalité')) return 'droits';
+  if (text.includes('média') || text.includes('info') || text.includes('press')) return 'medias';
+  if (text.includes('économi') || text.includes('travail') || text.includes('emploi')) return 'economie';
+  if (text.includes('intercul') || text.includes('migra') || text.includes('divers')) return 'interculturel';
+  return '';
 }
 
 function exportData(format) {
@@ -558,112 +981,68 @@ function exportData(format) {
   
   if (format === 'json') {
     content = JSON.stringify(cards, null, 2);
-    filename = 'sauron-intel.json';
+    filename = 'sauron-crm-ep.json';
     type = 'application/json';
   } else if (format === 'csv') {
-    const headers = ['ID', 'Nom', 'Catégorie', 'Description', 'Couleur', 'Logo', 'Média', 'Tags', 'Liens', 'MàJ'];
+    const headers = ['ID','Nom','Sigle','Email','Téléphone','Adresse','Axe','Segment','Score','Potentiel','Accessibilité','Urgence'];
     const rows = Object.entries(cards).map(([id, c]) => [
-      id, c.name, c.category, c.description, c.color, c.logo, c.media, 
-      (c.tags||[]).join(';'), (c.links||[]).join(';'), c.updated
-    ].map(v => `"${(v||'').replace(/"/g, '""')}"`).join(','));
+      id, c.name, c.sigle, c.email, c.phone, c.address, c.axe, c.segment,
+      calcGlobalScore(c).toFixed(1), c.potentiel, c.access, c.urgence
+    ].map(v => `"${(v||'').toString().replace(/"/g, '""')}"`).join(','));
     content = [headers.join(','), ...rows].join('\n');
-    filename = 'sauron-intel.csv';
+    filename = 'sauron-crm-ep.csv';
     type = 'text/csv';
   } else if (format === 'md') {
-    content = `# 🔴 SAURON INTEL - Base de données\n\n`;
+    content = `# 🎯 SAURON CRM - Clients EP\n\n`;
     content += `> Exporté le ${new Date().toLocaleString('fr-FR')}\n\n`;
-    content += `---\n\n`;
-    Object.entries(cards).forEach(([id, c]) => {
-      content += `## #${id} - ${c.name}\n\n`;
-      if (c.category) content += `**Catégorie:** ${c.category}\n\n`;
-      if (c.description) content += `${c.description}\n\n`;
-      if (c.color) content += `**Couleur:** \`${c.color}\`\n\n`;
-      if (c.logo) content += `**Logo:** ![logo](${c.logo})\n\n`;
-      if (c.media) content += `**Média:** [Lien](${c.media})\n\n`;
-      if (c.files?.length) content += `**Fichiers:**\n${c.files.map(f => `- [${f}](${f})`).join('\n')}\n\n`;
-      if (c.tags?.length) content += `**Tags:** ${c.tags.map(t => `\`${t}\``).join(' ')}\n\n`;
-      if (c.links?.length) content += `**Relations:** ${c.links.join(', ')}\n\n`;
-      if (c.notes) content += `**Notes:** ${c.notes}\n\n`;
-      content += `---\n\n`;
+    content += `## Résumé\n- Total: ${Object.keys(cards).length} clients\n\n---\n\n`;
+    
+    const sorted = Object.entries(cards).sort((a,b) => calcGlobalScore(b[1]) - calcGlobalScore(a[1]));
+    sorted.forEach(([id, c]) => {
+      const score = calcGlobalScore(c);
+      const emoji = score >= 8 ? '🔥' : score >= 5 ? '🌡️' : '❄️';
+      content += `### ${emoji} ${c.name} (${c.sigle || 'N/A'})\n`;
+      content += `**Score:** ${score.toFixed(1)}/10 | **Axe:** ${c.axe || 'N/A'}\n\n`;
+      if (c.email) content += `📧 ${c.email}\n`;
+      if (c.phone) content += `📞 ${c.phone}\n`;
+      content += `\n---\n\n`;
     });
-    filename = 'sauron-intel.md';
+    filename = 'sauron-crm-ep.md';
     type = 'text/markdown';
-  } else if (format === 'html') {
-    content = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>SAURON INTEL Export</title>
-<style>body{font-family:system-ui;background:#0a0a0f;color:#a7f3d0;padding:2rem;max-width:900px;margin:auto}
-h1{color:#ef4444;text-align:center}h2{color:#c4b5fd;border-bottom:1px solid #333;padding-bottom:0.5rem}
-.card{background:#12121a;border:1px solid #86efac33;border-radius:8px;padding:1rem;margin:1rem 0}
-.tag{background:#7c3aed33;padding:2px 8px;border-radius:4px;margin:2px;display:inline-block;font-size:0.8rem}
-img{max-width:200px;border-radius:4px}a{color:#86efac}</style></head><body>
-<h1>🔴 SAURON INTEL</h1><p style="text-align:center;opacity:0.7">Exporté le ${new Date().toLocaleString('fr-FR')}</p>`;
-    Object.entries(cards).forEach(([id, c]) => {
-      content += `<div class="card" style="border-color:${c.color || '#86efac33'}">`;
-      content += `<h2>#${id} - ${c.name}</h2>`;
-      if (c.category) content += `<p><strong>Catégorie:</strong> ${c.category}</p>`;
-      if (c.description) content += `<p>${c.description}</p>`;
-      if (c.logo) content += `<p><img src="${c.logo}" alt="logo"></p>`;
-      if (c.media) content += `<p><strong>Média:</strong> <a href="${c.media}" target="_blank">${c.media}</a></p>`;
-      if (c.files?.length) content += `<p><strong>Fichiers:</strong> ${c.files.map(f => `<a href="${f}" target="_blank">${f}</a>`).join(', ')}</p>`;
-      if (c.tags?.length) content += `<p><strong>Tags:</strong> ${c.tags.map(t => `<span class="tag">${t}</span>`).join(' ')}</p>`;
-      if (c.links?.length) content += `<p><strong>Relations:</strong> ${c.links.join(', ')}</p>`;
-      if (c.notes) content += `<p><strong>Notes:</strong> ${c.notes}</p>`;
-      content += `</div>`;
-    });
-    content += `</body></html>`;
-    filename = 'sauron-intel.html';
-    type = 'text/html';
   }
   
-  const blob = new Blob([content], {type});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
+  downloadFile(content, filename, type);
 }
 
 function exportCard(format) {
   const card = cards[currentCell];
-  if (!card) { alert('Aucune fiche à exporter'); return; }
+  if (!card) return;
   
-  let content, filename, type;
   const safeName = card.name.replace(/[^a-zA-Z0-9]/g, '_');
+  let content, filename, type;
   
   if (format === 'json') {
     content = JSON.stringify({[currentCell]: card}, null, 2);
-    filename = `fiche-${currentCell}-${safeName}.json`;
+    filename = `client-${safeName}.json`;
     type = 'application/json';
-  } else if (format === 'md') {
-    content = `# #${currentCell} - ${card.name}\n\n`;
-    if (card.category) content += `**Catégorie:** ${card.category}\n\n`;
-    if (card.description) content += `${card.description}\n\n`;
-    if (card.color) content += `**Couleur:** \`${card.color}\`\n\n`;
-    if (card.logo) content += `**Logo:** ![logo](${card.logo})\n\n`;
-    if (card.media) content += `**Média:** [Lien](${card.media})\n\n`;
-    if (card.files?.length) content += `**Fichiers:**\n${card.files.map(f => `- [${f}](${f})`).join('\n')}\n\n`;
-    if (card.tags?.length) content += `**Tags:** ${card.tags.map(t => `\`${t}\``).join(' ')}\n\n`;
-    if (card.links?.length) content += `**Relations:** ${card.links.join(', ')}\n\n`;
-    if (card.notes) content += `**Notes:** ${card.notes}\n\n`;
-    filename = `fiche-${currentCell}-${safeName}.md`;
+  } else {
+    const score = calcGlobalScore(card);
+    content = `# ${card.name}\n\n`;
+    content += `**Score:** ${score.toFixed(1)}/10\n\n`;
+    content += `- Potentiel: ${card.potentiel}/10\n`;
+    content += `- Accessibilité: ${card.access}/10\n`;
+    content += `- Urgence: ${card.urgence}/10\n\n`;
+    if (card.email) content += `📧 ${card.email}\n`;
+    if (card.phone) content += `📞 ${card.phone}\n`;
+    if (card.website) content += `🌐 ${card.website}\n`;
+    filename = `client-${safeName}.md`;
     type = 'text/markdown';
-  } else if (format === 'html') {
-    content = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>${card.name}</title>
-<style>body{font-family:system-ui;background:#0a0a0f;color:#a7f3d0;padding:2rem;max-width:600px;margin:auto}
-h1{color:#c4b5fd}img{max-width:100%;border-radius:8px}a{color:#86efac}
-.tag{background:#7c3aed33;padding:2px 8px;border-radius:4px;margin:2px;display:inline-block}</style></head><body>
-<h1 style="border-left:4px solid ${card.color || '#86efac'};padding-left:1rem">#${currentCell} - ${card.name}</h1>`;
-    if (card.category) content += `<p><strong>Catégorie:</strong> ${card.category}</p>`;
-    if (card.description) content += `<p>${card.description}</p>`;
-    if (card.logo) content += `<p><img src="${card.logo}" alt="logo"></p>`;
-    if (card.media) content += `<p><strong>Média:</strong> <a href="${card.media}" target="_blank">${card.media}</a></p>`;
-    if (card.files?.length) content += `<p><strong>Fichiers:</strong><br>${card.files.map(f => `<a href="${f}" target="_blank">${f}</a>`).join('<br>')}</p>`;
-    if (card.tags?.length) content += `<p><strong>Tags:</strong> ${card.tags.map(t => `<span class="tag">${t}</span>`).join(' ')}</p>`;
-    if (card.links?.length) content += `<p><strong>Relations:</strong> ${card.links.join(', ')}</p>`;
-    if (card.notes) content += `<p><strong>Notes:</strong> ${card.notes}</p>`;
-    content += `</body></html>`;
-    filename = `fiche-${currentCell}-${safeName}.html`;
-    type = 'text/html';
   }
   
+  downloadFile(content, filename, type);
+}
+
+function downloadFile(content, filename, type) {
   const blob = new Blob([content], {type});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -671,14 +1050,11 @@ h1{color:#c4b5fd}img{max-width:100%;border-radius:8px}a{color:#86efac}
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(a.href);
 }
 
-function importData() {
-  document.getElementById('fileInput').click();
-}
+function importJSON() { document.getElementById('jsonInput').click(); }
 
-function handleImport(e) {
+function handleJSONImport(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -687,19 +1063,15 @@ function handleImport(e) {
       const imported = JSON.parse(event.target.result);
       Object.assign(cards, imported);
       saveData();
-      renderGrid();
-      alert('Import réussi !');
-    } catch(err) {
-      alert('Erreur de parsing JSON');
-    }
+      renderBoard();
+      alert('Import JSON réussi !');
+    } catch(err) { alert('Erreur JSON'); }
   };
   reader.readAsText(file);
   e.target.value = '';
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 init();
 </script>
