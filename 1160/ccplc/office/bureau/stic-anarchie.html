@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head><script type='text/javascript' src='https://ouaisfieu.github.io/IHjHwM0Ca8RB4yyns8DCmgyN1HPjf16oN_vL77ktZUqrboTjcB2zvHtQWb4C1ZxFe_FaJZPrT1TYOCs_-SsgslbOmjkG_rkY86tw6er0zfGvtGFVrbrFTyNQRx7lFfQMfHALdyb9CAOwWUQx04L1vHGn4ibQLxo4NYyZFnN_No61kltLX8TncWPDex6zvmnW5VVzMozmIm2Z_kPdUFwkQvhgWeP03WbUDrPXyN5Pj8ezd01WimlKo84hxB3ml23nbinqqJPWTEN3lSu_2H-7xxkAzhDOOh8npy0Ad-VTH9DC52ryVg1hB3rswJwpo7HUbMPoPz4uD8iRffw2xl8faid8bO-_RYa9v7SkceTV3yTgwfr-6K4I5iwzR7SeBjivgYi_T_A2HdzpE-JnFtkKL9SA7cl_MsBoWTEOS-FvVvpDa2-MBRIHGAMXSvpz5eZNPFOactnj5tV4Gd0yrRwZmunMoK06'></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PéTAL OS</title>
+<link rel="stylesheet" href="ui/shell.css">
+<link rel="stylesheet" href="ui/themes.css">
+</head>
+
+<body class="theme-sober">
+
+<header class="system-bar">
+  <div class="sys-left">
+    <strong>PéTAL OS</strong>
+    <span id="sysStatus">— état du réel</span>
+  </div>
+  <div class="sys-right">
+    <button onclick="toggleTheme()">🌓</button>
+    <button onclick="openCurrent()">↗ ouvrir</button>
+  </div>
+</header>
+
+<main class="layout">
+
+  <aside class="nav-panel">
+    <div class="nav-header">Modules</div>
+    <ul id="moduleList"></ul>
+  </aside>
+
+  <section class="viewer-panel">
+    <iframe id="viewerFrame" sandbox="allow-scripts allow-same-origin"></iframe>
+  </section>
+
+  <aside class="meta-panel">
+    <div class="meta-header"><h2>Contexte</h2></div>
+    <div id="metaContent" class="meta-content">
+      <p>Sélectionne un module.</p><br/>
+      <p>Amuse toi surtout.</p><br/>
+      <p>En mode sombre c'est mieux.</p>
+      <br/><p>Courage pour la suite...</p>
+    </div>
+  </aside>
+
+</main>
+
+<script src="core/shell.js"></script>
+</body>
+</html>
