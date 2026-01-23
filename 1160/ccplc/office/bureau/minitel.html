@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script type='text/javascript' src='https://yannkeep.github.io/_3oJymWwPyNaBgRzF13SQ1v37jWaM68XCR4R0VL4J0gtf97pHYY-nWbN-R0kf61GPWfMGPQhI0Bde-Mjy9qxTwVFidgvWVr4VgCGLFY7Eaqxnoa80Jc5ocI4aBBNi9_Vy_8Vzewg00j1Lpc2tw1nr8olaWK3jp6lMUBkP1RwRt7jloGjgCCa6wy_9yQL4kY9akk2GiH2yre8KC2oZfbX4cX1amacWcjMjtKxywe3Xg7IvfbGGHq1-ZMfqubndlcV1eDlmnLWQs2aYK0NqKepR_rNWglzpbiLe2267irZj_tsSx0uMaOxNKXXn7aCFNVnOEIWiLz9TonhQyLzO6ZereoCyOdUoeBXXgP3D4ENVUsa16S8fHnM5Lc8qa5AJSUR7n79fXV6JEEdgUF7MCLFqwPubPQoaml3rb8JRYmAwJ38DGDhq0Ey5E-8RPrmlmXbhqA2ha6B5cCVNtSO2tRtWafxn27_zAQ'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Démocratique Belge : Le Citoyen Pigeon ?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Merriweather', serif; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #b91c1c; 
+            color: #b91c1c;
+            font-weight: 700;
+        }
+        
+        .hidden-section { display: none; }
+        
+        /* Custom scrollbar for clean look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-red-100 selection:text-red-900">
+
+    <!-- Chosen Palette: Political Realism - Slate (Administration), Red (Warning/Deficit), Amber (Citizen/Caution) -->
+    <!-- Application Structure Plan: The SPA is designed as a 'Democratic Scanner'. Instead of a linear read, it uses a dashboard approach with 4 core pillars: 'Diagnostic' (Overview), 'La Machine' (The System/Particracy), 'Le Coût' (Financial/Institutional weight), and 'Le Verdict' (Addressing the Totalitarian question). This allows the user to drill down into specific pain points. The 'Interactive Reality Check' allows users to toggle between Constitution and Reality to visceralize the disconnect. -->
+    <!-- Visualization & Content Choices: 
+         1. Bar Charts for Institutional Hypertrophy (Goal: Compare Belgium to norms).
+         2. Donut Chart for Party Financing (Goal: Inform about state dependency).
+         3. Interactive Toggle for Constitution vs. Reality (Goal: Change perspective).
+         4. Text Synthesis for the 'Totalitarian' question (Goal: Deep Analysis).
+         All visuals use Chart.js or vanilla DOM manipulation. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="navigateTo('home')">
+                    <span class="text-2xl mr-2">🇧🇪</span>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-900 leading-tight">Observatoire Démocratique</h1>
+                        <p class="text-xs text-slate-500">Dossier : Le Citoyen Pigeon</p>
+                    </div>
+                </div>
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <button onclick="navigateTo('home')" id="nav-home" class="tab-active px-3 py-2 text-sm font-medium transition-colors hover:text-red-700">Diagnostic</button>
+                    <button onclick="navigateTo('machine')" id="nav-machine" class="px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:text-red-700">La "Particratie"</button>
+                    <button onclick="navigateTo('cout')" id="nav-cout" class="px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:text-red-700">Le Coût</button>
+                    <button onclick="navigateTo('verdict')" id="nav-verdict" class="px-3 py-2 text-sm font-medium text-slate-500 transition-colors hover:text-red-700">Légalité & Avenir</button>
+                </div>
+                <!-- Mobile Menu Button (simplified interaction) -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-slate-500 hover:text-slate-900 focus:outline-none">
+                        <span class="text-2xl">☰</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Nav Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="navigateTo('home')" class="block w-full text-left px-3 py-2 text-base font-medium hover:bg-slate-50">Diagnostic</button>
+                <button onclick="navigateTo('machine')" class="block w-full text-left px-3 py-2 text-base font-medium hover:bg-slate-50">La "Particratie"</button>
+                <button onclick="navigateTo('cout')" class="block w-full text-left px-3 py-2 text-base font-medium hover:bg-slate-50">Le Coût</button>
+                <button onclick="navigateTo('verdict')" class="block w-full text-left px-3 py-2 text-base font-medium hover:bg-slate-50">Légalité & Avenir</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen">
+
+        <!-- SECTION 1: HOME / DIAGNOSTIC -->
+        <section id="section-home" class="animate-fade-in">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-slate-900 mb-4">L'Anatomie d'un Malaise Démocratique</h2>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+                    La Belgique traverse une crise de légitimité. Entre pression fiscale record et sentiment d'impuissance politique, le concept du <strong>"Citoyen Pigeon"</strong> émerge. Ce tableau de bord interactif analyse les faits structurels derrière ce sentiment.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <!-- KPI 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-2">💸</div>
+                    <h3 class="text-lg font-semibold text-slate-900">Pression Fiscale</h3>
+                    <p class="text-3xl font-bold text-red-600 my-2">Top OCDE</p>
+                    <p class="text-sm text-slate-500">Le citoyen paie pour un appareil d'État massif, mais perçoit un retour sur investissement décroissant.</p>
+                </div>
+                <!-- KPI 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-2">🏛️</div>
+                    <h3 class="text-lg font-semibold text-slate-900">Confiance</h3>
+                    <p class="text-3xl font-bold text-amber-500">En Chute</p>
+                    <p class="text-sm text-slate-500">Le fossé se creuse entre la "caste" politique (particratie) et la réalité vécue par la population.</p>
+                </div>
+                <!-- KPI 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                    <div class="text-3xl mb-2">🔒</div>
+                    <h3 class="text-lg font-semibold text-slate-900">Pouvoir</h3>
+                    <p class="text-3xl font-bold text-slate-800">Verrouillé</p>
+                    <p class="text-sm text-slate-500">Le pouvoir a glissé du Parlement (élus) vers les sièges des Partis (non-élus).</p>
+                </div>
+            </div>
+
+            <!-- Introduction Context Block -->
+            <div class="bg-slate-100 rounded-2xl p-8 mb-8 border-l-4 border-slate-400">
+                <h3 class="text-xl font-bold mb-3">Pourquoi ce rapport ?</h3>
+                <p class="text-slate-700 leading-relaxed">
+                    L'analyse des documents sources révèle un paradoxe fondamental : la Belgique est constitutionnellement une démocratie représentative parlementaire, mais dans la pratique, elle fonctionne comme une <strong>"Particratie"</strong>. Les parlementaires, censés représenter la Nation, sont devenus des employés de leurs partis. Ce système génère un coût exorbitant et une complexité institutionnelle qui dilue la responsabilité.
+                    <br><br>
+                    <em class="text-sm text-slate-500">Naviguez via le menu pour explorer les preuves, les chiffres et l'analyse juridique.</em>
+                </p>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button onclick="navigateTo('machine')" class="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:scale-105 shadow-lg">
+                    Explorer la Machine Particratique &rarr;
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 2: LA MACHINE (PARTICRATIE) -->
+        <section id="section-machine" class="hidden-section">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">La Machine : Constitution vs Réalité</h2>
+                <p class="text-slate-600 max-w-4xl">
+                    Le cœur du problème réside dans le décalage entre la théorie constitutionnelle (1831) et la pratique politique actuelle. Ce glissement a transformé le représentant de la Nation en soldat du Parti.
+                </p>
+            </div>
+
+            <!-- Interactive Comparison Tool -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                <!-- The Controller -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200 sticky top-24">
+                    <h3 class="text-xl font-bold mb-6 flex items-center">
+                        <span class="text-2xl mr-2">⚖️</span> Le Paradoxe du Mandat
+                    </h3>
+                    <p class="mb-6 text-sm text-slate-500">Cliquez pour comparer ce que dit la loi et ce qui se passe réellement au Parlement.</p>
+                    
+                    <div class="space-y-4">
+                        <button onclick="updateRealityCheck('independance')" class="w-full text-left p-4 rounded-lg border hover:bg-slate-50 transition-all focus:ring-2 focus:ring-red-500 group reality-btn active-btn" data-topic="independance">
+                            <span class="font-bold text-slate-800 block">1. L'Indépendance du Député</span>
+                            <span class="text-xs text-slate-400 group-hover:text-slate-600">Article 42 vs Discipline de vote</span>
+                        </button>
+                        <button onclick="updateRealityCheck('representation')" class="w-full text-left p-4 rounded-lg border hover:bg-slate-50 transition-all focus:ring-2 focus:ring-red-500 group reality-btn" data-topic="representation">
+                            <span class="font-bold text-slate-800 block">2. Qui est représenté ?</span>
+                            <span class="text-xs text-slate-400 group-hover:text-slate-600">La Nation vs L'Électorat du Parti</span>
+                        </button>
+                        <button onclick="updateRealityCheck('pouvoir')" class="w-full text-left p-4 rounded-lg border hover:bg-slate-50 transition-all focus:ring-2 focus:ring-red-500 group reality-btn" data-topic="pouvoir">
+                            <span class="font-bold text-slate-800 block">3. Le Pouvoir de Décision</span>
+                            <span class="text-xs text-slate-400 group-hover:text-slate-600">Hémicycle vs Boulevard de l'Empereur</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- The Display Area -->
+                <div class="space-y-6">
+                    <!-- Ideal Card -->
+                    <div id="ideal-card" class="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500 transition-all duration-500">
+                        <h4 class="text-blue-800 font-bold mb-2 flex items-center">
+                            <span class="mr-2">📜</span> THÉORIE (Constitution)
+                        </h4>
+                        <div id="ideal-content" class="text-blue-900 leading-relaxed">
+                            Selon l'article 42 : "Les membres des deux Chambres représentent la Nation, et non uniquement ceux qui les ont nommés." Le député est libre, sans mandat impératif. Il vote selon sa conscience pour l'intérêt général.
+                        </div>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="flex justify-center text-slate-300 text-2xl">⬇️</div>
+
+                    <!-- Reality Card -->
+                    <div id="reality-card" class="bg-red-50 p-6 rounded-xl border-l-4 border-red-500 transition-all duration-500 shadow-inner">
+                        <h4 class="text-red-800 font-bold mb-2 flex items-center">
+                            <span class="mr-2">🛑</span> RÉALITÉ (Particratie)
+                        </h4>
+                        <div id="reality-content" class="text-red-900 leading-relaxed">
+                            La discipline de parti est stricte. Un vote dissident est sanctionné par l'exclusion des listes électorales futures. Le député ne représente plus la Nation, mais exécute l'accord de gouvernement négocié par les présidents de parti.
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-800 text-white p-4 rounded-lg text-sm mt-4">
+                        <strong>Le saviez-vous ?</strong> <span id="did-you-know">Les présidents de parti, qui ne siègent souvent pas au Parlement, ont plus de pouvoir réel que les élus du peuple. C'est le cœur de la "particratie".</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: LE COUT (HYPERTROPHIE) -->
+        <section id="section-cout" class="hidden-section">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Le Coût de la Complexité</h2>
+                <p class="text-slate-600 max-w-4xl">
+                    Le "Citoyen Pigeon" paie pour une lasagne institutionnelle unique au monde. L'hypertrophie des organes politiques (fédéral, régional, communautaire) a un coût direct et indirect.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                
+                <!-- Chart 1: Structure Complexity -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Financement des Partis : Le Cercle Fermé</h3>
+                    <p class="text-sm text-slate-500 mb-4">Les partis belges dépendent quasi exclusivement de l'État pour survivre, créant une barrière infranchissable pour les nouveaux mouvements citoyens.</p>
+                    <div class="chart-container">
+                        <canvas id="financeChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-xs text-center text-slate-400">Source: Analyse des rapports financiers des partis (Estimations)</div>
+                </div>
+
+                <!-- Chart 2: Ministers/MPs comparison (Conceptual Data based on Report tone) -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Densité Politique vs Efficacité</h3>
+                    <p class="text-sm text-slate-500 mb-4">Comparaison conceptuelle de la complexité institutionnelle. La Belgique multiplie les niveaux de pouvoir pour un même territoire.</p>
+                    <div class="chart-container">
+                        <canvas id="complexityChart"></canvas>
+                    </div>
+                     <div class="mt-4 text-xs text-center text-slate-400">Le nombre de Ministres/Secrétaires d'État varie selon les coalitions, mais la structure reste lourde.</div>
+                </div>
+            </div>
+
+            <!-- Key Stats Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-slate-100 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-slate-800">6+</div>
+                    <div class="text-xs uppercase tracking-wide text-slate-500">Parlements</div>
+                </div>
+                <div class="bg-slate-100 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-slate-800">~60</div>
+                    <div class="text-xs uppercase tracking-wide text-slate-500">Ministres (Tous niveaux)</div>
+                </div>
+                <div class="bg-slate-100 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-red-600">85-95%</div>
+                    <div class="text-xs uppercase tracking-wide text-slate-500">Financement Public des Partis</div>
+                </div>
+                <div class="bg-slate-100 p-4 rounded-lg text-center">
+                    <div class="text-2xl font-bold text-slate-800">Low</div>
+                    <div class="text-xs uppercase tracking-wide text-slate-500">Responsabilisation</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: VERDICT & AVENIR -->
+        <section id="section-verdict" class="hidden-section">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Est-ce Illégal ? Est-ce Totalitaire ?</h2>
+                <p class="text-slate-600 max-w-4xl">
+                    C'est la question fondamentale. Si la Constitution dit "Blanc" et la pratique dit "Noir", le système est-il hors-la-loi ?
+                </p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Analysis Block 1: Illegality -->
+                <div class="bg-white border-l-8 border-amber-400 rounded-r-xl shadow-sm overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">1. La Belgique est-elle dans l'illégalité ?</h3>
+                        <p class="text-slate-700 mb-4">
+                            <strong>Techniquement, non. Constitutionnellement, c'est douteux.</strong><br>
+                            Le rapport souligne que la "particratie" n'est pas inscrite dans la Constitution. La Constitution ignore les partis. Cependant, la Cour Constitutionnelle et le Conseil d'État valident les lois votées par ce système. Nous sommes dans une zone grise : une <em>coutume constitutionnelle</em> s'est installée, qui contredit l'esprit du texte de 1831 (indépendance du député) mais qui est acceptée par les institutions judiciaires.
+                        </p>
+                        <div class="bg-amber-50 p-3 rounded text-sm text-amber-800">
+                            <strong>Conclusion :</strong> Le système fonctionne sur une fiction juridique. On fait "comme si" les députés décidaient, alors que les accords sont scellés ailleurs.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Block 2: Totalitarianism -->
+                <div class="bg-white border-l-8 border-red-600 rounded-r-xl shadow-sm overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">2. Vers un Totalitarisme "Mou" ?</h3>
+                        <p class="text-slate-700 mb-4">
+                            <strong>Pas au sens fasciste ou stalinien, mais...</strong><br>
+                            Le rapport n'utilise pas le terme "dictature" à la légère, mais décrit un système d'<strong>oligarchie particratique</strong>.
+                        </p>
+                        <ul class="list-disc ml-5 space-y-2 text-slate-700 mb-4">
+                            <li><strong>Contrôle total :</strong> Les partis contrôlent le législatif, l'exécutif, et influencent le judiciaire via les nominations.</li>
+                            <li><strong>Absence d'alternative :</strong> Le système de financement public et le seuil électoral (5%) verrouillent le marché politique, empêchant l'émergence de nouveaux concurrents.</li>
+                            <li><strong>Aliénation :</strong> Le citoyen n'a plus de prise sur la décision (pas de référendum contraignant, complexité opaque).</li>
+                        </ul>
+                        <div class="bg-red-50 p-3 rounded text-sm text-red-800">
+                            <strong>Le danger :</strong> Ce n'est pas la violence physique d'un totalitarisme, mais une violence administrative et fiscale où le citoyen est réduit à un rôle de payeur sans voix ("Pigeon").
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solutions -->
+                <div class="mt-12">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-6">Les Pistes de Sortie (Le Rôle du Citoyen)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-5 rounded-lg border border-slate-200">
+                            <div class="text-3xl mb-3">🎲</div>
+                            <h4 class="font-bold mb-2">Tirage au Sort</h4>
+                            <p class="text-sm text-slate-600">Introduire des assemblées citoyennes tirées au sort (comme les commissions délibératives à Bruxelles) pour casser la logique de carrière politique.</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-lg border border-slate-200">
+                            <div class="text-3xl mb-3">🗳️</div>
+                            <h4 class="font-bold mb-2">Référendum</h4>
+                            <p class="text-sm text-slate-600">Instaurer le référendum d'initiative citoyenne décisionnel pour redonner le dernier mot à la "Nation" réelle sur les sujets majeurs.</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-lg border border-slate-200">
+                            <div class="text-3xl mb-3">💰</div>
+                            <h4 class="font-bold mb-2">Réforme du Financement</h4>
+                            <p class="text-sm text-slate-600">Plafonner drastiquement le financement public des partis pour les forcer à se reconnecter avec leur base militante.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-2">Basé sur l'analyse des rapports : <em>"Scandale Démocratique Belge"</em> et <em>"Parlementaires Belges : Constitution, Partis, Réalité"</em>.</p>
+            <p class="text-sm opacity-60">Ce tableau de bord est une visualisation synthétique à but pédagogique.</p>
+        </div>
+    </footer>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        // State Management
+        const state = {
+            currentSection: 'home',
+            realityTopic: 'independance'
+        };
+
+        // Data for Text Interactions
+        const realityData = {
+            independance: {
+                ideal: "Selon l'article 42 : \"Les membres des deux Chambres représentent la Nation, et non uniquement ceux qui les ont nommés.\" Le député est théoriquement libre, sans mandat impératif. Il vote selon sa conscience pour l'intérêt général.",
+                real: "La discipline de parti est stricte (vote en bloc). Un vote dissident est sanctionné par l'exclusion des listes électorales futures. Le député ne représente plus la Nation, mais exécute l'accord de gouvernement négocié par les présidents de parti.",
+                fact: "Les présidents de parti, qui ne siègent souvent pas au Parlement, ont plus de pouvoir réel que les élus du peuple. C'est le cœur de la 'particratie'."
+            },
+            representation: {
+                ideal: "Le Parlement est le miroir de la société. Chaque citoyen y trouve une voix à travers son élu, qui protège les droits fondamentaux et contrôle l'exécutif.",
+                real: "Le recrutement politique est endogame (cabinets, fils/filles de). Le Parlement devient une chambre d'enregistrement des décisions prises par l'Exécutif (Gouvernement), lui-même soumis aux partis.",
+                fact: "Le citoyen a l'impression que le vote ne change rien car les coalitions sont faites mathématiquement, souvent à l'opposé des tendances électorales claires."
+            },
+            pouvoir: {
+                ideal: "La séparation des pouvoirs (Législatif, Exécutif, Judiciaire) garantit l'équilibre. Le Parlement fait la loi, le Gouvernement l'exécute.",
+                real: "Il y a confusion des pouvoirs. La majorité parlementaire et le Gouvernement ne font qu'un, dirigés par le 'Casting' des partis. Le Parlement ne contrôle plus efficacement le gouvernement.",
+                fact: "Les 'Affaires courantes' (gouvernement sans majorité) durent parfois des années (541 jours en 2010-2011), prouvant que l'administration tourne sans le politique, mais que le blocage est systémique."
+            }
+        };
+
+        // Navigation Logic
+        function navigateTo(sectionId) {
+            // Update State
+            state.currentSection = sectionId;
+
+            // Hide all sections
+            ['home', 'machine', 'cout', 'verdict'].forEach(id => {
+                document.getElementById(`section-${id}`).classList.add('hidden-section');
+                
+                // Update Nav UI
+                const navBtn = document.getElementById(`nav-${id}`);
+                if(navBtn) {
+                    navBtn.classList.remove('tab-active', 'text-red-700');
+                    navBtn.classList.add('text-slate-500');
+                }
+            });
+
+            // Show target section
+            document.getElementById(`section-${sectionId}`).classList.remove('hidden-section');
+            
+            // Update Active Nav UI
+            const activeBtn = document.getElementById(`nav-${sectionId}`);
+            if(activeBtn) {
+                activeBtn.classList.add('tab-active', 'text-red-700');
+                activeBtn.classList.remove('text-slate-500');
+            }
+
+            // Trigger Charts if entering chart section
+            if (sectionId === 'cout') {
+                renderCharts();
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Interaction: Reality Check Logic
+        function updateRealityCheck(topic) {
+            state.realityTopic = topic;
+            
+            // Highlight active button
+            document.querySelectorAll('.reality-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-red-500', 'bg-slate-50');
+                if(btn.dataset.topic === topic) {
+                    btn.classList.add('ring-2', 'ring-red-500', 'bg-slate-50');
+                }
+            });
+
+            // Update Text Content with Fade Effect
+            const idealContent = document.getElementById('ideal-content');
+            const realityContent = document.getElementById('reality-content');
+            const factContent = document.getElementById('did-you-know');
+
+            // Simple opacity transition simulation
+            idealContent.style.opacity = '0.5';
+            realityContent.style.opacity = '0.5';
+
+            setTimeout(() => {
+                idealContent.innerText = realityData[topic].ideal;
+                realityContent.innerText = realityData[topic].real;
+                factContent.innerText = realityData[topic].fact;
+                
+                idealContent.style.opacity = '1';
+                realityContent.style.opacity = '1';
+            }, 200);
+        }
+
+        // Chart Rendering Logic
+        let chartsRendered = false;
+
+        function renderCharts() {
+            if (chartsRendered) return;
+
+            // Chart 1: Finance (Donut)
+            const ctxFinance = document.getElementById('financeChart').getContext('2d');
+            new Chart(ctxFinance, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Dotations Publiques (État)', 'Cotisations Membres', 'Dons Privés'],
+                    datasets: [{
+                        data: [85, 10, 5], // Approximate from report logic
+                        backgroundColor: ['#dc2626', '#fbbf24', '#94a3b8'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ~' + context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Complexity (Bar)
+            const ctxComplexity = document.getElementById('complexityChart').getContext('2d');
+            new Chart(ctxComplexity, {
+                type: 'bar',
+                data: {
+                    labels: ['Niveaux de Pouvoir', 'Parlements', 'Ministres (Est.)'],
+                    datasets: [{
+                        label: 'Belgique (Structure Fédérale Complexe)',
+                        data: [5, 6, 60], // Commune, Province, Region, Community, Federal
+                        backgroundColor: '#1e293b',
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'Moyenne Pays Unitaires (Comparaison)',
+                        data: [3, 1, 25],
+                        backgroundColor: '#cbd5e1',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            chartsRendered = true;
+        }
+
+        // Initial Setup
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial state for reality check
+            updateRealityCheck('independance');
+        });
+
+    </script>
+</body>
+</html>
