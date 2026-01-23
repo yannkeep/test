@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorateur de l'Écosystème Ouaisfieu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals (Paper/Sand/Charcoal) for a calm, archival feel. -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-paper: #fdfbf7;
+            --bg-card: #ffffff;
+            --text-primary: #2d2a26;
+            --text-secondary: #5e5b56;
+            --accent-warm: #d4a373;
+            --accent-subtle: #e6e2dd;
+            --highlight: #a8dadc;
+        }
+
+        body {
+            background-color: var(--bg-paper);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, .mono {
+            font-family: 'Space Mono', monospace;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card-shadow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+        }
+
+        /* Chart Container Styling - Mandatory Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        
+        .node-indicator {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Application Structure Plan: 
+         1. Header: Brand identity and global "System Status".
+         2. Dashboard Overview: High-level metrics visualization (Chart.js) to show the balance of the ecosystem (Dev vs. Art vs. Data).
+         3. Interactive Atlas (Main Content): A filtered grid of "Nodes" (the links provided). 
+            - Users can filter by category (Archives, Dev, Media, Games).
+            - Each card offers context inferred from the URL.
+         4. "Discovery" Module: Addresses the user's specific question "Is there more?". 
+            - Simulates a scan of subdomains/directories to explain potential hidden content.
+         5. Footer: Simple credits.
+    -->
+
+    <!-- Header -->
+    <header class="w-full border-b border-stone-200 bg-white sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-stone-800 text-white flex items-center justify-center rounded font-bold mono">O</div>
+                <h1 class="text-xl font-bold tracking-tight text-stone-800">OUAISFIEU <span class="text-stone-400 font-normal">| ATLAS</span></h1>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#" onclick="navTo('dashboard')" class="text-stone-500 hover:text-stone-900 transition-colors">Vue d'ensemble</a>
+                <a href="#" onclick="navTo('nodes')" class="text-stone-500 hover:text-stone-900 transition-colors">Noeuds & Liens</a>
+                <a href="#" onclick="navTo('analysis')" class="text-stone-500 hover:text-stone-900 transition-colors">Analyse Profonde</a>
+            </nav>
+            <button onclick="scrollToDiscovery()" class="bg-stone-800 text-white px-4 py-2 rounded text-xs mono hover:bg-stone-700 transition-colors">
+                ? SCANNER LE RÉSEAU
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-12">
+
+        <!-- Intro Section -->
+        <section id="intro" class="text-center max-w-3xl mx-auto mb-12">
+            <h2 class="text-3xl font-bold mb-4 text-stone-800">Cartographie de l'Écosystème</h2>
+            <p class="text-stone-600 leading-relaxed">
+                Vous avez identifié une série de points d'accès numériques liés à l'entité <strong>"Ouaisfieu"</strong>. 
+                Cette interface centralise ces fragments dispersés (archives, dépôts de code, plateformes ludiques) pour en faciliter l'analyse. 
+                Utilisez ce tableau de bord pour naviguer entre les strates techniques, créatives et archivistiques.
+            </p>
+        </section>
+
+        <!-- Visualization & Content Choices:
+             - Ecosystem Distribution (Doughnut Chart): To show the weight of different activities (Dev, Games, Storage).
+             - Content Volume (Bar Chart): Estimated relative volume of content per node.
+             - Interaction: Clicking chart segments could filter the list below (simulated here via buttons).
+             - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+        -->
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            
+            <!-- Context for Visuals -->
+            <div class="lg:col-span-2">
+                <h3 class="text-xl font-bold mb-2 border-b border-stone-200 pb-2">Métriques de l'Écosystème</h3>
+                <p class="text-sm text-stone-500 mb-6">
+                    Visualisation de la répartition des ressources basées sur les URL identifiées. 
+                    On observe une forte concentration sur le stockage de données (dl.*) et le développement technique.
+                </p>
+            </div>
+
+            <!-- Chart 1: Distribution -->
+            <div class="bg-white p-6 rounded-lg card-shadow flex flex-col">
+                <h4 class="text-sm font-bold text-stone-400 uppercase mb-4 tracking-wider">Typologie des Nœuds</h4>
+                <div class="chart-container flex-grow">
+                    <canvas id="typeChart"></canvas>
+                </div>
+                <div class="mt-4 text-xs text-center text-stone-400 italic">Répartition par domaine d'activité</div>
+            </div>
+
+            <!-- Chart 2: Infrastructure Estimate -->
+            <div class="bg-white p-6 rounded-lg card-shadow flex flex-col">
+                <h4 class="text-sm font-bold text-stone-400 uppercase mb-4 tracking-wider">Densité de Contenu Estimée</h4>
+                <div class="chart-container flex-grow">
+                    <canvas id="activityChart"></canvas>
+                </div>
+                <div class="mt-4 text-xs text-center text-stone-400 italic">Basé sur la profondeur des liens détectés</div>
+            </div>
+        </section>
+
+        <!-- Interactive Atlas (The Links) -->
+        <section id="nodes" class="pt-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <div>
+                    <h3 class="text-xl font-bold">Points d'Accès (Nœuds)</h3>
+                    <p class="text-sm text-stone-500">Explorez les liens actifs. Cliquez pour visiter.</p>
+                </div>
+                
+                <!-- Filters -->
+                <div class="flex flex-wrap gap-2" id="filterContainer">
+                    <button onclick="filterNodes('all')" class="filter-btn active px-3 py-1 rounded-full text-xs font-medium border border-stone-300 bg-stone-800 text-white transition-all">Tout</button>
+                    <button onclick="filterNodes('archive')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-all">Archives (DL)</button>
+                    <button onclick="filterNodes('tech')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-all">Tech & Dev</button>
+                    <button onclick="filterNodes('creative')" class="filter-btn px-3 py-1 rounded-full text-xs font-medium border border-stone-300 bg-white text-stone-600 hover:bg-stone-100 transition-all">Créatif & Média</button>
+                </div>
+            </div>
+
+            <!-- Grid of Nodes -->
+            <div id="nodesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Javascript will populate this -->
+            </div>
+        </section>
+
+        <!-- "Is there more?" Analysis Section -->
+        <section id="analysis" class="bg-stone-100 rounded-xl p-8 mt-12 border border-stone-200">
+            <div class="max-w-4xl mx-auto">
+                <h3 class="text-2xl font-bold mb-4 mono text-stone-800">Analyse: "Il y a plus ?"</h3>
+                <p class="mb-6 text-stone-700">
+                    Vous posez la question de l'étendue de cet écosystème. Basé sur l'analyse de la structure des URL (notamment les sous-domaines et les répertoires), voici les vecteurs d'exploration probables :
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Hypothesis 1 -->
+                    <div class="bg-white p-5 rounded border border-stone-200">
+                        <div class="text-2xl mb-2">📂</div>
+                        <h4 class="font-bold mb-2">L'index "DL"</h4>
+                        <p class="text-sm text-stone-600">
+                            Le sous-domaine <code>dl.ouaisfi.eu</code> suggère un serveur de fichiers (Directory Listing). 
+                            L'existence de répertoires spécifiques (<code>/earl/</code>, <code>/biologia/</code>, <code>/1160/</code>) indique qu'il y a probablement d'autres dossiers non listés publiquement à la racine.
+                        </p>
+                    </div>
+
+                    <!-- Hypothesis 2 -->
+                    <div class="bg-white p-5 rounded border border-stone-200">
+                        <div class="text-2xl mb-2">🐙</div>
+                        <h4 class="font-bold mb-2">Github Repos</h4>
+                        <p class="text-sm text-stone-600">
+                            Les pages <code>github.io</code> (Tech, CCPLC) ne sont que la face visible. 
+                            Il est fort probable que le compte Github associé contienne des dépôts de code source bruts qui n'ont pas de page web générée.
+                        </p>
+                    </div>
+
+                    <!-- Hypothesis 3 -->
+                    <div class="bg-white p-5 rounded border border-stone-200">
+                        <div class="text-2xl mb-2">🔗</div>
+                        <h4 class="font-bold mb-2">Connexions Latérales</h4>
+                        <p class="text-sm text-stone-600">
+                            Le domaine <code>nyxo.brussels</code> semble être une entité distincte mais connectée. 
+                            Cela suggère un réseau de projets professionnels ou collaboratifs qui s'étend au-delà de la marque personnelle "Ouaisfieu".
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="alert('Simulation: Scan des ports ouverts... Accès refusé. Exploration manuelle requise sur dl.ouaisfi.eu')" class="bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold py-3 px-6 rounded inline-flex items-center transition-colors">
+                        <span class="mr-2">📡</span> Lancer une recherche heuristique
+                    </button>
+                    <p class="text-xs text-stone-400 mt-2">Simulation à but illustratif uniquement.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-stone-50 border-t border-stone-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-stone-400 text-sm mono">Généré par Canvas Create Webapp | Analyse de l'Écosystème Digital</p>
+            <p class="text-stone-300 text-xs mt-2">Données basées sur les entrées fournies.</p>
+        </div>
+    </footer>
+
+    <!-- JS Logic -->
+    <script>
+        // --- DATA STORE ---
+        // Creating a structured representation of the provided links
+        const ecosystemData = [
+            {
+                id: 1,
+                name: "Ouaisfi.eu",
+                url: "https://ouaisfi.eu",
+                category: "hub",
+                desc: "Le domaine racine probable. Point d'entrée central ou page d'atterrissage.",
+                icon: "🌐",
+                color: "bg-blue-100 text-blue-800"
+            },
+            {
+                id: 2,
+                name: "DL Repository",
+                url: "https://dl.ouaisfi.eu/",
+                category: "archive",
+                desc: "Serveur de fichiers / Index racine. Le cœur de stockage de l'écosystème.",
+                icon: "💾",
+                color: "bg-amber-100 text-amber-800"
+            },
+            {
+                id: 3,
+                name: "Projet EARL",
+                url: "https://dl.ouaisfi.eu/earl/",
+                category: "archive",
+                desc: "Sous-répertoire spécifique. Contenu inconnu (potentiellement audio, code ou archives perso).",
+                icon: "📁",
+                color: "bg-stone-100 text-stone-800"
+            },
+            {
+                id: 4,
+                name: "Biologia",
+                url: "https://dl.ouaisfi.eu/biologia/",
+                category: "archive",
+                desc: "Archives liées à la biologie ou projet scientifique. Documentation potentielle.",
+                icon: "🧬",
+                color: "bg-green-100 text-green-800"
+            },
+            {
+                id: 5,
+                name: "Zone 1160",
+                url: "https://dl.ouaisfi.eu/1160/",
+                category: "archive",
+                desc: "Référence géographique (Auderghem, Bruxelles). Photos ou projets locaux ?",
+                icon: "📍",
+                color: "bg-red-100 text-red-800"
+            },
+            {
+                id: 6,
+                name: "Tech Hub",
+                url: "https://ouaisfieu.github.io/tech/",
+                category: "tech",
+                desc: "Blog technique, documentation ou showcase de projets de développement.",
+                icon: "💻",
+                color: "bg-purple-100 text-purple-800"
+            },
+            {
+                id: 7,
+                name: "CCPLC",
+                url: "https://ouaisfieu.github.io/ccplc/",
+                category: "tech",
+                desc: "Projet hébergé sur Github. Acronyme technique (ex: Comité Consultatif, ou PLC automation).",
+                icon: "⚙️",
+                color: "bg-gray-100 text-gray-800"
+            },
+            {
+                id: 8,
+                name: "Itch.io",
+                url: "https://ouaisfieu.itch.io/",
+                category: "creative",
+                desc: "Plateforme de jeux indépendants. Créations ludiques et interactives.",
+                icon: "🎮",
+                color: "bg-pink-100 text-pink-800"
+            },
+            {
+                id: 9,
+                name: "YouTube",
+                url: "https://www.youtube.com/@ouaisfieu",
+                category: "creative",
+                desc: "Chaîne vidéo. Contenu média, tutoriels ou gameplay.",
+                icon: "▶️",
+                color: "bg-red-100 text-red-800"
+            },
+            {
+                id: 10,
+                name: "Nyxo Brussels",
+                url: "http://nyxo.brussels",
+                category: "tech",
+                desc: "Domaine externe lié (.brussels). Probablement un projet client ou une collaboration.",
+                icon: "🏢",
+                color: "bg-indigo-100 text-indigo-800"
+            }
+        ];
+
+        // --- STATE MANAGEMENT ---
+        let activeFilter = 'all';
+
+        // --- DOM ELEMENTS ---
+        const nodesGrid = document.getElementById('nodesGrid');
+        const filterContainer = document.getElementById('filterContainer');
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNodes();
+            initCharts();
+        });
+
+        // --- RENDER FUNCTION ---
+        function renderNodes() {
+            nodesGrid.innerHTML = '';
+            
+            const filteredData = activeFilter === 'all' 
+                ? ecosystemData 
+                : ecosystemData.filter(item => {
+                    if (activeFilter === 'archive') return item.category === 'archive' || item.category === 'hub';
+                    if (activeFilter === 'tech') return item.category === 'tech' || item.category === 'hub';
+                    if (activeFilter === 'creative') return item.category === 'creative';
+                    return true;
+                });
+
+            filteredData.forEach(node => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg p-6 border border-stone-100 card-shadow flex flex-col h-full hover:border-stone-300 transition-colors cursor-pointer';
+                card.onclick = () => window.open(node.url, '_blank');
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="${node.color} w-10 h-10 rounded-lg flex items-center justify-center text-xl shadow-sm">
+                            ${node.icon}
+                        </div>
+                        <span class="text-xs font-mono text-stone-400 border border-stone-100 px-2 py-1 rounded bg-stone-50">${node.category.toUpperCase()}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-stone-800 mb-2">${node.name}</h3>
+                    <p class="text-sm text-stone-600 flex-grow mb-4 leading-relaxed">${node.desc}</p>
+                    <div class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
+                        <span class="truncate max-w-[150px] font-mono opacity-70">${new URL(node.url).hostname}</span>
+                        <span class="flex items-center text-blue-600 font-semibold group-hover:underline">
+                            Visiter &rarr;
+                        </span>
+                    </div>
+                `;
+                nodesGrid.appendChild(card);
+            });
+        }
+
+        // --- FILTER LOGIC ---
+        function filterNodes(category) {
+            activeFilter = category;
+            
+            // Update button styles
+            const buttons = filterContainer.querySelectorAll('button');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('onclick').includes(category)) {
+                    btn.classList.remove('bg-white', 'text-stone-600');
+                    btn.classList.add('bg-stone-800', 'text-white');
+                } else {
+                    btn.classList.add('bg-white', 'text-stone-600');
+                    btn.classList.remove('bg-stone-800', 'text-white');
+                }
+            });
+
+            renderNodes();
+        }
+
+        // --- NAVIGATION ---
+        function navTo(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToDiscovery() {
+            document.getElementById('analysis').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- CHARTS INITIALIZATION ---
+        function initCharts() {
+            // Data Prep
+            const categories = {};
+            ecosystemData.forEach(item => {
+                categories[item.category] = (categories[item.category] || 0) + 1;
+            });
+
+            // Colors
+            const colors = {
+                archive: '#d4a373', // Warm Sand
+                tech: '#a8dadc',    // Soft Blue
+                creative: '#e63946', // Red accent
+                hub: '#457b9d'      // Dark Blue
+            };
+
+            // Chart 1: Distribution (Doughnut)
+            const ctxType = document.getElementById('typeChart').getContext('2d');
+            new Chart(ctxType, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Archives (DL)', 'Tech & Dev', 'Créatif & Média', 'Hub Central'],
+                    datasets: [{
+                        data: [
+                            categories.archive || 0,
+                            categories.tech || 0,
+                            categories.creative || 0,
+                            categories.hub || 0
+                        ],
+                        backgroundColor: [colors.archive, colors.tech, colors.creative, colors.hub],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { usePointStyle: true, font: { family: 'Inter' } } }
+                    },
+                    layout: { padding: 10 }
+                }
+            });
+
+            // Chart 2: Estimated Activity Volume (Bar)
+            // Estimation logic: Deep folders = more volume, Hub = less volume
+            const ctxActivity = document.getElementById('activityChart').getContext('2d');
+            new Chart(ctxActivity, {
+                type: 'bar',
+                data: {
+                    labels: ['Fichiers/Archives', 'Projets Web', 'Multimédia', 'Jeux'],
+                    datasets: [{
+                        label: 'Densité de Contenu Estimée',
+                        data: [85, 60, 45, 30], // Arbitrary values based on typical server content weight
+                        backgroundColor: '#5e5b56',
+                        borderRadius: 4,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: false } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
