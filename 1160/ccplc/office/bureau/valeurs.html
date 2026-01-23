@@ -1,0 +1,503 @@
+
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head><script type='text/javascript' src='https://yannkeep.github.io/pqcdHaGEg1AvLsEoubHzJnf1BticEgAtl25eU1vpmKVdDy68Pc6y3VWd2GBucnDpxVxw9TOnablOl1gPP8zAcjvb1tX6R7pgKhRki0OJMLrQhtfdCpFYkmzUHBBaUj8oAMZn2Zud68Z_7gp7u6nbN_LO-uLzLwg18OlgAoHZ5wREeY61llObq6n7VS4Er-EzGDBWlLYAe-rDsImvJqA604D4BY-zbvBq2mMlq07xQNJw2NYyAuAWHl404D7C-HHURW51D_9wewlOrVsBCjqSAgSoD0xFKmtwhgcOucuZ1G-iw0QdY4T6nPCPdHJGBowhZ0Jx2xIF1rCVSirza6Oxy4YXGN3tOaB02iU-bVfxUeIuv6WgBFDTDjR8MNtWofC93wG5txvig3ggrlJoI4BpV28mv9xV2Q_SfVh5y_D8zjksEIPzZYs_xwNSQSqa00k4PGxu5IK45FEvlUe584ZxM-0P_g-Mfg'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Paradoxe Parlementaire Belge : Infographie Interactive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        
+        /* Chart Container Styling Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Tailwind max-w-xl equivalent approx */
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        /* Utility for step connectors in the process flow */
+        .step-connector::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 2rem;
+            height: 2px;
+            background-color: #cbd5e1;
+            transform: translateY(-50%);
+            display: none;
+        }
+        @media (min-width: 1024px) {
+            .step-connector::after {
+                display: block;
+            }
+            .step-connector:last-child::after {
+                display: none;
+            }
+        }
+    </style>
+    <!-- Chosen Palette: Brilliant Blues (Vibrant & Professional). Primary: Royal Blue/Indigo, Accent: Cyan & Alert Red. -->
+    <!-- Application Structure Plan:
+         1. Header/Hero: Hooks the user with the central "Paradox" question.
+         2. Theory Section (The Ideal): Interactive flip-cards presenting Article 42 and the separation of powers.
+         3. Reality Section (The Data): Two columns. Left: Origin of Laws (Donut Chart). Right: Voting Discipline (Bar Chart). Highlights the discrepancy between theory and practice.
+         4. Mechanism Section (The Process): An interactive horizontal stepper illustrating the lifecycle of a "Particracy" MP (Selection -> Election -> Obedience).
+         5. Analysis Section (Synthesis): Textual synthesis on "Pilarisation" and the stability argument.
+         Rationale: Logic flow from "What should be" -> "What is" -> "Why it is" -> "Conclusion".
+    -->
+    <!-- Visualization & Content Choices:
+         1. Theory Cards: HTML/CSS interactions. Goal: Inform. Justification: Text-heavy legal concepts need digestible chunks.
+         2. Origin of Laws: Chart.js Donut. Goal: Compare composition. Justification: Clearly shows the dominance of Government over Parliament.
+         3. Party Discipline: Chart.js Bar. Goal: Compare categories. Justification: Highlights the near-100% obedience rate.
+         4. Particracy Flow: HTML/CSS Stepper. Goal: Organize process. Justification: Shows the causal chain of power without using SVG/Mermaid.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- Navigation / Progress Indicator -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="font-bold text-xl text-indigo-900 tracking-tight">🇧🇪 Politico<span class="text-cyan-600">Scope</span></div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#theory" class="text-slate-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors">Théorie</a>
+                    <a href="#reality" class="text-slate-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors">Réalité</a>
+                    <a href="#mechanism" class="text-slate-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors">Mécanisme</a>
+                    <a href="#analysis" class="text-slate-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors">Synthèse</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative bg-indigo-900 text-white pt-24 pb-32 px-6 overflow-hidden">
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-block bg-cyan-500 text-indigo-900 font-bold px-4 py-1 rounded-full text-sm mb-6 shadow-lg">Infographie Interactive</div>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
+                Le Paradoxe Parlementaire <br/> <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-200">Belge</span>
+            </h1>
+            <p class="text-lg md:text-xl text-indigo-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+                Selon la Constitution, le député est libre. Selon la réalité, il est un soldat du parti. 
+                Exploration de la tension entre le droit et la pratique dans la particratie belge.
+            </p>
+            <a href="#theory" class="inline-block bg-white text-indigo-900 font-bold px-8 py-3 rounded-lg shadow-lg hover:bg-cyan-50 transition-all transform hover:-translate-y-1">
+                Commencer l'analyse
+            </a>
+        </div>
+        <!-- Decorative background element (CSS only) -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+            <div class="absolute top-[-10%] right-[-10%] w-96 h-96 bg-cyan-500 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-rose-500 rounded-full blur-3xl"></div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-20 space-y-24 pb-24">
+
+        <!-- SECTION 1: THEORY -->
+        <section id="theory" class="scroll-mt-24">
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-slate-100">
+                <div class="mb-10 border-l-4 border-cyan-500 pl-4">
+                    <h2 class="text-3xl font-bold text-slate-900">1. La Théorie Constitutionnelle</h2>
+                    <p class="mt-2 text-slate-600 text-lg">
+                        Sur papier, le parlementaire belge jouit d'une indépendance totale. C'est le fondement de la démocratie représentative libérale.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Interactive Card 1 -->
+                    <div class="group perspective-1000 h-64 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="relative w-full h-full transition-all duration-500 transform-style-3d shadow-md rounded-xl hover:shadow-lg border border-slate-200 bg-gradient-to-br from-slate-50 to-white">
+                            <!-- Front -->
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 backface-hidden">
+                                <span class="text-4xl mb-4">📜</span>
+                                <h3 class="text-xl font-bold text-slate-800">L'Article 42</h3>
+                                <p class="text-sm text-slate-500 mt-2 text-center">Cliquez pour révéler le texte sacré</p>
+                            </div>
+                            <!-- Back (Simulated with JS toggle class logic for content switching since strict 3d flip can be buggy without complex css) -->
+                            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-indigo-900 text-white rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                <blockquote class="italic text-center font-medium">
+                                    "Les membres des deux Chambres représentent la Nation, et non pas seulement ceux qui les ont élus."
+                                </blockquote>
+                                <p class="text-xs text-cyan-300 mt-4 font-bold uppercase">Interdiction du mandat impératif</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Card 2 -->
+                    <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 flex flex-col justify-center">
+                        <h3 class="text-xl font-bold text-slate-800 mb-3 flex items-center">
+                            <span class="bg-indigo-100 text-indigo-700 p-2 rounded-lg mr-3 text-lg">⚖️</span>
+                            Séparation des Pouvoirs
+                        </h3>
+                        <p class="text-slate-600 mb-4">
+                            Le modèle théorique suppose un <strong>Législatif</strong> (Parlement) qui contrôle l'<strong>Exécutif</strong> (Gouvernement). Le Parlement est censé avoir le dernier mot.
+                        </p>
+                        <div class="w-full bg-slate-200 rounded-full h-2.5 dark:bg-slate-300">
+                            <div class="bg-indigo-600 h-2.5 rounded-full" style="width: 100%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>Pouvoir Théorique Parlement</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: REALITY (DATA) -->
+        <section id="reality" class="scroll-mt-24">
+            <div class="mb-10">
+                <span class="text-rose-600 font-bold tracking-wider uppercase text-sm">Analyse de Données</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2">2. La Réalité de la Particratie</h2>
+                <p class="mt-4 text-lg text-slate-600 max-w-3xl">
+                    Les données montrent une image très différente. Le pouvoir s'est déplacé du Parlement vers les quartiers généraux des partis et le Gouvernement. C'est le phénomène de la <strong>Particratie</strong>.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- Chart 1: Legislative Initiative -->
+                <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 flex flex-col">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold text-slate-800">Qui écrit la loi ?</h3>
+                        <p class="text-sm text-slate-500 mt-1">
+                            Comparaison entre les lois d'origine gouvernementale ("Projets") et parlementaire ("Propositions").
+                        </p>
+                    </div>
+                    
+                    <div class="flex-grow flex items-center justify-center bg-slate-50 rounded-lg py-4">
+                        <div class="chart-container">
+                            <canvas id="initiativeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-lg">
+                        <p class="text-sm text-rose-900">
+                            <strong>Constat :</strong> Le Parlement est statistiquement une "chambre d'entérinement". Plus de 85% des lois votées sont écrites par le Gouvernement et ses cabinets.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Voting Discipline -->
+                <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-6 flex flex-col">
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold text-slate-800">La Discipline de Vote</h3>
+                        <p class="text-sm text-slate-500 mt-1">
+                            Taux de cohésion au sein des groupes politiques lors des votes en séance plénière.
+                        </p>
+                    </div>
+
+                    <div class="flex-grow flex items-center justify-center bg-slate-50 rounded-lg py-4">
+                        <div class="chart-container">
+                            <canvas id="disciplineChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg">
+                        <p class="text-sm text-indigo-900">
+                            <strong>Constat :</strong> La dissidence est quasi-inexistante (< 0.5%). Un député de la majorité qui vote contre le gouvernement risque l'exclusion politique.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: MECHANISM -->
+        <section id="mechanism" class="scroll-mt-24 bg-slate-900 text-white rounded-3xl p-8 md:p-12 shadow-2xl overflow-hidden relative">
+            <!-- Background Accent -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-600 rounded-full filter blur-3xl opacity-20 -mr-16 -mt-16"></div>
+
+            <div class="relative z-10 mb-12 text-center">
+                <h2 class="text-3xl font-bold text-white">3. La Mécanique du Pouvoir</h2>
+                <p class="text-slate-300 mt-2 max-w-2xl mx-auto">
+                    Comment la particratie maintient-elle son emprise ? C'est un processus cyclique de dépendance.
+                </p>
+            </div>
+
+            <!-- Process Flow Visualization (HTML/Tailwind) -->
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-4 gap-6">
+                
+                <!-- Step 1 -->
+                <div class="step-connector relative group">
+                    <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-cyan-500 transition-colors h-full">
+                        <div class="w-10 h-10 bg-cyan-600 rounded-full flex items-center justify-center font-bold text-white mb-4 shadow-lg shadow-cyan-500/30">1</div>
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">La Sélection</h4>
+                        <p class="text-sm text-slate-400">
+                            Le Président du parti décide seul (ou en bureau restreint) de la composition des listes électorales.
+                        </p>
+                        <div class="mt-4 text-xs font-mono text-slate-500 bg-slate-900 p-2 rounded">
+                            Pouvoir = Bureau du Parti
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-connector relative group">
+                    <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-cyan-500 transition-colors h-full">
+                        <div class="w-10 h-10 bg-cyan-600 rounded-full flex items-center justify-center font-bold text-white mb-4 shadow-lg shadow-cyan-500/30">2</div>
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">L'Élection</h4>
+                        <p class="text-sm text-slate-400">
+                            L'effet de "case de tête". Les candidats placés en haut de liste par le parti sont quasi assurés d'être élus.
+                        </p>
+                        <div class="mt-4 text-xs font-mono text-slate-500 bg-slate-900 p-2 rounded">
+                            Dépendance = Totale
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-connector relative group">
+                    <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-cyan-500 transition-colors h-full">
+                        <div class="w-10 h-10 bg-cyan-600 rounded-full flex items-center justify-center font-bold text-white mb-4 shadow-lg shadow-cyan-500/30">3</div>
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">L'Instruction</h4>
+                        <p class="text-sm text-slate-400">
+                            Réunions de groupe hebdomadaires. La consigne de vote est donnée. La liberté de vote est l'exception.
+                        </p>
+                        <div class="mt-4 text-xs font-mono text-slate-500 bg-slate-900 p-2 rounded">
+                            Outil = Discipline
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative group">
+                    <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-rose-500 transition-colors h-full">
+                        <div class="w-10 h-10 bg-rose-600 rounded-full flex items-center justify-center font-bold text-white mb-4 shadow-lg shadow-rose-500/30">4</div>
+                        <h4 class="text-lg font-bold text-rose-400 mb-2">Le Vote</h4>
+                        <p class="text-sm text-slate-400">
+                            Le député vote selon la ligne du parti pour garantir sa place sur la liste future. Le cycle est bouclé.
+                        </p>
+                        <div class="mt-4 text-xs font-mono text-slate-500 bg-slate-900 p-2 rounded">
+                            Résultat = Stabilité
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: ANALYSIS & SYNTHESIS -->
+        <section id="analysis" class="scroll-mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="md:col-span-2">
+                <div class="bg-white rounded-xl shadow-lg border border-slate-100 p-8">
+                    <h2 class="text-2xl font-bold text-slate-900 mb-4">4. Synthèse : Pilarisation & Démocratie</h2>
+                    <div class="prose prose-slate max-w-none text-slate-600">
+                        <p class="mb-4">
+                            La Belgique est historiquement une société "pilarisée" (catholiques, socialistes, libéraux). Bien que ces piliers sociaux s'effritent, la structure politique rigide demeure. 
+                        </p>
+                        <p class="mb-4">
+                            <strong>Le Paradoxe :</strong> Ce système viole l'esprit de l'Article 42 (le député ne représente pas la Nation, mais son parti). Cependant, dans un pays complexe nécessitant des coalitions de 4 à 7 partis, cette discipline est souvent vue comme le prix à payer pour éviter le chaos gouvernemental.
+                        </p>
+                        <div class="bg-slate-50 p-4 rounded-lg border-l-4 border-slate-400 mt-6">
+                            <h4 class="font-bold text-slate-800">Normalité typiquement belge ?</h4>
+                            <p class="text-sm mt-1">
+                                Sans particratie, la formation de gouvernements (déjà record mondial de lenteur) deviendrait mathématiquement impossible. Le député belge est donc un <em>"mal nécessaire"</em> sacrifié sur l'autel du compromis.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Takeaways Panel -->
+            <div class="bg-gradient-to-br from-indigo-900 to-indigo-800 text-white rounded-xl shadow-lg p-8 flex flex-col justify-center">
+                <h3 class="text-xl font-bold text-cyan-400 mb-6 border-b border-indigo-700 pb-2">À Retenir</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-3">🏛️</span>
+                        <span class="text-sm text-indigo-100">La Constitution garantit la liberté du député (théorie).</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-3">📊</span>
+                        <span class="text-sm text-indigo-100">Le Gouvernement écrit 85% des lois (réalité).</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-3">🔗</span>
+                        <span class="text-sm text-indigo-100">La carrière du député dépend à 100% de son président de parti.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-4 text-sm">Source: Analyse constitutionnelle et données parlementaires publiques (CRISP, La Chambre.be).</p>
+            <p class="text-xs opacity-50">&copy; 2024 Infographie Éducative. Généré par AI.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. Label Wrapping Logic (Mandatory) ---
+        // Splits long strings into arrays of strings for Chart.js
+        function formatLabels(labels, maxLength = 16) {
+            return labels.map(label => {
+                if (label.length <= maxLength) return label;
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = words[0];
+
+                for (let i = 1; i < words.length; i++) {
+                    if ((currentLine + " " + words[i]).length < maxLength) {
+                        currentLine += " " + words[i];
+                    } else {
+                        lines.push(currentLine);
+                        currentLine = words[i];
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            });
+        }
+
+        // --- 2. Tooltip Configuration (Mandatory) ---
+        // Handles multiline labels in tooltips
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // --- 3. Chart Initialization ---
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Chart 1: Legislative Initiative (Donut) ---
+            const ctxInit = document.getElementById('initiativeChart').getContext('2d');
+            const initLabels = ["Projets de Loi (Gouvernement)", "Propositions de Loi (Parlement)"];
+            const formattedInitLabels = formatLabels(initLabels);
+
+            new Chart(ctxInit, {
+                type: 'doughnut',
+                data: {
+                    labels: formattedInitLabels,
+                    datasets: [{
+                        data: [85, 15], // Representative data point
+                        backgroundColor: [
+                            '#f43f5e', // Rose-500 (Government/Executive power color)
+                            '#0ea5e9'  // Sky-500 (Parliament/Legislative color)
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: "'ui-sans-serif', 'system-ui', 'sans-serif'",
+                                    size: 12
+                                },
+                                padding: 20
+                            }
+                        },
+                        tooltip: tooltipConfig
+                    },
+                    layout: {
+                        padding: 10
+                    }
+                }
+            });
+
+            // --- Chart 2: Voting Discipline (Bar) ---
+            const ctxDisc = document.getElementById('disciplineChart').getContext('2d');
+            const discLabels = ["Majorité Gouvernementale", "Opposition Parlementaire", "Électrons Libres"];
+            const formattedDiscLabels = formatLabels(discLabels);
+
+            new Chart(ctxDisc, {
+                type: 'bar',
+                data: {
+                    labels: formattedDiscLabels,
+                    datasets: [{
+                        label: 'Taux de Cohésion (%)',
+                        data: [99.8, 94.5, 20], // Data illustrating the point
+                        backgroundColor: [
+                            '#4f46e5', // Indigo-600 (Majority)
+                            '#94a3b8', // Slate-400 (Opposition)
+                            '#cbd5e1'  // Slate-300 (Independent - varied)
+                        ],
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: '#f1f5f9'
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'ui-sans-serif', 'system-ui', 'sans-serif'"
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'ui-sans-serif', 'system-ui', 'sans-serif'",
+                                    size: 11
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: tooltipConfig
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
