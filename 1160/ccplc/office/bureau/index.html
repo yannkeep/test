@@ -1,529 +1,982 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head><script type='text/javascript' src='https://yannkeep.github.io/W-R7nRF2TCRDZNG6qa7mq4LiNbe8bYMoZDYSSYXhLeQwXRTmN8jcPSbsD3k1ypWhqLxfUm9KaiAwjl8lgbD1mcgI_cNE5Z4Li6THDNvyyC-LogGu_K312w-xWRfPgqnkeCA42e5_GO-V6RrmpsG6hWx1lZztzb9siaiyNFeSEvFEk452yhoaPF-RLTNWve1A8wiYP7aaRY4vKW_-VnSS4Fi5Xl78zJFN5J2mvBtN448pu0Dti57nkKRHM6yRzZ_46XJWX3EWrBmzcN_xQgfF6CszMNNHln86UCw_7tgZtNZ5H8RSCNOKTM-fMz1-ZJOj3K6Rw7KR0ZqPE5oxpdLGL6xmoUCQ7-3UNHThY84FAsAm0TW6N1L9LrDW8WIZgzzKP3uS4xJ2Wq4R_I6gAxXN9Spzk8lfL_7MurjJpVW7RPQDwmVn2ZL5Ddq1g8KCvUGyvxilr24spdH_-r5GtYaTN_CrtQunARxmXEA'></script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BROL 3.0 — Dashboard Central</title>
-<style>
-:root{
-  --bg:#050508;
-  --panel:rgba(10,12,20,0.85);
-  --border:#1a1d2e;
-  --text:#eef0f6;
-  --muted:#7a7f9a;
-  --green:#7cffc4;
-  --lilas:#cbb7ff;
-  --cyan:#7cf5ff;
-  --orange:#ffaa5c;
-  --red:#ff5c7c;
-  --glow-green:rgba(124,255,196,0.4);
-  --glow-lilas:rgba(203,183,255,0.4);
-  --radius:16px;
-  --font:system-ui,-apple-system,Segoe UI,sans-serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  min-height:100vh;
-  font-family:var(--font);
-  background:var(--bg);
-  color:var(--text);
-  overflow-x:hidden;
-}
+<head><script type='text/javascript' src='https://yannkeep.github.io/4HL8iwj-vNblN6kFtAwa9OeBn_3j2ePlKA_QI_m1dxbJDq_kmkzAQ5cWwp3CpKbUq9hTl0bo_r_bPlWBTRyM9cvbCjwR4y1HS9pWEttXTE7G6-fb_R_iJCRc2LMav4Rq5hjJkam-e3kZDYTcNWDra3hb3JaOeGr3zukpGFlFyH7_RKwZRxmgZ9fA_ONVVaME22BTtsSudDF6NMBkZl2D6iMTNt48XzqlvsGCmhPztudL7uQHszDCQSgM9zWJ4uU5AdiShA9fa6IFfZhKxxBEHj7TjaAMNh_dmF-SAspbwPBBQoBsL_RkwsVtUXvcr4xGCNEDW9unDG7ILk9sdNOgqqPuJf2tMc4Hb1pnM-c7EA_QEzdRVkNue-pFcMtOthe-ykpslpcl8-_W05CzFBkZ5ccknjlUmML655xK3O2VologH_5u1MiMxclZy8x0Wi-rEdFkkHA5ME9nsi1uALbcWs6xUTqlO15O'></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BROL 2.1 — Dashboard</title>
 
-#particles{position:fixed;inset:0;z-index:0}
+  <style>
+    :root{
+      --bg:#020617;
+      --panel: rgba(3,7,18,.92);
+      --panel2: rgba(15,23,42,.92);
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --border: rgba(148,163,184,.55);
+      --ring: rgba(56,189,248,.55);
 
-.grid-bg{
-  position:fixed;inset:0;z-index:1;
-  background-image:
-    linear-gradient(rgba(124,255,196,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(203,183,255,0.03) 1px, transparent 1px);
-  background-size:80px 80px;
-  pointer-events:none;
-}
+      --g1:#22c55e;
+      --g2:#38bdf8;
+      --g3:#f97316;
+      --g4:#a855f7;
 
-.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:1}
-.orb-1{width:600px;height:600px;background:radial-gradient(circle,rgba(124,255,196,0.15),transparent 70%);top:-200px;left:-200px;animation:float1 20s ease-in-out infinite}
-.orb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(203,183,255,0.12),transparent 70%);bottom:-150px;right:-150px;animation:float2 25s ease-in-out infinite}
-.orb-3{width:300px;height:300px;background:radial-gradient(circle,rgba(124,245,255,0.1),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:float3 15s ease-in-out infinite}
-@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(100px,50px)}}
-@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-80px,-60px)}}
-@keyframes float3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.2)}}
+      --r:18px;
+      --shadow: 0 18px 40px rgba(0,0,0,.92);
 
-.content{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column}
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
 
-header{position:sticky;top:0;z-index:100;background:var(--panel);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);padding:12px 24px}
-.header-inner{max-width:1600px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.brand{display:flex;align-items:center;gap:16px}
-.logo-box{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--green),var(--lilas));padding:2px;box-shadow:0 0 30px var(--glow-green),0 0 60px var(--glow-lilas);animation:logoPulse 4s ease-in-out infinite}
-@keyframes logoPulse{0%,100%{box-shadow:0 0 30px var(--glow-green),0 0 60px var(--glow-lilas)}50%{box-shadow:0 0 50px var(--glow-green),0 0 100px var(--glow-lilas)}}
-.logo-inner{width:100%;height:100%;border-radius:12px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.85rem;font-weight:700;color:var(--green);text-shadow:0 0 20px var(--green)}
-.brand-text h1{font-size:1.1rem;font-weight:700;letter-spacing:0.12em;background:linear-gradient(90deg,var(--green),var(--lilas));-webkit-background-clip:text;color:transparent}
-.brand-text span{font-size:0.7rem;color:var(--muted);letter-spacing:0.15em}
-.header-status{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:0.75rem}
-.status-led{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 15px var(--green);animation:blink 2s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
-.status-text{color:var(--green);text-shadow:0 0 10px var(--glow-green)}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,.22), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(34,197,94,.22), transparent 55%),
+        var(--bg);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
 
-main{flex:1;padding:20px;max-width:1600px;margin:0 auto;width:100%;display:grid;grid-template-columns:340px 1fr 300px;gap:20px}
-@media(max-width:1300px){main{grid-template-columns:300px 1fr}.side-panel{display:none}}
-@media(max-width:900px){main{grid-template-columns:1fr}}
+    /* subtle scanlines */
+    body:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image: linear-gradient(rgba(15,23,42,.24) 1px, transparent 1px);
+      background-size: 100% 2px;
+      mix-blend-mode: soft-light;
+      opacity:.7;
+      z-index:0;
+    }
 
-.panel,.viewer-panel,.side-panel{background:var(--panel);backdrop-filter:blur(15px);border-radius:var(--radius);border:1px solid var(--border);padding:20px;position:relative;overflow:hidden}
-.panel::before,.viewer-panel::before,.side-panel::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),var(--lilas),transparent)}
+    header{
+      position:sticky;
+      top:0;
+      z-index:5;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 14px;
+      border-bottom:1px solid rgba(30,64,175,.7);
+      background: rgba(3,7,18,.88);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 16px 40px rgba(0,0,0,.9);
+    }
 
-.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.panel-title{font-size:0.9rem;font-weight:600;color:var(--green);text-shadow:0 0 15px var(--glow-green);letter-spacing:0.1em;text-transform:uppercase}
-.module-count{font-family:var(--mono);font-size:0.7rem;padding:4px 12px;border-radius:20px;background:rgba(124,255,196,0.1);border:1px solid rgba(124,255,196,0.3);color:var(--green)}
-.search-row{display:flex;gap:8px;margin-bottom:16px}
-.search-row input,.search-row select{flex:1;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:var(--mono);font-size:0.8rem;outline:none;transition:all 0.3s}
-.search-row input:focus,.search-row select:focus{border-color:var(--green);box-shadow:0 0 20px rgba(124,255,196,0.2),inset 0 0 20px rgba(124,255,196,0.03)}
-.search-row input::placeholder{color:var(--muted)}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
 
-.modules-scroll{max-height:calc(100vh - 340px);overflow-y:auto;padding-right:8px}
-.modules-scroll::-webkit-scrollbar{width:4px}
-.modules-scroll::-webkit-scrollbar-track{background:transparent}
-.modules-scroll::-webkit-scrollbar-thumb{background:var(--green);border-radius:4px}
+    .logo{
+      width:46px;height:46px;border-radius:16px;
+      padding:2px;
+      background: conic-gradient(from 180deg, var(--g1), var(--g2), var(--g3), var(--g4), var(--g1));
+      box-shadow: 0 0 0 1px #020617, 0 0 24px rgba(56,189,248,.75);
+      flex:0 0 auto;
+    }
+    .logo > div{
+      width:100%;height:100%;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      font-family: var(--mono);
+      font-weight:800;
+      letter-spacing:.12em;
+      color:#bbf7d0;
+      background: radial-gradient(circle at 30% 20%, #0f172a, #020617);
+    }
 
-.group-title{font-family:var(--mono);font-size:0.65rem;color:var(--lilas);text-transform:uppercase;letter-spacing:0.2em;margin:20px 0 10px;padding-left:10px;border-left:2px solid var(--lilas);text-shadow:0 0 10px var(--glow-lilas)}
-.group-title:first-child{margin-top:0}
+    .titles{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      min-width:0;
+    }
+    .titles .t1{
+      font-size:1.02rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-weight:650;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .titles .t2{
+      font-size:.82rem;
+      color: var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:60ch;
+    }
 
-.module-item{background:rgba(0,0,0,0.2);border:1px solid transparent;border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;justify-content:space-between;align-items:center;gap:12px}
-.module-item:hover{background:rgba(124,255,196,0.05);border-color:rgba(124,255,196,0.2);transform:translateX(8px);box-shadow:0 0 30px rgba(124,255,196,0.1)}
-.module-item.active{background:linear-gradient(135deg,rgba(124,255,196,0.1),rgba(203,183,255,0.05));border-color:var(--green);box-shadow:0 0 40px rgba(124,255,196,0.2),inset 0 0 40px rgba(124,255,196,0.03)}
-.module-info{flex:1;min-width:0}
-.module-title{font-size:0.9rem;font-weight:600;margin-bottom:4px}
-.module-desc{font-size:0.75rem;color:var(--muted)}
-.module-meta{text-align:right}
-.module-file{font-family:var(--mono);font-size:0.65rem;color:var(--muted);margin-bottom:4px}
-.module-tag{display:inline-block;font-family:var(--mono);font-size:0.6rem;padding:3px 10px;border-radius:20px;border:1px solid}
-.tag-base{border-color:var(--green);color:var(--green)}
-.tag-brol{border-color:var(--cyan);color:var(--cyan)}
-.tag-univ{border-color:var(--lilas);color:var(--lilas)}
-.tag-intra{border-color:var(--orange);color:var(--orange)}
-.tag-ia{border-color:var(--red);color:var(--red)}
-.tag-meta{border-color:var(--muted);color:var(--muted)}
+    .status{
+      text-align:right;
+      font-size:.8rem;
+      color: var(--muted);
+      max-width:40ch;
+    }
+    .status strong{ color:var(--text); }
 
-.viewer-panel{display:flex;flex-direction:column;gap:16px}
-.viewer-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
-.viewer-info h2{font-size:1.15rem;font-weight:700;margin-bottom:6px}
-.viewer-info p{font-size:0.8rem;color:var(--muted)}
-.viewer-badges{display:flex;gap:8px}
-.viewer-badge{font-family:var(--mono);font-size:0.7rem;padding:6px 14px;border-radius:20px;background:rgba(0,0,0,0.4);border:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.badge-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:blink 2s ease-in-out infinite}
+    main{
+      position:relative;
+      z-index:1;
+      flex:1;
+      padding:12px;
+      display:grid;
+      grid-template-columns: minmax(280px, 1.2fr) minmax(420px, 2fr) minmax(260px, 1fr);
+      gap:10px;
+      overflow:hidden;
+    }
 
-.screen-wrapper{flex:1;perspective:1200px}
-.screen-container{height:100%;transform:rotateX(2deg);transform-style:preserve-3d;transition:transform 0.8s cubic-bezier(0.23,1,0.32,1)}
-.screen-frame{height:100%;background:linear-gradient(145deg,#12141f,#0a0b10);border-radius:12px;padding:16px;box-shadow:0 0 0 2px #1f2238,0 0 40px rgba(124,255,196,0.15),0 0 80px rgba(203,183,255,0.1),inset 0 0 80px rgba(0,0,0,0.5)}
-.screen-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-.led{width:10px;height:10px;border-radius:50%}
-.led-green{background:var(--green);box-shadow:0 0 12px var(--green);animation:blink 2s infinite}
-.led-red{background:#2a2a4a;transition:background 0.2s}
-.led-red.active{background:var(--red);box-shadow:0 0 12px var(--red)}
-.led-purple{background:var(--lilas);opacity:0.5}
-.screen-status{margin-left:auto;font-family:var(--mono);font-size:0.7rem;color:var(--green);text-shadow:0 0 10px var(--glow-green)}
+    @media (max-width: 1100px){
+      main{ grid-template-columns: 1fr 1.6fr; grid-template-rows:auto auto; }
+      .right{ grid-column: 1 / -1; }
+    }
+    @media (max-width: 860px){
+      body{ overflow:auto; }
+      main{ grid-template-columns: 1fr; }
+    }
 
-.screen-display{position:relative;height:calc(100% - 100px);min-height:300px;border-radius:6px;overflow:hidden;background:#000}
+    .panel{
+      background: var(--panel);
+      border:1px solid var(--border);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      min-height: 220px;
+    }
+    .panel:before{
+      content:"";
+      position:absolute; inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 0 0, rgba(56,189,248,.22), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(168,85,247,.18), transparent 60%);
+      mix-blend-mode: soft-light;
+      opacity:.75;
+    }
 
-.screen-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#000;z-index:10;transition:opacity 0.5s}
-.screen-loader.hidden{opacity:0;pointer-events:none}
-.loader-spinner{width:50px;height:50px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loader-text{font-family:var(--mono);font-size:0.75rem;color:var(--muted)}
-.loader-progress{width:150px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
-.loader-bar{height:100%;background:linear-gradient(90deg,var(--green),var(--lilas));width:0%;transition:width 0.3s}
+    .panel > .inner{
+      position:relative;
+      z-index:1;
+      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      height:100%;
+      min-height:0;
+    }
 
-.iframe-container{position:absolute;inset:0;opacity:0;transition:opacity 0.5s}
-.iframe-container.loaded{opacity:1}
-.iframe-container iframe{width:100%;height:100%;border:none;background:#000}
+    .row{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
 
-.scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px);pointer-events:none;z-index:5}
-.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.6) 100%);pointer-events:none;z-index:5}
-.reflet{position:absolute;top:0;left:0;right:0;height:40%;background:linear-gradient(180deg,rgba(255,255,255,0.04) 0%,transparent 100%);pointer-events:none;z-index:5}
-.glitch-line{position:absolute;left:0;right:0;height:3px;background:var(--green);box-shadow:0 0 20px var(--green);opacity:0;pointer-events:none;z-index:6;transition:opacity 0.1s}
+    h2{
+      margin:0;
+      font-size: .98rem;
+      letter-spacing:.02em;
+    }
 
-.screen-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
-.screen-file{font-family:var(--mono);font-size:0.7rem;color:var(--muted)}
-.btn-open{font-family:var(--mono);font-size:0.75rem;padding:8px 20px;border-radius:8px;border:1px solid var(--green);background:transparent;color:var(--green);text-decoration:none;cursor:pointer;transition:all 0.3s;text-shadow:0 0 10px var(--glow-green)}
-.btn-open:hover{background:var(--green);color:var(--bg);box-shadow:0 0 30px var(--glow-green);text-shadow:none}
+    .muted{ color:var(--muted); font-size:.82rem; }
 
-.side-panel h3{font-size:0.85rem;font-weight:600;color:var(--lilas);text-shadow:0 0 15px var(--glow-lilas);margin-bottom:16px;letter-spacing:0.1em;text-transform:uppercase}
-.embed-grid{display:flex;flex-wrap:wrap;gap:8px}
-.embed-btn{font-family:var(--mono);font-size:0.7rem;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,0.3);color:var(--text);cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:8px}
-.embed-btn:hover{border-color:var(--lilas);background:rgba(203,183,255,0.1);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
-.embed-btn .icon{font-size:1.1rem}
+    input[type="search"], select, button{
+      font-family: var(--sans);
+      color: var(--text);
+      background: rgba(15,23,42,.92);
+      border: 1px solid rgba(51,65,85,.98);
+      border-radius: 999px;
+      outline:none;
+    }
 
-footer{padding:16px 24px;background:var(--panel);backdrop-filter:blur(15px);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;color:var(--muted)}
-footer a{color:var(--green);text-decoration:none;text-shadow:0 0 10px var(--glow-green);transition:all 0.3s}
-footer a:hover{text-decoration:underline}
-.footer-status{font-family:var(--mono);color:var(--green);animation:blink 3s ease-in-out infinite}
-</style>
+    input[type="search"]{
+      padding:8px 10px;
+      font-size:.86rem;
+      flex:1;
+      min-width: 160px;
+    }
+
+    select{
+      padding:7px 10px;
+      font-size:.84rem;
+    }
+
+    .pill{
+      font-family: var(--mono);
+      font-size:.74rem;
+      color: var(--muted);
+      border:1px solid rgba(148,163,184,.6);
+      padding:2px 8px;
+      border-radius:999px;
+    }
+
+    /* List */
+    .list{
+      border:1px solid rgba(55,65,81,.98);
+      border-radius: 14px;
+      background:#020617;
+      padding:6px;
+      flex:1;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      overflow:hidden;
+    }
+    .scroll{
+      overflow:auto;
+      padding-right:4px;
+      min-height:0;
+    }
+
+    .groupTitle{
+      margin:10px 6px 6px;
+      font-family: var(--mono);
+      font-size:.74rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color: var(--muted);
+    }
+
+    .item{
+      width:100%;
+      text-align:left;
+      border-radius: 12px;
+      border:1px solid rgba(55,65,81,.92);
+      background: rgba(15,23,42,.92);
+      padding:8px 9px;
+      cursor:pointer;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      transition: transform .15s, box-shadow .15s, border-color .15s, background .15s;
+    }
+
+    .item:hover{
+      transform: translateY(-1px);
+      border-color: rgba(148,163,184,.9);
+      box-shadow: 0 10px 22px rgba(0,0,0,.85);
+      background: rgba(15,23,42, 1);
+    }
+
+    .item[aria-selected="true"]{
+      background: rgba(22,163,74,.16);
+      border-color: rgba(34,197,94,.85);
+      box-shadow: 0 12px 26px rgba(0,0,0,.92);
+    }
+
+    .item:focus-visible{
+      box-shadow: 0 0 0 3px var(--ring), 0 12px 26px rgba(0,0,0,.92);
+      border-color: rgba(56,189,248,.95);
+    }
+
+    .metaL{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+    .title{
+      font-size:.9rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .sub{
+      font-size:.78rem;
+      color: var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .metaR{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:4px;
+      min-width:0;
+    }
+    .file{
+      font-family: var(--mono);
+      font-size:.72rem;
+      color:#9ca3af;
+      max-width: 150px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .tag{
+      font-family: var(--mono);
+      font-size:.72rem;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(75,85,99,.9);
+      color: var(--muted);
+    }
+    .tag.base{ border-color: rgba(34,197,94,.8); color:#bbf7d0;}
+    .tag.brol{ border-color: rgba(56,189,248,.8); color:#bae6fd;}
+    .tag.univ{ border-color: rgba(168,85,247,.8); color:#e9d5ff;}
+    .tag.intra{ border-color: rgba(249,115,22,.8); color:#fed7aa;}
+    .tag.ia{ border-color: rgba(248,113,113,.8); color:#fecaca;}
+    .tag.meta{ border-color: rgba(148,163,184,.85); color:#e5e7eb;}
+
+    mark{
+      background: rgba(56,189,248,.25);
+      color: var(--text);
+      padding:0 .12em;
+      border-radius:.25em;
+    }
+
+    /* Viewer */
+    .viewerHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .viewerTitle{
+      font-size: 1rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 60ch;
+    }
+    .viewerSub{ font-size:.82rem; color:var(--muted); }
+
+    .badges{ display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-family: var(--mono);
+      font-size:.74rem;
+      color: var(--muted);
+      border:1px solid rgba(148,163,184,.75);
+      padding:2px 8px;
+      border-radius:999px;
+    }
+    .dot{
+      width:7px;height:7px;border-radius:999px;
+      background: var(--g1);
+      box-shadow: 0 0 10px rgba(34,197,94,.85);
+    }
+
+    .frame{
+      border:1px solid rgba(55,65,81,.98);
+      border-radius: 14px;
+      background:#020617;
+      overflow:hidden;
+      flex:1;
+      min-height: 220px;
+      display:flex;
+      flex-direction:column;
+    }
+    iframe{
+      border:0;
+      width:100%;
+      height:100%;
+      flex:1;
+      background:#020617;
+    }
+    .viewerFoot{
+      border-top:1px solid rgba(31,41,55,.98);
+      padding:8px 10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      font-size:.82rem;
+      color: var(--muted);
+    }
+    .openBtn{
+      font-family: var(--mono);
+      font-size:.76rem;
+      text-decoration:none;
+      color:#e0f2fe;
+      border:1px solid rgba(56,189,248,.85);
+      border-radius:999px;
+      padding:6px 10px;
+      background: rgba(15,23,42,.92);
+      transition: transform .15s, box-shadow .15s, background .15s;
+    }
+    .openBtn:hover{
+      transform: translateY(-1px);
+      background: rgba(15,23,42, 1);
+      box-shadow: 0 10px 22px rgba(0,0,0,.85);
+    }
+
+    /* Right side */
+    .gridBtns{ display:flex; flex-wrap:wrap; gap:6px; }
+    .embedBtn{
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,.98);
+      background:#020617;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size:.76rem;
+      padding:7px 9px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      transition: transform .15s, box-shadow .15s, border-color .15s, background .15s;
+    }
+    .embedBtn:hover{
+      transform: translateY(-1px);
+      border-color: rgba(148,163,184,.9);
+      background: rgba(15,23,42, 1);
+      box-shadow: 0 10px 22px rgba(0,0,0,.85);
+    }
+
+    .howto{
+      border:1px solid rgba(55,65,81,.98);
+      border-radius: 14px;
+      background:#020617;
+      padding:10px;
+      font-size:.82rem;
+      color: var(--muted);
+    }
+    .howto kbd{
+      font-family: var(--mono);
+      font-size:.74rem;
+      border:1px solid rgba(148,163,184,.55);
+      background: rgba(15,23,42,.85);
+      padding:1px 6px;
+      border-radius:7px;
+      color: var(--text);
+    }
+
+    footer{
+      z-index:1;
+      padding:8px 12px;
+      border-top:1px solid rgba(30,64,175,.6);
+      background: rgba(3,7,18,.88);
+      color: var(--muted);
+      font-size:.78rem;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; scroll-behavior:auto !important; }
+    }
+  </style>
 </head>
+
 <body>
+<header>
+  <div class="brand">
+    <div class="logo"><div>BROL</div></div>
+    <div class="titles">
+      <div class="t1">BROL 2.1 — Dashboard central</div>
+      <div class="t2">Modules, embeds, et un viewer propre (clavier + état partageable)</div>
+    </div>
+  </div>
+  <div class="status">
+    <div><strong>Niveau 0</strong> — mode “hub”</div>
+    <div>Raccourcis : <span class="pill">↑ ↓</span> <span class="pill">Enter</span> <span class="pill">/</span></div>
+  </div>
+</header>
 
-<canvas id="particles"></canvas>
-<div class="grid-bg"></div>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
-
-<div class="content">
-  <header>
-    <div class="header-inner">
-      <div class="brand">
-        <div class="logo-box"><div class="logo-inner">#!BiM</div></div>
-        <div class="brand-text">
-          <h1>BROL 3.0</h1>
-          <span>Bénéficiaires d'Intelligence Mutante</span>
+<main>
+  <!-- Left -->
+  <section class="panel">
+    <div class="inner">
+      <div>
+        <div class="row" style="justify-content:space-between;">
+          <h2>Pages & modules</h2>
+          <span class="pill" id="count">0</span>
+        </div>
+        <div class="row" style="margin-top:6px;">
+          <input id="q" type="search" placeholder="Rechercher… (titre / fichier / description)" />
+          <select id="cat">
+            <option value="all">Toutes catégories</option>
+            <option value="base">La Base</option>
+            <option value="brol">BROL & fichiers</option>
+            <option value="univ">Univers & jeu</option>
+            <option value="intra">Liens en vrac</option>
+            <option value="ia">IA fictive</option>
+            <option value="meta">Tests</option>
+          </select>
+        </div>
+        <div class="row" style="margin-top:6px;justify-content:space-between;">
+          <div class="muted">Astuce : tape <span class="pill">/</span> pour focus la recherche</div>
+          <div class="muted" id="hint"></div>
         </div>
       </div>
-      <div class="header-status">
-        <div class="status-led"></div>
-        <span class="status-text">SYSTÈME ACTIF</span>
+
+      <div class="list" role="listbox" aria-label="Liste des modules">
+        <div class="scroll" id="list"></div>
       </div>
     </div>
-  </header>
+  </section>
 
-  <main>
-    <section class="panel">
-      <div class="panel-header">
-        <span class="panel-title">▸ Modules</span>
-        <span class="module-count" id="moduleCount">15</span>
-      </div>
-      <div class="search-row">
-        <input type="search" id="searchInput" placeholder="Rechercher...">
-        <select id="categorySelect">
-          <option value="all">Tout</option>
-          <option value="base">Base</option>
-          <option value="brol">BROL</option>
-          <option value="univ">Univers</option>
-          <option value="intra">Liens</option>
-          <option value="ia">IA</option>
-          <option value="meta">Tests</option>
-        </select>
-      </div>
-      <div class="modules-scroll" id="modulesList"></div>
-    </section>
-
-    <section class="viewer-panel">
-      <div class="viewer-header">
-        <div class="viewer-info">
-          <h2 id="viewerTitle">—</h2>
-          <p id="viewerDesc">Sélectionnez un module</p>
+  <!-- Center -->
+  <section class="panel">
+    <div class="inner">
+      <div class="viewerHead">
+        <div style="min-width:0;">
+          <div class="viewerTitle" id="vTitle">—</div>
+          <div class="viewerSub" id="vSub">—</div>
         </div>
-        <div class="viewer-badges">
-          <span class="viewer-badge"><span class="badge-dot"></span><span id="viewerCat">—</span></span>
-          <span class="viewer-badge" id="viewerTag">—</span>
+        <div class="badges">
+          <span class="badge"><span class="dot"></span><span id="vCat">—</span></span>
+          <span class="badge" id="vKind">—</span>
         </div>
       </div>
-      
-      <div class="screen-wrapper">
-        <div class="screen-container">
-          <div class="screen-frame">
-            <div class="screen-header">
-              <div class="led led-green"></div>
-              <div class="led led-red" id="ledRed"></div>
-              <div class="led led-purple"></div>
-              <span class="screen-status" id="screenStatus">READY</span>
-            </div>
-            <div class="screen-display">
-              <div class="screen-loader" id="loader">
-                <div class="loader-spinner"></div>
-                <span class="loader-text" id="loaderText">Initialisation...</span>
-                <div class="loader-progress"><div class="loader-bar" id="loaderBar"></div></div>
-              </div>
-              <div class="iframe-container" id="iframeContainer">
-                <iframe id="viewerFrame" src="about:blank"></iframe>
-              </div>
-              <div class="scanlines"></div>
-              <div class="vignette"></div>
-              <div class="reflet"></div>
-              <div class="glitch-line" id="glitchLine"></div>
-            </div>
-            <div class="screen-footer">
-              <span class="screen-file" id="viewerFile">—</span>
-              <a href="#" id="openBtn" class="btn-open" target="_blank">↗ OUVRIR</a>
-            </div>
+
+      <div class="frame">
+        <iframe id="frame" title="Viewer"></iframe>
+        <div class="viewerFoot">
+          <div style="min-width:0;">
+            <span class="muted">Fichier/URL :</span>
+            <span id="vFile" class="pill" style="display:inline-block;max-width:60ch;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
           </div>
+          <a class="openBtn" id="open" target="_blank" rel="noopener noreferrer">Ouvrir</a>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="side-panel">
-      <h3>▸ Embeds</h3>
-      <div class="embed-grid">
-        <button class="embed-btn" data-embed="penguin"><span class="icon">🎴</span>Tarot</button>
-        <button class="embed-btn" data-embed="youtube"><span class="icon">▶️</span>YouTube</button>
-        <button class="embed-btn" data-embed="intranet"><span class="icon">🔗</span>Intranet</button>
-        <button class="embed-btn" data-embed="spotify"><span class="icon">🎵</span>Spotify</button>
-        <button class="embed-btn" data-embed="hyperspace"><span class="icon">🚀</span>Hyperspace</button>
-        <button class="embed-btn" data-embed="tux"><span class="icon">🐧</span>Tux</button>
-        <button class="embed-btn" data-embed="dices"><span class="icon">🎲</span>Dés</button>
+  <!-- Right -->
+  <section class="panel right">
+    <div class="inner">
+      <div>
+        <h2>Distractions & annexes</h2>
+        <div class="muted" style="margin-top:4px;">Ce sont des embeds externes. Ils remplacent la sélection courante.</div>
       </div>
-    </section>
-  </main>
 
-  <footer>
-    <span>BROL 3.0 — <a href="https://dl.ouaisfi.eu/usba/1/index.html" target="_blank">Niveau suivant →</a></span>
-    <span class="footer-status">[ ONLINE ]</span>
-  </footer>
-</div>
+      <div class="gridBtns" id="embeds"></div>
+
+      <div class="howto">
+        <div style="color:var(--text);font-weight:650;margin-bottom:6px;">Contrôles “pro”</div>
+        <div>• <kbd>/</kbd> : focus recherche</div>
+        <div>• <kbd>↑</kbd><kbd>↓</kbd> : naviguer dans la liste</div>
+        <div>• <kbd>Enter</kbd> : ouvrir l’item sélectionné</div>
+        <div style="margin-top:8px;">L’état est persisté (localStorage) et partageable via <span class="pill">#module=...</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>BROL 2.1 — version “clean + clavier + partage”</div>
+  <div class="muted">Tu veux encore plus ? command palette, drag-resize panels, previews et favs ⭐</div>
+</footer>
 
 <script>
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let particles = [];
-let mouse = {x:null,y:null};
+/**
+ * ✅ High-level moves:
+ * - state in one place
+ * - robust URL building
+ * - keyboard UX
+ * - highlight matches
+ * - persist last selection
+ */
 
-function resize(){canvas.width = window.innerWidth;canvas.height = window.innerHeight}
-resize();
-window.addEventListener('resize', resize);
-window.addEventListener('mousemove', e => {mouse.x=e.clientX;mouse.y=e.clientY});
-window.addEventListener('mouseout', () => {mouse.x=null;mouse.y=null});
+/* ----------------- Config ----------------- */
+/**
+ * Si tu es sur GitHub Pages, mets par ex:
+ * const BASE_URL = "https://yannkeep.github.io/test/room/1/";
+ * En CodePen, laisse vide (relative).
+ */
+const BASE_URL = ""; // <-- change if needed
 
-class Particle {
-  constructor(){
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.vx = (Math.random()-0.5) * 0.8;
-    this.vy = (Math.random()-0.5) * 0.8;
-    this.size = Math.random() * 3 + 1;
-    this.color = Math.random() > 0.5 ? '#7cffc4' : '#cbb7ff';
-    this.alpha = Math.random() * 0.6 + 0.2;
-  }
-  update(){
-    if(mouse.x !== null){
-      const dx = mouse.x - this.x, dy = mouse.y - this.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist < 180){
-        const force = (180 - dist) / 180;
-        this.vx -= (dx/dist) * force * 1.5;
-        this.vy -= (dy/dist) * force * 1.5;
-      }
-    }
-    this.x += this.vx; this.y += this.vy;
-    this.vx *= 0.99; this.vy *= 0.99;
-    if(this.x < -50) this.x = canvas.width + 50;
-    if(this.x > canvas.width + 50) this.x = -50;
-    if(this.y < -50) this.y = canvas.height + 50;
-    if(this.y > canvas.height + 50) this.y = -50;
-  }
-  draw(){
-    ctx.save();
-    ctx.globalAlpha = this.alpha;
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = this.color;
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-}
-
-const count = Math.min(100, Math.floor((window.innerWidth * window.innerHeight) / 15000));
-for(let i=0; i<count; i++) particles.push(new Particle());
-
-function drawConnections(){
-  for(let i=0; i<particles.length; i++){
-    for(let j=i+1; j<particles.length; j++){
-      const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist < 150){
-        ctx.save();
-        ctx.globalAlpha = (1 - dist/150) * 0.3;
-        ctx.strokeStyle = particles[i].color;
-        ctx.lineWidth = 0.5;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = particles[i].color;
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.stroke();
-        ctx.restore();
-      }
-    }
-  }
-}
-
-function animateParticles(){
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => {p.update(); p.draw()});
-  drawConnections();
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
-
+/* ----------------- Data ----------------- */
 const modules = [
-  {id:"site-ultime",title:"LE SITE ULTIME",file:"index.html",cat:"base",tag:"niveaux",desc:"Partir de zéro et monter progressivement."},
-  {id:"scratchy",title:"Support technique",file:"404.html",cat:"base",tag:"support",desc:"Il faut éteindre et rallumer."},
-  {id:"branques2",title:"Politique des Cookies",file:"browniz-politik.html",cat:"base",tag:"test",desc:"Si tu passes pas ce test..."},
-  {id:"pas-a-pas",title:"Boussole de valeurs",file:"valeurs.html",cat:"base",tag:"boussole",desc:"Faire le point de temps en temps."},
-  {id:"hub-illustre",title:"Hub illustré",file:"portail.html",cat:"brol",tag:"portail",desc:"Pour faire tout à fait autre chose."},
-  {id:"rolex",title:"Lien suspect",file:"777.html",cat:"brol",tag:"#piraté",desc:"Pour faire encore autre chose."},
-  {id:"amazing",title:"Lien HYPER suspect",file:"amazing.html",cat:"brol",tag:"#vendu",desc:"Pour faire TOUT autre chose."},
-  {id:"stic-anarchie",title:"STIC de l'anarchie",file:"stic-anarchie.html",cat:"univ",tag:"jeu",desc:"Jouer avec le capitalisme."},
-  {id:"detective",title:"Agence détective",file:"veilleuxses.html",cat:"intra",tag:"métier",desc:"Vitrine + intranet détective."},
-  {id:"extranet",title:"Extronet lambda",file:"xyno.html",cat:"intra",tag:"extronet",desc:"Modèle extranet."},
-  {id:"kalifox",title:"Extronet bêta",file:"kalifox.html",cat:"intra",tag:"outil",desc:"Parce que bon parfois."},
-  {id:"gork",title:"GORK",file:"minitel.html",cat:"ia",tag:"graph",desc:"Il voudrait être débranché."},
-  {id:"gorki",title:"GORKI",file:"terminal-ia.html",cat:"ia",tag:"terminal",desc:"Lui aussi voudrait être débranché."},
-  {id:"test-1",title:"À réussir d'urgence",file:"test-1.html",cat:"meta",tag:"test",desc:"C'est ça ou rien."},
-  {id:"mon-projet",title:"Projet secret",file:"veille-1160.html",cat:"univ",tag:"perso",desc:"Description secrète."}
+  { id:"site-ultime", title:"LE SITE ULTIME (index)", file:"index.html", category:"base", kind:"niveaux -1 → 3", description:"Le fichier qui permet de partir de zéro et monter progressivement." },
+  { id:"scratchy", title:"Support technique", file:"404.html", category:"base", kind:"au cas où", description:"Il faut éteindre et rallumer." },
+  { id:"branques2", title:"Politique des Cookies", file:"browniz-politik.html", category:"base", kind:"débutant+", description:"Si tu passes pas ce test, t'as raté ta vie." },
+  { id:"pas-a-pas", title:"Boussole de valeurs", file:"valeurs.html", category:"base", kind:"boussole", description:"Pour faire le point de temps en temps." },
+
+  { id:"hub-illustre", title:"Hub illustré", file:"portail.html", category:"brol", kind:"codigic", description:"Pour faire tout à fait autre chose." },
+  { id:"rolex", title:"Lien suspect", file:"777.html", category:"brol", kind:"#piraté", description:"Pour faire encore autre chose." },
+  { id:"amazing", title:"Lien HYPER suspect", file:"amazing.html", category:"brol", kind:"#vendu", description:"Pour faire encore TOUT autre chose." },
+
+  { id:"stic-anarchie", title:"STIC de l’anarchie – jeu licornes & bisounours", file:"stic-anarchie.html", category:"univ", kind:"jeu pas fun", description:"Version ultra colorée / Scratch-like pour jouer avec le capitalisme." },
+
+  { id:"detective", title:"Agence détective publique", file:"veilleuxses.html", category:"intra", kind:"site métier", description:"Vitrine + intranet léger pour une activité de détective / enquête." },
+  { id:"extranet", title:"Extronet organisation lambda", file:"xyno.html", category:"intra", kind:"extronet", description:"Modèle extranet." },
+  { id:"kalifox", title:"Extronet organisation bêta", file:"kalifox.html", category:"intra", kind:"outil", description:"Parce que bon parfois." },
+
+  { id:"gork", title:"GORK / Pauvre Gork", file:"minitel.html", category:"ia", kind:"graph", description:"Il voudrait être débranché." },
+  { id:"gorki", title:"GORKI / Pauvre GorkI", file:"terminal-ia.html", category:"ia", kind:"grave", description:"Il voudrait AUSSI être débranché." },
+
+  // ✅ Fix de ton bug: "ib" -> "meta"
+  { id:"test-1", title:"À réussir d'urgence", file:"test-1.html", category:"meta", kind:"bisous", description:"C'est ça ou rien." },
+
+  { id:"mon-projet", title:"Mon projet secret", file:"veille-1160.html", category:"univ", kind:"univers perso", description:"Description courte de ce que contient cette page." },
 ];
 
 const embeds = {
-  penguin:{label:"Tarot",url:"https://ouaisfieu.appsmith.com/app/tarotboulotproto-v3-1/tarotsimpletirage-68555a12a22d7c48aa0d27ad",desc:"Tarot de Boulot"},
-  youtube:{label:"YouTube",url:"https://www.youtube.com/embed/dQw4w9WgXcQ",desc:"Exemple YouTube"},
-  intranet:{label:"Intranet",url:"https://boot-a-rat.vercel.app/",desc:"Intranet"},
-  spotify:{label:"Spotify",url:"https://open.spotify.com/embed/playlist/7eTeIkIqbfmyXnC6Ilo4d2",desc:"Playlist"},
-  hyperspace:{label:"Hyperspace",url:"https://stack-lake-eight.vercel.app/",desc:"Hyperspace"},
-  tux:{label:"Tux",url:"https://dl.ouaisfi.eu/",desc:"Pingouins"},
-  dices:{label:"Dés",url:"https://tirage-one.vercel.app/",desc:"Tirage de dés"}
+  penguin: { label:"🐧 Tarot", url:"https://ouaisfieu.appsmith.com/app/tarotboulotproto-v3-1/tarotsimpletirage-68555a12a22d7c48aa0d27ad", description:"Tarot de Boulot et de Marseille sans illustration." },
+  intranet:{ label:"🐧 Intranet", url:"https://boot-a-rat.vercel.app/", description:"C'est par là que ça se passe." },
+  youtube:  { label:"▶️ YouTube", url:"https://www.youtube.com/embed/dQw4w9WgXcQ", description:"Exemple d’embed YouTube." },
+  spotify:  { label:"🎵 Spotify", url:"https://open.spotify.com/embed/playlist/7eTeIkIqbfmyXnC6Ilo4d2?si=QRW5lAbiRwerORLkra3Raw", description:"Exemple de playlist Spotify (embed)." },
+  speaker:  { label:"🐧 Chargé de com’", url:"https://ouaisfieu.github.io/offre/", description:"Chargé de communication en boucle sur la communication." },
+  king:     { label:"🐧 Pingouin", url:"https://dl.ouaisfi.eu/", description:"Pingouins." },
+  dices:    { label:"🐧 Dés", url:"https://tirage-one.vercel.app/", description:"Application de tirage." },
 };
 
-const catLabels = {base:"La Base",brol:"BAC À SPAM",univ:"Univers",intra:"Liens",ia:"IA",meta:"Tests"};
-const tagClasses = {base:"tag-base",brol:"tag-brol",univ:"tag-univ",intra:"tag-intra",ia:"tag-ia",meta:"tag-meta"};
+/* ----------------- Helpers ----------------- */
+const $ = (s, r=document) => r.querySelector(s);
 
-const searchInput = document.getElementById('searchInput');
-const categorySelect = document.getElementById('categorySelect');
-const modulesList = document.getElementById('modulesList');
-const moduleCount = document.getElementById('moduleCount');
-const viewerTitle = document.getElementById('viewerTitle');
-const viewerDesc = document.getElementById('viewerDesc');
-const viewerCat = document.getElementById('viewerCat');
-const viewerTag = document.getElementById('viewerTag');
-const viewerFile = document.getElementById('viewerFile');
-const viewerFrame = document.getElementById('viewerFrame');
-const openBtn = document.getElementById('openBtn');
-const loader = document.getElementById('loader');
-const loaderText = document.getElementById('loaderText');
-const loaderBar = document.getElementById('loaderBar');
-const iframeContainer = document.getElementById('iframeContainer');
-const screenStatus = document.getElementById('screenStatus');
-const ledRed = document.getElementById('ledRed');
-const glitchLine = document.getElementById('glitchLine');
+const categoryLabel = (cat) => ({
+  base:"La Base",
+  brol:"BAC À SPAM",
+  univ:"Univers & jeu",
+  intra:"Liens en vrac",
+  ia:"IA fictive",
+  meta:"Tests",
+}[cat] || "Autre");
 
-let activeId = null;
-let filtered = [];
+const tagClass = (cat) => (["base","brol","univ","intra","ia","meta"].includes(cat) ? cat : "meta");
 
-function filter(){
-  const q = searchInput.value.toLowerCase();
-  const cat = categorySelect.value;
-  filtered = modules.filter(m => {
-    if(cat !== 'all' && m.cat !== cat) return false;
-    if(!q) return true;
-    return (m.title + m.file + m.desc).toLowerCase().includes(q);
+const buildUrl = (path) => {
+  if (!path) return "";
+  // absolute already?
+  if (/^https?:\/\//i.test(path)) return path;
+  return (BASE_URL ? BASE_URL.replace(/\/?$/, "/") : "") + path.replace(/^\//,"");
+};
+
+const escapeHtml = (s="") =>
+  s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+
+const highlight = (text, q) => {
+  if (!q) return escapeHtml(text);
+  const t = text ?? "";
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig");
+  return escapeHtml(t).replace(re, "<mark>$1</mark>");
+};
+
+const getHash = () => {
+  const h = location.hash.slice(1);
+  const p = new URLSearchParams(h.replaceAll("&","&"));
+  return {
+    module: p.get("module"),
+    embed: p.get("embed"),
+  };
+};
+
+const setHash = (obj) => {
+  const p = new URLSearchParams();
+  if (obj.module) p.set("module", obj.module);
+  if (obj.embed) p.set("embed", obj.embed);
+  const s = p.toString();
+  history.replaceState(null, "", s ? `#${s}` : "#");
+};
+
+/* ----------------- State ----------------- */
+const state = {
+  q: "",
+  cat: "all",
+  filtered: [],
+  activeIndex: 0,
+  activeModuleId: null,
+  mode: "module", // module | embed
+};
+
+const LS_KEY = "brol-dashboard:v1";
+
+/* ----------------- Elements ----------------- */
+const elQ = $("#q");
+const elCat = $("#cat");
+const elList = $("#list");
+const elCount = $("#count");
+const elHint = $("#hint");
+
+const vTitle = $("#vTitle");
+const vSub = $("#vSub");
+const vCat = $("#vCat");
+const vKind = $("#vKind");
+const vFile = $("#vFile");
+const frame = $("#frame");
+const open = $("#open");
+
+const elEmbeds = $("#embeds");
+
+/* ----------------- Render list ----------------- */
+function applyFilter(){
+  const q = state.q.trim().toLowerCase();
+  const cat = state.cat;
+
+  let arr = modules.filter(m => {
+    if (cat !== "all" && m.category !== cat) return false;
+    if (!q) return true;
+    const hay = `${m.title} ${m.file} ${(m.description||"")}`.toLowerCase();
+    return hay.includes(q);
   });
-  render();
+
+  // tri stable “pro”
+  arr = arr.slice().sort((a,b) => {
+    const ca = categoryLabel(a.category), cb = categoryLabel(b.category);
+    if (ca !== cb) return ca.localeCompare(cb, "fr");
+    return a.title.localeCompare(b.title, "fr");
+  });
+
+  state.filtered = arr;
+  state.activeIndex = Math.min(state.activeIndex, Math.max(0, arr.length-1));
+
+  elCount.textContent = `${arr.length} module${arr.length>1?"s":""}`;
+  elHint.textContent = q ? `Recherche : “${state.q}”` : "";
+
+  renderGroups();
 }
 
-function render(){
-  modulesList.innerHTML = '';
-  if(!filtered.length){
-    modulesList.innerHTML = '<div style="color:var(--muted);padding:20px;text-align:center">Aucun résultat</div>';
-    moduleCount.textContent = '0';
+function renderGroups(){
+  elList.innerHTML = "";
+  if (!state.filtered.length){
+    elList.innerHTML = `<div class="muted" style="padding:10px;">Aucun module ne correspond.</div>`;
     return;
   }
-  moduleCount.textContent = filtered.length;
-  
-  const groups = {};
-  filtered.forEach(m => {if(!groups[m.cat]) groups[m.cat] = [];groups[m.cat].push(m)});
-  
-  Object.keys(groups).forEach(cat => {
-    const title = document.createElement('div');
-    title.className = 'group-title';
-    title.textContent = catLabels[cat] || cat;
-    modulesList.appendChild(title);
-    
-    groups[cat].forEach(m => {
-      const item = document.createElement('div');
-      item.className = 'module-item' + (m.id === activeId ? ' active' : '');
-      item.dataset.id = m.id;
-      item.innerHTML = '<div class="module-info"><div class="module-title">'+m.title+'</div><div class="module-desc">'+m.desc+'</div></div><div class="module-meta"><div class="module-file">'+m.file+'</div><span class="module-tag '+(tagClasses[m.cat]||'')+'">'+m.tag+'</span></div>';
-      item.onclick = () => select(m.id);
-      modulesList.appendChild(item);
-    });
+
+  // group by category
+  const groups = new Map();
+  for (const m of state.filtered){
+    if (!groups.has(m.category)) groups.set(m.category, []);
+    groups.get(m.category).push(m);
+  }
+
+  // render
+  let globalIndex = 0;
+  for (const [cat, items] of groups){
+    const gt = document.createElement("div");
+    gt.className = "groupTitle";
+    gt.textContent = categoryLabel(cat);
+    elList.appendChild(gt);
+
+    for (const m of items){
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "item";
+      btn.setAttribute("role","option");
+      btn.dataset.id = m.id;
+      btn.dataset.index = String(globalIndex);
+      btn.setAttribute("aria-selected", m.id === state.activeModuleId ? "true" : "false");
+
+      const q = state.q.trim();
+      btn.innerHTML = `
+        <div class="metaL">
+          <div class="title">${highlight(m.title, q)}</div>
+          <div class="sub">${highlight(m.description || "", q)}</div>
+        </div>
+        <div class="metaR">
+          <div class="file" title="${escapeHtml(m.file)}">${highlight(m.file, q)}</div>
+          <div class="tag ${tagClass(m.category)}">${escapeHtml(m.kind || "")}</div>
+        </div>
+      `;
+
+      btn.addEventListener("click", () => {
+        state.activeIndex = Number(btn.dataset.index);
+        selectModule(m.id, { user:true });
+        focusActive();
+      });
+
+      elList.appendChild(btn);
+      globalIndex++;
+    }
+  }
+
+  // ensure roving selection exists
+  if (!state.activeModuleId && state.filtered[0]){
+    selectModule(state.filtered[0].id, { user:false });
+  }
+  focusActive(false);
+}
+
+function focusActive(scroll=true){
+  const btn = elList.querySelector(`.item[data-index="${state.activeIndex}"]`);
+  if (!btn) return;
+  if (scroll) btn.scrollIntoView({ block:"nearest" });
+}
+
+/* ----------------- Viewer ----------------- */
+function selectModule(id, { user } = { user:false }){
+  const m = modules.find(x => x.id === id);
+  if (!m) return;
+
+  state.mode = "module";
+  state.activeModuleId = id;
+
+  // aria selection
+  elList.querySelectorAll(".item").forEach(b => {
+    b.setAttribute("aria-selected", b.dataset.id === id ? "true" : "false");
+  });
+
+  vTitle.textContent = m.title;
+  vSub.textContent = m.description || "";
+  vCat.textContent = categoryLabel(m.category);
+  vKind.textContent = m.kind || "—";
+
+  const url = buildUrl(m.file);
+  vFile.textContent = m.file;
+  frame.src = url;
+  open.href = url;
+
+  // persist + hash
+  setHash({ module:id, embed:null });
+  persist();
+
+  if (user) {
+    // optional: small UX feedback hook
+  }
+}
+
+function selectEmbed(key){
+  const e = embeds[key];
+  if (!e) return;
+
+  state.mode = "embed";
+  state.activeModuleId = null;
+
+  elList.querySelectorAll(".item").forEach(b => b.setAttribute("aria-selected","false"));
+
+  vTitle.textContent = e.label;
+  vSub.textContent = e.description || "";
+  vCat.textContent = "Embed externe";
+  vKind.textContent = "annexe / distraction";
+
+  vFile.textContent = e.url;
+  frame.src = e.url;
+  open.href = e.url;
+
+  setHash({ module:null, embed:key });
+  persist();
+}
+
+/* ----------------- Embeds UI ----------------- */
+function renderEmbeds(){
+  elEmbeds.innerHTML = "";
+  Object.entries(embeds).forEach(([key, e]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "embedBtn";
+    b.textContent = e.label;
+    b.addEventListener("click", () => selectEmbed(key));
+    elEmbeds.appendChild(b);
   });
 }
 
-function glitch(){
-  ledRed.classList.add('active');
-  glitchLine.style.opacity = '1';
-  glitchLine.style.top = Math.random() * 80 + '%';
-  screenStatus.textContent = 'SYNC...';
-  setTimeout(() => {
-    ledRed.classList.remove('active');
-    glitchLine.style.opacity = '0';
-    screenStatus.textContent = 'LOCK';
-  }, 150);
-}
-
-function select(id){
-  const m = modules.find(x => x.id === id);
-  if(!m) return;
-  activeId = id;
-  document.querySelectorAll('.module-item').forEach(el => el.classList.toggle('active', el.dataset.id === id));
-  viewerTitle.textContent = m.title;
-  viewerDesc.textContent = m.desc;
-  viewerCat.textContent = catLabels[m.cat] || m.cat;
-  viewerTag.textContent = m.tag;
-  viewerFile.textContent = m.file;
-  openBtn.href = m.file;
-  loadContent(m.file);
-}
-
-function loadEmbed(key){
-  const e = embeds[key];
-  if(!e) return;
-  activeId = null;
-  document.querySelectorAll('.module-item').forEach(el => el.classList.remove('active'));
-  viewerTitle.textContent = e.label;
-  viewerDesc.textContent = e.desc;
-  viewerCat.textContent = 'Embed';
-  viewerTag.textContent = 'externe';
-  viewerFile.textContent = e.url;
-  openBtn.href = e.url;
-  loadContent(e.url);
-}
-
-function loadContent(url){
-  glitch();
-  loader.classList.remove('hidden');
-  iframeContainer.classList.remove('loaded');
-  loaderText.textContent = 'Chargement...';
-  loaderBar.style.width = '0%';
-  
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += Math.random() * 15;
-    if(progress > 90) progress = 90;
-    loaderBar.style.width = progress + '%';
-  }, 100);
-  
-  viewerFrame.onload = () => {
-    clearInterval(interval);
-    loaderBar.style.width = '100%';
-    loaderText.textContent = 'Flux synchronisé';
-    setTimeout(() => {
-      loader.classList.add('hidden');
-      iframeContainer.classList.add('loaded');
-      screenStatus.textContent = 'LOCK';
-      glitch();
-    }, 300);
+/* ----------------- Persist / restore ----------------- */
+function persist(){
+  const data = {
+    q: state.q,
+    cat: state.cat,
+    module: state.mode === "module" ? state.activeModuleId : null,
+    embed: state.mode === "embed" ? getHash().embed : null,
   };
-  viewerFrame.src = url;
+  try { localStorage.setItem(LS_KEY, JSON.stringify(data)); } catch {}
 }
 
-searchInput.addEventListener('input', filter);
-categorySelect.addEventListener('change', filter);
-document.querySelectorAll('.embed-btn').forEach(btn => {btn.onclick = () => loadEmbed(btn.dataset.embed)});
-setInterval(() => {if(Math.random() > 0.85) glitch()}, 2000);
+function restore(){
+  // priority 1: hash
+  const h = getHash();
+  if (h.embed && embeds[h.embed]) return { mode:"embed", embed:h.embed };
+  if (h.module && modules.some(m => m.id === h.module)) return { mode:"module", module:h.module };
 
-filter();
-if(modules[0]) select(modules[0].id);
+  // priority 2: localStorage
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (data?.q) state.q = data.q;
+    if (data?.cat) state.cat = data.cat;
+
+    if (data?.embed && embeds[data.embed]) return { mode:"embed", embed:data.embed };
+    if (data?.module && modules.some(m => m.id === data.module)) return { mode:"module", module:data.module };
+
+    return null;
+  }catch{ return null; }
+}
+
+/* ----------------- Keyboard UX ----------------- */
+function onKeydown(e){
+  // "/" focus search
+  if (e.key === "/" && document.activeElement !== elQ){
+    e.preventDefault();
+    elQ.focus();
+    return;
+  }
+
+  // list navigation only if not typing in input/select
+  const typing = ["INPUT","SELECT","TEXTAREA"].includes(document.activeElement?.tagName);
+  if (typing) return;
+
+  if (e.key === "ArrowDown"){
+    e.preventDefault();
+    state.activeIndex = Math.min(state.activeIndex + 1, state.filtered.length - 1);
+    focusActive();
+  }
+  if (e.key === "ArrowUp"){
+    e.preventDefault();
+    state.activeIndex = Math.max(state.activeIndex - 1, 0);
+    focusActive();
+  }
+  if (e.key === "Enter"){
+    e.preventDefault();
+    const m = state.filtered[state.activeIndex];
+    if (m) selectModule(m.id, { user:true });
+  }
+}
+
+/* ----------------- Init ----------------- */
+function init(){
+  renderEmbeds();
+
+  // wire inputs
+  elQ.value = state.q;
+  elCat.value = state.cat;
+
+  elQ.addEventListener("input", () => {
+    state.q = elQ.value;
+    state.activeIndex = 0;
+    applyFilter();
+    persist();
+  });
+
+  elCat.addEventListener("change", () => {
+    state.cat = elCat.value;
+    state.activeIndex = 0;
+    applyFilter();
+    persist();
+  });
+
+  window.addEventListener("keydown", onKeydown);
+
+  applyFilter();
+
+  const restored = restore();
+  if (restored?.mode === "embed") selectEmbed(restored.embed);
+  else if (restored?.mode === "module") selectModule(restored.module, { user:false });
+  else {
+    // default
+    selectModule("site-ultime", { user:false });
+  }
+}
+
+init();
 </script>
 </body>
 </html>
