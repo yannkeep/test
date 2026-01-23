@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ouaisfieu | Contre-Institution Numérique</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #FAFAFA;
+            color: #212121;
+        }
+        .heading-style {
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        .nav-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .nav-item:hover, .nav-item.active {
+            color: #6200EA;
+            border-bottom-color: #6200EA;
+        }
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="heading-style text-2xl text-[#6200EA]">Ouaisfieu<span class="text-[#F50057]">.</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a onclick="scrollToSection('mission')" class="nav-item active px-3 py-2 text-sm font-medium text-gray-700">Mission</a>
+                    <a onclick="scrollToSection('dashboard')" class="nav-item px-3 py-2 text-sm font-medium text-gray-700">Dashboard Crise</a>
+                    <a onclick="scrollToSection('ecosystem')" class="nav-item px-3 py-2 text-sm font-medium text-gray-700">Écosystème</a>
+                    <a onclick="scrollToSection('roadmap')" class="nav-item px-3 py-2 text-sm font-medium text-gray-700">Trajectoire 2026</a>
+                </div>
+                <div class="flex items-center md:hidden">
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="text-gray-500 hover:text-[#6200EA] focus:outline-none">
+                        ☰
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <a onclick="scrollToSection('mission')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mission</a>
+            <a onclick="scrollToSection('dashboard')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Crise</a>
+            <a onclick="scrollToSection('ecosystem')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Écosystème</a>
+            <a onclick="scrollToSection('roadmap')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Trajectoire 2026</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header id="mission" class="bg-gradient-to-br from-[#6200EA] to-[#3700B3] text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h1 class="text-4xl md:text-5xl heading-style mb-6 leading-tight">La Boussole de la Contre-Institution Numérique</h1>
+                <p class="text-lg md:text-xl text-indigo-100 mb-8 max-w-lg">
+                    Face à la complexité systémique belge, Ouaisfieu transforme l'indignation passive en capacité d'action éclairée.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm border border-white/20">
+                        <span class="mr-2">🛡️</span> Low-tech
+                    </div>
+                    <div class="flex items-center bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm border border-white/20">
+                        <span class="mr-2">🔓</span> Open Source
+                    </div>
+                    <div class="flex items-center bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm border border-white/20">
+                        <span class="mr-2">🚫</span> Zéro Traçage
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white text-gray-900 rounded-xl shadow-2xl p-6 transform rotate-1 hover:rotate-0 transition-transform duration-300">
+                <h3 class="text-xl font-bold mb-4 text-[#6200EA]">Les 3 Piliers de la Stratégie</h3>
+                <p class="text-sm text-gray-600 mb-4">Répartition de l'effort structurel pour la reconnaissance en Éducation Permanente.</p>
+                <div class="chart-container mx-auto">
+                    <canvas id="pillarsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
+
+        <!-- PILLARS DETAIL SECTION -->
+        <section>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card bg-white p-6 rounded-lg shadow-md border-t-4 border-[#6200EA]">
+                    <div class="text-4xl mb-4">🧠</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">La Tête</h3>
+                    <p class="text-xs font-bold text-[#F50057] uppercase mb-3">Analyse Politique</p>
+                    <p class="text-gray-600 text-sm">Décryptage de la particratie et de la pilarisation. Fournir les clés de lecture intellectuelles pour comprendre le système.</p>
+                </div>
+                <div class="card bg-white p-6 rounded-lg shadow-md border-t-4 border-[#03DAC6]">
+                    <div class="text-4xl mb-4">🖥️</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Le Corps</h3>
+                    <p class="text-xs font-bold text-[#F50057] uppercase mb-3">Transparence Numérique</p>
+                    <p class="text-gray-600 text-sm">Incarner le refus du capitalisme de surveillance. Infrastructure statique, sans cookies, hébergement éthique.</p>
+                </div>
+                <div class="card bg-white p-6 rounded-lg shadow-md border-t-4 border-[#F50057]">
+                    <div class="text-4xl mb-4">🦵</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Les Jambes</h3>
+                    <p class="text-xs font-bold text-[#F50057] uppercase mb-3">Éducation Permanente</p>
+                    <p class="text-gray-600 text-sm">Méthodologie CCPLC. Passer de l'analyse à l'action terrain via des ateliers et la mobilisation citoyenne.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD SECTION -->
+        <section id="dashboard" class="scroll-mt-24">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span class="w-2 h-8 bg-[#F50057] mr-4 rounded-sm"></span>
+                    Le Radar de Crise
+                </h2>
+                <p class="text-gray-600 max-w-3xl text-lg">
+                    Pourquoi une contre-institution est-elle urgente ? Ces indicateurs alimentent notre analyse et justifient la nécessité d'un contre-pouvoir citoyen organisé face aux défaillances systémiques.
+                </p>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <p class="text-sm text-gray-500 font-bold uppercase tracking-wide">Jours sans Gouvernement</p>
+                    <p class="text-4xl font-extrabold text-[#F50057] mt-2">541</p>
+                    <p class="text-xs text-gray-400 mt-1">Record mondial (Belgique)</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <p class="text-sm text-gray-500 font-bold uppercase tracking-wide">Dette BXL (Est.)</p>
+                    <p class="text-4xl font-extrabold text-[#6200EA] mt-2">12 Mrd €</p>
+                    <p class="text-xs text-gray-400 mt-1">Projection 2024</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <p class="text-sm text-gray-500 font-bold uppercase tracking-wide">Confiance Politique</p>
+                    <p class="text-4xl font-extrabold text-[#03DAC6] mt-2">Low</p>
+                    <p class="text-xs text-gray-400 mt-1">Indice de volatilité</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                    <p class="text-sm text-gray-500 font-bold uppercase tracking-wide">Horizon Reconnaissance</p>
+                    <p class="text-4xl font-extrabold text-gray-800 mt-2">2026</p>
+                    <p class="text-xs text-gray-400 mt-1">Objectif Mars</p>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Instability Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Historique d'Instabilité</h3>
+                    <p class="text-sm text-gray-500 mb-6">Évolution du nombre de jours de crise politique majeure par décennie.</p>
+                    <div class="chart-container mx-auto">
+                        <canvas id="crisisChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Debt Projection Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Trajectoire de la Dette</h3>
+                    <p class="text-sm text-gray-500 mb-6">Projection de l'endettement régional sans réformes structurelles (en Milliards €).</p>
+                    <div class="chart-container mx-auto">
+                        <canvas id="debtChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ECOSYSTEM SECTION -->
+        <section id="ecosystem" class="scroll-mt-24">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span class="w-2 h-8 bg-[#03DAC6] mr-4 rounded-sm"></span>
+                    La Constellation
+                </h2>
+                <p class="text-gray-600 max-w-3xl text-lg">
+                    Le Hub central Ouaisfieu agit comme un aiguillage vers les satellites spécialisés. Chaque projet conserve son autonomie mais partage l'ADN "Low-tech & Brutaliste".
+                </p>
+            </div>
+
+            <!-- Interactive Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Satellite 1 -->
+                <div class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-[#6200EA] transition-colors cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-[#6200EA]/10 rounded-bl-full -mr-8 -mt-8 transition-all group-hover:w-24 group-hover:h-24 group-hover:bg-[#6200EA]/20"></div>
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-4">🛠️</span>
+                        <h3 class="text-xl font-bold text-gray-900">DOCTech</h3>
+                    </div>
+                    <p class="text-xs font-bold text-[#6200EA] uppercase tracking-wide mb-2">La Forge Documentaire</p>
+                    <p class="text-sm text-gray-600">Base de connaissance technique pour l'autonomie numérique. Tutoriels, outils open-source et manuels d'autodéfense numérique.</p>
+                </div>
+
+                <!-- Satellite 2 -->
+                <div class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-[#F50057] transition-colors cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-[#F50057]/10 rounded-bl-full -mr-8 -mt-8 transition-all group-hover:w-24 group-hover:h-24 group-hover:bg-[#F50057]/20"></div>
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-4">📚</span>
+                        <h3 class="text-xl font-bold text-gray-900">EARL</h3>
+                    </div>
+                    <p class="text-xs font-bold text-[#F50057] uppercase tracking-wide mb-2">La Mémoire</p>
+                    <p class="text-sm text-gray-600">Archives et Réflexion Longue. Bibliothèque numérique préservant l'histoire des luttes sociales et syndicales.</p>
+                </div>
+
+                <!-- Satellite 3 -->
+                <div class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-[#03DAC6] transition-colors cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-[#03DAC6]/10 rounded-bl-full -mr-8 -mt-8 transition-all group-hover:w-24 group-hover:h-24 group-hover:bg-[#03DAC6]/20"></div>
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-4">📢</span>
+                        <h3 class="text-xl font-bold text-gray-900">11·60 bis</h3>
+                    </div>
+                    <p class="text-xs font-bold text-[#03DAC6] uppercase tracking-wide mb-2">Le Terrain</p>
+                    <p class="text-sm text-gray-600">Ancrage local bruxellois. Action de quartier, journalisme citoyen hyper-local et mobilisation physique.</p>
+                </div>
+
+                <!-- Satellite 4 -->
+                <div class="group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-gray-800 transition-colors cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-16 h-16 bg-gray-200 rounded-bl-full -mr-8 -mt-8 transition-all group-hover:w-24 group-hover:h-24"></div>
+                    <div class="flex items-center mb-4">
+                        <span class="text-3xl mr-4">🔮</span>
+                        <h3 class="text-xl font-bold text-gray-900">BXL2030</h3>
+                    </div>
+                    <p class="text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">La Prospective</p>
+                    <p class="text-sm text-gray-600">Laboratoire d'idées pour le futur de Bruxelles. Scénarios stratégiques et urbanisme tactique.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROADMAP SECTION -->
+        <section id="roadmap" class="scroll-mt-24 mb-16">
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 flex items-center">
+                    <span class="w-2 h-8 bg-[#6200EA] mr-4 rounded-sm"></span>
+                    Trajectoire de Reconnaissance
+                </h2>
+                <p class="text-gray-600 max-w-3xl text-lg">
+                    Le calendrier stratégique pour transformer l'écosystème fragmenté en une institution reconnue d'Éducation Permanente.
+                </p>
+            </div>
+
+            <div class="relative border-l-4 border-gray-200 ml-4 md:ml-6 space-y-12">
+                <!-- Step 1 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[14px] top-1 h-6 w-6 rounded-full bg-white border-4 border-[#03DAC6]"></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <span class="inline-block px-3 py-1 bg-[#E0F2F1] text-[#00695C] text-xs font-bold rounded-full mb-2">PHASE 1 : IMMÉDIAT</span>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Migration & Sécurisation</h3>
+                        <p class="text-sm text-gray-600">Migration de l'infrastructure vers une stack statique (Jekyll/Hugo) pour garantir la sécurité et le "Low-tech". Mise en ligne du Hub central.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[14px] top-1 h-6 w-6 rounded-full bg-white border-4 border-[#6200EA]"></div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                        <span class="inline-block px-3 py-1 bg-[#EDE7F6] text-[#4527A0] text-xs font-bold rounded-full mb-2">PHASE 2 : CONSOLIDATION</span>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Unification de l'Écosystème</h3>
+                        <p class="text-sm text-gray-600">Déploiement de la charte graphique unifiée "Brutaliste". Intégration du menu de navigation commun sur tous les satellites. Mise en place du Dashboard JSON.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-[14px] top-1 h-6 w-6 rounded-full bg-[#F50057] border-4 border-[#F50057] shadow-[0_0_0_4px_rgba(245,0,87,0.2)]"></div>
+                    <div class="bg-gradient-to-r from-[#F50057] to-[#C51162] p-6 rounded-lg shadow-lg text-white">
+                        <span class="inline-block px-3 py-1 bg-white/20 text-white text-xs font-bold rounded-full mb-2">PHASE 3 : MARS 2026</span>
+                        <h3 class="text-xl font-bold mb-2">Reconnaissance Officielle</h3>
+                        <p class="text-sm text-white/90">Dépôt du dossier "Éducation Permanente". Le projet devient une contre-institution reconnue, financée et pérenne.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FOOTER / MANIFESTO SNIPPET -->
+        <footer class="bg-gray-900 text-white rounded-t-3xl p-8 md:p-12 mt-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Manifeste Technique</h3>
+                    <p class="text-gray-400 mb-6 text-sm leading-relaxed">
+                        Ce projet est open-source. Nous croyons en l'anonymat relatif pour protéger les militants, tout en assurant une transparence totale sur les flux financiers et techniques. Pas de pubs, pas de trackers.
+                    </p>
+                    <button class="bg-[#F50057] hover:bg-[#C51162] text-white px-6 py-3 rounded font-bold text-sm transition-colors">
+                        Forker ce projet (.md)
+                    </button>
+                </div>
+                <div class="border-t md:border-t-0 md:border-l border-gray-700 pt-8 md:pt-0 md:pl-12">
+                    <h4 class="text-sm font-bold uppercase text-gray-500 mb-4">Liens Rapides</h4>
+                    <ul class="space-y-2 text-sm text-gray-300">
+                        <li><a href="#" class="hover:text-white">Github Repository</a></li>
+                        <li><a href="#" class="hover:text-white">Charte Graphique</a></li>
+                        <li><a href="#" class="hover:text-white">Contact Sécurisé (PGP)</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 text-center text-xs text-gray-600">
+                &copy; 2026 Écosystème Ouaisfieu. Digital Compass v2.1
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- UTILITIES ---
+        function formatLabel(str) {
+            if (str.length <= 16) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length > 16) {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                } else {
+                    currentLine += " " + words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if(el) {
+                const yOffset = -80; 
+                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            }
+            
+            // Update active state
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            // This is a simple approximation, normally requires intersection observer for scroll spy
+            event.target.classList.add('active');
+            
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // --- CHART CONFIGURATION ---
+        Chart.defaults.font.family = "'Segoe UI', Roboto, sans-serif";
+        Chart.defaults.color = '#616161';
+        
+        const tooltipConfig = {
+            tooltip: {
+                backgroundColor: 'rgba(33, 33, 33, 0.9)',
+                padding: 12,
+                cornerRadius: 4,
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        } else {
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        // 1. Pillars Chart (Donut)
+        const ctxPillars = document.getElementById('pillarsChart').getContext('2d');
+        new Chart(ctxPillars, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    formatLabel("La Tête (Analyse Politique)"), 
+                    formatLabel("Le Corps (Transparence Numérique)"), 
+                    formatLabel("Les Jambes (Éducation Permanente)")
+                ],
+                datasets: [{
+                    data: [33, 33, 34],
+                    backgroundColor: ['#6200EA', '#03DAC6', '#F50057'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, boxWidth: 8 }
+                    },
+                    ...tooltipConfig.plugins
+                },
+                cutout: '70%'
+            }
+        });
+
+        // 2. Crisis Chart (Bar)
+        const ctxCrisis = document.getElementById('crisisChart').getContext('2d');
+        new Chart(ctxCrisis, {
+            type: 'bar',
+            data: {
+                labels: ['1980s', '1990s', '2000s', formatLabel('Crise de 2010-2011'), '2020-2024'],
+                datasets: [{
+                    label: formatLabel('Jours sans Gouvernement'),
+                    data: [100, 140, 194, 541, 493],
+                    backgroundColor: ['#E0E0E0', '#E0E0E0', '#E0E0E0', '#F50057', '#6200EA'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#EEEEEE' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    ...tooltipConfig.plugins
+                }
+            }
+        });
+
+        // 3. Debt Chart (Line)
+        const ctxDebt = document.getElementById('debtChart').getContext('2d');
+        new Chart(ctxDebt, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', formatLabel('2024 (Estimation)')],
+                datasets: [{
+                    label: formatLabel('Dette Régionale (Milliards €)'),
+                    data: [6.5, 8.2, 9.8, 10.5, 11.2, 12.1],
+                    borderColor: '#03DAC6',
+                    backgroundColor: 'rgba(3, 218, 198, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#FFFFFF',
+                    pointBorderColor: '#03DAC6',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: false, grid: { color: '#EEEEEE' } },
+                    x: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: true, position: 'top', align: 'end' },
+                    ...tooltipConfig.plugins
+                }
+            }
+        });
+
+    </script>
+
+    <!-- Chosen Palette: "Vibrant Material" - Deep Purple (#6200EA), Teal (#03DAC6), Pink (#F50057) on Off-White (#FAFAFA). High contrast, energetic, professional. -->
+    
+    <!-- Application Structure Plan:
+         Designed as a "Digital Compass" landing page. 
+         1. Hero Section: Immediate visual hook with the 3 Pillars (Strategy) + Donut chart to explain the "Why".
+         2. Dashboard Section: Contextualizes the urgency using the "Crisis Data" from the report (Debt, Instability) via big numbers and charts.
+         3. Ecosystem Section: Interactive card grid to navigate the satellites (DOCTech, EARL, etc.), fulfilling the "Switchboard" function.
+         4. Roadmap Section: Vertical timeline to show the progression towards the 2026 goal.
+         Flow allows user to understand the Mission -> Context -> Tools -> Future.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. 3 Pillars -> Goal: Inform -> Viz: Donut Chart -> Justification: Shows the integrated nature of Head/Body/Legs.
+         2. Crisis History -> Goal: Change (Time) -> Viz: Bar Chart -> Justification: Highlights the record-breaking 541 days vs average.
+         3. Debt Trajectory -> Goal: Change (Trend) -> Viz: Line Chart -> Justification: Shows the alarming upward trend mentioned in the report.
+         4. Satellites -> Goal: Organize -> Viz: Grid with Hover Effects -> Justification: Clean navigation for distinct projects.
+         5. Roadmap -> Goal: Change (Process) -> Viz: Vertical Timeline -> Justification: Linear progression phases 1-3.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All icons are Unicode.
+    -->
+
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+</body>
+</html>
