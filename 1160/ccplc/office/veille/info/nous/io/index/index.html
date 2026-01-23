@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ouaisfieu · Hub Central</title>
+    <meta name="description" content="Contre-institution numérique · Veille citoyenne · Éducation permanente">
+    <style>
+        :root {
+            --bg-dark: #0d0d0d;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #242424;
+            --green-soft: #7dd3a0;
+            --green-glow: #4ade80;
+            --lilac: #c4a7e7;
+            --lilac-glow: #d4b9f7;
+            --text-main: #e8e8e8;
+            --text-muted: #888;
+            --border: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* HEADER */
+        header {
+            text-align: center;
+            padding: 4rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, var(--green-soft), var(--lilac));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .values {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .value-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .value-badge.green {
+            background: rgba(125, 211, 160, 0.15);
+            color: var(--green-soft);
+            border: 1px solid var(--green-soft);
+        }
+
+        .value-badge.lilac {
+            background: rgba(196, 167, 231, 0.15);
+            color: var(--lilac);
+            border: 1px solid var(--lilac);
+        }
+
+        /* NAVIGATION NARRATIVE */
+        .nav-narrative {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .nav-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .nav-card.observer { border-top: 3px solid var(--green-soft); }
+        .nav-card.documenter { border-top: 3px solid var(--lilac); }
+        .nav-card.outiller { border-top: 3px solid var(--green-glow); }
+        .nav-card.agir { border-top: 3px solid var(--lilac-glow); }
+
+        .nav-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-card.observer h3 { color: var(--green-soft); }
+        .nav-card.documenter h3 { color: var(--lilac); }
+        .nav-card.outiller h3 { color: var(--green-glow); }
+        .nav-card.agir h3 { color: var(--lilac-glow); }
+
+        .nav-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.6rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* SECTIONS */
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h2 .icon { font-size: 1.2rem; }
+
+        /* ECOSYSTEM GRID */
+        .ecosystem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .site-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            transition: all 0.2s;
+        }
+
+        .site-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--green-soft);
+        }
+
+        .site-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: var(--green-soft);
+        }
+
+        .site-card .url {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: monospace;
+            margin-bottom: 0.5rem;
+            word-break: break-all;
+        }
+
+        .site-card .desc {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .site-card .tech {
+            font-size: 0.7rem;
+            color: var(--lilac);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .site-card a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* THEMATIQUES */
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .theme-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            border-left: 3px solid var(--lilac);
+        }
+
+        .theme-item h4 {
+            font-size: 0.95rem;
+            color: var(--lilac);
+            margin-bottom: 0.5rem;
+        }
+
+        .theme-item ul {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .theme-item li {
+            padding: 0.2rem 0;
+        }
+
+        .theme-item li::before {
+            content: "→ ";
+            color: var(--green-soft);
+        }
+
+        /* SOCIAL & CONTACT */
+        .social-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .social-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+
+        .social-item:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--green-soft);
+        }
+
+        .social-item .icon {
+            font-size: 1.5rem;
+        }
+
+        .social-item .name {
+            font-weight: 600;
+        }
+
+        .social-item .handle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .social-item.inactive {
+            opacity: 0.5;
+        }
+
+        .social-item.inactive::after {
+            content: " (en dev)";
+            font-size: 0.7rem;
+            color: var(--lilac);
+        }
+
+        /* DASHBOARD CRISE */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(125,211,160,0.1), rgba(196,167,231,0.1));
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--green-soft), var(--lilac));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* TIMELINE */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--green-soft), var(--lilac));
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--green-soft);
+            border: 2px solid var(--bg-dark);
+        }
+
+        .timeline-item .date {
+            font-size: 0.8rem;
+            color: var(--lilac);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-item .content {
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--green-soft);
+            text-decoration: none;
+        }
+
+        footer .license {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        /* MANIFESTE */
+        .manifeste {
+            background: linear-gradient(135deg, rgba(125,211,160,0.05), rgba(196,167,231,0.05));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .manifeste blockquote {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--text-main);
+            border-left: 3px solid var(--green-soft);
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .manifeste .author {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* COLLAPSIBLE SECTIONS */
+        details {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        summary {
+            padding: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--green-soft);
+            list-style: none;
+        }
+
+        summary::before {
+            content: "▶ ";
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        details .content-inner {
+            padding: 0 1rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        details .content-inner ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        details .content-inner li {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        details .content-inner li:last-child {
+            border-bottom: none;
+        }
+
+        details .content-inner a {
+            color: var(--lilac);
+            text-decoration: none;
+        }
+
+        details .content-inner a:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .values {
+                gap: 0.5rem;
+            }
+            
+            .nav-narrative {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+    
+    <div class="container">
+        <header>
+            <div class="logo">ouaisfieu</div>
+            <p class="tagline">Contre-institution numérique · Veille citoyenne · Éducation permanente</p>
+            <div class="values">
+                <span class="value-badge green">Indépendance Totale</span>
+                <span class="value-badge lilac">Open Source</span>
+                <span class="value-badge green">Zéro Traçage</span>
+                <span class="value-badge lilac">CC BY-NC 4.0</span>
+            </div>
+        </header>
+
+        <div class="manifeste">
+            <blockquote>
+                "Ceci n'est pas un jeu, c'est une trousse à outils. Outiller le citoyen face à la complexité, transformer l'indignation passive en capacité d'action éclairée."
+            </blockquote>
+            <p class="author">— Pyramide DICS : Données → Information → Connaissance → Sagesse</p>
+        </div>
+
+        <!-- NAVIGATION NARRATIVE -->
+        <nav class="nav-narrative">
+            <div class="nav-card observer">
+                <h3>👁 OBSERVER</h3>
+                <p>Comprendre le système. Décrypter la particratie, la pilarisation et la complexité belge.</p>
+                <div class="nav-links">
+                    <a href="https://ouaisfieu.github.io/tech/">DOCTech</a>
+                    <a href="https://dl.ouaisfi.eu/1160/">11·60 bis</a>
+                    <a href="https://ouaisfi.eu/myspot">My Spot</a>
+                </div>
+            </div>
+            
+            <div class="nav-card documenter">
+                <h3>📊 DOCUMENTER</h3>
+                <p>Faits, chiffres et archives. La réalité sans filtre. Les preuves des crises systémiques.</p>
+                <div class="nav-links">
+                    <a href="https://ouaisfieu.github.io/bxl2030/">BXL2030</a>
+                    <a href="https://dl.ouaisfi.eu/">Magasin de fichiers</a>
+                    <a href="https://ouaisfieu.github.io/dossiers/">Dossiers</a>
+                </div>
+            </div>
+            
+            <div class="nav-card outiller">
+                <h3>🔧 S'OUTILLER</h3>
+                <p>Ne les croyez pas, vérifiez vous-même. OSINT, sécurité numérique, méthodes.</p>
+                <div class="nav-links">
+                    <a href="https://dl.ouaisfi.eu/earl/">EARL</a>
+                    <a href="https://dl.ouaisfi.eu/biologia/">Biologia</a>
+                    <a href="https://ouaisfieu.github.io/tech/notions/">Notions</a>
+                </div>
+            </div>
+            
+            <div class="nav-card agir">
+                <h3>✊ AGIR</h3>
+                <p>Rejoindre le mouvement. Hacker, forker, diffuser. Lead-dexing et collectif citoyen.</p>
+                <div class="nav-links">
+                    <a href="https://ouaisfieu.github.io/ccplc/">CCPLC</a>
+                    <a href="https://github.com/ouaisfieu">GitHub</a>
+                    <a href="https://bsky.app/profile/ouaisfi.eu">Bluesky</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- DASHBOARD CRISE -->
+        <section>
+            <h2><span class="icon">📈</span> Dashboard de Crise · Bruxelles</h2>
+            <div class="dashboard">
+                <div class="stat-card">
+                    <div class="number">10,4 Mrd€</div>
+                    <div class="label">Dette bruxelloise</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">7 morts</div>
+                    <div class="label">Trafic drogue 2023</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">131</div>
+                    <div class="label">Blessés 2023</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">10 mois</div>
+                    <div class="label">Sans gouvernement</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INDEX COMPLET ÉCOSYSTÈME -->
+        <section>
+            <h2><span class="icon">🗺️</span> Index Complet de l'Écosystème</h2>
+            
+            <h3 style="color: var(--green-soft); margin: 1.5rem 0 1rem; font-size: 1.1rem;">▸ Sites Principaux</h3>
+            <div class="ecosystem-grid">
+                <div class="site-card">
+                    <a href="https://ouaisfi.eu" target="_blank">
+                        <h4>ouaisfi.eu</h4>
+                        <div class="url">ouaisfi.eu</div>
+                        <div class="desc">Hub central en migration. Portail principal, My Spot (Belgique), Up Yours (dossiers critiques).</div>
+                        <div class="tech">Grav CMS + Learn2</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://dl.ouaisfi.eu" target="_blank">
+                        <h4>Magasin de Fichiers</h4>
+                        <div class="url">dl.ouaisfi.eu</div>
+                        <div class="desc">Catalogue statique 100% autonome. PDF, images, kits .zip, scripts, vidéos via manifest.json.</div>
+                        <div class="tech">HTML/JS statique</div>
+                    </a>
+                </div>
+            </div>
+
+            <h3 style="color: var(--lilac); margin: 1.5rem 0 1rem; font-size: 1.1rem;">▸ GitHub Pages</h3>
+            <div class="ecosystem-grid">
+                <div class="site-card">
+                    <a href="https://ouaisfieu.github.io/tech/" target="_blank">
+                        <h4>DOCTech</h4>
+                        <div class="url">ouaisfieu.github.io/tech/</div>
+                        <div class="desc">"Document d'Ordre Citoyen, et Technique" — ~30 fiches Markdown sur la Belgique. Notions, Belgique, Dossiers, Et quoi?</div>
+                        <div class="tech">Jekyll + Just the Docs</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://ouaisfieu.github.io/bxl2030/" target="_blank">
+                        <h4>BXL2030</h4>
+                        <div class="url">ouaisfieu.github.io/bxl2030/</div>
+                        <div class="desc">Prospective bruxelloise. Méthode Lead-dexing, crises systémiques, fiches personnalités publiques.</div>
+                        <div class="tech">Jekyll + Minimal Mistakes</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://ouaisfieu.github.io/bxl2042/" target="_blank">
+                        <h4>BXL2042</h4>
+                        <div class="url">ouaisfieu.github.io/bxl2042/</div>
+                        <div class="desc">Extension prospective long terme. Scénarios 2042.</div>
+                        <div class="tech">Jekyll</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://ouaisfieu.github.io/dossiers/" target="_blank">
+                        <h4>Dossiers</h4>
+                        <div class="url">ouaisfieu.github.io/dossiers/</div>
+                        <div class="desc">4 analyses critiques : échanges économiques, citoyenneté, guerre économique, information & pouvoir d'agir (DIKW).</div>
+                        <div class="tech">Jekyll + Minimal Mistakes</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://ouaisfieu.github.io/ccplc/" target="_blank">
+                        <h4>CCPLC</h4>
+                        <div class="url">ouaisfieu.github.io/ccplc/</div>
+                        <div class="desc">Collectif Citoyen pour la Participation Libre & Consciente. "ASBL de fait", offres d'accompagnement, NYXO.</div>
+                        <div class="tech">HTML/CSS/JS</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://ouaisfieu.github.io/GPTPardi/" target="_blank">
+                        <h4>GPTPardi</h4>
+                        <div class="url">ouaisfieu.github.io/GPTPardi/</div>
+                        <div class="desc">Projet IA. Assistant et générateur de contenu. "Don't be evil, just do it."</div>
+                        <div class="tech">Jekyll</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://ouaisfieu.github.io/" target="_blank">
+                        <h4>Index GitHub</h4>
+                        <div class="url">ouaisfieu.github.io/</div>
+                        <div class="desc">Racine GitHub Pages. Contenus en migration.</div>
+                        <div class="tech">Jekyll</div>
+                    </a>
+                </div>
+            </div>
+
+            <h3 style="color: var(--green-soft); margin: 1.5rem 0 1rem; font-size: 1.1rem;">▸ Publications dl.ouaisfi.eu</h3>
+            <div class="ecosystem-grid">
+                <div class="site-card">
+                    <a href="https://dl.ouaisfi.eu/earl/" target="_blank">
+                        <h4>EARL</h4>
+                        <div class="url">dl.ouaisfi.eu/earl/</div>
+                        <div class="desc">Intelligence Citoyenne. OSINT, SOCMINT, veille citoyenne, éducation permanente FWB. Documentation complète.</div>
+                        <div class="tech">Hugo + Relearn</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://dl.ouaisfi.eu/1160/" target="_blank">
+                        <h4>11·60 bis</h4>
+                        <div class="url">dl.ouaisfi.eu/1160/</div>
+                        <div class="desc">Dossiers éditoriaux. Grèves de 60, extrême droite BE, pilier libéral, champ médiatique, ateliers Markdown.</div>
+                        <div class="tech">Hugo + FixIt</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://dl.ouaisfi.eu/biologia/" target="_blank">
+                        <h4>Biologia</h4>
+                        <div class="url">dl.ouaisfi.eu/biologia/</div>
+                        <div class="desc">Blog auto-bio-logico-graphique signé "Walt". Tutoriels Obsidian, vocabulaire CRISP, particratie, conseils communaux.</div>
+                        <div class="tech">Hugo + FixIt</div>
+                    </a>
+                </div>
+            </div>
+
+            <h3 style="color: var(--lilac); margin: 1.5rem 0 1rem; font-size: 1.1rem;">▸ Projets Expérimentaux</h3>
+            <div class="ecosystem-grid">
+                <div class="site-card">
+                    <a href="https://nyxo.brussels" target="_blank">
+                        <h4>NYXO.brussels</h4>
+                        <div class="url">nyxo.brussels</div>
+                        <div class="desc">Cartographie par graphes. Zones 1km², nœuds, liens. Layers ASTRO/TAROT/NEUTRE. Outil de mapping relationnel.</div>
+                        <div class="tech">HTML/JS + Canvas</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://ouaisfieu.itch.io/" target="_blank">
+                        <h4>!SPAM · itch.io</h4>
+                        <div class="url">ouaisfieu.itch.io</div>
+                        <div class="desc">"THIS IS NOT A GAME · THIS IS A FORKABLE OBJECT" — ARG, terminal d'infiltration, PéTAL, LOREM, !IPSUM.</div>
+                        <div class="tech">HTML interactif</div>
+                    </a>
+                </div>
+                <div class="site-card">
+                    <a href="https://publish.obsidian.md/ouaisfieu" target="_blank">
+                        <h4>Obsidian Publish</h4>
+                        <div class="url">publish.obsidian.md/ouaisfieu</div>
+                        <div class="desc">Zone de TEST. Vault Obsidian. MDP: batman1234. En développement.</div>
+                        <div class="tech">Obsidian Publish</div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTENU DÉTAILLÉ -->
+        <section>
+            <h2><span class="icon">📂</span> Contenu Détaillé par Satellite</h2>
+            
+            <details>
+                <summary>DOCTech · Arborescence complète</summary>
+                <div class="content-inner">
+                    <ul>
+                        <li><strong>Notions</strong>
+                            <ul>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/subjectivation/">Subjectivation</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/violence/">Violence : panorama général</a> (5 sous-pages)</li>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/soft-power/">Le Soft Power</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/champ-et-marche/">Champ et marché</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/creation-valeur/">Création de valeur</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/kpi/">Indicateurs clés (KPIs)</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/lead/">Lead</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/operation-strategique/">Opération stratégique</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/notions/intersectionnalite.html">Intersectionnalité</a></li>
+                            </ul>
+                        </li>
+                        <li><strong>Dossiers</strong>
+                            <ul>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/democratie-belge/">Comment fonctionne la démocratie belge ?</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/partis-pouvoir/">Les partis ont-ils trop de pouvoir ?</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/pouvoir-individuel-collectif/">Pouvoir d'agir : individuel et collectif</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/veille-citoyenne/">Veille citoyenne</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/budget-participatif/">Budget participatif</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/assemblee-citoyenne/">Assemblée citoyenne</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/donnees-et-vie-privee/">Internet : quelles données on laisse ?</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/logiciel-libre-communs/">Logiciel libre & communs numériques</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/inclusion-participation/">Inclusion : que tout le monde puisse participer</a></li>
+                                <li><a href="https://ouaisfieu.github.io/tech/dossiers/bouger-sa-commune/">Kit express : faire bouger sa commune</a></li>
+                            </ul>
+                        </li>
+                        <li><strong>Belgique</strong> (~15 pages)
+                            <ul>
+                                <li>Pilarisation (genèse, déclin, comparaisons)</li>
+                                <li>Particratie (fonctionnement, critiques, stabilité)</li>
+                                <li>Compromis (origines, limites, comparaisons)</li>
+                                <li>Complexité (fédéralisme, réformes, compétences)</li>
+                                <li>Éducation civique, Justice sociale, Médias, Participation, Séparation des pouvoirs, Transparence</li>
+                                <li>Dix leviers pour une démocratie résiliente</li>
+                            </ul>
+                        </li>
+                        <li><strong>Et quoi ?</strong>
+                            <ul>
+                                <li>Pouvoir d'agir collectif</li>
+                                <li>Autonomie vs hégémonie capitaliste</li>
+                                <li>Études de cas contemporains</li>
+                                <li>Récupération du capitalisme</li>
+                                <li>CCPLC</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>EARL · Intelligence Citoyenne</summary>
+                <div class="content-inner">
+                    <ul>
+                        <li><strong>Intelligence Citoyenne</strong>
+                            <ul>
+                                <li>Guide Pratique de la Veille Citoyenne</li>
+                                <li>Du Cinquième Pouvoir aux Mobilisations Contemporaines</li>
+                            </ul>
+                        </li>
+                        <li><strong>Notions</strong>
+                            <ul>
+                                <li>L'Intelligence Économique (IE) + État des lieux Belgique</li>
+                                <li>Le Renseignement : OSINT, SOCMINT, HUMINT</li>
+                                <li>Guerre de l'Information et Résilience Démocratique</li>
+                                <li>L'Information comme Facteur de Pouvoir Économique</li>
+                                <li>La Particratie Belge</li>
+                                <li>Intelligence Civile et Veille Citoyenne en Éducation Permanente</li>
+                                <li>Sociologie Numérique</li>
+                            </ul>
+                        </li>
+                        <li><strong>Carnet</strong>
+                            <ul>
+                                <li>Démocratie et Transparence en Belgique (retransmission conseils communaux, opacité exécutifs)</li>
+                                <li>Pouvoirs, Contre-Pouvoirs et Mobilisations Citoyennes</li>
+                                <li>Sa Majesté des Mouches : Bestiaire Politico-Numérique</li>
+                                <li>Essaimer la Veille Citoyenne : Stratégie Progressive</li>
+                                <li>Incident Conseil communal Charleroi (23 juin 2025)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Journal</strong> — Entrées #000 à #999</li>
+                        <li><strong>Autres Projets</strong>
+                            <ul>
+                                <li>DOCTech, BXL2030, 11·60 bis, Vitrine, Catalogue</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>11·60 bis · Dossiers éditoriaux</summary>
+                <div class="content-inner">
+                    <ul>
+                        <li><strong>Dossiers</strong>
+                            <ul>
+                                <li>Veille stratégique et veille citoyenne : concepts, méthodes et impacts démocratiques</li>
+                                <li>Comprendre le champ médiatique : Belgique francophone vs France</li>
+                                <li>Guide pour comprendre et pratiquer la surveillance citoyenne</li>
+                            </ul>
+                        </li>
+                        <li><strong>Ateliers</strong>
+                            <ul>
+                                <li>Publier en ligne : du Markdown vers l'infini</li>
+                                <li>Parcours débutant·e : du texte à votre site web</li>
+                                <li>24 idées concrètes pour agir sans se noyer</li>
+                            </ul>
+                        </li>
+                        <li><strong>Outils</strong>
+                            <ul>
+                                <li>Publier ses textes en ligne : guide grand public</li>
+                                <li>Write.as et Bear Blog : le retour à l'essentiel</li>
+                                <li>Neocities et le Small Web</li>
+                                <li>Kit Mythologies Mondiales</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>BXL2030 · Lead-dexing & Crises</summary>
+                <div class="content-inner">
+                    <ul>
+                        <li><strong>Lead-dexing</strong> — Fiches personnalités publiques
+                            <ul>
+                                <li>Florence Manente</li>
+                                <li>Georges-Louis Bouchez</li>
+                                <li>→ #leaddexing sur Bluesky</li>
+                            </ul>
+                        </li>
+                        <li><strong>Bruxelles</strong>
+                            <ul>
+                                <li>Signes actuels de crises systémiques (2023-2025)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>Biologia · Blog réflexif</summary>
+                <div class="content-inner">
+                    <ul>
+                        <li>La boussole de valeurs : un outil pour s'orienter</li>
+                        <li>Langage intérieur : la voix dans ta tête</li>
+                        <li>Le métabolisme du scandale : pourquoi les démocraties encaissent</li>
+                        <li>Quand les conseils communaux deviennent visibles</li>
+                        <li>Le Monologue du Virus dans Matrix</li>
+                        <li>Quel avenir pour le pouvoir d'agir collectif ?</li>
+                        <li>Résonances contemporaines de Soleil Vert et L'Âge de Cristal</li>
+                        <li>Carnet d'apprentissage pour débarqué·e en réalité</li>
+                        <li>L'Éducation Idéale : Un tour d'horizon</li>
+                        <li>Bestiaire du « paranormal plausible »</li>
+                        <li>→ 14 pages d'articles (2024-2025)</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>ouaisfi.eu · Portail principal</summary>
+                <div class="content-inner">
+                    <ul>
+                        <li><strong>🟢 Accueil</strong>
+                            <ul>
+                                <li>À propos</li>
+                                <li>Guide</li>
+                                <li>Politique des Cookies</li>
+                                <li>Veille citoyenne : du suivi à l'impact</li>
+                            </ul>
+                        </li>
+                        <li><strong>🔴 Laboratoire</strong> — Copion, Publication, test-critique, Gloss, EN·TEST</li>
+                        <li><strong>🟢 My Space</strong> — Trop d'info ?, Où suis-je ?, Logiciel (Notion, Obsidian), SPAM</li>
+                        <li><strong>🟣 Up Yours</strong>
+                            <ul>
+                                <li>La citoyenneté, c'est le brol</li>
+                                <li>De l'intelligence à la stupidité économique</li>
+                                <li>Auftragstaktik citoyen·ne·s</li>
+                                <li>Guerre économique</li>
+                                <li>Info toute puissante</li>
+                                <li>Marche (en groupe) ou crève</li>
+                                <li>Veille citoyenne</li>
+                                <li>Rapport sur les dérives dystopiques mondiales (8 sous-pages)</li>
+                            </ul>
+                        </li>
+                        <li><strong>🟣 Kit de Base</strong> — Niveau Débutant·e, Niveau du dessus</li>
+                        <li><strong>🟢 My Spot</strong> (Belgique)
+                            <ul>
+                                <li>Cadre critique, Pilarisation, Particratie, Compromis</li>
+                                <li>Réformes de l'État, Fédéralisme asymétrique</li>
+                                <li>Éducation civique, Justice sociale, Médias</li>
+                                <li>Participation citoyenne, Séparation des pouvoirs</li>
+                                <li>Transparence et gouvernance</li>
+                                <li>Dix leviers, Open Data</li>
+                            </ul>
+                        </li>
+                        <li><strong>🟢 Kit de Secours</strong> — EN·CLAIR, EN·PRATIQUE, LA·SUITE, EN·VRAI</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>!SPAM · itch.io · ARG</summary>
+                <div class="content-inner">
+                    <ul>
+                        <li><strong>Projets</strong>
+                            <ul>
+                                <li>PéTAL — Please (é) Take Look</li>
+                                <li>LOREM — Interactive Fiction</li>
+                                <li>!LOREM</li>
+                                <li>!IPSUM — Lorem Ipsum World</li>
+                            </ul>
+                        </li>
+                        <li><strong>Liens</strong>
+                            <ul>
+                                <li>Terminal d'infiltration → aegis/intranet</li>
+                                <li>Secte → biologia/posts/911</li>
+                                <li>Low-tech & lo-Pro → confiance</li>
+                            </ul>
+                        </li>
+                        <li>→ "TINAG : THIS IS NOT (just) A GAME · THIS IS A FORKABLE OBJECT"</li>
+                    </ul>
+                </div>
+            </details>
+
+            <details>
+                <summary>CCPLC · Structure & Offres</summary>
+                <div class="content-inner">
+                    <ul>
+                        <li><strong>6 Axes Stratégiques 2025-2026</strong>
+                            <ul>
+                                <li>Observer · Documenter · Outiller · Former · Connecter · Évaluer</li>
+                            </ul>
+                        </li>
+                        <li><strong>Offres</strong>
+                            <ul>
+                                <li>0 · TRACE — Ping NYXO (0,125 €)</li>
+                                <li>1 · Module Découverte — Exploration + Dataset (1,250 €)</li>
+                                <li>2 · Audit Express (0125 €)</li>
+                                <li>3 · Diagnostic Personnel (1.250 €)</li>
+                                <li>4 · Accompagnement NYXO (12.500 €)</li>
+                                <li>6 · Audit Organisationnel Global (125.000 €)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Cibles</strong>
+                            <ul>
+                                <li>Institutions ouvertes</li>
+                                <li>Cellules de veille</li>
+                                <li>Labos improbables</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </details>
+        </section>
+
+        <!-- THÉMATIQUES TRANSVERSALES -->
+        <section>
+            <h2><span class="icon">🏷️</span> Thématiques Transversales</h2>
+            <div class="themes-grid">
+                <div class="theme-item">
+                    <h4>Système Politique Belge</h4>
+                    <ul>
+                        <li>Pilarisation (genèse, déclin)</li>
+                        <li>Particratie (critique)</li>
+                        <li>Compromis à la belge</li>
+                        <li>Fédéralisme asymétrique</li>
+                        <li>Complexité institutionnelle</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h4>Démocratie Participative</h4>
+                    <ul>
+                        <li>Veille citoyenne</li>
+                        <li>Budget participatif</li>
+                        <li>Assemblées citoyennes</li>
+                        <li>Inclusion & participation</li>
+                        <li>Kit faire bouger sa commune</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h4>Intelligence & OSINT</h4>
+                    <ul>
+                        <li>OSINT · SOCMINT · HUMINT</li>
+                        <li>Modèle DIKW/DICS</li>
+                        <li>Guerre cognitive</li>
+                        <li>Lead-dexing</li>
+                        <li>Fact-checking</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h4>Communs Numériques</h4>
+                    <ul>
+                        <li>Logiciel libre</li>
+                        <li>Open data</li>
+                        <li>Civic tech</li>
+                        <li>Small Web</li>
+                        <li>Protection des données</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h4>Prospective Urbaine</h4>
+                    <ul>
+                        <li>Crises systémiques BXL</li>
+                        <li>Scénarios 2030 / 2042</li>
+                        <li>Dette publique</li>
+                        <li>Insécurité</li>
+                        <li>Gouvernance régionale</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h4>Éducation Permanente</h4>
+                    <ul>
+                        <li>Décret 17 juillet 2003 FWB</li>
+                        <li>Analyse critique société</li>
+                        <li>Citoyenneté active</li>
+                        <li>Émancipation collective</li>
+                        <li>Contrat-programme 2026</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- RÉSEAUX & CONTACT -->
+        <section>
+            <h2><span class="icon">🔗</span> Réseaux & Contact</h2>
+            <div class="social-grid">
+                <a href="https://bsky.app/profile/ouaisfi.eu" class="social-item" target="_blank">
+                    <span class="icon">🦋</span>
+                    <div>
+                        <div class="name">Bluesky</div>
+                        <div class="handle">@ouaisfi.eu</div>
+                    </div>
+                </a>
+                <a href="https://github.com/ouaisfieu" class="social-item" target="_blank">
+                    <span class="icon">⚙️</span>
+                    <div>
+                        <div class="name">GitHub</div>
+                        <div class="handle">github.com/ouaisfieu</div>
+                    </div>
+                </a>
+                <a href="mailto:souad.effek@ouaisfi.eu" class="social-item">
+                    <span class="icon">✉️</span>
+                    <div>
+                        <div class="name">Contact</div>
+                        <div class="handle">souad.effek@ouaisfi.eu</div>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com/@ouaisfieu" class="social-item inactive" target="_blank">
+                    <span class="icon">📺</span>
+                    <div>
+                        <div class="name">YouTube</div>
+                        <div class="handle">@ouaisfieu</div>
+                    </div>
+                </a>
+                <a href="https://ouaisfieu.itch.io/" class="social-item" target="_blank">
+                    <span class="icon">🎮</span>
+                    <div>
+                        <div class="name">itch.io</div>
+                        <div class="handle">!SPAM</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- FEUILLE DE ROUTE -->
+        <section>
+            <h2><span class="icon">📅</span> Feuille de Route → Mars 2026</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="date">Phase 1 · Immédiat</div>
+                    <div class="content">Migration Grav → Hugo/Jekyll. Sécuriser le statique. Unifier l'infrastructure.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="date">Phase 2 · Consolidation</div>
+                    <div class="content">Unifier la navigation entre satellites. Menu commun. Charte graphique "Low-tech / Brutaliste".</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="date">Phase 3 · Partenariats</div>
+                    <div class="content">Ateliers-débats avec ASBL reconnues. Universités populaires. Médias associatifs.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="date">31 mars 2026</div>
+                    <div class="content">Dépôt du dossier de reconnaissance Éducation Permanente FWB. Contrat-programme 5 ans.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TECHNIQUE -->
+        <section>
+            <h2><span class="icon">⚙️</span> Stack Technique</h2>
+            <div class="ecosystem-grid">
+                <div class="site-card">
+                    <h4>Générateurs</h4>
+                    <div class="desc">Grav CMS (en migration), Hugo (FixIt, Relearn), Jekyll (Just the Docs, Minimal Mistakes)</div>
+                </div>
+                <div class="site-card">
+                    <h4>Hébergement</h4>
+                    <div class="desc">GitHub Pages (100% gratuit), dl.ouaisfi.eu (statique)</div>
+                </div>
+                <div class="site-card">
+                    <h4>Licence</h4>
+                    <div class="desc">CC BY-NC 4.0 — Attribution, Non Commercial, Share Alike</div>
+                </div>
+                <div class="site-card">
+                    <h4>Éthique</h4>
+                    <div class="desc">Zéro cookie tiers, zéro Google Analytics, zéro traçage, code 100% ouvert</div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p><strong>ouaisfieu</strong> · Contre-institution numérique · Veille citoyenne · Bruxelles</p>
+            <p class="license">
+                Tout le contenu sous <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a> · 
+                <a href="https://github.com/ouaisfieu" target="_blank">Fork me on GitHub</a> · 
+                Don't be evil, just do it
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.7rem; color: var(--text-muted);">
+                OBSERVER → DOCUMENTER → S'OUTILLER → AGIR
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // PARTICLES ANIMATION
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let particles = [];
+        const particleCount = 80;
+        const colors = ['#7dd3a0', '#c4a7e7', '#4ade80', '#d4b9f7'];
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        function createParticle() {
+            return {
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                alpha: Math.random() * 0.5 + 0.1
+            };
+        }
+        
+        function init() {
+            resize();
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(createParticle());
+            }
+        }
+        
+        function drawParticle(p) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.alpha;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+        
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = particles[i].color;
+                        ctx.globalAlpha = (150 - dist) / 150 * 0.15;
+                        ctx.stroke();
+                        ctx.globalAlpha = 1;
+                    }
+                }
+            }
+        }
+        
+        function update() {
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+            });
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawConnections();
+            particles.forEach(drawParticle);
+            update();
+            requestAnimationFrame(animate);
+        }
+        
+        window.addEventListener('resize', resize);
+        init();
+        animate();
+    </script>
+</body>
+</html>
