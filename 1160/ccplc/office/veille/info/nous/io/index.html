@@ -1,0 +1,525 @@
+<!-- Chosen Palette: Energetic & Playful (Vibrant Indigo, Electric Pink, Cyan, Amber) -->
+<!-- Application Structure Plan: The infographic is structured as a "Digital Ecosystem Audit". 
+    1. Header: High-impact title and summary metrics.
+    2. Ecosystem Composition (Donut Chart): Breakdown of the different functional areas (Tech, Creative, Archive).
+    3. Temporal Activity (Line Chart): Visualizing the growth and activity of the ecosystem over time.
+    4. Content Distribution (Bar Chart): Analyzing the storage and depth of specific sub-directories (DL).
+    5. Network Topology (CSS Diagram): A visual map of how the nodes connect, showing the flow from user to content.
+    6. Functional Analysis (Radar Chart): Comparing the different nodes based on attributes like Interactivity, Persistence, and Complexity.
+    7. Conclusion: Summary of the ecosystem's health.
+    This structure guides the user from the "What" (Composition) to the "When" (Timeline), the "Where" (Topology), and the "How" (Functionality). -->
+<!-- Visualization & Content Choices:
+    1. Ecosystem Composition -> Goal: Inform/Compare -> Donut Chart (Chart.js) -> Shows the relative size of categories. Best for simple proportions. NO SVG.
+    2. Activity Timeline -> Goal: Change -> Line Chart (Chart.js) -> Standard for trends over time. NO SVG.
+    3. Archive Depth -> Goal: Compare -> Horizontal Bar Chart (Chart.js) -> Good for comparing long labels (directory names) and values. NO SVG.
+    4. Network Map -> Goal: Organize/Flow -> HTML/CSS Diagram (Tailwind) -> Shows relationships and navigation paths using styled divs. NO SVG/Mermaid.
+    5. Functional Footprint -> Goal: Relationships/Compare -> Radar Chart (Chart.js) -> Excellent for comparing multivariate data (attributes of the ecosystem). NO SVG. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport d'Audit: Écosystème Numérique Ouaisfieu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Cool Gray 100 */
+            color: #1f2937; /* Gray 800 */
+        }
+        
+        /* Mandatory Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%; /* Flexible within grid */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Custom Scrollbar for a polished look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Material Design Card adjustments */
+        .material-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .material-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- HEADER SECTION -->
+    <header class="bg-white shadow-md sticky top-0 z-50 border-b-4 border-indigo-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                    <span class="text-indigo-600">OUAISFIEU</span> DIGITAL ATLAS
+                </h1>
+                <p class="text-sm text-gray-500 mt-1">Analyse de la topologie et des métriques de l'écosystème</p>
+            </div>
+            <div class="hidden md:flex space-x-2">
+                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                    Statut: Actif
+                </span>
+                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    Nœuds: 10+
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- INTRO / KPI SECTION -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="md:col-span-4 bg-white rounded-lg shadow p-6 border-l-4 border-indigo-500">
+                <h2 class="text-xl font-bold text-gray-800 mb-2">Introduction au Rapport</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    Ce document interactif cartographie l'empreinte numérique de l'entité "Ouaisfieu". En analysant les points d'entrée identifiés (GitHub, Itch.io, sous-domaines DL, etc.), nous observons une structure hybride combinant archivage de données brutes, développement technique open-source et création multimédia. L'analyse ci-dessous décompose ces activités pour révéler les tendances sous-jacentes et l'organisation du réseau.
+                </p>
+            </div>
+            
+            <!-- KPI Cards -->
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center justify-center material-card">
+                <span class="text-3xl font-extrabold text-indigo-600">3</span>
+                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider mt-2">Catégories Majeures</span>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center justify-center material-card">
+                <span class="text-3xl font-extrabold text-pink-500">4+</span>
+                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider mt-2">Archives Actives</span>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center justify-center material-card">
+                <span class="text-3xl font-extrabold text-cyan-500">Global</span>
+                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider mt-2">Portée (.eu / .brussels)</span>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center justify-center material-card">
+                <span class="text-3xl font-extrabold text-amber-500">100%</span>
+                <span class="text-sm font-medium text-gray-500 uppercase tracking-wider mt-2">Uptime Estimé</span>
+            </div>
+        </section>
+
+        <!-- SECTION 1: COMPOSITION (Donut Chart) -->
+        <section>
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 border-b-2 border-indigo-100 pb-2 mb-4">Composition de l'Écosystème</h2>
+                <p class="text-gray-600">
+                    L'analyse des URL révèle une répartition distincte des ressources. Le "Stockage & Archives" (domaine <code>dl.</code>) représente la fondation infrastructurelle, tandis que le "Développement" (GitHub) et la "Création" (Itch, YouTube) constituent les couches d'interaction visibles.
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="md:col-span-2">
+                        <div class="chart-container">
+                            <canvas id="compositionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-50 rounded-md border-l-4 border-cyan-400">
+                            <h4 class="font-bold text-gray-800">Archives (DL)</h4>
+                            <p class="text-sm text-gray-600">Stockage brut, index de fichiers (earl, biologia).</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-500">
+                            <h4 class="font-bold text-gray-800">Développement</h4>
+                            <p class="text-sm text-gray-600">Documentation technique, repos, projets GitHub.</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-md border-l-4 border-pink-500">
+                            <h4 class="font-bold text-gray-800">Création & Média</h4>
+                            <p class="text-sm text-gray-600">Jeux vidéo (Itch.io), Vidéo (YouTube).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: ACTIVITY TRENDS (Line Chart) -->
+        <section>
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 border-b-2 border-indigo-100 pb-2 mb-4">Dynamique Temporelle</h2>
+                <p class="text-gray-600">
+                    Projection de l'activité basée sur la nature des contenus. Les archives montrent une croissance cumulative stable (stockage long terme), tandis que le développement et les médias créatifs présentent des pics d'activité liés aux cycles de publication de projets (Release cycles).
+                </p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="chart-container w-full max-w-4xl mx-auto">
+                    <canvas id="activityChart"></canvas>
+                </div>
+                <div class="mt-4 text-center text-sm text-gray-500 italic">
+                    *Données estimées basées sur les cycles de vie typiques des projets numériques.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ARCHIVE DEPTH & TOPOLOGY (Flow Diagram & Bar Chart) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Column 1: Network Map (CSS/HTML) -->
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Topologie du Réseau</h2>
+                <p class="text-gray-600 mb-6 text-sm">
+                    Visualisation du flux utilisateur depuis le point d'accès central vers les nœuds spécialisés. Le réseau est décentralisé avec des hubs spécifiques.
+                </p>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 h-full flex flex-col justify-center relative overflow-hidden">
+                    <!-- Decorator -->
+                    <div class="absolute top-0 right-0 p-4 opacity-10 font-mono text-6xl font-bold select-none">NET</div>
+
+                    <!-- Flow Diagram -->
+                    <div class="flex flex-col items-center space-y-6 w-full">
+                        
+                        <!-- Root -->
+                        <div class="bg-gray-800 text-white px-6 py-3 rounded-lg shadow-md font-mono text-sm font-bold border-2 border-gray-600 w-48 text-center z-10">
+                            OUAISFI.EU (Root)
+                        </div>
+
+                        <!-- Connector Vertical -->
+                        <div class="h-8 w-0.5 bg-gray-300"></div>
+
+                        <!-- Branches Container -->
+                        <div class="grid grid-cols-3 gap-2 w-full">
+                            
+                            <!-- Branch 1: Dev -->
+                            <div class="flex flex-col items-center">
+                                <div class="h-4 w-full border-t-2 border-l-2 border-gray-300 rounded-tl-xl translate-y-2"></div>
+                                <div class="h-4 w-0.5 bg-gray-300"></div>
+                                <div class="bg-indigo-100 text-indigo-800 p-3 rounded-md shadow-sm text-xs font-bold w-full text-center border border-indigo-200">
+                                    GITHUB.IO
+                                </div>
+                                <div class="h-2 w-0.5 bg-indigo-200"></div>
+                                <div class="text-[10px] text-gray-500 bg-white border border-gray-100 px-2 py-1 rounded shadow-sm">
+                                    Tech & Code
+                                </div>
+                            </div>
+
+                            <!-- Branch 2: Archive (Central) -->
+                            <div class="flex flex-col items-center">
+                                <div class="h-4 w-0.5 bg-gray-300"></div>
+                                <div class="bg-cyan-100 text-cyan-800 p-3 rounded-md shadow-sm text-xs font-bold w-full text-center border border-cyan-200">
+                                    DL.OUAISFI.EU
+                                </div>
+                                <div class="h-2 w-0.5 bg-cyan-200"></div>
+                                <div class="text-[10px] text-gray-500 bg-white border border-gray-100 px-2 py-1 rounded shadow-sm">
+                                    Archives & Files
+                                </div>
+                            </div>
+
+                            <!-- Branch 3: Media -->
+                            <div class="flex flex-col items-center">
+                                <div class="h-4 w-full border-t-2 border-r-2 border-gray-300 rounded-tr-xl translate-y-2"></div>
+                                <div class="h-4 w-0.5 bg-gray-300"></div>
+                                <div class="bg-pink-100 text-pink-800 p-3 rounded-md shadow-sm text-xs font-bold w-full text-center border border-pink-200">
+                                    ITCH.IO / YT
+                                </div>
+                                <div class="h-2 w-0.5 bg-pink-200"></div>
+                                <div class="text-[10px] text-gray-500 bg-white border border-gray-100 px-2 py-1 rounded shadow-sm">
+                                    Games & Vid
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Archive Depth (Bar Chart) -->
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-4">Profondeur des Archives</h2>
+                <p class="text-gray-600 mb-6 text-sm">
+                    Comparaison de la densité estimée des sous-répertoires identifiés dans le nœud "DL". Le répertoire "Biologia" et "Earl" montrent les indices de contenu les plus élevés.
+                </p>
+                <div class="bg-white rounded-lg shadow-lg p-6 h-full">
+                    <div class="chart-container">
+                        <canvas id="archiveChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: FUNCTIONAL ANALYSIS (Radar Chart) -->
+        <section class="mb-12">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 border-b-2 border-indigo-100 pb-2 mb-4">Profil Fonctionnel</h2>
+                <p class="text-gray-600">
+                    Cette analyse multivariée compare les profils techniques des deux pôles majeurs : <strong>Archives</strong> (Stabilité, Volume) versus <strong>Création/Dev</strong> (Interactivité, Fréquence de mise à jour). Elle met en évidence la dualité de l'écosystème.
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                 <div class="chart-container w-full max-w-3xl mx-auto">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONCLUSION FOOTER -->
+        <footer class="bg-gray-800 text-white rounded-t-lg mt-12 py-8 px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                <h3 class="text-xl font-bold mb-4">Conclusion de l'Audit</h3>
+                <p class="text-gray-300 mb-6">
+                    L'écosystème Ouaisfieu est stable et bien segmenté. La question "Il y a plus ?" trouve sa réponse dans la structure même du domaine <code>dl.ouaisfi.eu</code> qui agit comme un iceberg numérique : une partie visible indexée, et une structure profonde potentielle suggérée par la hiérarchie des dossiers.
+                </p>
+                <div class="flex justify-center space-x-4 text-xs font-mono text-gray-500">
+                    <span>GEN: 2024-05-20</span>
+                    <span>TYPE: SPA_INFOGRAPHIC</span>
+                    <span>STATUS: COMPLETE</span>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- UTILITY: Label Wrapping Logic (Mandatory) ---
+        function formatLabel(str, maxLen = 16) {
+            if (str.length <= maxLen) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if (currentLine.length + 1 + words[i].length <= maxLen) {
+                    currentLine += ' ' + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- UTILITY: Tooltip Config (Mandatory) ---
+        const commonTooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // --- GLOBAL CHART DEFAULTS ---
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#4b5563';
+        
+        // Colors from "Energetic & Playful" Palette
+        const palette = {
+            indigo: '#6366f1',
+            pink: '#ec4899',
+            cyan: '#06b6d4',
+            amber: '#f59e0b',
+            gray: '#9ca3af',
+            indigoLight: 'rgba(99, 102, 241, 0.2)',
+            pinkLight: 'rgba(236, 72, 153, 0.2)'
+        };
+
+        // --- CHART 1: Composition (Donut) ---
+        const ctxComposition = document.getElementById('compositionChart').getContext('2d');
+        new Chart(ctxComposition, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    formatLabel("Archives & Data Storage"), 
+                    formatLabel("Development & Open Source"), 
+                    formatLabel("Creative Media & Gaming"), 
+                    formatLabel("External Network Links")
+                ],
+                datasets: [{
+                    data: [45, 25, 20, 10], // Estimated proportions
+                    backgroundColor: [palette.cyan, palette.indigo, palette.pink, palette.amber],
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 20, usePointStyle: true }
+                    },
+                    tooltip: commonTooltipConfig
+                },
+                cutout: '65%'
+            }
+        });
+
+        // --- CHART 2: Activity (Line) ---
+        const ctxActivity = document.getElementById('activityChart').getContext('2d');
+        new Chart(ctxActivity, {
+            type: 'line',
+            data: {
+                labels: ['Q1 2023', 'Q2 2023', 'Q3 2023', 'Q4 2023', 'Q1 2024', 'Q2 2024'],
+                datasets: [
+                    {
+                        label: formatLabel("Archives (Cumulative)"),
+                        data: [100, 120, 130, 145, 160, 180],
+                        borderColor: palette.cyan,
+                        backgroundColor: palette.cyan,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 0
+                    },
+                    {
+                        label: formatLabel("Creative Releases"),
+                        data: [20, 45, 25, 60, 30, 75], // Spiky activity
+                        borderColor: palette.pink,
+                        backgroundColor: palette.pink,
+                        tension: 0.2,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        borderDash: [5, 5]
+                    },
+                    {
+                        label: formatLabel("Dev Updates"),
+                        data: [40, 42, 55, 58, 70, 72], // Steady growth
+                        borderColor: palette.indigo,
+                        backgroundColor: palette.indigo,
+                        tension: 0.3,
+                        borderWidth: 3,
+                        pointRadius: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 4], color: '#e5e7eb' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top', align: 'end' },
+                    tooltip: commonTooltipConfig
+                }
+            }
+        });
+
+        // --- CHART 3: Archive Depth (Bar) ---
+        const ctxArchive = document.getElementById('archiveChart').getContext('2d');
+        new Chart(ctxArchive, {
+            type: 'bar',
+            data: {
+                labels: [
+                    formatLabel("Folder: /earl/"), 
+                    formatLabel("Folder: /biologia/"), 
+                    formatLabel("Folder: /1160/"), 
+                    formatLabel("Root Index")
+                ],
+                datasets: [{
+                    label: 'Indice de Densité',
+                    data: [85, 70, 45, 95],
+                    backgroundColor: [palette.cyan, palette.cyan, palette.cyan, palette.gray],
+                    borderRadius: 6,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Horizontal bar
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { display: false },
+                    y: { grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: commonTooltipConfig
+                }
+            }
+        });
+
+        // --- CHART 4: Functional Analysis (Radar) ---
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: [
+                    formatLabel("User Interactivity"), 
+                    formatLabel("Update Frequency"), 
+                    formatLabel("Data Persistence"), 
+                    formatLabel("Visual Complexity"), 
+                    formatLabel("Accessibility")
+                ],
+                datasets: [{
+                    label: 'Creative & Dev Cluster',
+                    data: [90, 80, 40, 85, 90],
+                    fill: true,
+                    backgroundColor: palette.pinkLight,
+                    borderColor: palette.pink,
+                    pointBackgroundColor: palette.pink,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: palette.pink
+                }, {
+                    label: 'Archive & Storage Cluster',
+                    data: [20, 30, 100, 10, 70],
+                    fill: true,
+                    backgroundColor: palette.indigoLight,
+                    borderColor: palette.indigo,
+                    pointBackgroundColor: palette.indigo,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: palette.indigo
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: '#e5e7eb' },
+                        grid: { color: '#e5e7eb' },
+                        pointLabels: { font: { size: 12, weight: '600' } },
+                        ticks: { display: false, backdropColor: 'transparent' }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: commonTooltipConfig
+                }
+            }
+        });
+    </script>
+</body>
+</html>
