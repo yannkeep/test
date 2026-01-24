@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ePOP!up — Bienvenue</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0f0f12;
+  --bg-secondary:#18181d;
+  --bg-tertiary:#1e1e24;
+  --bg-hover:#26262e;
+  --bg-active:#2d2d38;
+  --border:#2a2a35;
+  --border-light:#3a3a48;
+  --text:#e4e4e7;
+  --text-secondary:#a1a1aa;
+  --text-muted:#71717a;
+  --accent:#8b5cf6;
+  --accent-light:#a78bfa;
+  --accent-dim:#6d28d9;
+  --green:#22c55e;
+  --green-light:#4ade80;
+  --cyan:#06b6d4;
+  --orange:#f59e0b;
+  --red:#ef4444;
+  --pink:#ec4899;
+  --online:#22c55e;
+  --away:#f59e0b;
+  --offline:#71717a;
+  --radius:8px;
+  --radius-lg:12px;
+  --font:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow:hidden;
+}
+
+/* ==================== ONBOARDING ==================== */
+.onboarding{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+}
+
+.onboarding-card{
+  width:100%;
+  max-width:480px;
+  background:var(--bg-secondary);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+}
+
+.onboarding-header{
+  padding:2rem 2rem 1.5rem;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+}
+
+.onboarding-logo{
+  font-size:2rem;
+  margin-bottom:0.5rem;
+}
+
+.onboarding-title{
+  font-size:1.5rem;
+  font-weight:700;
+  margin-bottom:0.35rem;
+}
+
+.onboarding-subtitle{
+  color:var(--text-secondary);
+  font-size:0.9rem;
+}
+
+.onboarding-body{
+  padding:1.5rem 2rem 2rem;
+}
+
+.onboarding-step{
+  display:none;
+}
+
+.onboarding-step.active{
+  display:block;
+  animation:fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.step-title{
+  font-size:1.1rem;
+  font-weight:600;
+  margin-bottom:0.5rem;
+}
+
+.step-desc{
+  color:var(--text-secondary);
+  font-size:0.85rem;
+  margin-bottom:1.5rem;
+  line-height:1.5;
+}
+
+.form-group{
+  margin-bottom:1.25rem;
+}
+
+.form-label{
+  display:block;
+  font-size:0.8rem;
+  font-weight:500;
+  color:var(--text-secondary);
+  margin-bottom:0.5rem;
+}
+
+.form-input{
+  width:100%;
+  padding:0.75rem 1rem;
+  background:var(--bg-tertiary);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  color:var(--text);
+  font-family:inherit;
+  font-size:0.95rem;
+  transition:all 0.2s;
+}
+
+.form-input:focus{
+  outline:none;
+  border-color:var(--accent);
+  background:var(--bg-hover);
+}
+
+.form-input::placeholder{
+  color:var(--text-muted);
+}
+
+/* Avatar Selection */
+.avatar-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:0.75rem;
+  margin-bottom:1rem;
+}
+
+.avatar-option{
+  aspect-ratio:1;
+  background:var(--bg-tertiary);
+  border:2px solid var(--border);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.5rem;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.avatar-option:hover{
+  border-color:var(--accent-light);
+  transform:scale(1.05);
+}
+
+.avatar-option.selected{
+  border-color:var(--accent);
+  background:rgba(139,92,246,0.15);
+  box-shadow:0 0 0 3px rgba(139,92,246,0.2);
+}
+
+/* Situation Cards */
+.situation-card{
+  background:var(--bg-tertiary);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1rem;
+  margin-bottom:0.75rem;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.situation-card:hover{
+  border-color:var(--accent-light);
+  background:var(--bg-hover);
+}
+
+.situation-card.selected{
+  border-color:var(--accent);
+  background:rgba(139,92,246,0.1);
+}
+
+.situation-emoji{
+  font-size:1.25rem;
+  margin-bottom:0.5rem;
+}
+
+.situation-text{
+  font-size:0.9rem;
+  line-height:1.4;
+}
+
+/* Progress dots */
+.progress-dots{
+  display:flex;
+  justify-content:center;
+  gap:0.5rem;
+  margin-bottom:1.5rem;
+}
+
+.progress-dot{
+  width:8px;
+  height:8px;
+  background:var(--border);
+  border-radius:50%;
+  transition:all 0.3s;
+}
+
+.progress-dot.active{
+  background:var(--accent);
+  width:24px;
+  border-radius:4px;
+}
+
+.progress-dot.done{
+  background:var(--green);
+}
+
+/* Buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+  padding:0.75rem 1.5rem;
+  font-family:inherit;
+  font-size:0.9rem;
+  font-weight:600;
+  border:none;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.btn-primary{
+  background:var(--accent);
+  color:white;
+  width:100%;
+}
+
+.btn-primary:hover{
+  background:var(--accent-light);
+}
+
+.btn-primary:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+.btn-secondary{
+  background:var(--bg-tertiary);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+.btn-secondary:hover{
+  background:var(--bg-hover);
+  border-color:var(--border-light);
+}
+
+.btn-row{
+  display:flex;
+  gap:0.75rem;
+}
+
+.btn-row .btn{
+  flex:1;
+}
+
+/* ==================== MAIN APP ==================== */
+.app{
+  display:none;
+  height:100vh;
+}
+
+.app.active{
+  display:flex;
+}
+
+/* Sidebar */
+.sidebar{
+  width:260px;
+  background:var(--bg-secondary);
+  border-right:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+}
+
+.sidebar-header{
+  padding:1rem;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+
+.company-logo{
+  width:36px;
+  height:36px;
+  background:linear-gradient(135deg,var(--accent),var(--pink));
+  border-radius:var(--radius);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:0.9rem;
+}
+
+.company-name{
+  font-weight:600;
+  font-size:0.95rem;
+}
+
+.company-plan{
+  font-size:0.7rem;
+  color:var(--text-muted);
+}
+
+.sidebar-section{
+  padding:0.75rem 0.5rem;
+}
+
+.sidebar-title{
+  font-size:0.7rem;
+  font-weight:600;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  padding:0.5rem 0.75rem;
+}
+
+.channel-item{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  padding:0.5rem 0.75rem;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all 0.15s;
+  font-size:0.9rem;
+}
+
+.channel-item:hover{
+  background:var(--bg-hover);
+}
+
+.channel-item.active{
+  background:var(--accent);
+  color:white;
+}
+
+.channel-icon{
+  font-size:1rem;
+  opacity:0.7;
+}
+
+.channel-item.active .channel-icon{
+  opacity:1;
+}
+
+.channel-name{
+  flex:1;
+}
+
+.channel-badge{
+  padding:0.1rem 0.4rem;
+  background:var(--red);
+  border-radius:10px;
+  font-size:0.65rem;
+  font-weight:600;
+  color:white;
+}
+
+.channel-item.active .channel-badge{
+  background:white;
+  color:var(--accent);
+}
+
+/* DM List */
+.dm-item{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  padding:0.5rem 0.75rem;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all 0.15s;
+  font-size:0.9rem;
+}
+
+.dm-item:hover{
+  background:var(--bg-hover);
+}
+
+.dm-item.active{
+  background:var(--bg-active);
+}
+
+.dm-avatar{
+  width:28px;
+  height:28px;
+  border-radius:var(--radius);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.85rem;
+  background:var(--bg-tertiary);
+  position:relative;
+}
+
+.dm-status{
+  position:absolute;
+  bottom:-2px;
+  right:-2px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  border:2px solid var(--bg-secondary);
+}
+
+.dm-status.online{background:var(--online)}
+.dm-status.away{background:var(--away)}
+.dm-status.offline{background:var(--offline)}
+
+.dm-name{flex:1}
+
+.dm-unread{
+  width:8px;
+  height:8px;
+  background:var(--accent);
+  border-radius:50%;
+}
+
+/* User Profile (bottom) */
+.user-profile{
+  margin-top:auto;
+  padding:0.75rem;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+
+.user-avatar{
+  width:36px;
+  height:36px;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  border-radius:var(--radius);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.1rem;
+}
+
+.user-info{flex:1}
+
+.user-name{
+  font-size:0.85rem;
+  font-weight:600;
+}
+
+.user-status{
+  font-size:0.7rem;
+  color:var(--green);
+}
+
+.user-settings{
+  width:28px;
+  height:28px;
+  background:none;
+  border:none;
+  color:var(--text-muted);
+  cursor:pointer;
+  border-radius:var(--radius);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.user-settings:hover{
+  background:var(--bg-hover);
+  color:var(--text);
+}
+
+/* Main Content */
+.main-content{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+/* Chat Header */
+.chat-header{
+  padding:1rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+}
+
+.chat-header-icon{
+  font-size:1.25rem;
+}
+
+.chat-header-info{flex:1}
+
+.chat-header-name{
+  font-weight:600;
+  font-size:1rem;
+}
+
+.chat-header-desc{
+  font-size:0.75rem;
+  color:var(--text-muted);
+}
+
+/* Messages */
+.messages-container{
+  flex:1;
+  overflow-y:auto;
+  padding:1rem;
+}
+
+.message-group{
+  margin-bottom:1.25rem;
+}
+
+.message{
+  display:flex;
+  gap:0.75rem;
+  padding:0.5rem 0;
+}
+
+.message-avatar{
+  width:36px;
+  height:36px;
+  border-radius:var(--radius);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1rem;
+  background:var(--bg-tertiary);
+  flex-shrink:0;
+}
+
+.message-content{
+  flex:1;
+  min-width:0;
+}
+
+.message-header{
+  display:flex;
+  align-items:baseline;
+  gap:0.5rem;
+  margin-bottom:0.25rem;
+}
+
+.message-author{
+  font-weight:600;
+  font-size:0.9rem;
+}
+
+.message-time{
+  font-size:0.7rem;
+  color:var(--text-muted);
+}
+
+.message-text{
+  font-size:0.9rem;
+  line-height:1.5;
+  color:var(--text-secondary);
+}
+
+.message-text p{
+  margin-bottom:0.5rem;
+}
+
+.message-text p:last-child{
+  margin-bottom:0;
+}
+
+/* Response options */
+.response-options{
+  margin-top:0.75rem;
+  display:flex;
+  flex-wrap:wrap;
+  gap:0.5rem;
+}
+
+.response-btn{
+  padding:0.5rem 0.85rem;
+  background:var(--bg-tertiary);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  color:var(--text);
+  font-family:inherit;
+  font-size:0.8rem;
+  cursor:pointer;
+  transition:all 0.2s;
+  max-width:100%;
+}
+
+.response-btn:hover{
+  border-color:var(--accent);
+  background:var(--bg-hover);
+}
+
+.response-btn.selected{
+  border-color:var(--accent);
+  background:rgba(139,92,246,0.15);
+  color:var(--accent-light);
+}
+
+/* Typing indicator */
+.typing-indicator{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.5rem 0;
+  color:var(--text-muted);
+  font-size:0.8rem;
+}
+
+.typing-dots{
+  display:flex;
+  gap:3px;
+}
+
+.typing-dot{
+  width:6px;
+  height:6px;
+  background:var(--text-muted);
+  border-radius:50%;
+  animation:typingBounce 1.4s infinite;
+}
+
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+
+@keyframes typingBounce{
+  0%,60%,100%{transform:translateY(0)}
+  30%{transform:translateY(-4px)}
+}
+
+/* Input Area */
+.input-area{
+  padding:1rem;
+  border-top:1px solid var(--border);
+}
+
+.input-container{
+  display:flex;
+  align-items:flex-end;
+  gap:0.75rem;
+  padding:0.75rem;
+  background:var(--bg-tertiary);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+}
+
+.input-field{
+  flex:1;
+  background:none;
+  border:none;
+  color:var(--text);
+  font-family:inherit;
+  font-size:0.9rem;
+  resize:none;
+  max-height:120px;
+  line-height:1.4;
+}
+
+.input-field:focus{
+  outline:none;
+}
+
+.input-field::placeholder{
+  color:var(--text-muted);
+}
+
+.input-actions{
+  display:flex;
+  gap:0.25rem;
+}
+
+.input-btn{
+  width:32px;
+  height:32px;
+  background:none;
+  border:none;
+  color:var(--text-muted);
+  cursor:pointer;
+  border-radius:var(--radius);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.1rem;
+  transition:all 0.15s;
+}
+
+.input-btn:hover{
+  background:var(--bg-hover);
+  color:var(--text);
+}
+
+.input-btn.send{
+  background:var(--accent);
+  color:white;
+}
+
+.input-btn.send:hover{
+  background:var(--accent-light);
+}
+
+/* Right Panel - Profile Insights */
+.right-panel{
+  width:280px;
+  background:var(--bg-secondary);
+  border-left:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.right-panel-header{
+  padding:1rem;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.right-panel-title{
+  font-size:0.85rem;
+  font-weight:600;
+}
+
+.right-panel-toggle{
+  background:none;
+  border:none;
+  color:var(--text-muted);
+  cursor:pointer;
+  font-size:1rem;
+}
+
+.right-panel-content{
+  flex:1;
+  overflow-y:auto;
+  padding:1rem;
+}
+
+.profile-card{
+  text-align:center;
+  margin-bottom:1.5rem;
+}
+
+.profile-avatar-large{
+  width:80px;
+  height:80px;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  border-radius:var(--radius-lg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2.5rem;
+  margin:0 auto 0.75rem;
+}
+
+.profile-name-large{
+  font-size:1.1rem;
+  font-weight:600;
+  margin-bottom:0.25rem;
+}
+
+.profile-role{
+  font-size:0.8rem;
+  color:var(--text-secondary);
+}
+
+/* Trait bars */
+.traits-section{
+  margin-bottom:1.5rem;
+}
+
+.traits-title{
+  font-size:0.7rem;
+  font-weight:600;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+  margin-bottom:0.75rem;
+}
+
+.trait-item{
+  margin-bottom:0.85rem;
+}
+
+.trait-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:0.35rem;
+}
+
+.trait-name{
+  font-size:0.8rem;
+  color:var(--text-secondary);
+}
+
+.trait-value{
+  font-size:0.75rem;
+  font-family:var(--mono);
+  color:var(--accent-light);
+}
+
+.trait-bar{
+  height:4px;
+  background:var(--bg-tertiary);
+  border-radius:2px;
+  overflow:hidden;
+}
+
+.trait-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),var(--cyan));
+  border-radius:2px;
+  transition:width 0.5s ease;
+}
+
+/* Insights */
+.insights-section{
+  margin-bottom:1.5rem;
+}
+
+.insight-item{
+  display:flex;
+  align-items:flex-start;
+  gap:0.6rem;
+  padding:0.6rem;
+  background:var(--bg-tertiary);
+  border-radius:var(--radius);
+  margin-bottom:0.5rem;
+  font-size:0.8rem;
+}
+
+.insight-icon{
+  font-size:1rem;
+  flex-shrink:0;
+}
+
+.insight-text{
+  color:var(--text-secondary);
+  line-height:1.4;
+}
+
+/* Stats */
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:0.75rem;
+}
+
+.stat-box{
+  background:var(--bg-tertiary);
+  border-radius:var(--radius);
+  padding:0.75rem;
+  text-align:center;
+}
+
+.stat-value{
+  font-size:1.25rem;
+  font-weight:700;
+  color:var(--accent-light);
+  font-family:var(--mono);
+}
+
+.stat-label{
+  font-size:0.65rem;
+  color:var(--text-muted);
+  margin-top:0.15rem;
+}
+
+/* Hidden class */
+.hidden{display:none!important}
+
+/* Responsive */
+@media(max-width:1200px){
+  .right-panel{display:none}
+}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .app{flex-direction:column}
+}
+
+/* Notifications toast */
+.toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%) translateY(100px);
+  padding:0.75rem 1.25rem;
+  background:var(--bg-secondary);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  font-size:0.85rem;
+  opacity:0;
+  transition:all 0.3s ease;
+  z-index:1000;
+}
+
+.toast.show{
+  transform:translateX(-50%) translateY(0);
+  opacity:1;
+}
+
+.toast.success{border-color:var(--green)}
+.toast.info{border-color:var(--accent)}
+</style>
+</head>
+<body>
+
+<!-- ONBOARDING -->
+<div class="onboarding" id="onboarding">
+  <div class="onboarding-card">
+    <div class="onboarding-header">
+      <div class="onboarding-logo">🚀</div>
+      <div class="onboarding-title">Bienvenue chez Horizon</div>
+      <div class="onboarding-subtitle">C'est votre premier jour. Configurons votre profil.</div>
+    </div>
+    
+    <div class="onboarding-body">
+      <div class="progress-dots" id="progressDots">
+        <div class="progress-dot active"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+        <div class="progress-dot"></div>
+      </div>
+
+      <!-- Step 1: Name -->
+      <div class="onboarding-step active" data-step="1">
+        <div class="step-title">Comment vous appelez-vous ?</div>
+        <div class="step-desc">C'est le nom que verront vos collègues.</div>
+        
+        <div class="form-group">
+          <label class="form-label">Prénom</label>
+          <input type="text" class="form-input" id="inputFirstName" placeholder="Ex: Marie">
+        </div>
+        
+        <button class="btn btn-primary" onclick="nextStep()" id="btnStep1">Continuer</button>
+      </div>
+
+      <!-- Step 2: Avatar -->
+      <div class="onboarding-step" data-step="2">
+        <div class="step-title">Choisissez votre avatar</div>
+        <div class="step-desc">Ça aide les gens à vous reconnaître.</div>
+        
+        <div class="avatar-grid" id="avatarGrid">
+          <div class="avatar-option" data-avatar="😊">😊</div>
+          <div class="avatar-option" data-avatar="🙂">🙂</div>
+          <div class="avatar-option" data-avatar="😎">😎</div>
+          <div class="avatar-option" data-avatar="🤓">🤓</div>
+          <div class="avatar-option" data-avatar="🧑‍💻">🧑‍💻</div>
+          <div class="avatar-option" data-avatar="👩‍💼">👩‍💼</div>
+          <div class="avatar-option" data-avatar="🦊">🦊</div>
+          <div class="avatar-option" data-avatar="🐱">🐱</div>
+          <div class="avatar-option" data-avatar="🌸">🌸</div>
+          <div class="avatar-option" data-avatar="⭐">⭐</div>
+          <div class="avatar-option" data-avatar="🌈">🌈</div>
+          <div class="avatar-option" data-avatar="🎯">🎯</div>
+        </div>
+        
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep()">Retour</button>
+          <button class="btn btn-primary" onclick="nextStep()" id="btnStep2" disabled>Continuer</button>
+        </div>
+      </div>
+
+      <!-- Step 3: First Situation (disguised profiling) -->
+      <div class="onboarding-step" data-step="3">
+        <div class="step-title">Petit détail...</div>
+        <div class="step-desc">Votre prédécesseur a laissé un bureau en désordre. Que faites-vous ?</div>
+        
+        <div class="situation-card" data-value="proactive" onclick="selectSituation(this)">
+          <div class="situation-emoji">🧹</div>
+          <div class="situation-text">Je range tout de suite, je ne supporte pas le désordre</div>
+        </div>
+        
+        <div class="situation-card" data-value="pragmatic" onclick="selectSituation(this)">
+          <div class="situation-emoji">📦</div>
+          <div class="situation-text">Je pousse les trucs dans un coin, je verrai plus tard</div>
+        </div>
+        
+        <div class="situation-card" data-value="social" onclick="selectSituation(this)">
+          <div class="situation-emoji">💬</div>
+          <div class="situation-text">Je demande à un collègue s'il sait ce qu'il faut garder</div>
+        </div>
+        
+        <div class="situation-card" data-value="analytical" onclick="selectSituation(this)">
+          <div class="situation-emoji">🔍</div>
+          <div class="situation-text">J'examine chaque papier pour comprendre ce qui est important</div>
+        </div>
+        
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep()">Retour</button>
+          <button class="btn btn-primary" onclick="nextStep()" id="btnStep3" disabled>Continuer</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Second Situation -->
+      <div class="onboarding-step" data-step="4">
+        <div class="step-title">Oh, un message...</div>
+        <div class="step-desc">Vous recevez un message d'un collègue que vous ne connaissez pas : "Salut ! T'es nouveau ? On déjeune ensemble ?"</div>
+        
+        <div class="situation-card" data-value="extrovert" onclick="selectSituation(this)">
+          <div class="situation-emoji">🎉</div>
+          <div class="situation-text">Super ! J'adore rencontrer des gens, j'accepte direct</div>
+        </div>
+        
+        <div class="situation-card" data-value="cautious" onclick="selectSituation(this)">
+          <div class="situation-emoji">🤔</div>
+          <div class="situation-text">C'est gentil, mais je préfère d'abord m'installer tranquillement</div>
+        </div>
+        
+        <div class="situation-card" data-value="balanced" onclick="selectSituation(this)">
+          <div class="situation-emoji">😊</div>
+          <div class="situation-text">Pourquoi pas, mais pas aujourd'hui, je dois encore trouver mes marques</div>
+        </div>
+        
+        <div class="situation-card" data-value="strategic" onclick="selectSituation(this)">
+          <div class="situation-emoji">📋</div>
+          <div class="situation-text">Je regarde son profil d'abord pour savoir qui c'est</div>
+        </div>
+        
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="prevStep()">Retour</button>
+          <button class="btn btn-primary" onclick="startApp()" id="btnStep4" disabled>Entrer dans Horizon</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="company-logo">H</div>
+      <div>
+        <div class="company-name">Horizon</div>
+        <div class="company-plan">workspace</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Canaux</div>
+      <div class="channel-item active" data-channel="general">
+        <span class="channel-icon">#</span>
+        <span class="channel-name">général</span>
+        <span class="channel-badge" id="badgeGeneral">5</span>
+      </div>
+      <div class="channel-item" data-channel="random">
+        <span class="channel-icon">#</span>
+        <span class="channel-name">random</span>
+      </div>
+      <div class="channel-item" data-channel="aide">
+        <span class="channel-icon">#</span>
+        <span class="channel-name">aide</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Messages directs</div>
+      <div id="dmList">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+
+    <div class="user-profile">
+      <div class="user-avatar" id="sidebarAvatar">😊</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebarName">Vous</div>
+        <div class="user-status">● En ligne</div>
+      </div>
+      <button class="user-settings">⚙️</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="chat-header">
+      <span class="chat-header-icon">#</span>
+      <div class="chat-header-info">
+        <div class="chat-header-name" id="chatName">général</div>
+        <div class="chat-header-desc" id="chatDesc">Discussions de l'équipe</div>
+      </div>
+    </div>
+
+    <div class="messages-container" id="messagesContainer">
+      <!-- Messages populated dynamically -->
+    </div>
+
+    <div class="input-area">
+      <div class="input-container">
+        <textarea class="input-field" id="messageInput" placeholder="Écrire un message..." rows="1"></textarea>
+        <div class="input-actions">
+          <button class="input-btn">😊</button>
+          <button class="input-btn">📎</button>
+          <button class="input-btn send" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="right-panel-header">
+      <span class="right-panel-title">Votre profil</span>
+      <button class="right-panel-toggle">−</button>
+    </div>
+    
+    <div class="right-panel-content">
+      <div class="profile-card">
+        <div class="profile-avatar-large" id="profileAvatar">😊</div>
+        <div class="profile-name-large" id="profileName">Vous</div>
+        <div class="profile-role">Nouveau·elle arrivant·e</div>
+      </div>
+
+      <div class="traits-section">
+        <div class="traits-title">Traits émergents</div>
+        
+        <div class="trait-item">
+          <div class="trait-header">
+            <span class="trait-name">Ouverture</span>
+            <span class="trait-value" id="traitO">--</span>
+          </div>
+          <div class="trait-bar"><div class="trait-fill" id="barO" style="width:0%"></div></div>
+        </div>
+        
+        <div class="trait-item">
+          <div class="trait-header">
+            <span class="trait-name">Conscience</span>
+            <span class="trait-value" id="traitC">--</span>
+          </div>
+          <div class="trait-bar"><div class="trait-fill" id="barC" style="width:0%"></div></div>
+        </div>
+        
+        <div class="trait-item">
+          <div class="trait-header">
+            <span class="trait-name">Extraversion</span>
+            <span class="trait-value" id="traitE">--</span>
+          </div>
+          <div class="trait-bar"><div class="trait-fill" id="barE" style="width:0%"></div></div>
+        </div>
+        
+        <div class="trait-item">
+          <div class="trait-header">
+            <span class="trait-name">Agréabilité</span>
+            <span class="trait-value" id="traitA">--</span>
+          </div>
+          <div class="trait-bar"><div class="trait-fill" id="barA" style="width:0%"></div></div>
+        </div>
+        
+        <div class="trait-item">
+          <div class="trait-header">
+            <span class="trait-name">Stabilité</span>
+            <span class="trait-value" id="traitN">--</span>
+          </div>
+          <div class="trait-bar"><div class="trait-fill" id="barN" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="insights-section">
+        <div class="traits-title">Observations</div>
+        <div id="insightsList">
+          <div class="insight-item">
+            <span class="insight-icon">🔮</span>
+            <span class="insight-text">Interagissez pour révéler votre profil...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-value" id="statInteractions">0</div>
+          <div class="stat-label">Interactions</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="statCivix">0</div>
+          <div class="stat-label">Civix</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================
+// STATE
+// ============================================
+const state = {
+  step: 1,
+  user: {
+    name: '',
+    avatar: '',
+    situations: []
+  },
+  profile: {
+    O: 50, C: 50, E: 50, A: 50, N: 50,
+    empathy: 50,
+    pragmatism: 50,
+    humor: 50,
+    assertiveness: 50
+  },
+  interactions: 0,
+  civix: 0,
+  currentChannel: 'general',
+  messageQueue: [],
+  messageIndex: 0,
+  insights: [],
+  respondedTo: new Set()
+};
+
+// ============================================
+// COLLEAGUES
+// ============================================
+const colleagues = [
+  { id: 'sarah', name: 'Sarah', avatar: '👩‍💼', status: 'online', role: 'RH' },
+  { id: 'thomas', name: 'Thomas', avatar: '🧑‍💻', status: 'online', role: 'Dev' },
+  { id: 'julie', name: 'Julie', avatar: '😊', status: 'away', role: 'Marketing' },
+  { id: 'marc', name: 'Marc', avatar: '🤓', status: 'online', role: 'Comptabilité' },
+  { id: 'emma', name: 'Emma', avatar: '🌸', status: 'online', role: 'Design' },
+  { id: 'lucas', name: 'Lucas', avatar: '😎', status: 'offline', role: 'Commercial' }
+];
+
+// ============================================
+// MESSAGES - From trivial to existential
+// ============================================
+const messageScenarios = [
+  // WELCOME (neutral)
+  {
+    id: 'welcome',
+    author: 'sarah',
+    text: 'Hey ! Bienvenue dans l\'équipe @{user} ! 🎉 N\'hésite pas si tu as des questions.',
+    responses: [
+      { text: 'Merci beaucoup ! Super content·e d\'être là 😊', traits: { E: 3, A: 2 } },
+      { text: 'Merci. J\'ai hâte de commencer.', traits: { C: 2 } },
+      { text: 'Merci ! C\'est quoi le code wifi ? 😅', traits: { E: 2, humor: 3 } },
+      { text: '👍', traits: { E: -2 } }
+    ],
+    delay: 2000
+  },
+  
+  // TRIVIAL - Coffee
+  {
+    id: 'coffee',
+    author: 'thomas',
+    text: 'Quelqu\'un a pris MA tasse "World\'s Best Developer" ??? C\'est pas drôle, je l\'avais depuis 3 ans 😤',
+    responses: [
+      { text: 'Oh non ! Tu as regardé dans le lave-vaisselle ?', traits: { A: 3, pragmatism: 2 } },
+      { text: 'Peut-être qu\'elle s\'est auto-proclamée "World\'s Best" et elle est partie 😂', traits: { humor: 4, E: 2 } },
+      { text: 'C\'est juste une tasse...', traits: { A: -2, pragmatism: 3 } },
+      { text: 'J\'enquête ! Description du suspect ?', traits: { E: 3, humor: 2 } }
+    ],
+    delay: 15000
+  },
+
+  // DRAMA - Office gossip
+  {
+    id: 'gossip',
+    author: 'julie',
+    text: 'Vous avez vu que Marc est arrivé en retard ENCORE ? Et il a l\'air bizarre... Vous croyez qu\'il a des problèmes ?',
+    responses: [
+      { text: 'C\'est pas nos affaires, on devrait pas en parler derrière son dos', traits: { A: 2, assertiveness: 3, ethics: 3 } },
+      { text: 'Peut-être qu\'on devrait lui demander directement s\'il va bien ?', traits: { A: 4, E: 2, empathy: 3 } },
+      { text: 'Hmm oui j\'ai remarqué aussi... Tu sais quelque chose ?', traits: { E: 2, A: -1 } },
+      { text: 'Il a peut-être juste mal dormi, faut pas dramatiser', traits: { pragmatism: 3, N: 2 } }
+    ],
+    delay: 35000
+  },
+
+  // HELP REQUEST - Technical
+  {
+    id: 'help_tech',
+    author: 'marc',
+    text: 'Est-ce que quelqu\'un peut m\'aider ? Excel plante dès que j\'ouvre mon fichier de 50 000 lignes et j\'ai une deadline dans 2h 😰',
+    responses: [
+      { text: 'J\'arrive ! On va regarder ça ensemble', traits: { A: 4, E: 2, empathy: 2 } },
+      { text: 'Essaie d\'ouvrir en mode sans échec (maintiens Ctrl en ouvrant)', traits: { C: 3, pragmatism: 3 } },
+      { text: '50 000 lignes dans Excel... c\'est peut-être le moment de passer à autre chose 😬', traits: { O: 2, humor: 2 } },
+      { text: 'Désolé, je peux pas t\'aider sur Excel', traits: { A: -1 } }
+    ],
+    delay: 55000
+  },
+
+  // EXISTENTIAL - Work meaning
+  {
+    id: 'meaning',
+    author: 'emma',
+    text: 'Des fois je me demande... Est-ce que ce qu\'on fait a vraiment un sens ? Genre, on passe 8h par jour sur des trucs qui seront oubliés dans 6 mois...',
+    responses: [
+      { text: 'Je comprends ce que tu ressens. C\'est normal de se poser ces questions.', traits: { A: 3, empathy: 4, O: 2 } },
+      { text: 'Le sens, c\'est toi qui le crées. C\'est les relations, les petites victoires...', traits: { O: 4, N: 2, wisdom: 3 } },
+      { text: 'T\'as besoin d\'une pause café ? 😊', traits: { A: 2, E: 2, empathy: 1 } },
+      { text: 'Bienvenue dans le monde du travail ! 😅 Mais oui, c\'est une vraie question...', traits: { humor: 2, O: 2 } }
+    ],
+    delay: 90000
+  },
+
+  // CONFLICT - Disagreement
+  {
+    id: 'conflict',
+    author: 'thomas',
+    text: '@julie ton brief marketing est incompréhensible. Tu peux pas juste écrire clairement ce que tu veux au lieu de nous faire perdre du temps ?',
+    responses: [
+      { text: 'Peut-être qu\'on pourrait organiser un call pour clarifier ensemble ?', traits: { A: 3, assertiveness: 2, empathy: 2 } },
+      { text: 'Thomas, tu pourrais formuler ça plus gentiment quand même...', traits: { A: 2, assertiveness: 3, ethics: 2 } },
+      { text: '🍿', traits: { E: 1, humor: 3, A: -2 } },
+      { text: '*reste silencieux et observe*', traits: { E: -2, N: 2 } }
+    ],
+    delay: 120000
+  },
+
+  // PERSONAL - Weekend plans
+  {
+    id: 'weekend',
+    author: 'lucas',
+    text: 'Alors, qui fait quoi ce weekend ? Moi je vais enfin me poser et ne RIEN faire. Mon canapé me manque 😴',
+    responses: [
+      { text: 'Pareil ! Netflix et chill 🛋️', traits: { E: -1, A: 2 } },
+      { text: 'Moi je fais une rando avec des potes, vous voulez venir ?', traits: { E: 4, O: 2, A: 2 } },
+      { text: 'J\'ai un projet perso à finir, pas de repos pour moi 😤', traits: { C: 3, E: -1 } },
+      { text: 'Profite bien ! Le repos c\'est important', traits: { A: 2, empathy: 2 } }
+    ],
+    delay: 150000
+  },
+
+  // ETHICAL - Small dilemma
+  {
+    id: 'ethics',
+    author: 'sarah',
+    text: 'Question hypothétique : si vous trouvez une erreur qui avantage un client mais désavantage l\'entreprise... vous dites quelque chose ?',
+    responses: [
+      { text: 'Bien sûr, l\'honnêteté c\'est la base', traits: { C: 3, ethics: 4, assertiveness: 2 } },
+      { text: 'Ça dépend du montant et du client...', traits: { pragmatism: 3, ethics: -1 } },
+      { text: 'Question piège ! C\'est pour les entretiens annuels ? 😂', traits: { humor: 3, E: 2 } },
+      { text: 'Je signalerais l\'erreur mais je laisserais la décision à quelqu\'un d\'autre', traits: { C: 2, assertiveness: -1 } }
+    ],
+    delay: 180000
+  },
+
+  // FRUSTRATION - Tech problems
+  {
+    id: 'frustration',
+    author: 'emma',
+    text: 'AAAAARGH la visio a encore planté en plein milieu de ma présentation client !!! 😤😤😤 J\'EN PEUX PLUS de ces outils pourris !!!',
+    responses: [
+      { text: 'Respire... ça arrive à tout le monde. Le client a compris j\'suis sûr', traits: { A: 3, empathy: 3, N: 2 } },
+      { text: 'Tu utilises quoi ? Y\'a des alternatives plus stables', traits: { C: 2, pragmatism: 3 } },
+      { text: 'La technologie : 1, Emma : 0 😅 Courage !', traits: { humor: 3, A: 1, empathy: 1 } },
+      { text: 'C\'est vraiment pénible... T\'as besoin d\'en parler ?', traits: { A: 4, empathy: 4, E: 2 } }
+    ],
+    delay: 220000
+  },
+
+  // SUPPORT - Personal issue hint
+  {
+    id: 'personal',
+    author: 'marc',
+    text: 'Désolé pour mon humeur ces derniers temps... C\'est compliqué à la maison en ce moment.',
+    responses: [
+      { text: 'Merci de partager ça. Si tu veux en parler, je suis là.', traits: { A: 4, empathy: 4, E: 2 } },
+      { text: 'T\'inquiète, on comprend. Prends soin de toi 💙', traits: { A: 3, empathy: 3 } },
+      { text: 'Si tu as besoin de flexibilité sur les horaires, hésite pas à demander aux RH', traits: { C: 2, pragmatism: 3, A: 2 } },
+      { text: 'Courage... Les moments difficiles finissent par passer', traits: { A: 2, N: 2, wisdom: 2 } }
+    ],
+    delay: 260000
+  },
+
+  // ABSURD - Random fun
+  {
+    id: 'absurd',
+    author: 'lucas',
+    text: 'Question vitale : si vous deviez survivre 1 semaine avec uniquement un aliment, ce serait quoi ?',
+    responses: [
+      { text: 'Pizza. Glucides, protéines, légumes (la tomate ça compte) 🍕', traits: { humor: 3, E: 2, O: 1 } },
+      { text: 'Pommes de terre, objectivement c\'est le plus nutritif', traits: { C: 2, pragmatism: 3 } },
+      { text: 'Je refuse de participer à cette dystopie alimentaire 😂', traits: { humor: 4, O: 3 } },
+      { text: 'C\'est pour un sondage professionnel ? 🤔', traits: { C: 1, humor: 2 } }
+    ],
+    delay: 300000
+  },
+
+  // RECOGNITION - Praise
+  {
+    id: 'praise',
+    author: 'sarah',
+    text: '@{user} au fait, j\'ai eu de super retours sur ton travail d\'intégration ! Tu t\'en sors vraiment bien pour un premier jour 👏',
+    responses: [
+      { text: 'Oh merci ! C\'est grâce à l\'accueil de l\'équipe surtout 😊', traits: { A: 3, E: 2, humility: 3 } },
+      { text: 'Merci ! J\'essaie de faire de mon mieux', traits: { C: 2 } },
+      { text: 'Enfin quelqu\'un qui reconnaît mon génie ! 😎 (je plaisante merci !)', traits: { humor: 3, E: 3 } },
+      { text: 'Merci, ça fait plaisir 🙏', traits: { A: 2 } }
+    ],
+    delay: 350000
+  }
+];
+
+// ============================================
+// INSIGHTS RULES
+// ============================================
+const insightRules = [
+  { condition: p => p.A > 70, text: 'Vous semblez naturellement bienveillant·e', icon: '💚' },
+  { condition: p => p.E > 70, text: 'Vous êtes à l\'aise dans les interactions', icon: '🌟' },
+  { condition: p => p.E < 35, text: 'Vous préférez observer avant de vous exprimer', icon: '👁️' },
+  { condition: p => p.humor > 70, text: 'L\'humour est votre langage naturel', icon: '😄' },
+  { condition: p => p.empathy > 70, text: 'Vous êtes sensible aux émotions des autres', icon: '💝' },
+  { condition: p => p.pragmatism > 70, text: 'Vous allez droit à l\'essentiel', icon: '🎯' },
+  { condition: p => p.C > 70, text: 'Vous aimez quand les choses sont bien faites', icon: '✨' },
+  { condition: p => p.O > 70, text: 'Vous aimez les idées et les perspectives nouvelles', icon: '🌈' },
+  { condition: p => p.assertiveness > 70, text: 'Vous n\'hésitez pas à dire ce que vous pensez', icon: '💪' },
+  { condition: p => p.N > 70, text: 'Vous gardez votre calme facilement', icon: '🧘' }
+];
+
+// ============================================
+// ONBOARDING
+// ============================================
+function nextStep() {
+  if (state.step === 1) {
+    const name = document.getElementById('inputFirstName').value.trim();
+    if (!name) { showToast('Entrez votre prénom'); return; }
+    state.user.name = name;
+  }
+  
+  state.step++;
+  updateStepUI();
+}
+
+function prevStep() {
+  state.step--;
+  updateStepUI();
+}
+
+function updateStepUI() {
+  document.querySelectorAll('.onboarding-step').forEach(el => el.classList.remove('active'));
+  document.querySelector(`[data-step="${state.step}"]`).classList.add('active');
+  
+  const dots = document.querySelectorAll('.progress-dot');
+  dots.forEach((dot, i) => {
+    dot.classList.remove('active', 'done');
+    if (i + 1 === state.step) dot.classList.add('active');
+    else if (i + 1 < state.step) dot.classList.add('done');
+  });
+}
+
+// Avatar selection
+document.querySelectorAll('.avatar-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    state.user.avatar = opt.dataset.avatar;
+    document.getElementById('btnStep2').disabled = false;
+  });
+});
+
+// Situation selection
+function selectSituation(el) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.situation-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  state.user.situations.push(el.dataset.value);
+  
+  // Update profile based on situation
+  const val = el.dataset.value;
+  if (val === 'proactive') { state.profile.C += 10; state.profile.assertiveness += 5; }
+  if (val === 'pragmatic') { state.profile.pragmatism += 10; state.profile.C -= 5; }
+  if (val === 'social') { state.profile.E += 10; state.profile.A += 5; }
+  if (val === 'analytical') { state.profile.O += 10; state.profile.C += 5; }
+  if (val === 'extrovert') { state.profile.E += 15; }
+  if (val === 'cautious') { state.profile.E -= 5; state.profile.C += 5; }
+  if (val === 'balanced') { state.profile.A += 5; }
+  if (val === 'strategic') { state.profile.C += 5; state.profile.pragmatism += 5; }
+  
+  const btn = parent.querySelector('.btn-primary') || document.getElementById('btnStep3') || document.getElementById('btnStep4');
+  if (btn) btn.disabled = false;
+}
+
+// Name input validation
+document.getElementById('inputFirstName').addEventListener('input', (e) => {
+  document.getElementById('btnStep1').disabled = !e.target.value.trim();
+});
+
+// ============================================
+// START APP
+// ============================================
+function startApp() {
+  document.getElementById('onboarding').classList.add('hidden');
+  document.getElementById('app').classList.add('active');
+  
+  // Update UI with user info
+  document.getElementById('sidebarAvatar').textContent = state.user.avatar;
+  document.getElementById('sidebarName').textContent = state.user.name;
+  document.getElementById('profileAvatar').textContent = state.user.avatar;
+  document.getElementById('profileName').textContent = state.user.name;
+  
+  // Render DM list
+  renderDMList();
+  
+  // Update profile display
+  updateProfileDisplay();
+  
+  // Start message flow
+  setTimeout(() => {
+    addMessage(messageScenarios[0]);
+    scheduleMessages();
+  }, 1500);
+}
+
+function renderDMList() {
+  const list = document.getElementById('dmList');
+  list.innerHTML = colleagues.map(c => `
+    <div class="dm-item" data-dm="${c.id}">
+      <div class="dm-avatar">
+        ${c.avatar}
+        <div class="dm-status ${c.status}"></div>
+      </div>
+      <span class="dm-name">${c.name}</span>
+    </div>
+  `).join('');
+}
+
+// ============================================
+// MESSAGES
+// ============================================
+function addMessage(scenario, isResponse = false, responseText = null) {
+  const container = document.getElementById('messagesContainer');
+  const colleague = colleagues.find(c => c.id === scenario.author);
+  
+  const text = scenario.text.replace('{user}', state.user.name);
+  
+  const msgHtml = `
+    <div class="message" data-id="${scenario.id}">
+      <div class="message-avatar">${colleague.avatar}</div>
+      <div class="message-content">
+        <div class="message-header">
+          <span class="message-author">${colleague.name}</span>
+          <span class="message-time">${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</span>
+        </div>
+        <div class="message-text"><p>${text}</p></div>
+        ${!state.respondedTo.has(scenario.id) ? `
+          <div class="response-options" data-scenario="${scenario.id}">
+            ${scenario.responses.map((r, i) => `
+              <button class="response-btn" data-index="${i}">${r.text}</button>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+  
+  container.insertAdjacentHTML('beforeend', msgHtml);
+  container.scrollTop = container.scrollHeight;
+  
+  // Add click listeners to response buttons
+  if (!state.respondedTo.has(scenario.id)) {
+    const responseDiv = container.querySelector(`[data-scenario="${scenario.id}"]`);
+    responseDiv.querySelectorAll('.response-btn').forEach(btn => {
+      btn.addEventListener('click', () => handleResponse(scenario, parseInt(btn.dataset.index), btn));
+    });
+  }
+}
+
+function handleResponse(scenario, responseIndex, btnEl) {
+  if (state.respondedTo.has(scenario.id)) return;
+  state.respondedTo.add(scenario.id);
+  
+  const response = scenario.responses[responseIndex];
+  
+  // Mark selected
+  const parent = btnEl.parentElement;
+  parent.querySelectorAll('.response-btn').forEach(b => b.classList.remove('selected'));
+  btnEl.classList.add('selected');
+  
+  // Disable all buttons
+  parent.querySelectorAll('.response-btn').forEach(b => b.disabled = true);
+  
+  // Add user message
+  const container = document.getElementById('messagesContainer');
+  const userMsg = `
+    <div class="message">
+      <div class="message-avatar">${state.user.avatar}</div>
+      <div class="message-content">
+        <div class="message-header">
+          <span class="message-author">${state.user.name}</span>
+          <span class="message-time">${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</span>
+        </div>
+        <div class="message-text"><p>${response.text}</p></div>
+      </div>
+    </div>
+  `;
+  container.insertAdjacentHTML('beforeend', userMsg);
+  container.scrollTop = container.scrollHeight;
+  
+  // Update profile
+  applyTraits(response.traits);
+  
+  // Update stats
+  state.interactions++;
+  state.civix += 5 + Math.floor(Math.random() * 10);
+  document.getElementById('statInteractions').textContent = state.interactions;
+  document.getElementById('statCivix').textContent = state.civix;
+  
+  // Check for new insights
+  checkInsights();
+  
+  // Show typing then reply (sometimes)
+  if (Math.random() > 0.4) {
+    showTyping(scenario.author);
+  }
+}
+
+function applyTraits(traits) {
+  if (!traits) return;
+  
+  Object.entries(traits).forEach(([key, val]) => {
+    if (state.profile[key] !== undefined) {
+      state.profile[key] = Math.min(100, Math.max(0, state.profile[key] + val * 3));
+    }
+  });
+  
+  updateProfileDisplay();
+}
+
+function updateProfileDisplay() {
+  ['O', 'C', 'E', 'A', 'N'].forEach(trait => {
+    const val = Math.round(state.profile[trait]);
+    document.getElementById(`trait${trait}`).textContent = val + '%';
+    document.getElementById(`bar${trait}`).style.width = val + '%';
+  });
+}
+
+function checkInsights() {
+  const newInsights = insightRules.filter(rule => {
+    if (state.insights.includes(rule.text)) return false;
+    return rule.condition(state.profile);
+  });
+  
+  if (newInsights.length > 0) {
+    const insight = newInsights[0];
+    state.insights.push(insight.text);
+    
+    const list = document.getElementById('insightsList');
+    list.innerHTML = state.insights.map(text => {
+      const rule = insightRules.find(r => r.text === text);
+      return `
+        <div class="insight-item">
+          <span class="insight-icon">${rule?.icon || '💡'}</span>
+          <span class="insight-text">${text}</span>
+        </div>
+      `;
+    }).join('');
+    
+    showToast(`🔮 Nouveau trait découvert !`, 'info');
+  }
+}
+
+function showTyping(authorId) {
+  const colleague = colleagues.find(c => c.id === authorId);
+  const container = document.getElementById('messagesContainer');
+  
+  const typing = document.createElement('div');
+  typing.className = 'typing-indicator';
+  typing.id = 'typingIndicator';
+  typing.innerHTML = `
+    <div class="typing-dots">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+    <span>${colleague.name} écrit...</span>
+  `;
+  container.appendChild(typing);
+  container.scrollTop = container.scrollHeight;
+  
+  setTimeout(() => {
+    typing.remove();
+  }, 2000 + Math.random() * 2000);
+}
+
+function scheduleMessages() {
+  messageScenarios.slice(1).forEach((scenario, i) => {
+    setTimeout(() => {
+      if (!state.respondedTo.has(scenario.id)) {
+        addMessage(scenario);
+      }
+    }, scenario.delay);
+  });
+}
+
+// ============================================
+// UTILITIES
+// ============================================
+function showToast(message, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = `toast ${type} show`;
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function sendMessage() {
+  const input = document.getElementById('messageInput');
+  const text = input.value.trim();
+  if (!text) return;
+  
+  const container = document.getElementById('messagesContainer');
+  const userMsg = `
+    <div class="message">
+      <div class="message-avatar">${state.user.avatar}</div>
+      <div class="message-content">
+        <div class="message-header">
+          <span class="message-author">${state.user.name}</span>
+          <span class="message-time">${new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})}</span>
+        </div>
+        <div class="message-text"><p>${text}</p></div>
+      </div>
+    </div>
+  `;
+  container.insertAdjacentHTML('beforeend', userMsg);
+  container.scrollTop = container.scrollHeight;
+  
+  input.value = '';
+  
+  // Boost extraversion for initiative
+  state.profile.E += 2;
+  state.profile.assertiveness += 1;
+  state.interactions++;
+  state.civix += 3;
+  
+  updateProfileDisplay();
+  document.getElementById('statInteractions').textContent = state.interactions;
+  document.getElementById('statCivix').textContent = state.civix;
+}
+
+// ============================================
+// INIT
+// ============================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Enter key to send
+  document.getElementById('messageInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+});
+</script>
+
+</body>
+</html>
