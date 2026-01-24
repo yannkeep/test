@@ -1,0 +1,2687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrepRecruit — Module de Préparation aux Tests de Recrutement</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --primary-light: #1e293b;
+      --accent: #f97316;
+      --accent-glow: rgba(249, 115, 22, 0.3);
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.1);
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.1);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --surface: #1e293b;
+      --surface-elevated: #334155;
+      --border: #334155;
+      --gradient-warm: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+      --gradient-cool: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.4);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+      --shadow-glow: 0 0 40px var(--accent-glow);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--primary);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+    }
+
+    .grid-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Main Container */
+    .app-container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-warm);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-link {
+      padding: 0.6rem 1.2rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+    }
+
+    .nav-stats {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+    }
+
+    .stat-badge .icon {
+      font-size: 1rem;
+    }
+
+    .stat-badge .value {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Main Content */
+    .main-content {
+      padding-top: 70px;
+      min-height: 100vh;
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== HOME SCREEN ===== */
+    .home-screen {
+      padding: 4rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 0 6rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 span {
+      background: var(--gradient-warm);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .hero-stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--gradient-warm);
+      color: white;
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg), 0 0 60px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-elevated);
+      border-color: var(--accent);
+    }
+
+    /* Module Cards */
+    .modules-section {
+      padding: 2rem 0 4rem;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .module-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .module-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-warm);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .module-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .module-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .module-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .module-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .module-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .module-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .module-duration {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .module-difficulty {
+      display: flex;
+      gap: 4px;
+    }
+
+    .difficulty-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .difficulty-dot.filled {
+      background: var(--accent);
+    }
+
+    /* ===== DASHBOARD SCREEN ===== */
+    .dashboard-screen {
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .dashboard-header {
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-header h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-header p {
+      color: var(--text-muted);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .stat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .stat-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .stat-card-icon.orange { background: rgba(249, 115, 22, 0.15); }
+    .stat-card-icon.blue { background: rgba(59, 130, 246, 0.15); }
+    .stat-card-icon.green { background: rgba(16, 185, 129, 0.15); }
+    .stat-card-icon.purple { background: rgba(168, 85, 247, 0.15); }
+
+    .stat-card-trend {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 100px;
+      font-weight: 500;
+    }
+
+    .stat-card-trend.up {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .stat-card-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-card-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Progress Chart */
+    .dashboard-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .progress-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+    }
+
+    .progress-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .skill-progress {
+      margin-bottom: 1.25rem;
+    }
+
+    .skill-progress:last-child {
+      margin-bottom: 0;
+    }
+
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .skill-value {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .skill-bar {
+      height: 10px;
+      background: var(--primary);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 1s ease;
+    }
+
+    .skill-fill.orange { background: var(--gradient-warm); }
+    .skill-fill.blue { background: var(--gradient-cool); }
+    .skill-fill.green { background: var(--gradient-success); }
+
+    /* Recent Activity */
+    .activity-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+    }
+
+    .activity-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      background: var(--primary);
+    }
+
+    .activity-info {
+      flex: 1;
+    }
+
+    .activity-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    .activity-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .activity-score {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    /* ===== TEST SCREEN ===== */
+    .test-screen {
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .test-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .test-category-badge {
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .test-progress-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .timer-display {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .timer-display.warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+    }
+
+    .timer-display.danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      animation: timerPulse 1s infinite;
+    }
+
+    @keyframes timerPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Progress Bar */
+    .test-progress-bar {
+      height: 6px;
+      background: var(--surface);
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .test-progress-fill {
+      height: 100%;
+      background: var(--gradient-warm);
+      border-radius: 100px;
+      transition: width 0.3s;
+    }
+
+    /* Question Card */
+    .question-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .question-number {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .question-text {
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+
+    .question-media {
+      margin-bottom: 2rem;
+    }
+
+    /* Matrix Display */
+    .matrix-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 1.5rem;
+      background: var(--primary);
+      border-radius: var(--radius-lg);
+    }
+
+    .matrix-cell {
+      width: 80px;
+      height: 80px;
+      background: var(--surface-elevated);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .matrix-cell.mystery {
+      background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    /* Answer Options */
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .answers-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .answer-option {
+      padding: 1.25rem 1.5rem;
+      background: var(--primary);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .answer-option:hover {
+      border-color: var(--accent);
+      background: var(--surface-elevated);
+    }
+
+    .answer-option.selected {
+      border-color: var(--accent);
+      background: rgba(249, 115, 22, 0.1);
+    }
+
+    .answer-option.correct {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .answer-option.incorrect {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .answer-option.disabled {
+      pointer-events: none;
+    }
+
+    .answer-letter {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .answer-option.selected .answer-letter {
+      background: var(--accent);
+      color: white;
+    }
+
+    .answer-option.correct .answer-letter {
+      background: var(--success);
+      color: white;
+    }
+
+    .answer-option.incorrect .answer-letter {
+      background: var(--danger);
+      color: white;
+    }
+
+    .answer-text {
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    /* Likert Scale */
+    .likert-scale {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .likert-option {
+      flex: 1;
+      padding: 1rem 0.5rem;
+      background: var(--primary);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .likert-option:hover {
+      border-color: var(--accent);
+    }
+
+    .likert-option.selected {
+      border-color: var(--accent);
+      background: rgba(249, 115, 22, 0.15);
+    }
+
+    .likert-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .likert-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Feedback */
+    .feedback-container {
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feedback-container.correct {
+      background: var(--success-bg);
+      border: 1px solid var(--success);
+    }
+
+    .feedback-container.incorrect {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .feedback-icon {
+      font-size: 1.25rem;
+    }
+
+    .feedback-title {
+      font-weight: 600;
+    }
+
+    .feedback-container.correct .feedback-title { color: var(--success); }
+    .feedback-container.incorrect .feedback-title { color: var(--danger); }
+
+    .feedback-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Test Actions */
+    .test-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .btn-nav {
+      padding: 0.9rem 1.75rem;
+      font-size: 0.95rem;
+    }
+
+    /* ===== GAME SCREEN (Balloon) ===== */
+    .game-container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .game-header {
+      margin-bottom: 2rem;
+    }
+
+    .game-header h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-header p {
+      color: var(--text-muted);
+    }
+
+    .game-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .game-stat {
+      padding: 1rem 2rem;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+    }
+
+    .game-stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .game-stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .game-stat-value.money { color: var(--success); }
+    .game-stat-value.round { color: var(--accent); }
+
+    .balloon-container {
+      position: relative;
+      height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .balloon {
+      width: 120px;
+      height: 150px;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: relative;
+      transition: all 0.15s ease-out;
+      box-shadow: 
+        inset -20px -10px 40px rgba(0,0,0,0.3),
+        inset 20px 10px 40px rgba(255,255,255,0.2),
+        0 20px 60px rgba(239, 68, 68, 0.3);
+    }
+
+    .balloon::before {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 25px solid #b91c1c;
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      top: 25%;
+      left: 25%;
+      width: 30%;
+      height: 20%;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      transform: rotate(-30deg);
+    }
+
+    .balloon.popped {
+      animation: pop 0.3s ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .balloon-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .game-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .btn-pump {
+      padding: 1rem 3rem;
+      font-size: 1.1rem;
+      background: var(--gradient-warm);
+      border: none;
+      border-radius: var(--radius-lg);
+      color: white;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-pump:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    .btn-pump:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-collect {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      background: var(--success);
+      border: none;
+      border-radius: var(--radius-lg);
+      color: white;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-collect:hover:not(:disabled) {
+      background: #059669;
+    }
+
+    .game-message {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+    }
+
+    .game-message.success {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .game-message.fail {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    /* ===== RESULTS SCREEN ===== */
+    .results-screen {
+      padding: 3rem 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .results-header {
+      margin-bottom: 3rem;
+    }
+
+    .results-icon {
+      width: 100px;
+      height: 100px;
+      background: var(--gradient-warm);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .results-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .results-header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .score-display {
+      padding: 2.5rem;
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      margin-bottom: 2rem;
+    }
+
+    .score-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--accent) 0deg,
+        var(--accent) calc(var(--score-percent) * 3.6deg),
+        var(--surface-elevated) calc(var(--score-percent) * 3.6deg)
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      position: relative;
+    }
+
+    .score-circle::before {
+      content: '';
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      background: var(--surface);
+      border-radius: 50%;
+    }
+
+    .score-value {
+      position: relative;
+      z-index: 1;
+      font-size: 3rem;
+      font-weight: 700;
+    }
+
+    .score-label {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+    }
+
+    .results-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .breakdown-item {
+      padding: 1.25rem;
+      background: var(--primary);
+      border-radius: var(--radius-md);
+    }
+
+    .breakdown-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .breakdown-value.green { color: var(--success); }
+    .breakdown-value.red { color: var(--danger); }
+    .breakdown-value.blue { color: #3b82f6; }
+
+    .breakdown-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .xp-earned {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(249, 115, 22, 0.15);
+      border-radius: 100px;
+      margin-bottom: 2rem;
+    }
+
+    .xp-earned span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .results-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ===== PERSONALITY TEST ===== */
+    .personality-statement {
+      font-size: 1.3rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .scale-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== SJT ===== */
+    .scenario-box {
+      background: var(--primary);
+      border-left: 4px solid var(--accent);
+      padding: 1.5rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-bottom: 2rem;
+    }
+
+    .scenario-label {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .scenario-text {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .sjt-instruction {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .sjt-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .sjt-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--primary);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sjt-option:hover {
+      border-color: var(--accent);
+    }
+
+    .sjt-option.selected-best {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .sjt-option.selected-worst {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .sjt-letter {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .sjt-text {
+      flex: 1;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .sjt-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+
+    .sjt-btn {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sjt-btn-best {
+      background: var(--success);
+      color: white;
+    }
+
+    .sjt-btn-worst {
+      background: var(--danger);
+      color: white;
+    }
+
+    /* Disclaimer */
+    .disclaimer {
+      margin-top: 3rem;
+      padding: 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: left;
+    }
+
+    .disclaimer h4 {
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .disclaimer ul {
+      margin-left: 1.25rem;
+      margin-top: 0.75rem;
+    }
+
+    .disclaimer li {
+      margin-bottom: 0.35rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 0 1rem;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+      
+      .hero-stats {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .modules-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .matrix-cell {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+      
+      .likert-scale {
+        flex-wrap: wrap;
+      }
+      
+      .likert-option {
+        flex: 0 0 calc(20% - 0.5rem);
+      }
+      
+      .results-breakdown {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 0.5s ease;
+    }
+
+    .slide-in {
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Screen reader only */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Focus styles for accessibility */
+    *:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+  <div class="grid-overlay"></div>
+  
+  <div class="app-container">
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="#" class="logo" onclick="showScreen('home')">
+        <div class="logo-icon">📋</div>
+        <span>PrepRecruit</span>
+      </a>
+      
+      <div class="nav-links">
+        <button class="nav-link active" data-screen="home" onclick="showScreen('home')">Accueil</button>
+        <button class="nav-link" data-screen="dashboard" onclick="showScreen('dashboard')">Progression</button>
+        <button class="nav-link" data-screen="modules" onclick="showScreen('home')">Modules</button>
+      </div>
+      
+      <div class="nav-stats">
+        <div class="stat-badge">
+          <span class="icon">⚡</span>
+          <span class="value" id="totalXP">1,250</span>
+          <span>XP</span>
+        </div>
+        <div class="stat-badge">
+          <span class="icon">🔥</span>
+          <span class="value" id="streak">7</span>
+          <span>jours</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- HOME SCREEN -->
+      <section class="screen active" id="screen-home">
+        <div class="home-screen">
+          <div class="hero">
+            <div class="hero-badge">
+              <span class="dot"></span>
+              <span>Module de préparation aux tests de recrutement</span>
+            </div>
+            
+            <h1>Maîtrisez vos tests,<br><span>décrochez le poste</span></h1>
+            
+            <p class="hero-subtitle">
+              Entraînez-vous sur les tests cognitifs, de personnalité et mises en situation utilisés par les plus grandes entreprises. Augmentez vos scores de 40 à 80%.
+            </p>
+            
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <div class="hero-stat-value">54-84%</div>
+                <div class="hero-stat-label">candidats éliminés aux tests</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-value">+65%</div>
+                <div class="hero-stat-label">amélioration avec pratique</div>
+              </div>
+              <div class="hero-stat">
+                <div class="hero-stat-value">6</div>
+                <div class="hero-stat-label">modules d'entraînement</div>
+              </div>
+            </div>
+            
+            <div class="cta-buttons">
+              <button class="btn btn-primary" onclick="startQuickTest()">
+                <span>🚀</span> Commencer l'entraînement
+              </button>
+              <button class="btn btn-secondary" onclick="showScreen('dashboard')">
+                <span>📊</span> Voir ma progression
+              </button>
+            </div>
+          </div>
+          
+          <div class="modules-section">
+            <div class="section-header">
+              <h2 class="section-title">Modules d'entraînement</h2>
+            </div>
+            
+            <div class="modules-grid">
+              <div class="module-card" onclick="startTest('logical')">
+                <div class="module-icon">🧩</div>
+                <h3>Raisonnement Logique</h3>
+                <p>Matrices, séries et patterns. Développez votre intelligence fluide avec les tests type Raven.</p>
+                <div class="module-meta">
+                  <span class="module-duration">⏱️ 15 min</span>
+                  <div class="module-difficulty">
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot"></span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="module-card" onclick="startTest('verbal')">
+                <div class="module-icon">📖</div>
+                <h3>Raisonnement Verbal</h3>
+                <p>Compréhension de textes et inférence logique. Maîtrisez l'analyse Vrai/Faux/Ne peut pas dire.</p>
+                <div class="module-meta">
+                  <span class="module-duration">⏱️ 20 min</span>
+                  <div class="module-difficulty">
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot filled"></span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="module-card" onclick="startTest('numerical')">
+                <div class="module-icon">📊</div>
+                <h3>Raisonnement Numérique</h3>
+                <p>Tableaux, graphiques et calculs. Interprétez les données comme un analyste.</p>
+                <div class="module-meta">
+                  <span class="module-duration">⏱️ 20 min</span>
+                  <div class="module-difficulty">
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot"></span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="module-card" onclick="startTest('personality')">
+                <div class="module-icon">🎭</div>
+                <h3>Test de Personnalité</h3>
+                <p>Découvrez votre profil Big Five (OCEAN) et préparez-vous aux inventaires de personnalité.</p>
+                <div class="module-meta">
+                  <span class="module-duration">⏱️ 10 min</span>
+                  <div class="module-difficulty">
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot"></span>
+                    <span class="difficulty-dot"></span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="module-card" onclick="startTest('sjt')">
+                <div class="module-icon">💼</div>
+                <h3>Jugement Situationnel</h3>
+                <p>Scénarios professionnels réalistes. Démontrez votre jugement et votre éthique.</p>
+                <div class="module-meta">
+                  <span class="module-duration">⏱️ 25 min</span>
+                  <div class="module-difficulty">
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot filled"></span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="module-card" onclick="startGame('balloon')">
+                <div class="module-icon">🎈</div>
+                <h3>Balloon Game</h3>
+                <p>Test gamifié de prise de risque et d'impulsivité. Découvrez votre profil décisionnel.</p>
+                <div class="module-meta">
+                  <span class="module-duration">⏱️ 5 min</span>
+                  <div class="module-difficulty">
+                    <span class="difficulty-dot filled"></span>
+                    <span class="difficulty-dot"></span>
+                    <span class="difficulty-dot"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="disclaimer">
+            <h4>⚠️ Avertissement Important</h4>
+            <p>Ce module est un <strong>outil de préparation et d'entraînement</strong>. Il ne constitue pas un test psychométrique validé scientifiquement.</p>
+            <ul>
+              <li>Les résultats sont <strong>indicatifs</strong> et à but pédagogique uniquement</li>
+              <li>Ce module ne prétend pas mesurer des aptitudes réelles avec précision</li>
+              <li>Il ne peut se substituer à une évaluation professionnelle</li>
+            </ul>
+            <p style="margin-top: 1rem;">Ce module n'est pas développé, approuvé ou affilié à SHL, Cubiks, Aon, Korn Ferry ou tout autre éditeur de tests psychométriques.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD SCREEN -->
+      <section class="screen" id="screen-dashboard">
+        <div class="dashboard-screen">
+          <div class="dashboard-header">
+            <h1>📊 Votre Progression</h1>
+            <p>Suivez vos performances et identifiez vos axes d'amélioration</p>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div class="stat-card-icon orange">🎯</div>
+                <span class="stat-card-trend up">+12%</span>
+              </div>
+              <div class="stat-card-value">73%</div>
+              <div class="stat-card-label">Score moyen global</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div class="stat-card-icon blue">📝</div>
+              </div>
+              <div class="stat-card-value">24</div>
+              <div class="stat-card-label">Tests complétés</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div class="stat-card-icon green">⏱️</div>
+              </div>
+              <div class="stat-card-value">4h 32m</div>
+              <div class="stat-card-label">Temps d'entraînement</div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <div class="stat-card-icon purple">🏆</div>
+              </div>
+              <div class="stat-card-value">5</div>
+              <div class="stat-card-label">Badges obtenus</div>
+            </div>
+          </div>
+          
+          <div class="dashboard-content">
+            <div class="progress-card">
+              <h3>Performance par catégorie</h3>
+              
+              <div class="skill-progress">
+                <div class="skill-header">
+                  <span class="skill-name">🧩 Raisonnement Logique</span>
+                  <span class="skill-value">82%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill orange" style="width: 82%"></div>
+                </div>
+              </div>
+              
+              <div class="skill-progress">
+                <div class="skill-header">
+                  <span class="skill-name">📖 Raisonnement Verbal</span>
+                  <span class="skill-value">68%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill blue" style="width: 68%"></div>
+                </div>
+              </div>
+              
+              <div class="skill-progress">
+                <div class="skill-header">
+                  <span class="skill-name">📊 Raisonnement Numérique</span>
+                  <span class="skill-value">75%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill green" style="width: 75%"></div>
+                </div>
+              </div>
+              
+              <div class="skill-progress">
+                <div class="skill-header">
+                  <span class="skill-name">💼 Jugement Situationnel</span>
+                  <span class="skill-value">71%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill orange" style="width: 71%"></div>
+                </div>
+              </div>
+              
+              <div class="skill-progress">
+                <div class="skill-header">
+                  <span class="skill-name">🎈 Tests Gamifiés</span>
+                  <span class="skill-value">65%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill blue" style="width: 65%"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="activity-card">
+              <h3>Activité récente</h3>
+              
+              <div class="activity-item">
+                <div class="activity-icon">🧩</div>
+                <div class="activity-info">
+                  <div class="activity-title">Raisonnement Logique</div>
+                  <div class="activity-time">Il y a 2 heures</div>
+                </div>
+                <div class="activity-score">85%</div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">💼</div>
+                <div class="activity-info">
+                  <div class="activity-title">Jugement Situationnel</div>
+                  <div class="activity-time">Hier</div>
+                </div>
+                <div class="activity-score">72%</div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">📖</div>
+                <div class="activity-info">
+                  <div class="activity-title">Raisonnement Verbal</div>
+                  <div class="activity-time">Il y a 2 jours</div>
+                </div>
+                <div class="activity-score">68%</div>
+              </div>
+              
+              <div class="activity-item">
+                <div class="activity-icon">🎈</div>
+                <div class="activity-info">
+                  <div class="activity-title">Balloon Game</div>
+                  <div class="activity-time">Il y a 3 jours</div>
+                </div>
+                <div class="activity-score">450 pts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEST SCREEN -->
+      <section class="screen" id="screen-test">
+        <div class="test-screen">
+          <div class="test-header">
+            <div class="test-info">
+              <span class="test-category-badge" id="testCategory">🧩 Raisonnement Logique</span>
+              <span class="test-progress-info">
+                <span id="currentQuestion">1</span>/<span id="totalQuestions">5</span> questions
+              </span>
+            </div>
+            <div class="timer-display" id="timer">
+              <span>⏱️</span>
+              <span id="timerValue">02:00</span>
+            </div>
+          </div>
+          
+          <div class="test-progress-bar">
+            <div class="test-progress-fill" id="progressFill" style="width: 20%"></div>
+          </div>
+          
+          <div class="question-card" id="questionCard">
+            <!-- Question content will be dynamically inserted -->
+          </div>
+          
+          <div class="feedback-container" id="feedbackContainer" style="display: none;">
+            <!-- Feedback will be dynamically inserted -->
+          </div>
+          
+          <div class="test-actions">
+            <button class="btn btn-secondary btn-nav" id="btnPrev" onclick="prevQuestion()" disabled>
+              ← Précédent
+            </button>
+            <button class="btn btn-primary btn-nav" id="btnNext" onclick="nextQuestion()">
+              Suivant →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAME SCREEN (Balloon) -->
+      <section class="screen" id="screen-game">
+        <div class="game-container">
+          <div class="game-header">
+            <h2>🎈 Balloon Game</h2>
+            <p>Gonflez le ballon pour accumuler des gains, mais attention... il peut éclater !</p>
+          </div>
+          
+          <div class="game-stats">
+            <div class="game-stat">
+              <div class="game-stat-label">Gains accumulés</div>
+              <div class="game-stat-value money" id="totalMoney">€0</div>
+            </div>
+            <div class="game-stat">
+              <div class="game-stat-label">Manche</div>
+              <div class="game-stat-value round"><span id="currentRound">1</span>/10</div>
+            </div>
+          </div>
+          
+          <div class="balloon-container">
+            <div class="balloon" id="balloon">
+              <span class="balloon-value" id="balloonValue">€0</span>
+            </div>
+          </div>
+          
+          <div class="game-controls">
+            <button class="btn-pump" id="btnPump" onclick="pumpBalloon()">
+              💨 Pomper (+€5)
+            </button>
+            <button class="btn-collect" id="btnCollect" onclick="collectMoney()">
+              💰 Encaisser
+            </button>
+          </div>
+          
+          <div class="game-message" id="gameMessage" style="display: none;"></div>
+          
+          <div style="margin-top: 2rem;">
+            <button class="btn btn-secondary" onclick="showScreen('home')">← Retour aux modules</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS SCREEN -->
+      <section class="screen" id="screen-results">
+        <div class="results-screen">
+          <div class="results-header">
+            <div class="results-icon">🏆</div>
+            <h1>Test terminé !</h1>
+            <p>Voici vos résultats détaillés</p>
+          </div>
+          
+          <div class="score-display">
+            <div class="score-circle" style="--score-percent: 80">
+              <span class="score-value" id="finalScore">80%</span>
+            </div>
+            <div class="score-label">Score global</div>
+          </div>
+          
+          <div class="results-breakdown">
+            <div class="breakdown-item">
+              <div class="breakdown-value green" id="correctAnswers">4</div>
+              <div class="breakdown-label">Réponses correctes</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-value red" id="wrongAnswers">1</div>
+              <div class="breakdown-label">Réponses incorrectes</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-value blue" id="avgTime">45s</div>
+              <div class="breakdown-label">Temps moyen/question</div>
+            </div>
+          </div>
+          
+          <div class="xp-earned">
+            🎉 <span>+125 XP</span> gagnés !
+          </div>
+          
+          <div class="results-actions">
+            <button class="btn btn-secondary" onclick="showScreen('home')">
+              ← Retour aux modules
+            </button>
+            <button class="btn btn-primary" onclick="retryTest()">
+              🔄 Recommencer
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Accessibility announcer -->
+  <div role="status" aria-live="polite" class="sr-only" id="announcer"></div>
+
+  <script>
+    // ============================================
+    // APPLICATION STATE
+    // ============================================
+    const state = {
+      currentScreen: 'home',
+      currentTest: null,
+      currentQuestionIndex: 0,
+      answers: [],
+      score: 0,
+      timeRemaining: 120,
+      timerInterval: null,
+      totalXP: 1250,
+      streak: 7,
+      // Balloon game state
+      balloonValue: 0,
+      totalMoney: 0,
+      currentRound: 1,
+      maxRounds: 10,
+      popProbability: 0
+    };
+
+    // ============================================
+    // QUESTION BANKS
+    // ============================================
+    const questions = {
+      logical: [
+        {
+          type: 'matrix',
+          question: "Quelle figure complète la série ?",
+          matrix: ['🔵', '🔵🔵', '🔵🔵🔵', '🔴', '🔴🔴', '🔴🔴🔴', '🟢', '🟢🟢', '?'],
+          options: ['🟢🟢🟢', '🟢', '🔵🔵🔵', '🔴🔴🔴'],
+          correct: 0,
+          explanation: "Règle horizontale : +1 élément par cellule. Règle verticale : changement de couleur. La réponse est donc 3 cercles verts."
+        },
+        {
+          type: 'sequence',
+          question: "Quelle est la suite de cette série ? 2, 6, 12, 20, 30, ?",
+          options: ['40', '42', '44', '36'],
+          correct: 1,
+          explanation: "Les différences sont : 4, 6, 8, 10. Elles augmentent de 2. La prochaine différence est 12. 30 + 12 = 42."
+        },
+        {
+          type: 'matrix',
+          question: "Trouvez l'élément manquant dans cette matrice logique.",
+          matrix: ['▲', '▲▲', '▲▲▲', '■', '■■', '■■■', '●', '●●', '?'],
+          options: ['●●●', '●', '■■■', '▲▲▲'],
+          correct: 0,
+          explanation: "Chaque ligne utilise une forme différente, et le nombre augmente de 1 à 3. La case manquante doit avoir 3 cercles."
+        },
+        {
+          type: 'sequence',
+          question: "Complétez : 1, 1, 2, 3, 5, 8, ?",
+          options: ['11', '12', '13', '10'],
+          correct: 2,
+          explanation: "C'est la suite de Fibonacci : chaque nombre est la somme des deux précédents. 5 + 8 = 13."
+        },
+        {
+          type: 'analogy',
+          question: "Livre est à Bibliothèque ce que Voiture est à :",
+          options: ['Route', 'Garage', 'Parking', 'Essence'],
+          correct: 1,
+          explanation: "Un livre est rangé dans une bibliothèque, de même qu'une voiture est rangée dans un garage."
+        }
+      ],
+      verbal: [
+        {
+          type: 'verbal',
+          passage: "L'entreprise TechCorp a augmenté ses investissements en R&D de 15% cette année. Le directeur a déclaré que cette stratégie vise à maintenir leur avantage compétitif face aux nouveaux entrants sur le marché.",
+          question: "Les investissements en R&D de TechCorp ont doublé cette année.",
+          options: ['Vrai', 'Faux', 'On ne peut pas dire'],
+          correct: 1,
+          explanation: "FAUX - Le texte indique une augmentation de 15%, pas un doublement (qui serait +100%)."
+        },
+        {
+          type: 'verbal',
+          passage: "Selon une étude récente, le télétravail a augmenté la productivité de 23% dans les entreprises qui l'ont adopté. Cependant, les chercheurs notent que l'isolement social reste un défi majeur pour les employés.",
+          question: "Le télétravail n'a que des avantages pour les entreprises.",
+          options: ['Vrai', 'Faux', 'On ne peut pas dire'],
+          correct: 1,
+          explanation: "FAUX - Le texte mentionne clairement un inconvénient : l'isolement social des employés."
+        },
+        {
+          type: 'verbal',
+          passage: "La nouvelle réglementation européenne impose aux entreprises de plus de 250 employés de publier un rapport annuel sur leur empreinte carbone. Les PME sont exemptées de cette obligation jusqu'en 2027.",
+          question: "Une entreprise de 100 employés devra publier son rapport carbone en 2025.",
+          options: ['Vrai', 'Faux', 'On ne peut pas dire'],
+          correct: 1,
+          explanation: "FAUX - Les PME (dont celles de 100 employés) sont exemptées jusqu'en 2027."
+        },
+        {
+          type: 'verbal',
+          passage: "Le marché des véhicules électriques a connu une croissance de 40% en Europe l'an dernier. Les principaux constructeurs ont tous annoncé des plans d'expansion de leur gamme électrique.",
+          question: "La croissance du marché des véhicules électriques continuera l'année prochaine.",
+          options: ['Vrai', 'Faux', 'On ne peut pas dire'],
+          correct: 2,
+          explanation: "ON NE PEUT PAS DIRE - Le texte parle du passé, mais ne fait aucune prédiction sur l'avenir."
+        },
+        {
+          type: 'verbal',
+          passage: "L'intelligence artificielle générative transforme le secteur de la création de contenu. Les agences marketing reportent une réduction de 30% du temps de production grâce à ces outils.",
+          question: "L'IA générative est utilisée par toutes les agences marketing.",
+          options: ['Vrai', 'Faux', 'On ne peut pas dire'],
+          correct: 2,
+          explanation: "ON NE PEUT PAS DIRE - Le texte ne précise pas quelle proportion d'agences utilise ces outils."
+        }
+      ],
+      numerical: [
+        {
+          type: 'numerical',
+          question: "Une entreprise a réalisé un CA de 2,4M€ au T1 et 2,88M€ au T2. Quel est le pourcentage d'augmentation ?",
+          options: ['15%', '20%', '25%', '18%'],
+          correct: 1,
+          explanation: "(2,88 - 2,4) / 2,4 × 100 = 0,48 / 2,4 × 100 = 20%"
+        },
+        {
+          type: 'numerical',
+          question: "Si 35% des 800 employés travaillent à temps partiel, combien d'employés sont à temps plein ?",
+          options: ['280', '520', '560', '240'],
+          correct: 1,
+          explanation: "Temps partiel : 800 × 0,35 = 280. Temps plein : 800 - 280 = 520."
+        },
+        {
+          type: 'numerical',
+          question: "Un produit coûte 85€ HT. Avec une TVA de 20%, quel est le prix TTC ?",
+          options: ['102€', '105€', '100€', '97€'],
+          correct: 0,
+          explanation: "Prix TTC = 85 × 1,20 = 102€"
+        },
+        {
+          type: 'numerical',
+          question: "Le ratio dettes/capitaux propres d'une entreprise est de 0,75. Si les capitaux propres sont de 4M€, quel est le montant des dettes ?",
+          options: ['3M€', '5,33M€', '3,5M€', '2,5M€'],
+          correct: 0,
+          explanation: "Dettes = Capitaux propres × Ratio = 4M × 0,75 = 3M€"
+        },
+        {
+          type: 'numerical',
+          question: "Un investissement de 10 000€ rapporte 5% d'intérêts composés annuels. Quelle est sa valeur après 2 ans ?",
+          options: ['11 000€', '11 025€', '10 500€', '11 050€'],
+          correct: 1,
+          explanation: "Année 1 : 10 000 × 1,05 = 10 500€. Année 2 : 10 500 × 1,05 = 11 025€"
+        }
+      ],
+      personality: [
+        {
+          type: 'likert',
+          dimension: 'O',
+          statement: "J'aime explorer de nouvelles idées et concepts abstraits.",
+          reversed: false
+        },
+        {
+          type: 'likert',
+          dimension: 'C',
+          statement: "Je suis toujours bien préparé(e) et organisé(e) dans mon travail.",
+          reversed: false
+        },
+        {
+          type: 'likert',
+          dimension: 'E',
+          statement: "Je me sens énergisé(e) après avoir passé du temps avec un grand groupe de personnes.",
+          reversed: false
+        },
+        {
+          type: 'likert',
+          dimension: 'A',
+          statement: "Je fais naturellement confiance aux intentions des autres.",
+          reversed: false
+        },
+        {
+          type: 'likert',
+          dimension: 'N',
+          statement: "Je reste calme et serein(e) même dans des situations stressantes.",
+          reversed: true
+        }
+      ],
+      sjt: [
+        {
+          type: 'sjt',
+          scenario: "Vous êtes chef de projet. Deux membres de votre équipe sont en conflit ouvert et refusent de collaborer. Cela affecte les délais du projet et l'ambiance de l'équipe.",
+          options: [
+            { id: 'A', text: "Organiser immédiatement une réunion avec les deux personnes pour qu'elles s'expliquent devant vous." },
+            { id: 'B', text: "Les rencontrer individuellement d'abord pour comprendre chaque point de vue avant d'envisager une médiation." },
+            { id: 'C', text: "Signaler le problème aux RH et leur demander de gérer le conflit." },
+            { id: 'D', text: "Réorganiser les tâches pour qu'ils n'aient plus besoin de travailler ensemble." }
+          ],
+          best: 'B',
+          worst: 'C',
+          explanation: "B est la meilleure option car elle permet de comprendre les enjeux de chaque partie avant d'intervenir. C est la pire car elle déléguent une responsabilité managériale directe."
+        },
+        {
+          type: 'sjt',
+          scenario: "Un client important se plaint vivement d'un retard de livraison. Il menace de rompre le contrat. Vous savez que le retard est dû à un problème chez un fournisseur.",
+          options: [
+            { id: 'A', text: "Expliquer que ce n'est pas votre faute et que le fournisseur est responsable du retard." },
+            { id: 'B', text: "Présenter vos excuses, proposer une compensation et un plan d'action pour éviter que cela se reproduise." },
+            { id: 'C', text: "Promettre une livraison sous 24h même si vous n'êtes pas sûr de pouvoir tenir ce délai." },
+            { id: 'D', text: "Transférer l'appel à votre supérieur pour qu'il gère la situation." }
+          ],
+          best: 'B',
+          worst: 'C',
+          explanation: "B est la meilleure option : assumer la responsabilité client et proposer des solutions concrètes. C est la pire : promettre l'impossible aggravera la situation."
+        },
+        {
+          type: 'sjt',
+          scenario: "Vous découvrez qu'un collègue a fait une erreur importante dans un rapport déjà envoyé à la direction. Il n'en est pas conscient.",
+          options: [
+            { id: 'A', text: "En informer directement votre manager sans en parler au collègue." },
+            { id: 'B', text: "Informer discrètement votre collègue de l'erreur et lui suggérer de la corriger rapidement." },
+            { id: 'C', text: "Ne rien faire, ce n'est pas votre responsabilité." },
+            { id: 'D', text: "Corriger l'erreur vous-même et renvoyer le rapport sans rien dire." }
+          ],
+          best: 'B',
+          worst: 'C',
+          explanation: "B respecte le collègue tout en permettant de corriger l'erreur. C est la pire car elle laisse une erreur importante non corrigée."
+        }
+      ]
+    };
+
+    // ============================================
+    // NAVIGATION FUNCTIONS
+    // ============================================
+    function showScreen(screenName) {
+      // Update state
+      state.currentScreen = screenName;
+      
+      // Hide all screens
+      document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+      });
+      
+      // Show target screen
+      const targetScreen = document.getElementById(`screen-${screenName}`);
+      if (targetScreen) {
+        targetScreen.classList.add('active');
+      }
+      
+      // Update nav
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.screen === screenName) {
+          link.classList.add('active');
+        }
+      });
+      
+      // Announce for screen readers
+      announce(`Navigation vers ${screenName}`);
+    }
+
+    function announce(message) {
+      const announcer = document.getElementById('announcer');
+      announcer.textContent = message;
+    }
+
+    // ============================================
+    // TEST FUNCTIONS
+    // ============================================
+    function startTest(testType) {
+      state.currentTest = testType;
+      state.currentQuestionIndex = 0;
+      state.answers = [];
+      state.score = 0;
+      
+      // Set timer based on test type
+      state.timeRemaining = testType === 'personality' ? 300 : 120;
+      
+      // Update category badge
+      const categoryNames = {
+        logical: '🧩 Raisonnement Logique',
+        verbal: '📖 Raisonnement Verbal',
+        numerical: '📊 Raisonnement Numérique',
+        personality: '🎭 Test de Personnalité',
+        sjt: '💼 Jugement Situationnel'
+      };
+      document.getElementById('testCategory').textContent = categoryNames[testType];
+      document.getElementById('totalQuestions').textContent = questions[testType].length;
+      
+      showScreen('test');
+      renderQuestion();
+      startTimer();
+    }
+
+    function startQuickTest() {
+      startTest('logical');
+    }
+
+    function renderQuestion() {
+      const testQuestions = questions[state.currentTest];
+      const question = testQuestions[state.currentQuestionIndex];
+      const container = document.getElementById('questionCard');
+      
+      // Update progress
+      document.getElementById('currentQuestion').textContent = state.currentQuestionIndex + 1;
+      const progress = ((state.currentQuestionIndex + 1) / testQuestions.length) * 100;
+      document.getElementById('progressFill').style.width = `${progress}%`;
+      
+      // Hide feedback
+      document.getElementById('feedbackContainer').style.display = 'none';
+      
+      // Enable next button
+      document.getElementById('btnNext').disabled = false;
+      document.getElementById('btnNext').textContent = 
+        state.currentQuestionIndex === testQuestions.length - 1 ? 'Terminer ✓' : 'Suivant →';
+      
+      // Update prev button
+      document.getElementById('btnPrev').disabled = state.currentQuestionIndex === 0;
+      
+      // Render based on question type
+      if (question.type === 'matrix') {
+        renderMatrixQuestion(question, container);
+      } else if (question.type === 'likert') {
+        renderLikertQuestion(question, container);
+      } else if (question.type === 'sjt') {
+        renderSJTQuestion(question, container);
+      } else if (question.type === 'verbal') {
+        renderVerbalQuestion(question, container);
+      } else {
+        renderStandardQuestion(question, container);
+      }
+      
+      announce(`Question ${state.currentQuestionIndex + 1} sur ${testQuestions.length}`);
+    }
+
+    function renderMatrixQuestion(question, container) {
+      container.innerHTML = `
+        <div class="question-number">Question ${state.currentQuestionIndex + 1}</div>
+        <div class="question-text">${question.question}</div>
+        <div class="matrix-container">
+          <div class="matrix-grid">
+            ${question.matrix.map((cell, i) => `
+              <div class="matrix-cell ${cell === '?' ? 'mystery' : ''}">${cell}</div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="answers-grid">
+          ${question.options.map((opt, i) => `
+            <div class="answer-option" onclick="selectAnswer(${i})" data-index="${i}">
+              <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+              <span class="answer-text">${opt}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderVerbalQuestion(question, container) {
+      container.innerHTML = `
+        <div class="question-number">Question ${state.currentQuestionIndex + 1}</div>
+        <div class="scenario-box">
+          <div class="scenario-label">Texte</div>
+          <div class="scenario-text">${question.passage}</div>
+        </div>
+        <div class="question-text">${question.question}</div>
+        <div class="answers-grid">
+          ${question.options.map((opt, i) => `
+            <div class="answer-option" onclick="selectAnswer(${i})" data-index="${i}">
+              <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+              <span class="answer-text">${opt}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderStandardQuestion(question, container) {
+      container.innerHTML = `
+        <div class="question-number">Question ${state.currentQuestionIndex + 1}</div>
+        <div class="question-text">${question.question}</div>
+        <div class="answers-grid">
+          ${question.options.map((opt, i) => `
+            <div class="answer-option" onclick="selectAnswer(${i})" data-index="${i}">
+              <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+              <span class="answer-text">${opt}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderLikertQuestion(question, container) {
+      const labels = ['Pas du tout d\'accord', 'Pas d\'accord', 'Neutre', 'D\'accord', 'Tout à fait d\'accord'];
+      container.innerHTML = `
+        <div class="question-number">Question ${state.currentQuestionIndex + 1}</div>
+        <div class="personality-statement">"${question.statement}"</div>
+        <div class="likert-scale">
+          ${[1,2,3,4,5].map(val => `
+            <div class="likert-option" onclick="selectLikertAnswer(${val})" data-value="${val}">
+              <div class="likert-value">${val}</div>
+              <div class="likert-label">${labels[val-1]}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="scale-labels">
+          <span>Pas du tout d'accord</span>
+          <span>Tout à fait d'accord</span>
+        </div>
+      `;
+    }
+
+    function renderSJTQuestion(question, container) {
+      container.innerHTML = `
+        <div class="question-number">Question ${state.currentQuestionIndex + 1}</div>
+        <div class="scenario-box">
+          <div class="scenario-label">📋 Situation</div>
+          <div class="scenario-text">${question.scenario}</div>
+        </div>
+        <div class="sjt-instruction">Sélectionnez la <strong>MEILLEURE</strong> et la <strong>PIRE</strong> réponse</div>
+        <div class="sjt-options">
+          ${question.options.map(opt => `
+            <div class="sjt-option" data-id="${opt.id}">
+              <span class="sjt-letter">${opt.id}</span>
+              <span class="sjt-text">${opt.text}</span>
+              <div class="sjt-actions">
+                <button class="sjt-btn sjt-btn-best" onclick="selectSJTAnswer('${opt.id}', 'best', event)">Meilleure</button>
+                <button class="sjt-btn sjt-btn-worst" onclick="selectSJTAnswer('${opt.id}', 'worst', event)">Pire</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function selectAnswer(index) {
+      const question = questions[state.currentTest][state.currentQuestionIndex];
+      const options = document.querySelectorAll('.answer-option');
+      
+      // Remove previous selection
+      options.forEach(opt => opt.classList.remove('selected', 'correct', 'incorrect', 'disabled'));
+      
+      // Mark selected
+      options[index].classList.add('selected');
+      
+      // Store answer
+      state.answers[state.currentQuestionIndex] = index;
+      
+      // Show feedback
+      setTimeout(() => {
+        showFeedback(index === question.correct, question.explanation);
+        options.forEach(opt => opt.classList.add('disabled'));
+        options[question.correct].classList.add('correct');
+        if (index !== question.correct) {
+          options[index].classList.add('incorrect');
+        }
+      }, 300);
+    }
+
+    function selectLikertAnswer(value) {
+      const options = document.querySelectorAll('.likert-option');
+      options.forEach(opt => opt.classList.remove('selected'));
+      
+      document.querySelector(`[data-value="${value}"]`).classList.add('selected');
+      state.answers[state.currentQuestionIndex] = value;
+    }
+
+    function selectSJTAnswer(optionId, type, event) {
+      event.stopPropagation();
+      const options = document.querySelectorAll('.sjt-option');
+      
+      // Remove same type selection from other options
+      options.forEach(opt => {
+        if (type === 'best') opt.classList.remove('selected-best');
+        if (type === 'worst') opt.classList.remove('selected-worst');
+      });
+      
+      // Add selection to clicked option
+      const targetOption = document.querySelector(`[data-id="${optionId}"]`);
+      targetOption.classList.add(type === 'best' ? 'selected-best' : 'selected-worst');
+      
+      // Store answer
+      if (!state.answers[state.currentQuestionIndex]) {
+        state.answers[state.currentQuestionIndex] = {};
+      }
+      state.answers[state.currentQuestionIndex][type] = optionId;
+    }
+
+    function showFeedback(isCorrect, explanation) {
+      const container = document.getElementById('feedbackContainer');
+      container.style.display = 'block';
+      container.className = `feedback-container ${isCorrect ? 'correct' : 'incorrect'}`;
+      
+      container.innerHTML = `
+        <div class="feedback-header">
+          <span class="feedback-icon">${isCorrect ? '✓' : '✗'}</span>
+          <span class="feedback-title">${isCorrect ? 'Correct !' : 'Incorrect'}</span>
+        </div>
+        <p class="feedback-text">${explanation}</p>
+      `;
+      
+      if (isCorrect) state.score++;
+    }
+
+    function nextQuestion() {
+      const testQuestions = questions[state.currentTest];
+      
+      if (state.currentQuestionIndex < testQuestions.length - 1) {
+        state.currentQuestionIndex++;
+        renderQuestion();
+      } else {
+        finishTest();
+      }
+    }
+
+    function prevQuestion() {
+      if (state.currentQuestionIndex > 0) {
+        state.currentQuestionIndex--;
+        renderQuestion();
+      }
+    }
+
+    function finishTest() {
+      clearInterval(state.timerInterval);
+      
+      const testQuestions = questions[state.currentTest];
+      const percentage = Math.round((state.score / testQuestions.length) * 100);
+      
+      // Update results screen
+      document.getElementById('finalScore').textContent = `${percentage}%`;
+      document.getElementById('correctAnswers').textContent = state.score;
+      document.getElementById('wrongAnswers').textContent = testQuestions.length - state.score;
+      document.getElementById('avgTime').textContent = '38s';
+      
+      // Update score circle
+      document.querySelector('.score-circle').style.setProperty('--score-percent', percentage);
+      
+      // Add XP
+      const xpEarned = Math.round(percentage * 1.5);
+      state.totalXP += xpEarned;
+      document.getElementById('totalXP').textContent = state.totalXP.toLocaleString();
+      
+      showScreen('results');
+    }
+
+    function retryTest() {
+      if (state.currentTest) {
+        startTest(state.currentTest);
+      }
+    }
+
+    // ============================================
+    // TIMER FUNCTIONS
+    // ============================================
+    function startTimer() {
+      clearInterval(state.timerInterval);
+      updateTimerDisplay();
+      
+      state.timerInterval = setInterval(() => {
+        state.timeRemaining--;
+        updateTimerDisplay();
+        
+        if (state.timeRemaining <= 0) {
+          clearInterval(state.timerInterval);
+          finishTest();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(state.timeRemaining / 60);
+      const seconds = state.timeRemaining % 60;
+      const display = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      
+      const timerElement = document.getElementById('timer');
+      document.getElementById('timerValue').textContent = display;
+      
+      // Warning states
+      timerElement.classList.remove('warning', 'danger');
+      if (state.timeRemaining <= 30) {
+        timerElement.classList.add('danger');
+      } else if (state.timeRemaining <= 60) {
+        timerElement.classList.add('warning');
+      }
+    }
+
+    // ============================================
+    // BALLOON GAME FUNCTIONS
+    // ============================================
+    function startGame(gameType) {
+      if (gameType === 'balloon') {
+        state.balloonValue = 0;
+        state.totalMoney = 0;
+        state.currentRound = 1;
+        state.popProbability = 0;
+        
+        updateBalloonDisplay();
+        showScreen('game');
+        document.getElementById('gameMessage').style.display = 'none';
+        document.getElementById('btnPump').disabled = false;
+        document.getElementById('btnCollect').disabled = false;
+      }
+    }
+
+    function pumpBalloon() {
+      state.popProbability += 0.05 + (state.balloonValue / 100) * 0.03;
+      
+      if (Math.random() < state.popProbability) {
+        // Balloon pops!
+        popBalloon();
+      } else {
+        state.balloonValue += 5;
+        updateBalloonDisplay();
+        
+        // Animate balloon
+        const balloon = document.getElementById('balloon');
+        const scale = 1 + (state.balloonValue / 200);
+        balloon.style.transform = `scale(${Math.min(scale, 1.8)})`;
+      }
+    }
+
+    function popBalloon() {
+      const balloon = document.getElementById('balloon');
+      balloon.classList.add('popped');
+      
+      document.getElementById('btnPump').disabled = true;
+      document.getElementById('btnCollect').disabled = true;
+      
+      showGameMessage(`💥 Boom ! Le ballon a éclaté ! Vous avez perdu €${state.balloonValue}`, 'fail');
+      
+      state.balloonValue = 0;
+      
+      setTimeout(() => {
+        if (state.currentRound < state.maxRounds) {
+          nextRound();
+        } else {
+          endGame();
+        }
+      }, 2000);
+    }
+
+    function collectMoney() {
+      state.totalMoney += state.balloonValue;
+      showGameMessage(`💰 Bien joué ! Vous avez encaissé €${state.balloonValue}`, 'success');
+      
+      state.balloonValue = 0;
+      
+      setTimeout(() => {
+        if (state.currentRound < state.maxRounds) {
+          nextRound();
+        } else {
+          endGame();
+        }
+      }, 1500);
+    }
+
+    function nextRound() {
+      state.currentRound++;
+      state.balloonValue = 0;
+      state.popProbability = 0;
+      
+      const balloon = document.getElementById('balloon');
+      balloon.classList.remove('popped');
+      balloon.style.transform = 'scale(1)';
+      
+      document.getElementById('btnPump').disabled = false;
+      document.getElementById('btnCollect').disabled = false;
+      document.getElementById('gameMessage').style.display = 'none';
+      
+      updateBalloonDisplay();
+    }
+
+    function updateBalloonDisplay() {
+      document.getElementById('balloonValue').textContent = `€${state.balloonValue}`;
+      document.getElementById('totalMoney').textContent = `€${state.totalMoney}`;
+      document.getElementById('currentRound').textContent = state.currentRound;
+    }
+
+    function showGameMessage(message, type) {
+      const msgEl = document.getElementById('gameMessage');
+      msgEl.textContent = message;
+      msgEl.className = `game-message ${type}`;
+      msgEl.style.display = 'block';
+    }
+
+    function endGame() {
+      showGameMessage(`🎮 Partie terminée ! Score final : €${state.totalMoney}`, 'success');
+      
+      // Add XP based on money earned
+      const xpEarned = Math.round(state.totalMoney / 5);
+      state.totalXP += xpEarned;
+      document.getElementById('totalXP').textContent = state.totalXP.toLocaleString();
+    }
+
+    // ============================================
+    // KEYBOARD NAVIGATION
+    // ============================================
+    document.addEventListener('keydown', (e) => {
+      if (state.currentScreen !== 'test') return;
+      
+      const options = document.querySelectorAll('.answer-option:not(.disabled)');
+      if (options.length === 0) return;
+      
+      if (e.key >= '1' && e.key <= '4') {
+        const index = parseInt(e.key) - 1;
+        if (index < options.length) {
+          options[index].click();
+        }
+      }
+      
+      if (e.key === 'Enter') {
+        document.getElementById('btnNext').click();
+      }
+    });
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize with home screen
+      showScreen('home');
+      
+      // Animate skill bars on dashboard view
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const fills = entry.target.querySelectorAll('.skill-fill');
+            fills.forEach(fill => {
+              const width = fill.style.width;
+              fill.style.width = '0%';
+              setTimeout(() => {
+                fill.style.width = width;
+              }, 100);
+            });
+          }
+        });
+      });
+      
+      const progressCard = document.querySelector('.progress-card');
+      if (progressCard) observer.observe(progressCard);
+    });
+  </script>
+</body>
+</html>
