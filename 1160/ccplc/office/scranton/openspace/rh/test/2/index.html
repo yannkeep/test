@@ -1,0 +1,3828 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrepRecruit — Module de Préparation aux Tests de Recrutement</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       DESIGN SYSTEM — Vert Tendre & Lilas (Dark)
+       ============================================ */
+    :root {
+      /* Primary Palette - Vert Tendre */
+      --mint-50: #f0fdf4;
+      --mint-100: #dcfce7;
+      --mint-200: #bbf7d0;
+      --mint-300: #86efac;
+      --mint-400: #4ade80;
+      --mint-500: #22c55e;
+      --mint-600: #16a34a;
+      --mint-700: #15803d;
+      --mint-800: #166534;
+      --mint-900: #14532d;
+      
+      /* Secondary Palette - Lilas */
+      --lilac-50: #faf5ff;
+      --lilac-100: #f3e8ff;
+      --lilac-200: #e9d5ff;
+      --lilac-300: #d8b4fe;
+      --lilac-400: #c084fc;
+      --lilac-500: #a855f7;
+      --lilac-600: #9333ea;
+      --lilac-700: #7e22ce;
+      --lilac-800: #6b21a8;
+      --lilac-900: #581c87;
+      
+      /* Dark Theme Colors */
+      --bg-primary: #0c0f0e;
+      --bg-secondary: #141a17;
+      --bg-tertiary: #1a2320;
+      --bg-elevated: #212d28;
+      --bg-hover: #283530;
+      
+      /* Text Colors */
+      --text-primary: #f0fdf4;
+      --text-secondary: #a7c4b5;
+      --text-muted: #6b8f7a;
+      --text-inverse: #0c0f0e;
+      
+      /* Accent Colors */
+      --accent-primary: #4ade80;
+      --accent-primary-hover: #22c55e;
+      --accent-primary-glow: rgba(74, 222, 128, 0.25);
+      --accent-secondary: #c084fc;
+      --accent-secondary-hover: #a855f7;
+      --accent-secondary-glow: rgba(192, 132, 252, 0.25);
+      
+      /* Semantic Colors */
+      --success: #4ade80;
+      --success-bg: rgba(74, 222, 128, 0.12);
+      --warning: #fbbf24;
+      --warning-bg: rgba(251, 191, 36, 0.12);
+      --danger: #f87171;
+      --danger-bg: rgba(248, 113, 113, 0.12);
+      --info: #60a5fa;
+      --info-bg: rgba(96, 165, 250, 0.12);
+      
+      /* Borders */
+      --border-subtle: rgba(74, 222, 128, 0.1);
+      --border-default: rgba(74, 222, 128, 0.2);
+      --border-strong: rgba(74, 222, 128, 0.3);
+      
+      /* Gradients */
+      --gradient-mint: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      --gradient-lilac: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+      --gradient-mixed: linear-gradient(135deg, #4ade80 0%, #c084fc 100%);
+      --gradient-surface: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      
+      /* Shadows */
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+      --shadow-glow-mint: 0 0 40px var(--accent-primary-glow);
+      --shadow-glow-lilac: 0 0 40px var(--accent-secondary-glow);
+      
+      /* Border Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-full: 9999px;
+      
+      /* Transitions */
+      --transition-fast: 0.15s ease;
+      --transition-base: 0.25s ease;
+      --transition-slow: 0.4s ease;
+    }
+
+    /* ============================================
+       RESET & BASE
+       ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Outfit', -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================
+       ANIMATED BACKGROUND
+       ============================================ */
+    .bg-effects {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .bg-gradient-orb.mint {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--accent-primary-glow) 0%, transparent 70%);
+      top: -200px;
+      left: -200px;
+    }
+
+    .bg-gradient-orb.lilac {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--accent-secondary-glow) 0%, transparent 70%);
+      bottom: -150px;
+      right: -150px;
+      animation-delay: -10s;
+    }
+
+    .bg-gradient-orb.center {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(74, 222, 128, 0.1) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 10px) scale(1.02); }
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(var(--border-subtle) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.5;
+    }
+
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+    }
+
+    /* ============================================
+       APP CONTAINER
+       ============================================ */
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    /* ============================================
+       NAVIGATION
+       ============================================ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: rgba(12, 15, 14, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      background: var(--gradient-mint);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: var(--shadow-glow-mint);
+    }
+
+    .logo-text {
+      font-family: 'Fraunces', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      background: var(--gradient-mixed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .nav-item {
+      padding: 0.6rem 1.25rem;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .nav-item:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .nav-item.active {
+      color: var(--accent-primary);
+      background: var(--success-bg);
+    }
+
+    .nav-stats {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+    }
+
+    .stat-pill .icon {
+      font-size: 1rem;
+    }
+
+    .stat-pill .value {
+      font-weight: 600;
+      color: var(--accent-primary);
+    }
+
+    .stat-pill.streak .value {
+      color: var(--accent-secondary);
+    }
+
+    /* ============================================
+       MAIN CONTENT
+       ============================================ */
+    .main {
+      padding-top: 72px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* ============================================
+       SCREENS
+       ============================================ */
+    .screen {
+      display: none;
+      animation: screenFadeIn 0.5s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes screenFadeIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================
+       HOME SCREEN
+       ============================================ */
+    .hero {
+      text-align: center;
+      padding: 5rem 0 6rem;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge .pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-primary);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--accent-primary-glow); }
+      50% { opacity: 0.8; box-shadow: 0 0 0 8px transparent; }
+    }
+
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2.75rem, 7vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 .gradient {
+      background: var(--gradient-mixed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .hero-metrics {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      margin-bottom: 3rem;
+    }
+
+    .metric {
+      text-align: center;
+    }
+
+    .metric-value {
+      font-family: 'Fraunces', serif;
+      font-size: 2.75rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      line-height: 1;
+    }
+
+    .metric-value.lilac {
+      color: var(--accent-secondary);
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ============================================
+       BUTTONS
+       ============================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.9rem 1.75rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-mint);
+      color: var(--text-inverse);
+      box-shadow: var(--shadow-md), var(--shadow-glow-mint);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg), 0 0 60px var(--accent-primary-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent-primary);
+    }
+
+    .btn-lilac {
+      background: var(--gradient-lilac);
+      color: white;
+      box-shadow: var(--shadow-md), var(--shadow-glow-lilac);
+    }
+
+    .btn-lilac:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg), 0 0 60px var(--accent-secondary-glow);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 0.6rem 1rem;
+    }
+
+    .btn-ghost:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-lg {
+      padding: 1.1rem 2.25rem;
+      font-size: 1.05rem;
+    }
+
+    /* ============================================
+       MODULE CARDS
+       ============================================ */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .module-card {
+      position: relative;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      overflow: hidden;
+    }
+
+    .module-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-mint);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition-base);
+    }
+
+    .module-card.lilac-accent::before {
+      background: var(--gradient-lilac);
+    }
+
+    .module-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .module-card.lilac-accent:hover {
+      border-color: var(--accent-secondary);
+    }
+
+    .module-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .module-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .module-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .module-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .module-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .module-duration {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .module-difficulty {
+      display: flex;
+      gap: 4px;
+    }
+
+    .diff-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--bg-hover);
+      transition: background var(--transition-fast);
+    }
+
+    .diff-dot.filled {
+      background: var(--accent-primary);
+    }
+
+    .module-card.lilac-accent .diff-dot.filled {
+      background: var(--accent-secondary);
+    }
+
+    .module-tag {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.3rem 0.7rem;
+      background: var(--accent-secondary-glow);
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ============================================
+       PARCOURS SELECTOR
+       ============================================ */
+    .parcours-section {
+      margin-bottom: 4rem;
+    }
+
+    .parcours-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .parcours-card {
+      position: relative;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .parcours-card:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .parcours-card.selected {
+      border-color: var(--accent-primary);
+      background: var(--success-bg);
+    }
+
+    .parcours-card.lilac:hover {
+      border-color: var(--accent-secondary);
+    }
+
+    .parcours-card.lilac.selected {
+      border-color: var(--accent-secondary);
+      background: rgba(192, 132, 252, 0.08);
+    }
+
+    .parcours-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--gradient-mint);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .parcours-card.lilac .parcours-icon {
+      background: var(--gradient-lilac);
+    }
+
+    .parcours-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .parcours-card > p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .parcours-features {
+      list-style: none;
+    }
+
+    .parcours-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .parcours-features li::before {
+      content: '✓';
+      color: var(--accent-primary);
+      font-weight: 600;
+    }
+
+    .parcours-card.lilac .parcours-features li::before {
+      color: var(--accent-secondary);
+    }
+
+    /* ============================================
+       DASHBOARD
+       ============================================ */
+    .dashboard-header {
+      margin-bottom: 2rem;
+    }
+
+    .dashboard-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .dashboard-header p {
+      color: var(--text-secondary);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      padding: 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+    }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .kpi-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .kpi-icon.mint { background: var(--success-bg); }
+    .kpi-icon.lilac { background: rgba(192, 132, 252, 0.12); }
+    .kpi-icon.blue { background: var(--info-bg); }
+    .kpi-icon.amber { background: var(--warning-bg); }
+
+    .kpi-trend {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .kpi-trend.up {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .kpi-trend.down {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .kpi-value {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+
+    .kpi-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Skills Progress */
+    .skill-item {
+      margin-bottom: 1.25rem;
+    }
+
+    .skill-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .skill-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .skill-percent {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .skill-bar {
+      height: 8px;
+      background: var(--bg-primary);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 1s ease-out;
+    }
+
+    .skill-fill.mint { background: var(--gradient-mint); }
+    .skill-fill.lilac { background: var(--gradient-lilac); }
+    .skill-fill.mixed { background: var(--gradient-mixed); }
+
+    /* Activity List */
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .activity-info {
+      flex: 1;
+    }
+
+    .activity-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.15rem;
+    }
+
+    .activity-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .activity-score {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--accent-primary);
+    }
+
+    /* Personality Radar (simplified display) */
+    .personality-chart {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .trait-bar {
+      text-align: center;
+    }
+
+    .trait-fill-container {
+      height: 120px;
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .trait-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--gradient-mint);
+      border-radius: var(--radius-md);
+      transition: height 1s ease-out;
+    }
+
+    .trait-value {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-inverse);
+      z-index: 1;
+    }
+
+    .trait-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ============================================
+       TEST SCREEN
+       ============================================ */
+    .test-container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .test-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .test-category {
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .test-progress-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .timer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.25rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+
+    .timer.warning {
+      background: var(--warning-bg);
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .timer.danger {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: var(--danger);
+      animation: timerPulse 1s infinite;
+    }
+
+    @keyframes timerPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-full);
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-mint);
+      border-radius: var(--radius-full);
+      transition: width var(--transition-base);
+    }
+
+    /* Question Card */
+    .question-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .question-num {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      background: var(--success-bg);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      margin-bottom: 1.25rem;
+    }
+
+    .question-text {
+      font-size: 1.3rem;
+      font-weight: 500;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+
+    /* Scenario Box */
+    .scenario-box {
+      background: var(--bg-primary);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .scenario-label {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      background: var(--success-bg);
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .scenario-text {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    /* Matrix Display */
+    .matrix-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 1.5rem;
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .matrix-cell {
+      width: 72px;
+      height: 72px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .matrix-cell.mystery {
+      background: var(--gradient-mint);
+      border: none;
+      color: var(--text-inverse);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    /* Answer Options */
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .answers-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .answer-option {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .answer-option:hover:not(.disabled) {
+      border-color: var(--accent-primary);
+      background: var(--bg-hover);
+    }
+
+    .answer-option.selected {
+      border-color: var(--accent-primary);
+      background: var(--success-bg);
+    }
+
+    .answer-option.correct {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .answer-option.incorrect {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .answer-option.disabled {
+      pointer-events: none;
+    }
+
+    .answer-letter {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      transition: all var(--transition-fast);
+    }
+
+    .answer-option.selected .answer-letter {
+      background: var(--accent-primary);
+      color: var(--text-inverse);
+    }
+
+    .answer-option.correct .answer-letter {
+      background: var(--success);
+      color: var(--text-inverse);
+    }
+
+    .answer-option.incorrect .answer-letter {
+      background: var(--danger);
+      color: white;
+    }
+
+    .answer-text {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    /* Likert Scale */
+    .likert-statement {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding: 0 1rem;
+      font-style: italic;
+    }
+
+    .likert-scale {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .likert-option {
+      flex: 1;
+      max-width: 120px;
+      padding: 1.25rem 0.75rem;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-align: center;
+    }
+
+    .likert-option:hover {
+      border-color: var(--accent-secondary);
+    }
+
+    .likert-option.selected {
+      border-color: var(--accent-secondary);
+      background: rgba(192, 132, 252, 0.12);
+    }
+
+    .likert-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--text-primary);
+    }
+
+    .likert-option.selected .likert-value {
+      color: var(--accent-secondary);
+    }
+
+    .likert-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .scale-endpoints {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* SJT Options */
+    .sjt-instruction {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .sjt-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .sjt-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-fast);
+    }
+
+    .sjt-option.selected-best {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .sjt-option.selected-worst {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .sjt-letter {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .sjt-content {
+      flex: 1;
+    }
+
+    .sjt-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .sjt-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .sjt-btn {
+      padding: 0.4rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .sjt-btn-best {
+      background: var(--success);
+      color: var(--text-inverse);
+    }
+
+    .sjt-btn-best:hover {
+      background: var(--accent-primary-hover);
+    }
+
+    .sjt-btn-worst {
+      background: var(--danger);
+      color: white;
+    }
+
+    .sjt-btn-worst:hover {
+      background: #ef4444;
+    }
+
+    /* Ipsative (Forced Choice) */
+    .ipsative-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .ipsative-instruction {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .ipsative-option {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .ipsative-option:hover {
+      border-color: var(--accent-secondary);
+    }
+
+    .ipsative-option.selected-plus {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .ipsative-option.selected-minus {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .ipsative-letter {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .ipsative-text {
+      flex: 1;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .ipsative-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .ipsative-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .ipsative-btn-plus {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .ipsative-btn-plus:hover {
+      background: var(--success);
+      color: var(--text-inverse);
+    }
+
+    .ipsative-btn-minus {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .ipsative-btn-minus:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    /* Feedback */
+    .feedback-box {
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+      animation: feedbackSlide 0.3s ease;
+    }
+
+    @keyframes feedbackSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feedback-box.correct {
+      background: var(--success-bg);
+      border: 1px solid var(--success);
+    }
+
+    .feedback-box.incorrect {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .feedback-icon {
+      font-size: 1.25rem;
+    }
+
+    .feedback-title {
+      font-weight: 600;
+    }
+
+    .feedback-box.correct .feedback-title { color: var(--success); }
+    .feedback-box.incorrect .feedback-title { color: var(--danger); }
+
+    .feedback-text {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Test Actions */
+    .test-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    /* ============================================
+       GAME SCREEN
+       ============================================ */
+    .game-container {
+      max-width: 650px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .game-header {
+      margin-bottom: 2rem;
+    }
+
+    .game-header h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .game-header p {
+      color: var(--text-secondary);
+    }
+
+    .game-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .game-stat {
+      padding: 1.25rem 2rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+    }
+
+    .game-stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .game-stat-value {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+    }
+
+    .game-stat-value.money { color: var(--accent-primary); }
+    .game-stat-value.round { color: var(--accent-secondary); }
+
+    .balloon-area {
+      position: relative;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .balloon {
+      position: relative;
+      width: 100px;
+      height: 125px;
+      background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--lilac-600) 50%, var(--lilac-800) 100%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      transition: all 0.15s ease-out;
+      box-shadow: 
+        inset -15px -8px 30px rgba(0,0,0,0.25),
+        inset 15px 8px 30px rgba(255,255,255,0.15),
+        0 15px 40px var(--accent-secondary-glow);
+    }
+
+    .balloon::before {
+      content: '';
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 22px solid var(--lilac-800);
+    }
+
+    .balloon::after {
+      content: '';
+      position: absolute;
+      top: 22%;
+      left: 22%;
+      width: 28%;
+      height: 18%;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+      transform: rotate(-35deg);
+    }
+
+    .balloon-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .balloon.popped {
+      animation: pop 0.35s ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); opacity: 1; }
+      40% { transform: scale(1.4); opacity: 0.6; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    .game-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .btn-pump {
+      padding: 1rem 2.5rem;
+      font-size: 1rem;
+      background: var(--gradient-lilac);
+      border: none;
+      border-radius: var(--radius-lg);
+      color: white;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-md), var(--shadow-glow-lilac);
+    }
+
+    .btn-pump:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    .btn-pump:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-collect {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      background: var(--gradient-mint);
+      border: none;
+      border-radius: var(--radius-lg);
+      color: var(--text-inverse);
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-collect:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    .game-message {
+      margin-top: 1.5rem;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-lg);
+      font-weight: 500;
+    }
+
+    .game-message.success {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    .game-message.fail {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    /* Tower Game */
+    .tower-area {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 2rem 0;
+      min-height: 200px;
+    }
+
+    .tower-peg {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      width: 120px;
+      min-height: 180px;
+      padding-bottom: 1rem;
+      position: relative;
+    }
+
+    .tower-peg::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 140px;
+      background: var(--bg-tertiary);
+      border-radius: 4px;
+    }
+
+    .tower-peg::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+    }
+
+    .tower-disk {
+      height: 24px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 4px;
+      cursor: grab;
+      position: relative;
+      z-index: 1;
+      transition: all var(--transition-fast);
+    }
+
+    .tower-disk.selected {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .tower-disk:nth-child(1) { width: 40px; background: var(--mint-400); }
+    .tower-disk:nth-child(2) { width: 60px; background: var(--lilac-400); }
+    .tower-disk:nth-child(3) { width: 80px; background: var(--mint-500); }
+    .tower-disk:nth-child(4) { width: 100px; background: var(--lilac-500); }
+
+    .tower-moves {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .tower-moves strong {
+      color: var(--accent-primary);
+      font-size: 1.1rem;
+    }
+
+    /* Memory Grid Game */
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      max-width: 320px;
+      margin: 2rem auto;
+    }
+
+    .memory-cell {
+      aspect-ratio: 1;
+      background: var(--bg-tertiary);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .memory-cell.highlight {
+      background: var(--success-bg);
+      border-color: var(--accent-primary);
+    }
+
+    .memory-cell.correct {
+      background: var(--success-bg);
+      border-color: var(--success);
+    }
+
+    .memory-cell.wrong {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+    }
+
+    /* ============================================
+       RESULTS SCREEN
+       ============================================ */
+    .results-container {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .results-icon {
+      width: 100px;
+      height: 100px;
+      background: var(--gradient-mint);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.75rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: var(--shadow-glow-mint);
+    }
+
+    .results-container h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .results-container > p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .score-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .score-ring {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .score-ring svg {
+      transform: rotate(-90deg);
+    }
+
+    .score-ring-bg {
+      fill: none;
+      stroke: var(--bg-tertiary);
+      stroke-width: 12;
+    }
+
+    .score-ring-fill {
+      fill: none;
+      stroke: url(#scoreGradient);
+      stroke-width: 12;
+      stroke-linecap: round;
+      stroke-dasharray: 440;
+      stroke-dashoffset: 440;
+      transition: stroke-dashoffset 1.5s ease-out;
+    }
+
+    .score-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif;
+      font-size: 3rem;
+      font-weight: 600;
+    }
+
+    .score-label {
+      font-size: 1rem;
+      color: var(--text-muted);
+    }
+
+    .results-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .breakdown-item {
+      padding: 1.25rem;
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+    }
+
+    .breakdown-value {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .breakdown-value.green { color: var(--success); }
+    .breakdown-value.red { color: var(--danger); }
+    .breakdown-value.lilac { color: var(--accent-secondary); }
+
+    .breakdown-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .xp-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--success-bg);
+      border: 1px solid var(--success);
+      border-radius: var(--radius-full);
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+
+    .xp-badge span {
+      color: var(--accent-primary);
+    }
+
+    .results-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ============================================
+       ONBOARDING MODAL
+       ============================================ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-base);
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      max-width: 500px;
+      width: 90%;
+      transform: translateY(20px);
+      transition: transform var(--transition-base);
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .modal p {
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ============================================
+       DISCLAIMER
+       ============================================ */
+    .disclaimer {
+      margin-top: 4rem;
+      padding: 1.75rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+    }
+
+    .disclaimer h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .disclaimer p, .disclaimer li {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .disclaimer ul {
+      margin: 1rem 0 1rem 1.5rem;
+    }
+
+    .disclaimer li {
+      margin-bottom: 0.35rem;
+    }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 0 1rem;
+      }
+
+      .nav-menu {
+        display: none;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      .hero-metrics {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .parcours-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .modules-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .matrix-cell {
+        width: 56px;
+        height: 56px;
+        font-size: 1.25rem;
+      }
+
+      .likert-scale {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .likert-option {
+        flex: 0 0 calc(33% - 0.5rem);
+        max-width: none;
+      }
+
+      .results-breakdown {
+        grid-template-columns: 1fr;
+      }
+
+      .game-stats {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    /* ============================================
+       UTILITIES
+       ============================================ */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="bg-effects">
+    <div class="bg-gradient-orb mint"></div>
+    <div class="bg-gradient-orb lilac"></div>
+    <div class="bg-gradient-orb center"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+  </div>
+
+  <!-- App Container -->
+  <div class="app">
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="#" class="logo" onclick="showScreen('home'); return false;">
+        <div class="logo-mark">📋</div>
+        <span class="logo-text">PrepRecruit</span>
+      </a>
+
+      <div class="nav-menu">
+        <button class="nav-item active" data-screen="home" onclick="showScreen('home')">Accueil</button>
+        <button class="nav-item" data-screen="dashboard" onclick="showScreen('dashboard')">Progression</button>
+        <button class="nav-item" data-screen="personality" onclick="showScreen('personality')">Mon Profil</button>
+      </div>
+
+      <div class="nav-stats">
+        <div class="stat-pill">
+          <span class="icon">⚡</span>
+          <span class="value" id="navXP">0</span>
+          <span>XP</span>
+        </div>
+        <div class="stat-pill streak">
+          <span class="icon">🔥</span>
+          <span class="value" id="navStreak">0</span>
+          <span>jours</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- ==================== HOME SCREEN ==================== -->
+      <section class="screen active" id="screen-home">
+        <div class="container">
+          <div class="hero">
+            <div class="hero-badge">
+              <span class="pulse"></span>
+              <span>Module de préparation aux tests de recrutement</span>
+            </div>
+
+            <h1>Maîtrisez vos tests,<br><span class="gradient">décrochez le poste</span></h1>
+
+            <p class="hero-subtitle">
+              Entraînez-vous sur les tests cognitifs, de personnalité et mises en situation utilisés par les plus grandes entreprises. La pratique augmente vos scores de 40 à 80%.
+            </p>
+
+            <div class="hero-metrics">
+              <div class="metric">
+                <div class="metric-value">54-84%</div>
+                <div class="metric-label">candidats éliminés aux tests</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value lilac">+65%</div>
+                <div class="metric-label">amélioration avec pratique</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">6</div>
+                <div class="metric-label">modules d'entraînement</div>
+              </div>
+            </div>
+
+            <div class="hero-actions">
+              <button class="btn btn-primary btn-lg" onclick="startQuickTest()">
+                🚀 Commencer l'entraînement
+              </button>
+              <button class="btn btn-secondary btn-lg" onclick="showScreen('dashboard')">
+                📊 Voir ma progression
+              </button>
+            </div>
+          </div>
+
+          <!-- Parcours Selection -->
+          <div class="parcours-section">
+            <div class="section-header">
+              <h2 class="section-title">Choisissez votre parcours</h2>
+            </div>
+
+            <div class="parcours-cards">
+              <div class="parcours-card" id="parcours-offre" onclick="selectParcours('offre')">
+                <div class="parcours-icon">🎯</div>
+                <h3>Réponse à une offre</h3>
+                <p>Vous postulez à un poste spécifique ? Préparez-vous à prouver votre conformité au profil recherché.</p>
+                <ul class="parcours-features">
+                  <li>Tests adaptés au type de poste</li>
+                  <li>Focus sur les compétences techniques</li>
+                  <li>Simulations de cas pratiques</li>
+                  <li>Préparation entretien STAR</li>
+                </ul>
+              </div>
+
+              <div class="parcours-card lilac" id="parcours-spontanee" onclick="selectParcours('spontanee')">
+                <div class="parcours-icon">💡</div>
+                <h3>Candidature spontanée</h3>
+                <p>Vous voulez démontrer votre potentiel ? Mettez en avant votre Learning Agility et votre adaptabilité.</p>
+                <ul class="parcours-features">
+                  <li>Mise en avant du potentiel</li>
+                  <li>Tests de raisonnement abstrait</li>
+                  <li>Profil de personnalité complet</li>
+                  <li>Évaluation de l'agilité d'apprentissage</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modules Grid -->
+          <div class="section-header" style="margin-top: 3rem;">
+            <h2 class="section-title">Modules d'entraînement</h2>
+          </div>
+
+          <div class="modules-grid">
+            <div class="module-card" onclick="startTest('logical')">
+              <div class="module-icon">🧩</div>
+              <h3>Raisonnement Logique</h3>
+              <p>Matrices de Raven, séries et patterns. Développez votre intelligence fluide.</p>
+              <div class="module-footer">
+                <span class="module-duration">⏱️ 15 min</span>
+                <div class="module-difficulty">
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="module-card" onclick="startTest('verbal')">
+              <div class="module-icon">📖</div>
+              <h3>Raisonnement Verbal</h3>
+              <p>Compréhension de textes et inférence. Maîtrisez l'analyse Vrai/Faux/Ne peut pas dire.</p>
+              <div class="module-footer">
+                <span class="module-duration">⏱️ 20 min</span>
+                <div class="module-difficulty">
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot filled"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="module-card" onclick="startTest('numerical')">
+              <div class="module-icon">📊</div>
+              <h3>Raisonnement Numérique</h3>
+              <p>Tableaux, graphiques et calculs. Interprétez les données rapidement.</p>
+              <div class="module-footer">
+                <span class="module-duration">⏱️ 20 min</span>
+                <div class="module-difficulty">
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="module-card lilac-accent" onclick="startTest('personality')">
+              <div class="module-tag">Big Five</div>
+              <div class="module-icon">🎭</div>
+              <h3>Inventaire de Personnalité</h3>
+              <p>Découvrez votre profil OCEAN complet et préparez-vous aux tests de personnalité.</p>
+              <div class="module-footer">
+                <span class="module-duration">⏱️ 12 min</span>
+                <div class="module-difficulty">
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot"></span>
+                  <span class="diff-dot"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="module-card" onclick="startTest('sjt')">
+              <div class="module-icon">💼</div>
+              <h3>Jugement Situationnel</h3>
+              <p>Scénarios professionnels réalistes. Démontrez votre jugement et votre éthique.</p>
+              <div class="module-footer">
+                <span class="module-duration">⏱️ 25 min</span>
+                <div class="module-difficulty">
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot filled"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="module-card lilac-accent" onclick="startGame('balloon')">
+              <div class="module-tag">Gamifié</div>
+              <div class="module-icon">🎈</div>
+              <h3>Balloon Game</h3>
+              <p>Test de prise de risque et d'impulsivité. Découvrez votre profil décisionnel.</p>
+              <div class="module-footer">
+                <span class="module-duration">⏱️ 5 min</span>
+                <div class="module-difficulty">
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot"></span>
+                  <span class="diff-dot"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="module-card lilac-accent" onclick="startGame('tower')">
+              <div class="module-tag">Gamifié</div>
+              <div class="module-icon">🗼</div>
+              <h3>Tower Game</h3>
+              <p>Test de planification et stratégie. Tours de Hanoï modernisées.</p>
+              <div class="module-footer">
+                <span class="module-duration">⏱️ 5 min</span>
+                <div class="module-difficulty">
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="module-card lilac-accent" onclick="startGame('memory')">
+              <div class="module-tag">Gamifié</div>
+              <div class="module-icon">🧠</div>
+              <h3>Memory Grid</h3>
+              <p>Test de mémoire de travail et attention. Mémorisez les séquences.</p>
+              <div class="module-footer">
+                <span class="module-duration">⏱️ 5 min</span>
+                <div class="module-difficulty">
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot filled"></span>
+                  <span class="diff-dot"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Disclaimer -->
+          <div class="disclaimer">
+            <h4>⚠️ Avertissement Important</h4>
+            <p>Ce module est un <strong>outil de préparation et d'entraînement</strong>. Il ne constitue pas un test psychométrique validé scientifiquement.</p>
+            <ul>
+              <li>Les résultats sont <strong>indicatifs</strong> et à but pédagogique uniquement</li>
+              <li>Ce module ne prétend pas mesurer des aptitudes réelles avec précision</li>
+              <li>Il ne peut se substituer à une évaluation professionnelle</li>
+              <li>Les questions sont des exercices d'entraînement originaux</li>
+            </ul>
+            <p>Ce module n'est pas développé, approuvé ou affilié à SHL, Cubiks, Aon, Korn Ferry ou tout autre éditeur de tests psychométriques.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== DASHBOARD SCREEN ==================== -->
+      <section class="screen" id="screen-dashboard">
+        <div class="container">
+          <div class="dashboard-header">
+            <h1>📊 Votre Progression</h1>
+            <p>Suivez vos performances et identifiez vos axes d'amélioration</p>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <div class="kpi-icon mint">🎯</div>
+                <span class="kpi-trend up">↑ 12%</span>
+              </div>
+              <div class="kpi-value" id="kpiScore">0%</div>
+              <div class="kpi-label">Score moyen global</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <div class="kpi-icon lilac">📝</div>
+              </div>
+              <div class="kpi-value" id="kpiTests">0</div>
+              <div class="kpi-label">Tests complétés</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <div class="kpi-icon blue">⏱️</div>
+              </div>
+              <div class="kpi-value" id="kpiTime">0h</div>
+              <div class="kpi-label">Temps d'entraînement</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <div class="kpi-icon amber">🏆</div>
+              </div>
+              <div class="kpi-value" id="kpiBadges">0</div>
+              <div class="kpi-label">Badges obtenus</div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card">
+              <h3 class="card-title">Performance par catégorie</h3>
+
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">🧩 Raisonnement Logique</span>
+                  <span class="skill-percent" id="skillLogical">0%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill mint" id="skillLogicalBar" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">📖 Raisonnement Verbal</span>
+                  <span class="skill-percent" id="skillVerbal">0%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill lilac" id="skillVerbalBar" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">📊 Raisonnement Numérique</span>
+                  <span class="skill-percent" id="skillNumerical">0%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill mint" id="skillNumericalBar" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">💼 Jugement Situationnel</span>
+                  <span class="skill-percent" id="skillSJT">0%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill lilac" id="skillSJTBar" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="skill-item">
+                <div class="skill-header">
+                  <span class="skill-name">🎮 Tests Gamifiés</span>
+                  <span class="skill-percent" id="skillGames">0%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill mixed" id="skillGamesBar" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Activité récente</h3>
+              <div class="activity-list" id="activityList">
+                <div class="activity-item">
+                  <div class="activity-icon">📝</div>
+                  <div class="activity-info">
+                    <div class="activity-title">Aucune activité</div>
+                    <div class="activity-time">Commencez un test !</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== PERSONALITY PROFILE SCREEN ==================== -->
+      <section class="screen" id="screen-personality">
+        <div class="container">
+          <div class="dashboard-header">
+            <h1>🎭 Mon Profil de Personnalité</h1>
+            <p>Votre profil Big Five (OCEAN) basé sur vos réponses</p>
+          </div>
+
+          <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <h3 class="card-title">Les 5 Dimensions</h3>
+            <div class="personality-chart">
+              <div class="trait-bar">
+                <div class="trait-fill-container">
+                  <div class="trait-fill" id="traitO" style="height: 0%"></div>
+                  <span class="trait-value" id="traitOVal">-</span>
+                </div>
+                <div class="trait-label">Ouverture</div>
+              </div>
+              <div class="trait-bar">
+                <div class="trait-fill-container">
+                  <div class="trait-fill" id="traitC" style="height: 0%"></div>
+                  <span class="trait-value" id="traitCVal">-</span>
+                </div>
+                <div class="trait-label">Conscience</div>
+              </div>
+              <div class="trait-bar">
+                <div class="trait-fill-container">
+                  <div class="trait-fill" id="traitE" style="height: 0%"></div>
+                  <span class="trait-value" id="traitEVal">-</span>
+                </div>
+                <div class="trait-label">Extraversion</div>
+              </div>
+              <div class="trait-bar">
+                <div class="trait-fill-container">
+                  <div class="trait-fill" id="traitA" style="height: 0%"></div>
+                  <span class="trait-value" id="traitAVal">-</span>
+                </div>
+                <div class="trait-label">Agréabilité</div>
+              </div>
+              <div class="trait-bar">
+                <div class="trait-fill-container">
+                  <div class="trait-fill" id="traitN" style="height: 0%"></div>
+                  <span class="trait-value" id="traitNVal">-</span>
+                </div>
+                <div class="trait-label">Stabilité</div>
+              </div>
+            </div>
+
+            <p style="text-align: center; color: var(--text-muted); margin-top: 2rem; font-size: 0.9rem;">
+              Complétez le test de personnalité pour voir votre profil détaillé.
+            </p>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+              <button class="btn btn-lilac" onclick="startTest('personality')">
+                🎭 Passer le test Big Five
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TEST SCREEN ==================== -->
+      <section class="screen" id="screen-test">
+        <div class="container">
+          <div class="test-container">
+            <div class="test-header">
+              <div class="test-meta">
+                <span class="test-category" id="testCategory">🧩 Raisonnement Logique</span>
+                <span class="test-progress-text">
+                  Question <span id="currentQ">1</span>/<span id="totalQ">10</span>
+                </span>
+              </div>
+              <div class="timer" id="timer">
+                <span>⏱️</span>
+                <span id="timerDisplay">02:00</span>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <div class="question-card" id="questionCard">
+              <!-- Question content dynamically inserted -->
+            </div>
+
+            <div class="feedback-box hidden" id="feedbackBox">
+              <!-- Feedback dynamically inserted -->
+            </div>
+
+            <div class="test-actions">
+              <button class="btn btn-secondary" id="btnPrev" onclick="prevQuestion()" disabled>
+                ← Précédent
+              </button>
+              <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()">
+                Suivant →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== GAME SCREEN ==================== -->
+      <section class="screen" id="screen-game">
+        <div class="container">
+          <div class="game-container" id="gameContainer">
+            <!-- Game content dynamically inserted -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== RESULTS SCREEN ==================== -->
+      <section class="screen" id="screen-results">
+        <div class="container">
+          <div class="results-container">
+            <div class="results-icon">🏆</div>
+            <h1>Test terminé !</h1>
+            <p>Voici vos résultats détaillés</p>
+
+            <div class="score-card">
+              <div class="score-ring">
+                <svg width="180" height="180" viewBox="0 0 180 180">
+                  <defs>
+                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4ade80"/>
+                      <stop offset="100%" style="stop-color:#c084fc"/>
+                    </linearGradient>
+                  </defs>
+                  <circle class="score-ring-bg" cx="90" cy="90" r="70"/>
+                  <circle class="score-ring-fill" id="scoreRing" cx="90" cy="90" r="70"/>
+                </svg>
+                <span class="score-value" id="finalScore">0%</span>
+              </div>
+              <div class="score-label">Score global</div>
+            </div>
+
+            <div class="results-breakdown">
+              <div class="breakdown-item">
+                <div class="breakdown-value green" id="correctCount">0</div>
+                <div class="breakdown-label">Réponses correctes</div>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-value red" id="wrongCount">0</div>
+                <div class="breakdown-label">Réponses incorrectes</div>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-value lilac" id="avgTime">0s</div>
+                <div class="breakdown-label">Temps moyen</div>
+              </div>
+            </div>
+
+            <div class="xp-badge">
+              🎉 <span id="xpEarned">+0 XP</span> gagnés !
+            </div>
+
+            <div class="results-actions">
+              <button class="btn btn-secondary" onclick="showScreen('home')">
+                ← Retour aux modules
+              </button>
+              <button class="btn btn-primary" onclick="retryTest()">
+                🔄 Recommencer
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Onboarding Modal -->
+  <div class="modal-overlay" id="onboardingModal">
+    <div class="modal">
+      <h2>👋 Bienvenue sur PrepRecruit !</h2>
+      <p>Préparez-vous efficacement aux tests de recrutement. Commencez par choisir votre parcours, puis entraînez-vous sur les différents modules.</p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="closeOnboarding()">
+          C'est parti !
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen Reader Announcer -->
+  <div role="status" aria-live="polite" class="sr-only" id="announcer"></div>
+
+  <script>
+    // ============================================
+    // APPLICATION STATE & STORAGE
+    // ============================================
+    const STORAGE_KEY = 'preprecruit_data';
+
+    const defaultState = {
+      xp: 0,
+      streak: 0,
+      lastVisit: null,
+      parcours: null,
+      testsCompleted: 0,
+      totalTimeSeconds: 0,
+      badges: [],
+      scores: {
+        logical: [],
+        verbal: [],
+        numerical: [],
+        personality: [],
+        sjt: [],
+        games: []
+      },
+      personalityProfile: {
+        O: null, C: null, E: null, A: null, N: null
+      },
+      activities: [],
+      firstVisit: true
+    };
+
+    let state = loadState();
+    let currentTest = null;
+    let currentQuestionIndex = 0;
+    let answers = [];
+    let score = 0;
+    let timeRemaining = 120;
+    let timerInterval = null;
+    let testStartTime = null;
+
+    // Game states
+    let balloonValue = 0;
+    let totalMoney = 0;
+    let currentRound = 1;
+    let popProbability = 0;
+
+    // Tower game
+    let towerPegs = [[], [], []];
+    let towerMoves = 0;
+    let selectedDisk = null;
+
+    // Memory game
+    let memorySequence = [];
+    let memoryUserSequence = [];
+    let memoryLevel = 3;
+    let memoryPhase = 'watch';
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          return { ...defaultState, ...JSON.parse(saved) };
+        }
+      } catch (e) {
+        console.error('Error loading state:', e);
+      }
+      return { ...defaultState };
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.error('Error saving state:', e);
+      }
+    }
+
+    // ============================================
+    // QUESTION BANKS
+    // ============================================
+    const questions = {
+      logical: [
+        {
+          type: 'matrix',
+          question: "Quelle figure complète la série ?",
+          matrix: ['🔵', '🔵🔵', '🔵🔵🔵', '🔴', '🔴🔴', '🔴🔴🔴', '🟢', '🟢🟢', '?'],
+          options: ['🟢🟢🟢', '🟢', '🔵🔵🔵', '🔴🔴🔴'],
+          correct: 0,
+          explanation: "Règle horizontale : +1 élément par cellule. Règle verticale : changement de couleur (bleu → rouge → vert). La réponse est 3 cercles verts."
+        },
+        {
+          type: 'sequence',
+          question: "Quelle est la suite : 2, 6, 12, 20, 30, ?",
+          options: ['40', '42', '44', '36'],
+          correct: 1,
+          explanation: "Différences : 4, 6, 8, 10 (+2 à chaque fois). Prochaine différence : 12. Donc 30 + 12 = 42."
+        },
+        {
+          type: 'matrix',
+          question: "Complétez la matrice logique.",
+          matrix: ['▲', '▲▲', '▲▲▲', '■', '■■', '■■■', '●', '●●', '?'],
+          options: ['●●●', '●', '■■■', '▲▲▲'],
+          correct: 0,
+          explanation: "Chaque ligne a une forme unique, et le nombre augmente de 1 à 3. Réponse : 3 cercles."
+        },
+        {
+          type: 'sequence',
+          question: "Suite de Fibonacci : 1, 1, 2, 3, 5, 8, ?",
+          options: ['11', '12', '13', '10'],
+          correct: 2,
+          explanation: "Chaque nombre = somme des 2 précédents. 5 + 8 = 13."
+        },
+        {
+          type: 'analogy',
+          question: "Livre est à Bibliothèque ce que Voiture est à :",
+          options: ['Route', 'Garage', 'Parking', 'Essence'],
+          correct: 1,
+          explanation: "Relation de rangement : un livre se range dans une bibliothèque, une voiture se range dans un garage."
+        },
+        {
+          type: 'sequence',
+          question: "Quelle est la suite : 3, 9, 27, 81, ?",
+          options: ['162', '243', '216', '324'],
+          correct: 1,
+          explanation: "Progression géométrique : ×3 à chaque étape. 81 × 3 = 243."
+        },
+        {
+          type: 'analogy',
+          question: "Médecin est à Patient ce que Avocat est à :",
+          options: ['Juge', 'Client', 'Tribunal', 'Procès'],
+          correct: 1,
+          explanation: "Relation professionnelle : le médecin soigne son patient, l'avocat défend son client."
+        },
+        {
+          type: 'sequence',
+          question: "Suite : 1, 4, 9, 16, 25, ?",
+          options: ['30', '36', '49', '34'],
+          correct: 1,
+          explanation: "Suite des carrés parfaits : 1², 2², 3², 4², 5², 6² = 36."
+        }
+      ],
+      verbal: [
+        {
+          type: 'verbal',
+          passage: "L'entreprise TechCorp a augmenté ses investissements en R&D de 15% cette année. Le directeur a déclaré que cette stratégie vise à maintenir leur avantage compétitif face aux nouveaux entrants sur le marché.",
+          question: "Les investissements en R&D de TechCorp ont doublé cette année.",
+          options: ['Vrai', 'Faux', 'Ne peut pas dire'],
+          correct: 1,
+          explanation: "FAUX — Le texte indique +15%, pas un doublement (+100%)."
+        },
+        {
+          type: 'verbal',
+          passage: "Le télétravail a augmenté la productivité de 23% dans les entreprises l'ayant adopté. Cependant, l'isolement social reste un défi majeur pour les employés.",
+          question: "Le télétravail n'a que des avantages pour les entreprises.",
+          options: ['Vrai', 'Faux', 'Ne peut pas dire'],
+          correct: 1,
+          explanation: "FAUX — Le texte mentionne un inconvénient : l'isolement social."
+        },
+        {
+          type: 'verbal',
+          passage: "La réglementation européenne impose aux entreprises de plus de 250 employés de publier un rapport carbone annuel. Les PME sont exemptées jusqu'en 2027.",
+          question: "Une entreprise de 100 employés devra publier son rapport carbone en 2025.",
+          options: ['Vrai', 'Faux', 'Ne peut pas dire'],
+          correct: 1,
+          explanation: "FAUX — Les PME sont exemptées jusqu'en 2027."
+        },
+        {
+          type: 'verbal',
+          passage: "Le marché des véhicules électriques a connu une croissance de 40% en Europe l'an dernier. Les constructeurs ont annoncé des plans d'expansion.",
+          question: "La croissance du marché EV continuera l'année prochaine.",
+          options: ['Vrai', 'Faux', 'Ne peut pas dire'],
+          correct: 2,
+          explanation: "NE PEUT PAS DIRE — Le texte ne fait aucune prédiction sur l'avenir."
+        },
+        {
+          type: 'verbal',
+          passage: "L'IA générative transforme la création de contenu. Les agences marketing reportent une réduction de 30% du temps de production grâce à ces outils.",
+          question: "L'IA générative est utilisée par toutes les agences marketing.",
+          options: ['Vrai', 'Faux', 'Ne peut pas dire'],
+          correct: 2,
+          explanation: "NE PEUT PAS DIRE — Le texte ne précise pas quelle proportion d'agences l'utilise."
+        },
+        {
+          type: 'verbal',
+          passage: "Les énergies renouvelables représentent désormais 25% du mix énergétique français. L'éolien et le solaire ont progressé de 12% en un an.",
+          question: "Le nucléaire ne fait plus partie du mix énergétique français.",
+          options: ['Vrai', 'Faux', 'Ne peut pas dire'],
+          correct: 2,
+          explanation: "NE PEUT PAS DIRE — Le texte ne mentionne pas le nucléaire."
+        }
+      ],
+      numerical: [
+        {
+          type: 'numerical',
+          question: "CA T1 : 2,4M€. CA T2 : 2,88M€. Pourcentage d'augmentation ?",
+          options: ['15%', '20%', '25%', '18%'],
+          correct: 1,
+          explanation: "(2,88 - 2,4) / 2,4 × 100 = 20%"
+        },
+        {
+          type: 'numerical',
+          question: "35% des 800 employés sont à temps partiel. Combien à temps plein ?",
+          options: ['280', '520', '560', '240'],
+          correct: 1,
+          explanation: "Temps partiel : 800 × 0,35 = 280. Temps plein : 800 - 280 = 520."
+        },
+        {
+          type: 'numerical',
+          question: "Produit à 85€ HT + TVA 20%. Prix TTC ?",
+          options: ['102€', '105€', '100€', '97€'],
+          correct: 0,
+          explanation: "85 × 1,20 = 102€"
+        },
+        {
+          type: 'numerical',
+          question: "Ratio dettes/capitaux = 0,75. Capitaux = 4M€. Montant des dettes ?",
+          options: ['3M€', '5,33M€', '3,5M€', '2,5M€'],
+          correct: 0,
+          explanation: "Dettes = 4M × 0,75 = 3M€"
+        },
+        {
+          type: 'numerical',
+          question: "10 000€ à 5% d'intérêts composés/an. Valeur après 2 ans ?",
+          options: ['11 000€', '11 025€', '10 500€', '11 050€'],
+          correct: 1,
+          explanation: "An 1 : 10 000 × 1,05 = 10 500. An 2 : 10 500 × 1,05 = 11 025€"
+        },
+        {
+          type: 'numerical',
+          question: "Budget marketing : 15% de 2,4M€ de CA. Montant ?",
+          options: ['360 000€', '240 000€', '400 000€', '300 000€'],
+          correct: 0,
+          explanation: "2 400 000 × 0,15 = 360 000€"
+        }
+      ],
+      personality: [
+        // Ouverture (O)
+        { type: 'likert', dimension: 'O', statement: "J'aime explorer de nouvelles idées et concepts abstraits.", reversed: false },
+        { type: 'likert', dimension: 'O', statement: "Je préfère les routines établies aux nouvelles expériences.", reversed: true },
+        { type: 'likert', dimension: 'O', statement: "L'art et la beauté me touchent profondément.", reversed: false },
+        // Conscience (C)
+        { type: 'likert', dimension: 'C', statement: "Je suis toujours bien préparé(e) et organisé(e).", reversed: false },
+        { type: 'likert', dimension: 'C', statement: "J'ai tendance à remettre les tâches à plus tard.", reversed: true },
+        { type: 'likert', dimension: 'C', statement: "Je fais attention aux détails dans mon travail.", reversed: false },
+        // Extraversion (E)
+        { type: 'likert', dimension: 'E', statement: "Je me sens énergisé(e) après avoir passé du temps en groupe.", reversed: false },
+        { type: 'likert', dimension: 'E', statement: "Je préfère les conversations en petit comité.", reversed: true },
+        { type: 'likert', dimension: 'E', statement: "J'initie facilement les conversations avec des inconnus.", reversed: false },
+        // Agréabilité (A)
+        { type: 'likert', dimension: 'A', statement: "Je m'intéresse sincèrement aux problèmes des autres.", reversed: false },
+        { type: 'likert', dimension: 'A', statement: "Je suis parfois perçu(e) comme froid(e) ou distant(e).", reversed: true },
+        { type: 'likert', dimension: 'A', statement: "Je fais naturellement confiance aux intentions des autres.", reversed: false },
+        // Névrosisme (N inversé = Stabilité)
+        { type: 'likert', dimension: 'N', statement: "Je reste calme et serein(e) même sous pression.", reversed: true },
+        { type: 'likert', dimension: 'N', statement: "Mon humeur change fréquemment.", reversed: false },
+        { type: 'likert', dimension: 'N', statement: "Je gère bien le stress et l'incertitude.", reversed: true },
+        // Échelle L (désirabilité sociale) - Questions pièges
+        { type: 'likert', dimension: 'L', statement: "Je ne me mets jamais en colère.", reversed: false, validity: true },
+        { type: 'likert', dimension: 'L', statement: "Je dis toujours la vérité, sans exception.", reversed: false, validity: true }
+      ],
+      sjt: [
+        {
+          type: 'sjt',
+          scenario: "Deux membres de votre équipe sont en conflit ouvert et refusent de collaborer. Cela affecte les délais du projet et l'ambiance générale.",
+          options: [
+            { id: 'A', text: "Organiser immédiatement une réunion avec les deux personnes pour qu'elles s'expliquent devant vous." },
+            { id: 'B', text: "Les rencontrer individuellement d'abord pour comprendre chaque point de vue avant d'envisager une médiation." },
+            { id: 'C', text: "Signaler le problème aux RH et leur demander de gérer le conflit." },
+            { id: 'D', text: "Réorganiser les tâches pour qu'ils n'aient plus besoin de travailler ensemble." }
+          ],
+          best: 'B',
+          worst: 'C',
+          explanation: "B permet de comprendre les enjeux avant d'agir. C délègue une responsabilité managériale directe."
+        },
+        {
+          type: 'sjt',
+          scenario: "Un client important se plaint d'un retard de livraison et menace de rompre le contrat. Le retard est dû à un problème chez un fournisseur.",
+          options: [
+            { id: 'A', text: "Expliquer que ce n'est pas votre faute et que le fournisseur est responsable." },
+            { id: 'B', text: "Présenter vos excuses, proposer une compensation et un plan d'action pour éviter que cela se reproduise." },
+            { id: 'C', text: "Promettre une livraison sous 24h même si vous n'êtes pas sûr de pouvoir tenir ce délai." },
+            { id: 'D', text: "Transférer l'appel à votre supérieur pour qu'il gère la situation." }
+          ],
+          best: 'B',
+          worst: 'C',
+          explanation: "B assume la responsabilité client et propose des solutions. C aggravera la situation si le délai n'est pas tenu."
+        },
+        {
+          type: 'sjt',
+          scenario: "Vous découvrez qu'un collègue a fait une erreur importante dans un rapport déjà envoyé à la direction. Il n'en est pas conscient.",
+          options: [
+            { id: 'A', text: "En informer directement votre manager sans en parler au collègue." },
+            { id: 'B', text: "Informer discrètement votre collègue de l'erreur et lui suggérer de la corriger rapidement." },
+            { id: 'C', text: "Ne rien faire, ce n'est pas votre responsabilité." },
+            { id: 'D', text: "Corriger l'erreur vous-même et renvoyer le rapport sans rien dire." }
+          ],
+          best: 'B',
+          worst: 'C',
+          explanation: "B respecte le collègue tout en corrigeant l'erreur. C laisse une erreur importante non traitée."
+        },
+        {
+          type: 'sjt',
+          scenario: "Votre manager vous demande de falsifier un rapport de dépenses pour augmenter le budget de l'équipe. Il assure que c'est courant.",
+          options: [
+            { id: 'A', text: "Refuser poliment et expliquer que vous n'êtes pas à l'aise avec cette pratique." },
+            { id: 'B', text: "Accepter car c'est votre manager et vous ne voulez pas créer de conflit." },
+            { id: 'C', text: "Signaler immédiatement la situation aux RH ou à la direction." },
+            { id: 'D', text: "Demander conseil à un collègue de confiance avant de prendre une décision." }
+          ],
+          best: 'A',
+          worst: 'B',
+          explanation: "A refuse une pratique non éthique de manière professionnelle. B compromet votre intégrité."
+        }
+      ]
+    };
+
+    // ============================================
+    // NAVIGATION
+    // ============================================
+    function showScreen(screenName) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(`screen-${screenName}`).classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.screen === screenName) item.classList.add('active');
+      });
+
+      if (screenName === 'dashboard') updateDashboard();
+      if (screenName === 'personality') updatePersonalityProfile();
+
+      announce(`Navigation vers ${screenName}`);
+    }
+
+    function announce(message) {
+      document.getElementById('announcer').textContent = message;
+    }
+
+    // ============================================
+    // ONBOARDING
+    // ============================================
+    function checkOnboarding() {
+      if (state.firstVisit) {
+        document.getElementById('onboardingModal').classList.add('active');
+      }
+      updateStreak();
+      updateUI();
+    }
+
+    function closeOnboarding() {
+      document.getElementById('onboardingModal').classList.remove('active');
+      state.firstVisit = false;
+      saveState();
+    }
+
+    function updateStreak() {
+      const today = new Date().toDateString();
+      if (state.lastVisit) {
+        const lastDate = new Date(state.lastVisit);
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        if (lastDate.toDateString() === yesterday.toDateString()) {
+          state.streak++;
+        } else if (lastDate.toDateString() !== today) {
+          state.streak = 1;
+        }
+      } else {
+        state.streak = 1;
+      }
+      state.lastVisit = today;
+      saveState();
+    }
+
+    function updateUI() {
+      document.getElementById('navXP').textContent = state.xp.toLocaleString();
+      document.getElementById('navStreak').textContent = state.streak;
+    }
+
+    // ============================================
+    // PARCOURS SELECTION
+    // ============================================
+    function selectParcours(type) {
+      document.querySelectorAll('.parcours-card').forEach(card => card.classList.remove('selected'));
+      document.getElementById(`parcours-${type}`).classList.add('selected');
+      state.parcours = type;
+      saveState();
+    }
+
+    // ============================================
+    // TEST FUNCTIONS
+    // ============================================
+    function startQuickTest() {
+      startTest('logical');
+    }
+
+    function startTest(testType) {
+      currentTest = testType;
+      currentQuestionIndex = 0;
+      answers = [];
+      score = 0;
+      testStartTime = Date.now();
+
+      const times = { logical: 180, verbal: 240, numerical: 240, personality: 600, sjt: 300 };
+      timeRemaining = times[testType] || 180;
+
+      const labels = {
+        logical: '🧩 Raisonnement Logique',
+        verbal: '📖 Raisonnement Verbal',
+        numerical: '📊 Raisonnement Numérique',
+        personality: '🎭 Test de Personnalité',
+        sjt: '💼 Jugement Situationnel'
+      };
+
+      document.getElementById('testCategory').textContent = labels[testType];
+      document.getElementById('totalQ').textContent = questions[testType].length;
+
+      showScreen('test');
+      renderQuestion();
+      startTimer();
+    }
+
+    function renderQuestion() {
+      const qs = questions[currentTest];
+      const q = qs[currentQuestionIndex];
+      const container = document.getElementById('questionCard');
+
+      document.getElementById('currentQ').textContent = currentQuestionIndex + 1;
+      document.getElementById('progressFill').style.width = `${((currentQuestionIndex + 1) / qs.length) * 100}%`;
+      document.getElementById('feedbackBox').classList.add('hidden');
+      document.getElementById('btnPrev').disabled = currentQuestionIndex === 0;
+      document.getElementById('btnNext').textContent = currentQuestionIndex === qs.length - 1 ? 'Terminer ✓' : 'Suivant →';
+
+      if (q.type === 'matrix') {
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <p class="question-text">${q.question}</p>
+          <div class="matrix-wrapper">
+            <div class="matrix-grid">
+              ${q.matrix.map(cell => `<div class="matrix-cell ${cell === '?' ? 'mystery' : ''}">${cell}</div>`).join('')}
+            </div>
+          </div>
+          <div class="answers-grid">
+            ${q.options.map((opt, i) => `
+              <div class="answer-option" onclick="selectAnswer(${i})" data-idx="${i}">
+                <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+                <span class="answer-text">${opt}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (q.type === 'verbal') {
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <div class="scenario-box">
+            <span class="scenario-label">📄 Texte</span>
+            <p class="scenario-text">${q.passage}</p>
+          </div>
+          <p class="question-text">${q.question}</p>
+          <div class="answers-grid">
+            ${q.options.map((opt, i) => `
+              <div class="answer-option" onclick="selectAnswer(${i})" data-idx="${i}">
+                <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+                <span class="answer-text">${opt}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (q.type === 'likert') {
+        const labels = ['Pas du tout', "Pas d'accord", 'Neutre', "D'accord", 'Tout à fait'];
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <p class="likert-statement">"${q.statement}"</p>
+          <div class="likert-scale">
+            ${[1,2,3,4,5].map(v => `
+              <div class="likert-option" onclick="selectLikert(${v})" data-val="${v}">
+                <div class="likert-value">${v}</div>
+                <div class="likert-label">${labels[v-1]}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="scale-endpoints">
+            <span>Pas du tout d'accord</span>
+            <span>Tout à fait d'accord</span>
+          </div>
+        `;
+      } else if (q.type === 'sjt') {
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <div class="scenario-box">
+            <span class="scenario-label">📋 Situation</span>
+            <p class="scenario-text">${q.scenario}</p>
+          </div>
+          <p class="sjt-instruction">Sélectionnez la <strong>MEILLEURE</strong> et la <strong>PIRE</strong> réponse</p>
+          <div class="sjt-options">
+            ${q.options.map(opt => `
+              <div class="sjt-option" data-id="${opt.id}">
+                <span class="sjt-letter">${opt.id}</span>
+                <div class="sjt-content">
+                  <p class="sjt-text">${opt.text}</p>
+                  <div class="sjt-actions">
+                    <button class="sjt-btn sjt-btn-best" onclick="selectSJT('${opt.id}', 'best', event)">Meilleure</button>
+                    <button class="sjt-btn sjt-btn-worst" onclick="selectSJT('${opt.id}', 'worst', event)">Pire</button>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <p class="question-text">${q.question}</p>
+          <div class="answers-grid">
+            ${q.options.map((opt, i) => `
+              <div class="answer-option" onclick="selectAnswer(${i})" data-idx="${i}">
+                <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+                <span class="answer-text">${opt}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    function selectAnswer(idx) {
+      const q = questions[currentTest][currentQuestionIndex];
+      const options = document.querySelectorAll('.answer-option');
+      
+      options.forEach(opt => opt.classList.remove('selected', 'correct', 'incorrect', 'disabled'));
+      options[idx].classList.add('selected');
+      answers[currentQuestionIndex] = idx;
+
+      setTimeout(() => {
+        const isCorrect = idx === q.correct;
+        options.forEach(opt => opt.classList.add('disabled'));
+        options[q.correct].classList.add('correct');
+        if (!isCorrect) options[idx].classList.add('incorrect');
+        if (isCorrect) score++;
+        showFeedback(isCorrect, q.explanation);
+      }, 300);
+    }
+
+    function selectLikert(value) {
+      document.querySelectorAll('.likert-option').forEach(opt => opt.classList.remove('selected'));
+      document.querySelector(`[data-val="${value}"]`).classList.add('selected');
+      answers[currentQuestionIndex] = value;
+    }
+
+    function selectSJT(optionId, type, event) {
+      event.stopPropagation();
+      const options = document.querySelectorAll('.sjt-option');
+      
+      options.forEach(opt => {
+        if (type === 'best') opt.classList.remove('selected-best');
+        if (type === 'worst') opt.classList.remove('selected-worst');
+      });
+
+      document.querySelector(`[data-id="${optionId}"]`).classList.add(type === 'best' ? 'selected-best' : 'selected-worst');
+      
+      if (!answers[currentQuestionIndex]) answers[currentQuestionIndex] = {};
+      answers[currentQuestionIndex][type] = optionId;
+    }
+
+    function showFeedback(isCorrect, explanation) {
+      const box = document.getElementById('feedbackBox');
+      box.className = `feedback-box ${isCorrect ? 'correct' : 'incorrect'}`;
+      box.innerHTML = `
+        <div class="feedback-header">
+          <span class="feedback-icon">${isCorrect ? '✓' : '✗'}</span>
+          <span class="feedback-title">${isCorrect ? 'Correct !' : 'Incorrect'}</span>
+        </div>
+        <p class="feedback-text">${explanation}</p>
+      `;
+      box.classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      const qs = questions[currentTest];
+      if (currentQuestionIndex < qs.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion();
+      } else {
+        finishTest();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion();
+      }
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          finishTest();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timeRemaining / 60);
+      const secs = timeRemaining % 60;
+      document.getElementById('timerDisplay').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      
+      const timer = document.getElementById('timer');
+      timer.classList.remove('warning', 'danger');
+      if (timeRemaining <= 30) timer.classList.add('danger');
+      else if (timeRemaining <= 60) timer.classList.add('warning');
+    }
+
+    function finishTest() {
+      clearInterval(timerInterval);
+      const qs = questions[currentTest];
+      const totalTime = Math.round((Date.now() - testStartTime) / 1000);
+      
+      // Calculate score
+      let finalScore = 0;
+      if (currentTest === 'personality') {
+        // Process personality
+        const traits = { O: [], C: [], E: [], A: [], N: [], L: [] };
+        qs.forEach((q, i) => {
+          if (answers[i] !== undefined) {
+            let val = answers[i];
+            if (q.reversed) val = 6 - val;
+            traits[q.dimension].push(val);
+          }
+        });
+        
+        Object.keys(traits).forEach(t => {
+          if (traits[t].length > 0 && t !== 'L') {
+            const avg = traits[t].reduce((a, b) => a + b, 0) / traits[t].length;
+            state.personalityProfile[t] = Math.round((avg / 5) * 100);
+          }
+        });
+        finalScore = 100; // Completion score for personality
+      } else if (currentTest === 'sjt') {
+        // SJT scoring
+        qs.forEach((q, i) => {
+          if (answers[i] && answers[i].best === q.best && answers[i].worst === q.worst) {
+            finalScore += 2;
+          } else if (answers[i] && (answers[i].best === q.best || answers[i].worst === q.worst)) {
+            finalScore += 1;
+          }
+        });
+        finalScore = Math.round((finalScore / (qs.length * 2)) * 100);
+      } else {
+        finalScore = Math.round((score / qs.length) * 100);
+      }
+
+      // Update state
+      const xpEarned = Math.round(finalScore * 1.5) + 25;
+      state.xp += xpEarned;
+      state.testsCompleted++;
+      state.totalTimeSeconds += totalTime;
+      
+      const scoreCategory = currentTest === 'personality' ? 'personality' : 
+                          currentTest === 'sjt' ? 'sjt' : currentTest;
+      if (state.scores[scoreCategory]) {
+        state.scores[scoreCategory].push(finalScore);
+      }
+
+      // Add activity
+      const activityLabels = {
+        logical: '🧩 Raisonnement Logique',
+        verbal: '📖 Raisonnement Verbal',
+        numerical: '📊 Raisonnement Numérique',
+        personality: '🎭 Personnalité',
+        sjt: '💼 Jugement Situationnel'
+      };
+      
+      state.activities.unshift({
+        type: currentTest,
+        label: activityLabels[currentTest],
+        score: finalScore,
+        date: new Date().toISOString()
+      });
+      
+      if (state.activities.length > 10) state.activities = state.activities.slice(0, 10);
+      
+      saveState();
+      updateUI();
+
+      // Show results
+      document.getElementById('finalScore').textContent = `${finalScore}%`;
+      document.getElementById('correctCount').textContent = score;
+      document.getElementById('wrongCount').textContent = qs.length - score;
+      document.getElementById('avgTime').textContent = `${Math.round(totalTime / qs.length)}s`;
+      document.getElementById('xpEarned').textContent = `+${xpEarned} XP`;
+
+      // Animate score ring
+      const ring = document.getElementById('scoreRing');
+      const circumference = 2 * Math.PI * 70;
+      ring.style.strokeDasharray = circumference;
+      setTimeout(() => {
+        ring.style.strokeDashoffset = circumference - (circumference * finalScore / 100);
+      }, 100);
+
+      showScreen('results');
+    }
+
+    function retryTest() {
+      if (currentTest) startTest(currentTest);
+    }
+
+    // ============================================
+    // GAMES
+    // ============================================
+    function startGame(gameType) {
+      showScreen('game');
+      
+      if (gameType === 'balloon') {
+        initBalloonGame();
+      } else if (gameType === 'tower') {
+        initTowerGame();
+      } else if (gameType === 'memory') {
+        initMemoryGame();
+      }
+    }
+
+    // BALLOON GAME
+    function initBalloonGame() {
+      balloonValue = 0;
+      totalMoney = 0;
+      currentRound = 1;
+      popProbability = 0;
+
+      document.getElementById('gameContainer').innerHTML = `
+        <div class="game-header">
+          <h2>🎈 Balloon Game</h2>
+          <p>Gonflez le ballon pour accumuler des gains, mais attention... il peut éclater !</p>
+        </div>
+        <div class="game-stats">
+          <div class="game-stat">
+            <div class="game-stat-label">Gains totaux</div>
+            <div class="game-stat-value money" id="totalMoney">€0</div>
+          </div>
+          <div class="game-stat">
+            <div class="game-stat-label">Manche</div>
+            <div class="game-stat-value round"><span id="currentRound">1</span>/10</div>
+          </div>
+        </div>
+        <div class="balloon-area">
+          <div class="balloon" id="balloon">
+            <span class="balloon-value" id="balloonValue">€0</span>
+          </div>
+        </div>
+        <div class="game-controls">
+          <button class="btn-pump" id="btnPump" onclick="pumpBalloon()">💨 Pomper (+€5)</button>
+          <button class="btn-collect" id="btnCollect" onclick="collectMoney()">💰 Encaisser</button>
+        </div>
+        <div class="game-message hidden" id="gameMessage"></div>
+        <div style="margin-top: 2rem; text-align: center;">
+          <button class="btn btn-secondary" onclick="showScreen('home')">← Retour</button>
+        </div>
+      `;
+    }
+
+    function pumpBalloon() {
+      popProbability += 0.04 + (balloonValue / 150) * 0.02;
+      
+      if (Math.random() < popProbability) {
+        const balloon = document.getElementById('balloon');
+        balloon.classList.add('popped');
+        document.getElementById('btnPump').disabled = true;
+        document.getElementById('btnCollect').disabled = true;
+        showGameMessage(`💥 Boom ! Vous avez perdu €${balloonValue}`, 'fail');
+        balloonValue = 0;
+        setTimeout(() => {
+          if (currentRound < 10) nextBalloonRound();
+          else endBalloonGame();
+        }, 2000);
+      } else {
+        balloonValue += 5;
+        document.getElementById('balloonValue').textContent = `€${balloonValue}`;
+        const balloon = document.getElementById('balloon');
+        const scale = 1 + (balloonValue / 150);
+        balloon.style.transform = `scale(${Math.min(scale, 1.8)})`;
+      }
+    }
+
+    function collectMoney() {
+      totalMoney += balloonValue;
+      document.getElementById('totalMoney').textContent = `€${totalMoney}`;
+      showGameMessage(`💰 Bien joué ! +€${balloonValue}`, 'success');
+      balloonValue = 0;
+      setTimeout(() => {
+        if (currentRound < 10) nextBalloonRound();
+        else endBalloonGame();
+      }, 1500);
+    }
+
+    function nextBalloonRound() {
+      currentRound++;
+      balloonValue = 0;
+      popProbability = 0;
+      
+      const balloon = document.getElementById('balloon');
+      balloon.classList.remove('popped');
+      balloon.style.transform = 'scale(1)';
+      
+      document.getElementById('balloonValue').textContent = '€0';
+      document.getElementById('currentRound').textContent = currentRound;
+      document.getElementById('btnPump').disabled = false;
+      document.getElementById('btnCollect').disabled = false;
+      document.getElementById('gameMessage').classList.add('hidden');
+    }
+
+    function endBalloonGame() {
+      const xpEarned = Math.round(totalMoney / 3);
+      state.xp += xpEarned;
+      state.scores.games.push(totalMoney);
+      state.activities.unshift({
+        type: 'balloon',
+        label: '🎈 Balloon Game',
+        score: totalMoney,
+        date: new Date().toISOString()
+      });
+      saveState();
+      updateUI();
+      showGameMessage(`🎮 Partie terminée ! Score: €${totalMoney} (+${xpEarned} XP)`, 'success');
+    }
+
+    function showGameMessage(msg, type) {
+      const el = document.getElementById('gameMessage');
+      el.textContent = msg;
+      el.className = `game-message ${type}`;
+      el.classList.remove('hidden');
+    }
+
+    // TOWER GAME
+    function initTowerGame() {
+      towerPegs = [[4, 3, 2, 1], [], []];
+      towerMoves = 0;
+      selectedDisk = null;
+
+      document.getElementById('gameContainer').innerHTML = `
+        <div class="game-header">
+          <h2>🗼 Tower Game</h2>
+          <p>Déplacez tous les disques vers la tour de droite en un minimum de coups.</p>
+        </div>
+        <div class="tower-area" id="towerArea"></div>
+        <div class="tower-moves">Coups : <strong id="moveCount">0</strong> (Optimal : 15)</div>
+        <div class="game-message hidden" id="gameMessage"></div>
+        <div style="margin-top: 2rem; text-align: center;">
+          <button class="btn btn-secondary" onclick="showScreen('home')">← Retour</button>
+          <button class="btn btn-lilac" onclick="initTowerGame()">🔄 Recommencer</button>
+        </div>
+      `;
+      renderTower();
+    }
+
+    function renderTower() {
+      const area = document.getElementById('towerArea');
+      area.innerHTML = towerPegs.map((peg, pegIdx) => `
+        <div class="tower-peg" onclick="handleTowerClick(${pegIdx})">
+          ${peg.map(disk => `<div class="tower-disk" data-size="${disk}"></div>`).join('')}
+        </div>
+      `).join('');
+    }
+
+    function handleTowerClick(pegIdx) {
+      if (selectedDisk === null) {
+        if (towerPegs[pegIdx].length > 0) {
+          selectedDisk = { peg: pegIdx, disk: towerPegs[pegIdx][towerPegs[pegIdx].length - 1] };
+          renderTower();
+          const disks = document.querySelectorAll('.tower-peg')[pegIdx].querySelectorAll('.tower-disk');
+          if (disks.length > 0) disks[disks.length - 1].classList.add('selected');
+        }
+      } else {
+        const targetPeg = towerPegs[pegIdx];
+        const canPlace = targetPeg.length === 0 || targetPeg[targetPeg.length - 1] > selectedDisk.disk;
+        
+        if (canPlace) {
+          towerPegs[selectedDisk.peg].pop();
+          towerPegs[pegIdx].push(selectedDisk.disk);
+          towerMoves++;
+          document.getElementById('moveCount').textContent = towerMoves;
+          
+          if (towerPegs[2].length === 4) {
+            const xpEarned = Math.max(50 - (towerMoves - 15) * 2, 10);
+            state.xp += xpEarned;
+            state.scores.games.push(Math.max(100 - (towerMoves - 15) * 5, 20));
+            saveState();
+            updateUI();
+            showGameMessage(`🎉 Bravo ! Complété en ${towerMoves} coups (+${xpEarned} XP)`, 'success');
+          }
+        }
+        selectedDisk = null;
+        renderTower();
+      }
+    }
+
+    // MEMORY GAME
+    function initMemoryGame() {
+      memorySequence = [];
+      memoryUserSequence = [];
+      memoryLevel = 3;
+      memoryPhase = 'watch';
+
+      document.getElementById('gameContainer').innerHTML = `
+        <div class="game-header">
+          <h2>🧠 Memory Grid</h2>
+          <p>Mémorisez la séquence puis reproduisez-la dans l'ordre.</p>
+        </div>
+        <div class="game-stats">
+          <div class="game-stat">
+            <div class="game-stat-label">Niveau</div>
+            <div class="game-stat-value round" id="memoryLevel">3</div>
+          </div>
+        </div>
+        <div class="memory-grid" id="memoryGrid"></div>
+        <div class="game-message" id="gameMessage">Regardez la séquence...</div>
+        <div style="margin-top: 2rem; text-align: center;">
+          <button class="btn btn-secondary" onclick="showScreen('home')">← Retour</button>
+        </div>
+      `;
+      
+      const grid = document.getElementById('memoryGrid');
+      for (let i = 0; i < 16; i++) {
+        grid.innerHTML += `<div class="memory-cell" data-idx="${i}" onclick="handleMemoryClick(${i})"></div>`;
+      }
+      
+      startMemoryRound();
+    }
+
+    function startMemoryRound() {
+      memorySequence = [];
+      memoryUserSequence = [];
+      memoryPhase = 'watch';
+      document.getElementById('gameMessage').textContent = 'Regardez la séquence...';
+      document.getElementById('gameMessage').className = 'game-message';
+
+      for (let i = 0; i < memoryLevel; i++) {
+        let idx;
+        do {
+          idx = Math.floor(Math.random() * 16);
+        } while (memorySequence.includes(idx));
+        memorySequence.push(idx);
+      }
+
+      playMemorySequence();
+    }
+
+    function playMemorySequence() {
+      const cells = document.querySelectorAll('.memory-cell');
+      let i = 0;
+      
+      const interval = setInterval(() => {
+        cells.forEach(c => c.classList.remove('highlight'));
+        if (i < memorySequence.length) {
+          cells[memorySequence[i]].classList.add('highlight');
+          i++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            cells.forEach(c => c.classList.remove('highlight'));
+            memoryPhase = 'input';
+            document.getElementById('gameMessage').textContent = 'À votre tour ! Reproduisez la séquence.';
+          }, 500);
+        }
+      }, 700);
+    }
+
+    function handleMemoryClick(idx) {
+      if (memoryPhase !== 'input') return;
+      
+      const cells = document.querySelectorAll('.memory-cell');
+      memoryUserSequence.push(idx);
+      
+      const currentIdx = memoryUserSequence.length - 1;
+      if (memorySequence[currentIdx] === idx) {
+        cells[idx].classList.add('correct');
+        setTimeout(() => cells[idx].classList.remove('correct'), 300);
+        
+        if (memoryUserSequence.length === memorySequence.length) {
+          memoryLevel++;
+          document.getElementById('memoryLevel').textContent = memoryLevel;
+          document.getElementById('gameMessage').textContent = '✓ Correct ! Niveau suivant...';
+          document.getElementById('gameMessage').className = 'game-message success';
+          setTimeout(startMemoryRound, 1500);
+        }
+      } else {
+        cells[idx].classList.add('wrong');
+        memoryPhase = 'done';
+        const xpEarned = (memoryLevel - 3) * 15 + 10;
+        state.xp += xpEarned;
+        state.scores.games.push((memoryLevel - 3) * 20);
+        saveState();
+        updateUI();
+        document.getElementById('gameMessage').textContent = `Erreur ! Score final : Niveau ${memoryLevel - 1} (+${xpEarned} XP)`;
+        document.getElementById('gameMessage').className = 'game-message fail';
+      }
+    }
+
+    // ============================================
+    // DASHBOARD
+    // ============================================
+    function updateDashboard() {
+      const avgScore = calculateAverageScore();
+      document.getElementById('kpiScore').textContent = `${avgScore}%`;
+      document.getElementById('kpiTests').textContent = state.testsCompleted;
+      document.getElementById('kpiTime').textContent = formatTime(state.totalTimeSeconds);
+      document.getElementById('kpiBadges').textContent = state.badges.length;
+
+      // Update skill bars
+      updateSkillBar('Logical', 'logical');
+      updateSkillBar('Verbal', 'verbal');
+      updateSkillBar('Numerical', 'numerical');
+      updateSkillBar('SJT', 'sjt');
+      updateSkillBar('Games', 'games');
+
+      // Update activity list
+      const activityList = document.getElementById('activityList');
+      if (state.activities.length > 0) {
+        activityList.innerHTML = state.activities.slice(0, 5).map(act => `
+          <div class="activity-item">
+            <div class="activity-icon">${act.label.split(' ')[0]}</div>
+            <div class="activity-info">
+              <div class="activity-title">${act.label.substring(2)}</div>
+              <div class="activity-time">${formatDate(act.date)}</div>
+            </div>
+            <div class="activity-score">${typeof act.score === 'number' && act.type !== 'balloon' ? act.score + '%' : '€' + act.score}</div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateSkillBar(name, key) {
+      const scores = state.scores[key] || [];
+      const avg = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+      document.getElementById(`skill${name}`).textContent = `${avg}%`;
+      document.getElementById(`skill${name}Bar`).style.width = `${avg}%`;
+    }
+
+    function calculateAverageScore() {
+      let total = 0, count = 0;
+      ['logical', 'verbal', 'numerical', 'sjt'].forEach(key => {
+        const scores = state.scores[key] || [];
+        if (scores.length > 0) {
+          total += scores.reduce((a, b) => a + b, 0);
+          count += scores.length;
+        }
+      });
+      return count > 0 ? Math.round(total / count) : 0;
+    }
+
+    function formatTime(seconds) {
+      if (seconds < 60) return `${seconds}s`;
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+      return `${Math.floor(seconds / 3600)}h ${Math.floor((seconds % 3600) / 60)}m`;
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 60) return `Il y a ${diffMins} min`;
+      if (diffHours < 24) return `Il y a ${diffHours}h`;
+      if (diffDays < 7) return `Il y a ${diffDays}j`;
+      return date.toLocaleDateString('fr-FR');
+    }
+
+    // ============================================
+    // PERSONALITY PROFILE
+    // ============================================
+    function updatePersonalityProfile() {
+      const traits = ['O', 'C', 'E', 'A', 'N'];
+      traits.forEach(t => {
+        const val = state.personalityProfile[t];
+        if (val !== null) {
+          document.getElementById(`trait${t}`).style.height = `${val}%`;
+          document.getElementById(`trait${t}Val`).textContent = `${val}%`;
+        }
+      });
+    }
+
+    // ============================================
+    // KEYBOARD NAVIGATION
+    // ============================================
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('screen-test').classList.contains('active')) {
+        if (e.key >= '1' && e.key <= '4') {
+          const options = document.querySelectorAll('.answer-option:not(.disabled)');
+          const idx = parseInt(e.key) - 1;
+          if (idx < options.length) options[idx].click();
+        }
+        if (e.key === 'Enter') {
+          document.getElementById('btnNext').click();
+        }
+      }
+    });
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      checkOnboarding();
+      showScreen('home');
+      
+      if (state.parcours) {
+        document.getElementById(`parcours-${state.parcours}`).classList.add('selected');
+      }
+    });
+  </script>
+</body>
+</html>
