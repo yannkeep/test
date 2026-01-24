@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ePOP!up — Bienvenue</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0a0a0f;
+  --bg-phone:#111118;
+  --bg-chat:#1a1a24;
+  --bg-bubble-other:#252532;
+  --bg-bubble-me:linear-gradient(135deg,#6366f1,#8b5cf6);
+  --bg-input:#1e1e2a;
+  --border:#2a2a3a;
+  --text:#f0f0f5;
+  --text-dim:#8888a0;
+  --text-muted:#55556a;
+  --accent:#8b5cf6;
+  --accent-dim:#6366f1;
+  --green:#22c55e;
+  --green-dim:#16a34a;
+  --blue:#3b82f6;
+  --orange:#f59e0b;
+  --red:#ef4444;
+  --pink:#ec4899;
+  --cyan:#06b6d4;
+  --radius:16px;
+  --radius-sm:10px;
+  --font:'Inter',-apple-system,system-ui,sans-serif;
+}
+
+html,body{
+  height:100%;
+  overflow:hidden;
+}
+
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Phone Frame */
+.phone-frame{
+  width:100%;
+  max-width:420px;
+  height:100vh;
+  max-height:850px;
+  background:var(--bg-phone);
+  border-radius:0;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  box-shadow:0 25px 80px rgba(0,0,0,0.5);
+}
+
+@media(min-width:500px){
+  .phone-frame{
+    border-radius:40px;
+    border:8px solid #222;
+    height:90vh;
+  }
+}
+
+/* Status Bar */
+.status-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0.5rem 1.25rem;
+  font-size:0.75rem;
+  font-weight:600;
+  color:var(--text);
+  background:var(--bg-phone);
+}
+
+.status-time{font-variant-numeric:tabular-nums}
+
+.status-icons{
+  display:flex;
+  gap:0.4rem;
+  align-items:center;
+}
+
+/* Screens */
+.screen{
+  flex:1;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+  animation:fadeIn 0.4s ease;
+}
+
+.screen.active{display:flex}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ==================== WELCOME SCREEN ==================== */
+.welcome-screen{
+  padding:2rem 1.5rem;
+  text-align:center;
+  justify-content:center;
+  gap:2rem;
+}
+
+.welcome-logo{
+  font-size:2.5rem;
+  margin-bottom:0.5rem;
+}
+
+.welcome-title{
+  font-size:1.75rem;
+  font-weight:700;
+  background:linear-gradient(135deg,#8b5cf6,#06b6d4);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:0.5rem;
+}
+
+.welcome-subtitle{
+  color:var(--text-dim);
+  font-size:0.95rem;
+  line-height:1.5;
+}
+
+.welcome-features{
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
+  text-align:left;
+}
+
+.welcome-feature{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  padding:0.85rem 1rem;
+  background:var(--bg-chat);
+  border-radius:var(--radius-sm);
+}
+
+.welcome-feature-icon{font-size:1.25rem}
+
+.welcome-feature-text{
+  font-size:0.85rem;
+  color:var(--text-dim);
+}
+
+.welcome-feature-text strong{
+  color:var(--text);
+  display:block;
+  margin-bottom:0.1rem;
+}
+
+.welcome-btn{
+  padding:1rem 2rem;
+  background:var(--bg-bubble-me);
+  border:none;
+  border-radius:var(--radius);
+  color:white;
+  font-family:inherit;
+  font-size:1rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.welcome-btn:hover{
+  transform:scale(1.02);
+  box-shadow:0 10px 30px rgba(139,92,246,0.3);
+}
+
+/* ==================== SETUP SCREEN ==================== */
+.setup-screen{
+  padding:1.5rem;
+}
+
+.setup-header{
+  text-align:center;
+  margin-bottom:1.5rem;
+}
+
+.setup-step{
+  font-size:0.75rem;
+  color:var(--accent);
+  font-weight:600;
+  margin-bottom:0.35rem;
+}
+
+.setup-title{
+  font-size:1.25rem;
+  font-weight:700;
+}
+
+.setup-content{
+  flex:1;
+  overflow-y:auto;
+}
+
+.input-group{
+  margin-bottom:1.25rem;
+}
+
+.input-label{
+  display:block;
+  font-size:0.8rem;
+  font-weight:600;
+  color:var(--text-dim);
+  margin-bottom:0.5rem;
+}
+
+.text-input{
+  width:100%;
+  padding:0.9rem 1rem;
+  background:var(--bg-input);
+  border:2px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  font-family:inherit;
+  font-size:1rem;
+  transition:border-color 0.2s;
+}
+
+.text-input:focus{
+  outline:none;
+  border-color:var(--accent);
+}
+
+.text-input::placeholder{color:var(--text-muted)}
+
+/* Avatar Selector */
+.avatar-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0.75rem;
+}
+
+.avatar-option{
+  aspect-ratio:1;
+  background:var(--bg-input);
+  border:3px solid var(--border);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.75rem;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.avatar-option:hover{
+  border-color:var(--accent-dim);
+  transform:scale(1.05);
+}
+
+.avatar-option.selected{
+  border-color:var(--accent);
+  background:rgba(139,92,246,0.15);
+  box-shadow:0 0 20px rgba(139,92,246,0.3);
+}
+
+/* Situation Cards */
+.situation-cards{
+  display:flex;
+  flex-direction:column;
+  gap:0.6rem;
+}
+
+.situation-card{
+  display:flex;
+  align-items:center;
+  gap:0.85rem;
+  padding:0.9rem 1rem;
+  background:var(--bg-input);
+  border:2px solid var(--border);
+  border-radius:var(--radius-sm);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.situation-card:hover{
+  border-color:var(--accent-dim);
+}
+
+.situation-card.selected{
+  border-color:var(--accent);
+  background:rgba(139,92,246,0.1);
+}
+
+.situation-icon{font-size:1.5rem}
+
+.situation-text{
+  flex:1;
+}
+
+.situation-title{
+  font-weight:600;
+  font-size:0.9rem;
+  margin-bottom:0.1rem;
+}
+
+.situation-desc{
+  font-size:0.75rem;
+  color:var(--text-dim);
+}
+
+.setup-footer{
+  padding-top:1rem;
+}
+
+.setup-btn{
+  width:100%;
+  padding:0.9rem;
+  background:var(--bg-bubble-me);
+  border:none;
+  border-radius:var(--radius-sm);
+  color:white;
+  font-family:inherit;
+  font-size:0.95rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+
+.setup-btn:hover{transform:translateY(-2px)}
+
+.setup-btn:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+  transform:none;
+}
+
+/* ==================== CHAT LIST SCREEN ==================== */
+.chat-list-screen{
+  background:var(--bg-phone);
+}
+
+.chat-list-header{
+  padding:1rem 1.25rem;
+  background:var(--bg-phone);
+  border-bottom:1px solid var(--border);
+}
+
+.chat-list-title{
+  font-size:1.5rem;
+  font-weight:700;
+  margin-bottom:0.25rem;
+}
+
+.chat-list-subtitle{
+  font-size:0.8rem;
+  color:var(--text-dim);
+}
+
+.chat-list{
+  flex:1;
+  overflow-y:auto;
+}
+
+.chat-item{
+  display:flex;
+  align-items:center;
+  gap:0.85rem;
+  padding:0.9rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:background 0.15s;
+}
+
+.chat-item:hover{background:var(--bg-chat)}
+
+.chat-item.has-unread{background:rgba(139,92,246,0.05)}
+
+.chat-avatar{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.5rem;
+  flex-shrink:0;
+  position:relative;
+}
+
+.chat-avatar.group{
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+}
+
+.chat-avatar.person{
+  background:var(--bg-chat);
+}
+
+.unread-dot{
+  position:absolute;
+  top:0;right:0;
+  width:14px;height:14px;
+  background:var(--accent);
+  border:2px solid var(--bg-phone);
+  border-radius:50%;
+  font-size:0.6rem;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.chat-info{
+  flex:1;
+  min-width:0;
+}
+
+.chat-name{
+  font-weight:600;
+  font-size:0.95rem;
+  margin-bottom:0.15rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.chat-time{
+  font-size:0.7rem;
+  font-weight:400;
+  color:var(--text-muted);
+}
+
+.chat-item.has-unread .chat-time{color:var(--accent)}
+
+.chat-preview{
+  font-size:0.8rem;
+  color:var(--text-dim);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.chat-item.has-unread .chat-preview{
+  color:var(--text);
+  font-weight:500;
+}
+
+/* ==================== CHAT SCREEN ==================== */
+.chat-screen{
+  background:var(--bg-chat);
+}
+
+.chat-header{
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  padding:0.75rem 1rem;
+  background:var(--bg-phone);
+  border-bottom:1px solid var(--border);
+}
+
+.back-btn{
+  width:36px;
+  height:36px;
+  background:none;
+  border:none;
+  color:var(--text);
+  font-size:1.25rem;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  transition:background 0.15s;
+}
+
+.back-btn:hover{background:var(--bg-chat)}
+
+.chat-header-avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.25rem;
+}
+
+.chat-header-avatar.group{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.chat-header-avatar.person{background:var(--bg-chat)}
+
+.chat-header-info{flex:1}
+
+.chat-header-name{
+  font-weight:600;
+  font-size:0.95rem;
+}
+
+.chat-header-status{
+  font-size:0.7rem;
+  color:var(--green);
+}
+
+/* Messages */
+.messages-container{
+  flex:1;
+  overflow-y:auto;
+  padding:1rem;
+  display:flex;
+  flex-direction:column;
+  gap:0.5rem;
+}
+
+.message-group{
+  display:flex;
+  flex-direction:column;
+  gap:0.25rem;
+}
+
+.message-group.me{align-items:flex-end}
+.message-group.other{align-items:flex-start}
+
+.message-sender{
+  font-size:0.7rem;
+  font-weight:600;
+  color:var(--accent);
+  margin-bottom:0.15rem;
+  margin-left:0.5rem;
+}
+
+.message-bubble{
+  max-width:80%;
+  padding:0.65rem 0.9rem;
+  border-radius:var(--radius);
+  font-size:0.9rem;
+  line-height:1.45;
+  position:relative;
+}
+
+.message-group.other .message-bubble{
+  background:var(--bg-bubble-other);
+  border-bottom-left-radius:4px;
+}
+
+.message-group.me .message-bubble{
+  background:var(--bg-bubble-me);
+  border-bottom-right-radius:4px;
+}
+
+.message-time{
+  font-size:0.6rem;
+  color:var(--text-muted);
+  margin-top:0.25rem;
+  text-align:right;
+}
+
+.message-group.me .message-time{
+  color:rgba(255,255,255,0.6);
+}
+
+/* System Message */
+.system-message{
+  text-align:center;
+  padding:0.5rem 1rem;
+  font-size:0.75rem;
+  color:var(--text-muted);
+}
+
+.system-message span{
+  background:var(--bg-bubble-other);
+  padding:0.35rem 0.75rem;
+  border-radius:var(--radius);
+}
+
+/* Typing Indicator */
+.typing-indicator{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.5rem;
+  font-size:0.8rem;
+  color:var(--text-dim);
+}
+
+.typing-dots{
+  display:flex;
+  gap:3px;
+}
+
+.typing-dot{
+  width:6px;
+  height:6px;
+  background:var(--text-muted);
+  border-radius:50%;
+  animation:typingBounce 1.4s infinite;
+}
+
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+
+@keyframes typingBounce{
+  0%,60%,100%{transform:translateY(0)}
+  30%{transform:translateY(-4px)}
+}
+
+/* Response Options */
+.response-options{
+  padding:0.75rem 1rem;
+  background:var(--bg-phone);
+  border-top:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  gap:0.5rem;
+  max-height:45%;
+  overflow-y:auto;
+}
+
+.response-label{
+  font-size:0.7rem;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+
+.response-btn{
+  width:100%;
+  padding:0.75rem 1rem;
+  background:var(--bg-input);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  color:var(--text);
+  font-family:inherit;
+  font-size:0.85rem;
+  text-align:left;
+  cursor:pointer;
+  transition:all 0.15s;
+  line-height:1.4;
+}
+
+.response-btn:hover{
+  border-color:var(--accent);
+  background:rgba(139,92,246,0.1);
+}
+
+.response-btn:active{
+  transform:scale(0.98);
+}
+
+/* Chat Input */
+.chat-input-area{
+  padding:0.75rem 1rem;
+  background:var(--bg-phone);
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+}
+
+.chat-input{
+  flex:1;
+  padding:0.7rem 1rem;
+  background:var(--bg-input);
+  border:none;
+  border-radius:20px;
+  color:var(--text);
+  font-family:inherit;
+  font-size:0.9rem;
+}
+
+.chat-input:focus{outline:none}
+.chat-input::placeholder{color:var(--text-muted)}
+
+.send-btn{
+  width:40px;
+  height:40px;
+  background:var(--bg-bubble-me);
+  border:none;
+  border-radius:50%;
+  color:white;
+  font-size:1.1rem;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform 0.15s;
+}
+
+.send-btn:hover{transform:scale(1.05)}
+
+/* ==================== PROFILE PREVIEW ==================== */
+.profile-preview{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  background:var(--bg-phone);
+  border-top:1px solid var(--border);
+  border-radius:var(--radius) var(--radius) 0 0;
+  padding:1rem;
+  transform:translateY(100%);
+  transition:transform 0.3s ease;
+  z-index:100;
+}
+
+.profile-preview.show{transform:translateY(0)}
+
+.profile-preview-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1rem;
+}
+
+.profile-preview-title{
+  font-size:0.85rem;
+  font-weight:600;
+  color:var(--accent);
+}
+
+.profile-preview-close{
+  background:none;
+  border:none;
+  color:var(--text-dim);
+  font-size:1.25rem;
+  cursor:pointer;
+}
+
+.profile-traits{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:0.5rem;
+}
+
+.trait-item{
+  text-align:center;
+}
+
+.trait-bar{
+  height:60px;
+  background:var(--bg-input);
+  border-radius:4px;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:0.35rem;
+}
+
+.trait-fill{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  background:linear-gradient(to top,var(--accent),var(--accent-dim));
+  border-radius:4px;
+  transition:height 0.5s ease;
+}
+
+.trait-label{
+  font-size:0.6rem;
+  color:var(--text-dim);
+}
+
+.trait-value{
+  font-size:0.7rem;
+  font-weight:600;
+  color:var(--text);
+}
+
+/* Nav Hint */
+.nav-hint{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:0.5rem 1rem;
+  background:rgba(0,0,0,0.8);
+  border-radius:var(--radius);
+  font-size:0.75rem;
+  color:var(--text-dim);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.3s;
+}
+
+.nav-hint.show{opacity:1}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="status-bar">
+    <span class="status-time" id="statusTime">09:41</span>
+    <div class="status-icons">
+      <span>📶</span>
+      <span>🔋</span>
+    </div>
+  </div>
+
+  <!-- WELCOME SCREEN -->
+  <div class="screen active" id="welcomeScreen">
+    <div class="welcome-screen">
+      <div>
+        <div class="welcome-logo">🏠</div>
+        <div class="welcome-title">Bienvenue</div>
+        <div class="welcome-subtitle">Tu viens d'emménager dans un nouvel immeuble. Tes voisins t'ont ajouté au groupe.</div>
+      </div>
+
+      <div class="welcome-features">
+        <div class="welcome-feature">
+          <span class="welcome-feature-icon">💬</span>
+          <div class="welcome-feature-text">
+            <strong>Fais connaissance</strong>
+            Découvre tes voisins et leur quotidien
+          </div>
+        </div>
+        <div class="welcome-feature">
+          <span class="welcome-feature-icon">🤝</span>
+          <div class="welcome-feature-text">
+            <strong>Interagis</strong>
+            Réponds, aide, partage... ou pas
+          </div>
+        </div>
+        <div class="welcome-feature">
+          <span class="welcome-feature-icon">✨</span>
+          <div class="welcome-feature-text">
+            <strong>Sois toi-même</strong>
+            Il n'y a pas de bonne ou mauvaise réponse
+          </div>
+        </div>
+      </div>
+
+      <button class="welcome-btn" onclick="goToSetup()">Commencer →</button>
+    </div>
+  </div>
+
+  <!-- SETUP SCREEN 1: Name -->
+  <div class="screen" id="setupName">
+    <div class="setup-screen">
+      <div class="setup-header">
+        <div class="setup-step">Étape 1/3</div>
+        <div class="setup-title">Comment tu t'appelles ?</div>
+      </div>
+      <div class="setup-content">
+        <div class="input-group">
+          <label class="input-label">Ton prénom</label>
+          <input type="text" class="text-input" id="inputName" placeholder="Ex: Alex" maxlength="20" oninput="validateSetup1()">
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-dim);line-height:1.5">
+          C'est comme ça que tes voisins t'appelleront. Tu peux mettre ton vrai prénom ou un pseudo.
+        </p>
+      </div>
+      <div class="setup-footer">
+        <button class="setup-btn" id="btnSetup1" disabled onclick="goToSetup2()">Continuer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETUP SCREEN 2: Avatar -->
+  <div class="screen" id="setupAvatar">
+    <div class="setup-screen">
+      <div class="setup-header">
+        <div class="setup-step">Étape 2/3</div>
+        <div class="setup-title">Choisis ton avatar</div>
+      </div>
+      <div class="setup-content">
+        <div class="input-group">
+          <label class="input-label">Ton emoji</label>
+          <div class="avatar-grid" id="avatarGrid">
+            <div class="avatar-option" data-avatar="😊">😊</div>
+            <div class="avatar-option" data-avatar="😎">😎</div>
+            <div class="avatar-option" data-avatar="🙂">🙂</div>
+            <div class="avatar-option" data-avatar="😄">😄</div>
+            <div class="avatar-option" data-avatar="🤓">🤓</div>
+            <div class="avatar-option" data-avatar="😌">😌</div>
+            <div class="avatar-option" data-avatar="🧑">🧑</div>
+            <div class="avatar-option" data-avatar="👤">👤</div>
+          </div>
+        </div>
+      </div>
+      <div class="setup-footer">
+        <button class="setup-btn" id="btnSetup2" disabled onclick="goToSetup3()">Continuer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETUP SCREEN 3: Situation -->
+  <div class="screen" id="setupSituation">
+    <div class="setup-screen">
+      <div class="setup-header">
+        <div class="setup-step">Étape 3/3</div>
+        <div class="setup-title">Ta situation</div>
+      </div>
+      <div class="setup-content">
+        <div class="input-group">
+          <label class="input-label">Tu emménages parce que...</label>
+          <div class="situation-cards">
+            <div class="situation-card" data-situation="job" onclick="selectSituation('job')">
+              <span class="situation-icon">💼</span>
+              <div class="situation-text">
+                <div class="situation-title">Nouveau boulot</div>
+                <div class="situation-desc">Tu commences un travail dans la région</div>
+              </div>
+            </div>
+            <div class="situation-card" data-situation="study" onclick="selectSituation('study')">
+              <span class="situation-icon">📚</span>
+              <div class="situation-text">
+                <div class="situation-title">Études</div>
+                <div class="situation-desc">Tu commences ou reprends des études</div>
+              </div>
+            </div>
+            <div class="situation-card" data-situation="change" onclick="selectSituation('change')">
+              <span class="situation-icon">🔄</span>
+              <div class="situation-text">
+                <div class="situation-title">Changement de vie</div>
+                <div class="situation-desc">Tu avais besoin d'air, de nouveau</div>
+              </div>
+            </div>
+            <div class="situation-card" data-situation="other" onclick="selectSituation('other')">
+              <span class="situation-icon">🤷</span>
+              <div class="situation-text">
+                <div class="situation-title">C'est compliqué</div>
+                <div class="situation-desc">Tu préfères ne pas en parler</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="setup-footer">
+        <button class="setup-btn" id="btnSetup3" disabled onclick="startChat()">Rejoindre le groupe</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT LIST SCREEN -->
+  <div class="screen" id="chatListScreen">
+    <div class="chat-list-screen">
+      <div class="chat-list-header">
+        <div class="chat-list-title">Messages</div>
+        <div class="chat-list-subtitle">Résidence Les Érables</div>
+      </div>
+      <div class="chat-list" id="chatList">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT SCREEN -->
+  <div class="screen" id="chatScreen">
+    <div class="chat-screen">
+      <div class="chat-header">
+        <button class="back-btn" onclick="goToChatList()">←</button>
+        <div class="chat-header-avatar group" id="chatHeaderAvatar">🏠</div>
+        <div class="chat-header-info">
+          <div class="chat-header-name" id="chatHeaderName">Groupe</div>
+          <div class="chat-header-status" id="chatHeaderStatus">6 participants</div>
+        </div>
+      </div>
+      <div class="messages-container" id="messagesContainer">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="response-options" id="responseOptions" style="display:none">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="chat-input-area" id="chatInputArea">
+        <input type="text" class="chat-input" placeholder="Message..." readonly>
+        <button class="send-btn">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Preview (swipe up) -->
+  <div class="profile-preview" id="profilePreview">
+    <div class="profile-preview-header">
+      <span class="profile-preview-title">🧬 Ton profil se dessine...</span>
+      <button class="profile-preview-close" onclick="toggleProfile()">×</button>
+    </div>
+    <div class="profile-traits">
+      <div class="trait-item">
+        <div class="trait-bar"><div class="trait-fill" id="traitO" style="height:50%"></div></div>
+        <div class="trait-value" id="valO">50</div>
+        <div class="trait-label">Ouverture</div>
+      </div>
+      <div class="trait-item">
+        <div class="trait-bar"><div class="trait-fill" id="traitC" style="height:50%"></div></div>
+        <div class="trait-value" id="valC">50</div>
+        <div class="trait-label">Rigueur</div>
+      </div>
+      <div class="trait-item">
+        <div class="trait-bar"><div class="trait-fill" id="traitE" style="height:50%"></div></div>
+        <div class="trait-value" id="valE">50</div>
+        <div class="trait-label">Social</div>
+      </div>
+      <div class="trait-item">
+        <div class="trait-bar"><div class="trait-fill" id="traitA" style="height:50%"></div></div>
+        <div class="trait-value" id="valA">50</div>
+        <div class="trait-label">Empathie</div>
+      </div>
+      <div class="trait-item">
+        <div class="trait-bar"><div class="trait-fill" id="traitN" style="height:50%"></div></div>
+        <div class="trait-value" id="valN">50</div>
+        <div class="trait-label">Calme</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-hint" id="navHint">↑ Glisse vers le haut pour voir ton profil</div>
+</div>
+
+<script>
+// ============================================
+// STATE
+// ============================================
+const state = {
+  name: '',
+  avatar: '',
+  situation: '',
+  currentChat: null,
+  messageIndex: 0,
+  traits: { O: 50, C: 50, E: 50, A: 50, N: 50 },
+  values: { collectivism: 50, authority: 50, tradition: 50, pragmatism: 50 },
+  choices: [],
+  unreadCounts: {}
+};
+
+// ============================================
+// NEIGHBORS DATA
+// ============================================
+const neighbors = {
+  martine: { name: 'Martine', avatar: '👩‍🦳', role: 'Retraitée, 68 ans', color: '#ec4899' },
+  kevin: { name: 'Kévin', avatar: '🧑‍🦱', role: '24 ans, livreur', color: '#f59e0b' },
+  sophie: { name: 'Sophie', avatar: '👩', role: '35 ans, infirmière', color: '#22c55e' },
+  michel: { name: 'Michel', avatar: '👨‍🦲', role: '52 ans, comptable', color: '#3b82f6' },
+  lea: { name: 'Léa', avatar: '👧', role: '19 ans, étudiante', color: '#8b5cf6' },
+  omar: { name: 'Omar', avatar: '🧔', role: '41 ans, taxi', color: '#06b6d4' }
+};
+
+// ============================================
+// CHAT SCENARIOS
+// ============================================
+const chats = {
+  group: {
+    id: 'group',
+    name: 'Résidence Les Érables 🏠',
+    avatar: '🏠',
+    isGroup: true,
+    participants: '6 participants',
+    unread: 8,
+    preview: 'Martine: Bienvenue au nouveau !',
+    messages: []
+  },
+  martine: {
+    id: 'martine',
+    name: 'Martine',
+    avatar: '👩‍🦳',
+    isGroup: false,
+    participants: 'En ligne',
+    unread: 1,
+    preview: 'Tu as 2 minutes ?',
+    messages: []
+  },
+  kevin: {
+    id: 'kevin',
+    name: 'Kévin',
+    avatar: '🧑‍🦱',
+    isGroup: false,
+    participants: 'En ligne',
+    unread: 0,
+    preview: '',
+    messages: []
+  }
+};
+
+// Main group scenario
+const groupScenario = [
+  // WELCOME SEQUENCE
+  { type: 'system', text: 'Tu as rejoint le groupe' },
+  { sender: 'martine', text: 'Oh super, le nouveau/la nouvelle est là ! 🎉' },
+  { sender: 'martine', text: 'Bienvenue dans l\'immeuble !' },
+  { sender: 'sophie', text: 'Bienvenue ! N\'hésite pas si tu as besoin de quoi que ce soit' },
+  { sender: 'kevin', text: 'yo bienvenue 👋' },
+  { sender: 'michel', text: 'Bonjour et bienvenue parmi nous.' },
+  { sender: 'lea', text: 'coucou !! tu es à quel étage ??' },
+  {
+    type: 'choice',
+    question: 'Comment tu te présentes ?',
+    options: [
+      { text: 'Salut tout le monde ! Merci pour l\'accueil, ça fait plaisir 😊 Je suis au 3ème !', traits: { E: 8, A: 5 } },
+      { text: 'Bonjour. Merci. Je suis au 3ème étage.', traits: { E: -3, C: 3 } },
+      { text: 'Hello ! Ravi·e d\'être là. C\'est quoi l\'ambiance ici ? Des trucs à savoir ?', traits: { E: 6, O: 5 } },
+      { text: '👋 3ème. On verra bien comment ça se passe.', traits: { E: -5, N: 3 } }
+    ]
+  },
+  { sender: 'martine', text: 'Ah le 3ème ! Tu es à côté de chez Kévin alors' },
+  { sender: 'kevin', text: 'ouais on est voisins de palier du coup' },
+  { sender: 'kevin', text: 'si jamais tu fais une soirée préviens moi je monte le son aussi 😂' },
+  { sender: 'michel', text: 'Parlant de bruit... il y a le règlement intérieur qui stipule pas de bruit après 22h' },
+  { sender: 'lea', text: 'michel tu vas pas recommencer 🙄' },
+  { sender: 'michel', text: 'Je dis juste les règles.' },
+  {
+    type: 'choice',
+    question: 'Tu interviens ?',
+    options: [
+      { text: 'T\'inquiète Kévin je suis plutôt calme, mais on pourra toujours boire un verre !', traits: { E: 4, A: 6 } },
+      { text: 'Michel a raison, les règles c\'est important. Mais bon, un peu de souplesse aussi.', traits: { C: 5, A: 3 } },
+      { text: 'Mdr les voisins qui se chamaillent déjà, j\'adore 😂', traits: { E: 5, O: 3, A: -2 } },
+      { text: '...', traits: { E: -6 }, silent: true }
+    ]
+  },
+  { type: 'pause', duration: 2000 },
+  // SITUATION 1: Lost cat
+  { sender: 'sophie', text: 'Au fait quelqu\'un a vu le chat de Mme Garnier au 2ème ?' },
+  { sender: 'sophie', text: 'Elle l\'a pas vu depuis hier soir, elle est super inquiète' },
+  { sender: 'martine', text: 'Oh non pas Caramel ! Il est roux avec un collier bleu' },
+  { sender: 'lea', text: 'je l\'ai vu dans le parking souterrain hier vers 23h !' },
+  { sender: 'lea', text: 'mais j\'ai pas réussi à l\'attraper il a filé' },
+  { sender: 'omar', text: 'Je descends au parking dans 10min pour le taxi, je regarderai' },
+  {
+    type: 'choice',
+    question: 'Tu proposes quelque chose ?',
+    options: [
+      { text: 'Je peux aller voir maintenant si vous voulez, j\'ai rien de prévu', traits: { A: 8, E: 3 } },
+      { text: 'Bonne chance pour le chat ! 🐱', traits: { A: 0 } },
+      { text: 'Il va sûrement revenir tout seul, les chats font souvent ça', traits: { A: -2, O: 2 } },
+      { text: 'Vous avez essayé de mettre sa litière dehors ? Ça les attire paraît-il', traits: { O: 5, A: 4 } }
+    ]
+  },
+  { type: 'pause', duration: 3000 },
+  // SITUATION 2: Package drama
+  { sender: 'michel', text: 'ENCORE un colis laissé devant ma porte alors que c\'est pas pour moi.' },
+  { sender: 'michel', text: 'C\'est pour "K. Dumont" au 3ème. Quelqu\'un peut venir le chercher ??' },
+  { sender: 'kevin', text: 'ah merde c est le mien desolé michel' },
+  { sender: 'kevin', text: 'le livreur fait n importe quoi' },
+  { sender: 'michel', text: 'C\'est pas au livreur de monter 2 étages. Tu pourrais mettre ton nom sur ta boîte aux lettres correctement.' },
+  { sender: 'kevin', text: 'wow calme michel c est qu un colis' },
+  { sender: 'martine', text: 'Les garçons, on se calme 😅' },
+  {
+    type: 'choice',
+    question: 'Le ton monte...',
+    options: [
+      { text: 'Kévin tu veux que je te le monte ? Je dois sortir de toute façon', traits: { A: 7, E: 2 } },
+      { text: 'Michel je comprends que c\'est relou, mais c\'est pas si grave non plus', traits: { A: 4, C: -2 } },
+      { text: 'Perso j\'ai mis mon nom + étage sur ma BAL, ça aide les livreurs', traits: { C: 6, A: 2 } },
+      { text: '🍿 (tu regardes le drama sans intervenir)', traits: { E: -4, A: -3 }, silent: true }
+    ]
+  },
+  { sender: 'kevin', text: 'ok jvais mettre mon nom sur la boite ça va' },
+  { sender: 'michel', text: 'Merci.' },
+  { type: 'pause', duration: 2000 },
+  // SITUATION 3: Favor request
+  { sender: 'sophie', text: 'Dites, j\'ai un gros souci' },
+  { sender: 'sophie', text: 'Je suis de garde cette nuit et mon ex devait garder les enfants mais il vient d\'annuler' },
+  { sender: 'sophie', text: 'Est-ce que quelqu\'un pourrait les garder ce soir ? Juste de 20h à 8h, ils sont autonomes et dorment tôt' },
+  { sender: 'sophie', text: 'Je sais que c\'est beaucoup demander à la dernière minute...' },
+  { sender: 'martine', text: 'Oh ma pauvre... Moi je peux pas ce soir j\'ai ma sœur qui vient' },
+  { sender: 'lea', text: 'j\'aurais bien voulu mais j\'ai un partiel demain matin 😭' },
+  { sender: 'omar', text: 'Je bosse jusqu\'à 3h du mat désolé' },
+  {
+    type: 'choice',
+    question: 'Sophie est vraiment coincée...',
+    options: [
+      { text: 'Je peux les garder si tu veux. C\'est quoi leurs prénoms, ils ont quel âge ?', traits: { A: 10, E: 3 } },
+      { text: 'Je pourrais peut-être aider mais faudrait voir les détails, c\'est un peu short', traits: { A: 4, C: 4 } },
+      { text: 'Aïe pas possible pour moi désolé·e, j\'ai des trucs de prévus', traits: { A: -2 } },
+      { text: 'T\'as essayé les applis de babysitting de dernière minute ?', traits: { O: 4, A: 1 } }
+    ]
+  },
+  { sender: 'sophie', text: 'C\'est vraiment adorable, merci à ceux qui proposent 🙏' },
+  { type: 'pause', duration: 2000 },
+  // SITUATION 4: Noise complaint / ethics
+  { sender: 'michel', text: 'Bon, je dois signaler quelque chose' },
+  { sender: 'michel', text: 'L\'appart 12 au 1er (les nouveaux locataires), j\'ai vu le gars jeter ses mégots par la fenêtre plusieurs fois' },
+  { sender: 'michel', text: 'Je compte envoyer une lettre au syndic. Quelqu\'un veut co-signer ?' },
+  { sender: 'martine', text: 'Michel tu pourrais peut-être leur en parler d\'abord directement ?' },
+  { sender: 'michel', text: 'Je ne vais pas faire la police. Le syndic est là pour ça.' },
+  { sender: 'kevin', text: 'balance...' },
+  { sender: 'michel', text: 'Pardon ??' },
+  { sender: 'kevin', text: 'nan rien' },
+  {
+    type: 'choice',
+    question: 'Conflit éthique : signaler ou parler d\'abord ?',
+    options: [
+      { text: 'Michel, tu veux que j\'aille leur parler avec toi ? Ça passerait peut-être mieux', traits: { A: 6, E: 4, C: 3 } },
+      { text: 'Je comprends Michel, c\'est irrespectueux. Si ça continue, faut signaler.', traits: { C: 7, A: 1 } },
+      { text: 'Perso je trouve qu\'on devrait essayer de régler entre voisins avant le syndic', traits: { A: 5, O: 3 } },
+      { text: 'C\'est un peu relou comme situation, je préfère pas m\'en mêler', traits: { E: -4, A: -2, N: 3 } }
+    ]
+  },
+  { type: 'pause', duration: 3000 },
+  // SITUATION 5: Deep convo
+  { sender: 'lea', text: 'j\'arrive pas à dormir' },
+  { sender: 'lea', text: 'c\'est nul d\'être seule à 2h du mat à flipper pour un exam' },
+  { sender: 'lea', text: 'parfois je me demande à quoi ça sert tout ça...' },
+  { sender: 'martine', text: 'Léa ma puce tu veux que je t\'appelle ?' },
+  { sender: 'lea', text: 'non c\'est bon martine merci, c\'est juste un coup de mou' },
+  { sender: 'lea', text: 'vous avez jamais l\'impression de faire semblant que tout va bien ?' },
+  {
+    type: 'choice',
+    question: 'Léa a besoin de parler...',
+    options: [
+      { text: 'Tout le temps. Mais ça va aller, les études c\'est dur mais t\'es pas seule ❤️', traits: { A: 8, O: 3, E: 4 } },
+      { text: 'C\'est normal de douter. L\'important c\'est de continuer à avancer, un pas à la fois.', traits: { C: 4, A: 4 } },
+      { text: 'Tu veux qu\'on se fasse un thé demain pour en parler ? Parfois ça fait du bien', traits: { A: 9, E: 5 } },
+      { text: '😔 (tu lis mais tu sais pas quoi dire)', traits: { E: -3, A: 2, N: 4 }, silent: true }
+    ]
+  },
+  { sender: 'lea', text: 'merci les gens... ça fait du bien de savoir qu\'on est pas seul' },
+  { sender: 'sophie', text: '💙' },
+  { sender: 'omar', text: '❤️' },
+  { type: 'pause', duration: 2000 },
+  // FINAL
+  { type: 'system', text: 'Quelques jours plus tard...' },
+  { sender: 'martine', text: 'Au fait @nouveau, on fait un apéro sur la terrasse commune samedi, tu viens ?' },
+  { sender: 'kevin', text: 'jramene les enceintes 😎' },
+  { sender: 'michel', text: 'Avant 22h.' },
+  { sender: 'lea', text: '😂😂😂' },
+  { sender: 'sophie', text: 'Allez viens, tu verras on mord pas !' },
+  {
+    type: 'choice',
+    question: 'Invitation à l\'apéro des voisins',
+    options: [
+      { text: 'Carrément ! J\'apporte quoi ? 🍻', traits: { E: 8, A: 5 } },
+      { text: 'Avec plaisir, je passerai faire un tour', traits: { E: 4, A: 4 } },
+      { text: 'Peut-être, je vous dis ! (tu sais que t\'iras pas)', traits: { E: -4, A: -2 } },
+      { text: 'C\'est gentil mais je suis pas trop apéros, je verrai', traits: { E: -6, O: -2 } }
+    ]
+  },
+  { type: 'end' }
+];
+
+// Private chat with Martine
+const martineScenario = [
+  { sender: 'martine', text: 'Coucou, tu as 2 minutes ?' },
+  { sender: 'martine', text: 'J\'aurais besoin d\'un petit service si c\'est possible' },
+  {
+    type: 'choice',
+    question: 'Martine te contacte en privé',
+    options: [
+      { text: 'Bien sûr Martine, dis-moi !', traits: { A: 4, E: 2 } },
+      { text: 'Ça dépend, c\'est quoi ?', traits: { A: 0, C: 2 } },
+      { text: 'Je suis un peu occupé·e là, ça peut attendre ?', traits: { A: -2, C: 3 } }
+    ]
+  },
+  { sender: 'martine', text: 'Voilà, j\'ai rendez-vous chez le médecin vendredi matin' },
+  { sender: 'martine', text: 'Et ma fille peut pas m\'accompagner, elle travaille' },
+  { sender: 'martine', text: 'Tu aurais le temps de m\'y conduire ? C\'est à 10 minutes en voiture' },
+  { sender: 'martine', text: 'Je comprendrais si tu peux pas hein, c\'est juste que j\'ai plus vraiment confiance pour prendre le bus seule...' },
+  {
+    type: 'choice',
+    question: 'Martine a besoin d\'aide pour un rdv médical',
+    options: [
+      { text: 'Pas de souci Martine, c\'est normal ! C\'est à quelle heure ?', traits: { A: 10, E: 3 } },
+      { text: 'Je regarde mon planning et je te dis, ça devrait pouvoir se faire', traits: { A: 5, C: 5 } },
+      { text: 'J\'ai pas de voiture mais je peux t\'accompagner en bus si tu veux ?', traits: { A: 7, O: 3 } },
+      { text: 'Désolé·e Martine mais vendredi c\'est compliqué pour moi...', traits: { A: -3 } }
+    ]
+  },
+  { sender: 'martine', text: 'Oh merci, tu es adorable 🥰' },
+  { sender: 'martine', text: 'Au fait, entre nous...' },
+  { sender: 'martine', text: 'Tu trouves pas que Kévin il est un peu... enfin tu vois...' },
+  { sender: 'martine', text: 'C\'est un gentil garçon mais des fois il fait beaucoup de bruit et il reçoit des gens bizarres la nuit' },
+  {
+    type: 'choice',
+    question: 'Martine te fait une confidence/commérage',
+    options: [
+      { text: 'Oh tu sais, chacun sa vie ! Il a l\'air sympa', traits: { A: 3, O: 4 } },
+      { text: 'Ah oui ? Quel genre de gens ? (curieux·se)', traits: { O: 6, A: -2 } },
+      { text: 'Bof je le connais pas encore assez pour juger', traits: { C: 4, A: 2 } },
+      { text: 'Martine, c\'est pas très gentil de parler dans son dos...', traits: { A: 5, C: 5, E: -2 } }
+    ]
+  },
+  { sender: 'martine', text: 'Tu as raison, je dis rien moi 🤐' },
+  { sender: 'martine', text: 'Allez, à bientôt ! Et encore merci ❤️' },
+  { type: 'end' }
+];
+
+// ============================================
+// NAVIGATION
+// ============================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goToSetup() {
+  showScreen('setupName');
+  document.getElementById('inputName').focus();
+}
+
+function validateSetup1() {
+  const name = document.getElementById('inputName').value.trim();
+  document.getElementById('btnSetup1').disabled = name.length < 2;
+}
+
+function goToSetup2() {
+  state.name = document.getElementById('inputName').value.trim();
+  showScreen('setupAvatar');
+  
+  document.querySelectorAll('.avatar-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.avatar = opt.dataset.avatar;
+      document.getElementById('btnSetup2').disabled = false;
+    });
+  });
+}
+
+function goToSetup3() {
+  showScreen('setupSituation');
+}
+
+function selectSituation(sit) {
+  document.querySelectorAll('.situation-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`[data-situation="${sit}"]`).classList.add('selected');
+  state.situation = sit;
+  document.getElementById('btnSetup3').disabled = false;
+}
+
+function startChat() {
+  // Initialize scenarios
+  chats.group.messages = [...groupScenario];
+  chats.martine.messages = [...martineScenario];
+  
+  // Set unread
+  state.unreadCounts = { group: 8, martine: 1, kevin: 0 };
+  
+  showScreen('chatListScreen');
+  renderChatList();
+  
+  // Show hint after a moment
+  setTimeout(() => {
+    document.getElementById('navHint').classList.add('show');
+    setTimeout(() => document.getElementById('navHint').classList.remove('show'), 4000);
+  }, 2000);
+}
+
+// ============================================
+// CHAT LIST
+// ============================================
+function renderChatList() {
+  const list = document.getElementById('chatList');
+  list.innerHTML = Object.values(chats).map(chat => {
+    const unread = state.unreadCounts[chat.id] || 0;
+    return `
+      <div class="chat-item ${unread > 0 ? 'has-unread' : ''}" onclick="openChat('${chat.id}')">
+        <div class="chat-avatar ${chat.isGroup ? 'group' : 'person'}">
+          ${chat.avatar}
+          ${unread > 0 ? `<span class="unread-dot">${unread}</span>` : ''}
+        </div>
+        <div class="chat-info">
+          <div class="chat-name">
+            ${chat.name}
+            <span class="chat-time">${getRandomTime()}</span>
+          </div>
+          <div class="chat-preview">${chat.preview || 'Pas de message'}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function getRandomTime() {
+  const times = ['09:41', '09:38', '09:30', '08:45', 'Hier'];
+  return times[Math.floor(Math.random() * times.length)];
+}
+
+// ============================================
+// CHAT
+// ============================================
+function openChat(chatId) {
+  state.currentChat = chatId;
+  state.messageIndex = 0;
+  state.unreadCounts[chatId] = 0;
+  
+  const chat = chats[chatId];
+  
+  document.getElementById('chatHeaderAvatar').textContent = chat.avatar;
+  document.getElementById('chatHeaderAvatar').className = `chat-header-avatar ${chat.isGroup ? 'group' : 'person'}`;
+  document.getElementById('chatHeaderName').textContent = chat.name;
+  document.getElementById('chatHeaderStatus').textContent = chat.participants;
+  
+  document.getElementById('messagesContainer').innerHTML = '';
+  document.getElementById('responseOptions').style.display = 'none';
+  
+  showScreen('chatScreen');
+  
+  // Start displaying messages
+  setTimeout(() => displayNextMessage(), 500);
+}
+
+function goToChatList() {
+  showScreen('chatListScreen');
+  renderChatList();
+}
+
+function displayNextMessage() {
+  const chat = chats[state.currentChat];
+  if (state.messageIndex >= chat.messages.length) return;
+  
+  const msg = chat.messages[state.messageIndex];
+  const container = document.getElementById('messagesContainer');
+  
+  if (msg.type === 'system') {
+    container.innerHTML += `
+      <div class="system-message"><span>${msg.text}</span></div>
+    `;
+    state.messageIndex++;
+    setTimeout(() => displayNextMessage(), 800);
+  } 
+  else if (msg.type === 'pause') {
+    state.messageIndex++;
+    setTimeout(() => displayNextMessage(), msg.duration);
+  }
+  else if (msg.type === 'choice') {
+    showResponseOptions(msg);
+  }
+  else if (msg.type === 'end') {
+    // Chat finished
+    setTimeout(() => {
+      if (state.currentChat === 'group' && state.unreadCounts.martine > 0) {
+        showNotification('martine');
+      }
+    }, 2000);
+  }
+  else if (msg.sender) {
+    // Regular message
+    showTypingIndicator(msg.sender);
+    
+    setTimeout(() => {
+      hideTypingIndicator();
+      addMessage(msg.sender, msg.text);
+      state.messageIndex++;
+      
+      container.scrollTop = container.scrollHeight;
+      
+      setTimeout(() => displayNextMessage(), getReadingDelay(msg.text));
+    }, getTypingDelay(msg.text));
+  }
+}
+
+function showTypingIndicator(senderId) {
+  const container = document.getElementById('messagesContainer');
+  const sender = neighbors[senderId] || { name: senderId, avatar: '👤' };
+  
+  container.innerHTML += `
+    <div class="typing-indicator" id="typingIndicator">
+      <span>${sender.avatar}</span>
+      <span>${sender.name} écrit</span>
+      <div class="typing-dots">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+  `;
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTypingIndicator() {
+  const indicator = document.getElementById('typingIndicator');
+  if (indicator) indicator.remove();
+}
+
+function addMessage(senderId, text, isMe = false) {
+  const container = document.getElementById('messagesContainer');
+  const sender = neighbors[senderId] || { name: senderId, avatar: '👤' };
+  const time = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  
+  if (isMe) {
+    container.innerHTML += `
+      <div class="message-group me">
+        <div class="message-bubble">${text}<div class="message-time">${time}</div></div>
+      </div>
+    `;
+  } else {
+    const chat = chats[state.currentChat];
+    const showSender = chat.isGroup;
+    
+    container.innerHTML += `
+      <div class="message-group other">
+        ${showSender ? `<div class="message-sender">${sender.avatar} ${sender.name}</div>` : ''}
+        <div class="message-bubble">${text}<div class="message-time">${time}</div></div>
+      </div>
+    `;
+  }
+  
+  container.scrollTop = container.scrollHeight;
+}
+
+function showResponseOptions(choice) {
+  const optionsDiv = document.getElementById('responseOptions');
+  const inputArea = document.getElementById('chatInputArea');
+  
+  inputArea.style.display = 'none';
+  optionsDiv.style.display = 'flex';
+  
+  optionsDiv.innerHTML = `
+    <div class="response-label">Ta réponse</div>
+    ${choice.options.map((opt, i) => `
+      <button class="response-btn" onclick="selectResponse(${i})">${opt.text}</button>
+    `).join('')}
+  `;
+}
+
+function selectResponse(index) {
+  const chat = chats[state.currentChat];
+  const choice = chat.messages[state.messageIndex];
+  const selected = choice.options[index];
+  
+  // Apply traits
+  if (selected.traits) {
+    Object.entries(selected.traits).forEach(([trait, delta]) => {
+      state.traits[trait] = Math.max(0, Math.min(100, state.traits[trait] + delta));
+    });
+    updateProfileDisplay();
+  }
+  
+  // Record choice
+  state.choices.push({
+    question: choice.question,
+    answer: selected.text,
+    traits: selected.traits
+  });
+  
+  // Hide options, show input
+  document.getElementById('responseOptions').style.display = 'none';
+  document.getElementById('chatInputArea').style.display = 'flex';
+  
+  // Add user message (unless silent)
+  if (!selected.silent) {
+    addMessage(null, selected.text, true);
+  }
+  
+  state.messageIndex++;
+  
+  // Continue
+  setTimeout(() => displayNextMessage(), 1000);
+}
+
+function getTypingDelay(text) {
+  return Math.min(1500, 500 + text.length * 15);
+}
+
+function getReadingDelay(text) {
+  return Math.min(2000, 400 + text.length * 10);
+}
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+function showNotification(chatId) {
+  const chat = chats[chatId];
+  if (!chat) return;
+  
+  // Could add a notification popup here
+  state.unreadCounts[chatId] = chat.unread;
+  renderChatList();
+}
+
+// ============================================
+// PROFILE
+// ============================================
+function updateProfileDisplay() {
+  ['O', 'C', 'E', 'A', 'N'].forEach(trait => {
+    const val = state.traits[trait];
+    document.getElementById(`trait${trait}`).style.height = `${val}%`;
+    document.getElementById(`val${trait}`).textContent = val;
+  });
+}
+
+function toggleProfile() {
+  document.getElementById('profilePreview').classList.toggle('show');
+}
+
+// Swipe up to show profile
+let touchStartY = 0;
+document.addEventListener('touchstart', e => {
+  touchStartY = e.touches[0].clientY;
+});
+
+document.addEventListener('touchend', e => {
+  const touchEndY = e.changedTouches[0].clientY;
+  const diff = touchStartY - touchEndY;
+  
+  if (diff > 50) {
+    document.getElementById('profilePreview').classList.add('show');
+  } else if (diff < -50) {
+    document.getElementById('profilePreview').classList.remove('show');
+  }
+});
+
+// ============================================
+// INIT
+// ============================================
+function updateTime() {
+  const now = new Date();
+  document.getElementById('statusTime').textContent = 
+    now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+
+setInterval(updateTime, 1000);
+updateTime();
+</script>
+
+</body>
+</html>
