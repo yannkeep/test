@@ -1,0 +1,3131 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ePOP!up — Plateforme Citoyenne</title>
+  <meta name="description" content="Intelligence citoyenne collective. Formez-vous, enquêtez, agissez. Chaque contribution compte.">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================
+       DESIGN SYSTEM — ePOP!up
+       Vert Tendre & Lilas — Mode Sombre
+       ============================================ */
+    :root {
+      --mint-50: #f0fdf4;
+      --mint-100: #dcfce7;
+      --mint-200: #bbf7d0;
+      --mint-300: #86efac;
+      --mint-400: #4ade80;
+      --mint-500: #22c55e;
+      --mint-600: #16a34a;
+      --mint-700: #15803d;
+      
+      --lilac-50: #faf5ff;
+      --lilac-100: #f3e8ff;
+      --lilac-200: #e9d5ff;
+      --lilac-300: #d8b4fe;
+      --lilac-400: #c084fc;
+      --lilac-500: #a855f7;
+      --lilac-600: #9333ea;
+      --lilac-700: #7e22ce;
+      
+      --bg-primary: #0a0d0c;
+      --bg-secondary: #0f1412;
+      --bg-tertiary: #151c19;
+      --bg-elevated: #1a2420;
+      --bg-hover: #1f2d27;
+      --bg-card: #121916;
+      
+      --text-primary: #f0fdf4;
+      --text-secondary: #9cb8a8;
+      --text-muted: #5a7d6a;
+      --text-inverse: #0a0d0c;
+      
+      --accent-mint: #4ade80;
+      --accent-mint-hover: #22c55e;
+      --accent-mint-glow: rgba(74, 222, 128, 0.2);
+      --accent-lilac: #c084fc;
+      --accent-lilac-hover: #a855f7;
+      --accent-lilac-glow: rgba(192, 132, 252, 0.2);
+      
+      --success: #4ade80;
+      --success-bg: rgba(74, 222, 128, 0.1);
+      --warning: #fbbf24;
+      --warning-bg: rgba(251, 191, 36, 0.1);
+      --danger: #f87171;
+      --danger-bg: rgba(248, 113, 113, 0.1);
+      --info: #60a5fa;
+      --info-bg: rgba(96, 165, 250, 0.1);
+      
+      --border-subtle: rgba(74, 222, 128, 0.08);
+      --border-default: rgba(74, 222, 128, 0.15);
+      --border-strong: rgba(74, 222, 128, 0.25);
+      
+      --gradient-mint: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      --gradient-lilac: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+      --gradient-mixed: linear-gradient(135deg, #4ade80 0%, #c084fc 100%);
+      --gradient-civix: linear-gradient(135deg, #c084fc 0%, #4ade80 100%);
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+      --shadow-glow-mint: 0 0 30px var(--accent-mint-glow);
+      --shadow-glow-lilac: 0 0 30px var(--accent-lilac-glow);
+      
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+      
+      --transition-fast: 0.15s ease;
+      --transition-base: 0.25s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.3;
+    }
+
+    .bg-orb.mint {
+      width: 500px;
+      height: 500px;
+      background: var(--accent-mint-glow);
+      top: -150px;
+      left: -100px;
+      animation: drift 25s ease-in-out infinite;
+    }
+
+    .bg-orb.lilac {
+      width: 400px;
+      height: 400px;
+      background: var(--accent-lilac-glow);
+      bottom: -100px;
+      right: -50px;
+      animation: drift 20s ease-in-out infinite reverse;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, -20px); }
+    }
+
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(var(--border-subtle) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* App */
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(10, 13, 12, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .logo-mark {
+      font-family: 'Fraunces', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: var(--gradient-mixed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-mark span {
+      color: var(--accent-lilac);
+      -webkit-text-fill-color: var(--accent-lilac);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 0.25rem;
+      background: var(--bg-tertiary);
+      padding: 4px;
+      border-radius: var(--radius-lg);
+    }
+
+    .nav-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .nav-tab:hover {
+      color: var(--text-secondary);
+    }
+
+    .nav-tab.active {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    .nav-tab .icon {
+      font-size: 1rem;
+    }
+
+    .nav-wallet {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .wallet-balance {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .wallet-balance:hover {
+      border-color: var(--accent-lilac);
+      box-shadow: var(--shadow-glow-lilac);
+    }
+
+    .civix-icon {
+      width: 24px;
+      height: 24px;
+      background: var(--gradient-civix);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-inverse);
+    }
+
+    .wallet-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent-lilac);
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background: var(--gradient-mint);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-inverse);
+      cursor: pointer;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding-top: 64px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Screens */
+    .screen {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==================== HOME ==================== */
+    .home-header {
+      text-align: center;
+      padding: 3rem 0 4rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .status-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .home-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .home-header h1 .highlight {
+      background: var(--gradient-mixed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .home-header p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--accent-mint);
+      line-height: 1;
+    }
+
+    .stat-value.lilac { color: var(--accent-lilac); }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .section-link {
+      font-size: 0.85rem;
+      color: var(--accent-mint);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .section-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Mission Cards */
+    .missions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .mission-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all var(--transition-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mission-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-mint);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition-base);
+    }
+
+    .mission-card.lilac::before {
+      background: var(--gradient-lilac);
+    }
+
+    .mission-card:hover {
+      border-color: var(--accent-mint);
+      transform: translateY(-2px);
+    }
+
+    .mission-card.lilac:hover {
+      border-color: var(--accent-lilac);
+    }
+
+    .mission-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .mission-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .mission-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.7rem;
+      background: var(--success-bg);
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--success);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .mission-type.veille { background: var(--info-bg); color: var(--info); }
+    .mission-type.formation { background: var(--success-bg); color: var(--success); }
+    .mission-type.enquete { background: rgba(192, 132, 252, 0.12); color: var(--accent-lilac); }
+    .mission-type.action { background: var(--warning-bg); color: var(--warning); }
+
+    .mission-reward {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-lilac);
+    }
+
+    .mission-reward .civix-sm {
+      width: 18px;
+      height: 18px;
+      background: var(--gradient-civix);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: var(--text-inverse);
+    }
+
+    .mission-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .mission-card > p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .mission-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .mission-difficulty {
+      display: flex;
+      gap: 3px;
+    }
+
+    .diff-bar {
+      width: 20px;
+      height: 4px;
+      background: var(--bg-hover);
+      border-radius: 2px;
+    }
+
+    .diff-bar.filled { background: var(--accent-mint); }
+    .mission-card.lilac .diff-bar.filled { background: var(--accent-lilac); }
+
+    .mission-time {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .quick-action:hover {
+      border-color: var(--accent-mint);
+      background: var(--bg-hover);
+    }
+
+    .quick-action-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .quick-action h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    .quick-action p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ==================== WALLET ==================== */
+    .wallet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+    }
+
+    .wallet-info h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .wallet-info p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .balance-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-civix);
+    }
+
+    .balance-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .balance-value {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .balance-value .civix-lg {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-civix);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-inverse);
+      box-shadow: var(--shadow-glow-lilac);
+    }
+
+    .balance-value .amount {
+      font-family: 'Fraunces', serif;
+      font-size: 3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .balance-value .currency {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-left: 0.25rem;
+    }
+
+    .balance-equiv {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .balance-equiv strong {
+      color: var(--accent-mint);
+    }
+
+    .wallet-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .wallet-stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      text-align: center;
+    }
+
+    .wallet-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--accent-mint);
+    }
+
+    .wallet-stat-value.lilac { color: var(--accent-lilac); }
+    .wallet-stat-value.warning { color: var(--warning); }
+
+    .wallet-stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Transactions */
+    .transactions-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .transactions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .transactions-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .transaction-filters {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.35rem 0.75rem;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--bg-hover);
+      border-color: var(--accent-mint);
+      color: var(--text-primary);
+    }
+
+    .transactions-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .transaction-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background var(--transition-fast);
+    }
+
+    .transaction-item:last-child {
+      border-bottom: none;
+    }
+
+    .transaction-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .transaction-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .transaction-icon.earn { background: var(--success-bg); }
+    .transaction-icon.spend { background: var(--danger-bg); }
+    .transaction-icon.vote { background: rgba(192, 132, 252, 0.12); }
+
+    .transaction-info {
+      flex: 1;
+    }
+
+    .transaction-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.1rem;
+    }
+
+    .transaction-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .transaction-amount {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .transaction-amount.positive { color: var(--success); }
+    .transaction-amount.negative { color: var(--danger); }
+
+    /* ==================== FORMATION ==================== */
+    .formation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .formation-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .formation-card:hover {
+      border-color: var(--accent-mint);
+      transform: translateY(-2px);
+    }
+
+    .formation-card.lilac:hover {
+      border-color: var(--accent-lilac);
+    }
+
+    .formation-cover {
+      height: 120px;
+      background: var(--gradient-mint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .formation-card.lilac .formation-cover {
+      background: var(--gradient-lilac);
+    }
+
+    .formation-content {
+      padding: 1.25rem;
+    }
+
+    .formation-tag {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      background: var(--success-bg);
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--success);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .formation-card.lilac .formation-tag {
+      background: rgba(192, 132, 252, 0.12);
+      color: var(--accent-lilac);
+    }
+
+    .formation-content h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .formation-content p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .formation-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .formation-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .formation-reward {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-lilac);
+    }
+
+    /* Progress indicator */
+    .formation-progress {
+      height: 3px;
+      background: var(--bg-hover);
+      margin-top: 0.75rem;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .formation-progress-fill {
+      height: 100%;
+      background: var(--gradient-mint);
+      transition: width 0.5s ease;
+    }
+
+    /* ==================== COMMUNAUTÉ ==================== */
+    .community-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .community-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feed-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .feed-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+    }
+
+    .feed-avatar {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-mint);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-inverse);
+    }
+
+    .feed-avatar.lilac { background: var(--gradient-lilac); }
+
+    .feed-user {
+      flex: 1;
+    }
+
+    .feed-username {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .feed-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .feed-type-badge {
+      padding: 0.25rem 0.6rem;
+      background: var(--success-bg);
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .feed-type-badge.veille { background: var(--info-bg); color: var(--info); }
+    .feed-type-badge.enquete { background: rgba(192, 132, 252, 0.12); color: var(--accent-lilac); }
+
+    .feed-content {
+      padding: 0 1.25rem 1rem;
+    }
+
+    .feed-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feed-content p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .feed-actions {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .feed-action {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .feed-action:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .feed-action.liked {
+      color: var(--danger);
+    }
+
+    /* Leaderboard */
+    .leaderboard-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .leaderboard-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .leaderboard-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+
+    .leaderboard-rank {
+      width: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .leaderboard-rank.gold { color: #fbbf24; }
+    .leaderboard-rank.silver { color: #94a3b8; }
+    .leaderboard-rank.bronze { color: #d97706; }
+
+    .leaderboard-avatar {
+      width: 32px;
+      height: 32px;
+      background: var(--gradient-mint);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-inverse);
+    }
+
+    .leaderboard-name {
+      flex: 1;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .leaderboard-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-lilac);
+    }
+
+    /* ==================== MISSION DETAIL ==================== */
+    .mission-detail {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .mission-detail-header {
+      margin-bottom: 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-decoration: none;
+      margin-bottom: 1rem;
+    }
+
+    .back-link:hover {
+      color: var(--text-primary);
+    }
+
+    .mission-detail-header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .mission-detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .mission-detail-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mission-detail-content h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .mission-detail-content h2:first-child {
+      margin-top: 0;
+    }
+
+    .mission-detail-content p {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .mission-detail-content ul {
+      margin-left: 1.25rem;
+      color: var(--text-secondary);
+    }
+
+    .mission-detail-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    .mission-actions-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+    }
+
+    .mission-reward-display {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .mission-reward-display .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .mission-reward-display .value {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent-lilac);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .btn-primary {
+      background: var(--gradient-mint);
+      color: var(--text-inverse);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md), var(--shadow-glow-mint);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-default);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent-mint);
+    }
+
+    .btn-lilac {
+      background: var(--gradient-lilac);
+      color: white;
+    }
+
+    .btn-lilac:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md), var(--shadow-glow-lilac);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-lg {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+    }
+
+    /* ==================== TEST INTERFACE ==================== */
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .test-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .test-badge {
+      padding: 0.4rem 0.85rem;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .test-progress-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .timer {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .timer.warning {
+      background: var(--warning-bg);
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .timer.danger {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: var(--danger);
+      animation: timerPulse 1s infinite;
+    }
+
+    @keyframes timerPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--bg-tertiary);
+      border-radius: 2px;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-mint);
+      transition: width var(--transition-base);
+    }
+
+    .question-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .question-num {
+      display: inline-block;
+      padding: 0.3rem 0.75rem;
+      background: var(--success-bg);
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--success);
+      margin-bottom: 1rem;
+    }
+
+    .question-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .answers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .answers-grid { grid-template-columns: 1fr; }
+    }
+
+    .answer-option {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 1rem 1.25rem;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .answer-option:hover:not(.disabled) {
+      border-color: var(--accent-mint);
+      background: var(--bg-hover);
+    }
+
+    .answer-option.selected {
+      border-color: var(--accent-mint);
+      background: var(--success-bg);
+    }
+
+    .answer-option.correct {
+      border-color: var(--success);
+      background: var(--success-bg);
+    }
+
+    .answer-option.incorrect {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+    }
+
+    .answer-option.disabled {
+      pointer-events: none;
+    }
+
+    .answer-letter {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .answer-option.selected .answer-letter {
+      background: var(--accent-mint);
+      color: var(--text-inverse);
+    }
+
+    .answer-option.correct .answer-letter {
+      background: var(--success);
+      color: var(--text-inverse);
+    }
+
+    .answer-option.incorrect .answer-letter {
+      background: var(--danger);
+      color: white;
+    }
+
+    .answer-text {
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .feedback-box {
+      padding: 1.25rem;
+      border-radius: var(--radius-lg);
+      margin-bottom: 1.5rem;
+    }
+
+    .feedback-box.correct {
+      background: var(--success-bg);
+      border: 1px solid var(--success);
+    }
+
+    .feedback-box.incorrect {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger);
+    }
+
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feedback-title {
+      font-weight: 600;
+    }
+
+    .feedback-box.correct .feedback-title { color: var(--success); }
+    .feedback-box.incorrect .feedback-title { color: var(--danger); }
+
+    .feedback-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .test-actions {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Scenario box */
+    .scenario-box {
+      background: var(--bg-primary);
+      border-left: 3px solid var(--accent-mint);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .scenario-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent-mint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .scenario-text {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    /* Likert */
+    .likert-statement {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+
+    .likert-scale {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .likert-option {
+      flex: 1;
+      max-width: 100px;
+      padding: 1rem 0.5rem;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      text-align: center;
+      transition: all var(--transition-fast);
+    }
+
+    .likert-option:hover {
+      border-color: var(--accent-lilac);
+    }
+
+    .likert-option.selected {
+      border-color: var(--accent-lilac);
+      background: rgba(192, 132, 252, 0.1);
+    }
+
+    .likert-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .likert-option.selected .likert-value {
+      color: var(--accent-lilac);
+    }
+
+    .likert-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      line-height: 1.2;
+    }
+
+    /* Results */
+    .results-container {
+      max-width: 650px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .results-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--gradient-mint);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.25rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: var(--shadow-glow-mint);
+    }
+
+    .results-container h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .results-container > p {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .score-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .score-ring {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 1rem;
+    }
+
+    .score-ring svg {
+      transform: rotate(-90deg);
+    }
+
+    .score-ring-bg {
+      fill: none;
+      stroke: var(--bg-tertiary);
+      stroke-width: 10;
+    }
+
+    .score-ring-fill {
+      fill: none;
+      stroke: url(#scoreGradient);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 377;
+      stroke-dashoffset: 377;
+      transition: stroke-dashoffset 1.5s ease-out;
+    }
+
+    .score-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Fraunces', serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+
+    .score-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .results-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .breakdown-item {
+      padding: 1rem;
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+    }
+
+    .breakdown-value {
+      font-family: 'Fraunces', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .breakdown-value.green { color: var(--success); }
+    .breakdown-value.red { color: var(--danger); }
+    .breakdown-value.lilac { color: var(--accent-lilac); }
+
+    .breakdown-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .civix-earned {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(192, 132, 252, 0.1);
+      border: 1px solid var(--accent-lilac);
+      border-radius: var(--radius-full);
+      margin-bottom: 2rem;
+    }
+
+    .civix-earned span {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--accent-lilac);
+    }
+
+    .results-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+      .nav { padding: 0 1rem; }
+      .nav-tabs { display: none; }
+      .container { padding: 1.5rem 1rem; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .quick-actions { grid-template-columns: 1fr; }
+      .missions-grid { grid-template-columns: 1fr; }
+      .wallet-stats { grid-template-columns: 1fr; }
+      .results-breakdown { grid-template-columns: 1fr; }
+    }
+
+    /* Mobile nav */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(10, 13, 12, 0.95);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border-subtle);
+      z-index: 1000;
+    }
+
+    @media (max-width: 768px) {
+      .mobile-nav { display: flex; }
+      .main { padding-bottom: 64px; }
+    }
+
+    .mobile-nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.65rem;
+      cursor: pointer;
+    }
+
+    .mobile-nav-item .icon {
+      font-size: 1.25rem;
+    }
+
+    .mobile-nav-item.active {
+      color: var(--accent-mint);
+    }
+
+    /* Utilities */
+    .hidden { display: none !important; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--accent-mint);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-layer">
+    <div class="bg-orb mint"></div>
+    <div class="bg-orb lilac"></div>
+    <div class="bg-grid"></div>
+  </div>
+
+  <!-- App -->
+  <div class="app">
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="#" class="logo" onclick="showScreen('home'); return false;">
+        <span class="logo-mark">ePOP<span>!</span>up</span>
+      </a>
+
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-screen="home" onclick="showScreen('home')">
+          <span class="icon">🏠</span> Accueil
+        </button>
+        <button class="nav-tab" data-screen="formation" onclick="showScreen('formation')">
+          <span class="icon">📚</span> Formation
+        </button>
+        <button class="nav-tab" data-screen="missions" onclick="showScreen('missions')">
+          <span class="icon">🎯</span> Missions
+        </button>
+        <button class="nav-tab" data-screen="community" onclick="showScreen('community')">
+          <span class="icon">👥</span> Communauté
+        </button>
+      </div>
+
+      <div class="nav-wallet">
+        <div class="wallet-balance" onclick="showScreen('wallet')">
+          <div class="civix-icon">Ȼ</div>
+          <span class="wallet-amount" id="navBalance">0</span>
+        </div>
+        <div class="user-avatar" id="userAvatar">?</div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+      <!-- ==================== HOME ==================== -->
+      <section class="screen active" id="screen-home">
+        <div class="container">
+          <div class="home-header">
+            <div class="status-badge">
+              <span class="dot"></span>
+              <span id="memberCount">2,847</span> citoyens actifs
+            </div>
+            <h1>Intelligence citoyenne<br><span class="highlight">collective</span></h1>
+            <p>Formez-vous aux mécanismes du système. Documentez. Enquêtez. Agissez. Chaque contribution renforce notre capacité collective.</p>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-value" id="statMissions">0</div>
+              <div class="stat-label">Missions complétées</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value lilac" id="statCivix">0</div>
+              <div class="stat-label">Civix en circulation</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statVeilles">0</div>
+              <div class="stat-label">Veilles documentées</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value lilac" id="statImpact">0</div>
+              <div class="stat-label">Score d'impact collectif</div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <h2 class="section-title">Missions prioritaires</h2>
+            <a href="#" class="section-link" onclick="showScreen('missions'); return false;">Voir toutes →</a>
+          </div>
+
+          <div class="missions-grid" id="homeMissions">
+            <!-- Dynamically populated -->
+          </div>
+
+          <div class="section-header">
+            <h2 class="section-title">Actions rapides</h2>
+          </div>
+
+          <div class="quick-actions">
+            <div class="quick-action" onclick="showScreen('formation')">
+              <div class="quick-action-icon">🧠</div>
+              <div>
+                <h4>Comprendre le système</h4>
+                <p>Tests de recrutement, particratie, mécanismes de sélection</p>
+              </div>
+            </div>
+            <div class="quick-action" onclick="startMission('veille-locale')">
+              <div class="quick-action-icon">📍</div>
+              <div>
+                <h4>Signaler un problème local</h4>
+                <p>Documenter un dysfonctionnement près de chez vous</p>
+              </div>
+            </div>
+            <div class="quick-action" onclick="showScreen('community')">
+              <div class="quick-action-icon">🤝</div>
+              <div>
+                <h4>Rejoindre une enquête</h4>
+                <p>Contribuer aux investigations collectives en cours</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== WALLET ==================== -->
+      <section class="screen" id="screen-wallet">
+        <div class="container">
+          <div class="wallet-header">
+            <div class="wallet-info">
+              <h1>💰 Portefeuille Civix</h1>
+              <p>Votre contribution à l'intelligence collective, quantifiée.</p>
+            </div>
+          </div>
+
+          <div class="balance-card">
+            <div class="balance-label">Solde actuel</div>
+            <div class="balance-value">
+              <div class="civix-lg">Ȼ</div>
+              <span class="amount" id="walletBalance">0</span>
+              <span class="currency">Civix</span>
+            </div>
+            <p class="balance-equiv">Équivalent à <strong id="walletHours">0</strong> heures de travail citoyen reconnu</p>
+          </div>
+
+          <div class="wallet-stats">
+            <div class="wallet-stat">
+              <div class="wallet-stat-value" id="walletEarned">0</div>
+              <div class="wallet-stat-label">Civix gagnés (total)</div>
+            </div>
+            <div class="wallet-stat">
+              <div class="wallet-stat-value lilac" id="walletSpent">0</div>
+              <div class="wallet-stat-label">Civix utilisés</div>
+            </div>
+            <div class="wallet-stat">
+              <div class="wallet-stat-value warning" id="walletDecay">-0</div>
+              <div class="wallet-stat-label">Fonte mensuelle (2%)</div>
+            </div>
+          </div>
+
+          <div class="transactions-card">
+            <div class="transactions-header">
+              <h3>Historique des transactions</h3>
+              <div class="transaction-filters">
+                <button class="filter-btn active">Tout</button>
+                <button class="filter-btn">Gains</button>
+                <button class="filter-btn">Dépenses</button>
+              </div>
+            </div>
+            <div class="transactions-list" id="transactionsList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== FORMATION ==================== -->
+      <section class="screen" id="screen-formation">
+        <div class="container">
+          <div class="section-header" style="margin-bottom: 2rem;">
+            <div>
+              <h1 class="section-title" style="font-size: 1.5rem;">📚 Modules de Formation</h1>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Comprendre pour mieux agir</p>
+            </div>
+          </div>
+
+          <div class="formation-grid" id="formationGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== MISSIONS ==================== -->
+      <section class="screen" id="screen-missions">
+        <div class="container">
+          <div class="section-header" style="margin-bottom: 2rem;">
+            <div>
+              <h1 class="section-title" style="font-size: 1.5rem;">🎯 Missions Disponibles</h1>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Chaque action compte</p>
+            </div>
+          </div>
+
+          <div class="missions-grid" id="missionsGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== COMMUNITY ==================== -->
+      <section class="screen" id="screen-community">
+        <div class="container">
+          <div class="section-header" style="margin-bottom: 2rem;">
+            <div>
+              <h1 class="section-title" style="font-size: 1.5rem;">👥 Communauté</h1>
+              <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">L'intelligence collective en action</p>
+            </div>
+          </div>
+
+          <div class="community-layout">
+            <div class="feed" id="communityFeed">
+              <!-- Dynamically populated -->
+            </div>
+            <div>
+              <div class="leaderboard-card">
+                <div class="leaderboard-header">
+                  <h3>🏆 Top Contributeurs</h3>
+                </div>
+                <div id="leaderboard">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TEST SCREEN ==================== -->
+      <section class="screen" id="screen-test">
+        <div class="container">
+          <div class="test-container">
+            <div class="test-header">
+              <div class="test-meta">
+                <span class="test-badge" id="testBadge">📚 Formation</span>
+                <span class="test-progress-text">Question <span id="currentQ">1</span>/<span id="totalQ">10</span></span>
+              </div>
+              <div class="timer" id="timer">
+                <span>⏱️</span>
+                <span id="timerDisplay">05:00</span>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <div class="question-card" id="questionCard">
+              <!-- Dynamically populated -->
+            </div>
+
+            <div class="feedback-box hidden" id="feedbackBox"></div>
+
+            <div class="test-actions">
+              <button class="btn btn-secondary" id="btnPrev" onclick="prevQuestion()" disabled>← Précédent</button>
+              <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()">Suivant →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== RESULTS ==================== -->
+      <section class="screen" id="screen-results">
+        <div class="container">
+          <div class="results-container">
+            <div class="results-icon">🏆</div>
+            <h1>Module terminé !</h1>
+            <p>Votre contribution a été enregistrée</p>
+
+            <div class="score-card">
+              <div class="score-ring">
+                <svg width="150" height="150" viewBox="0 0 150 150">
+                  <defs>
+                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4ade80"/>
+                      <stop offset="100%" style="stop-color:#c084fc"/>
+                    </linearGradient>
+                  </defs>
+                  <circle class="score-ring-bg" cx="75" cy="75" r="60"/>
+                  <circle class="score-ring-fill" id="scoreRing" cx="75" cy="75" r="60"/>
+                </svg>
+                <span class="score-value" id="finalScore">0%</span>
+              </div>
+              <div class="score-label">Score obtenu</div>
+            </div>
+
+            <div class="results-breakdown">
+              <div class="breakdown-item">
+                <div class="breakdown-value green" id="correctCount">0</div>
+                <div class="breakdown-label">Correctes</div>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-value red" id="wrongCount">0</div>
+                <div class="breakdown-label">Incorrectes</div>
+              </div>
+              <div class="breakdown-item">
+                <div class="breakdown-value lilac" id="timeSpent">0s</div>
+                <div class="breakdown-label">Temps</div>
+              </div>
+            </div>
+
+            <div class="civix-earned">
+              <div class="civix-icon">Ȼ</div>
+              <span id="civixEarned">+0 Civix</span>
+            </div>
+
+            <div class="results-actions">
+              <button class="btn btn-secondary" onclick="showScreen('formation')">← Retour</button>
+              <button class="btn btn-primary" onclick="retryTest()">🔄 Recommencer</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== MISSION DETAIL ==================== -->
+      <section class="screen" id="screen-mission-detail">
+        <div class="container">
+          <div class="mission-detail" id="missionDetail">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+      <button class="mobile-nav-item active" onclick="showScreen('home')">
+        <span class="icon">🏠</span>
+        <span>Accueil</span>
+      </button>
+      <button class="mobile-nav-item" onclick="showScreen('formation')">
+        <span class="icon">📚</span>
+        <span>Formation</span>
+      </button>
+      <button class="mobile-nav-item" onclick="showScreen('missions')">
+        <span class="icon">🎯</span>
+        <span>Missions</span>
+      </button>
+      <button class="mobile-nav-item" onclick="showScreen('wallet')">
+        <span class="icon">💰</span>
+        <span>Civix</span>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    // ============================================
+    // DATA & STATE
+    // ============================================
+    const STORAGE_KEY = 'epopup_data';
+
+    const defaultState = {
+      username: null,
+      civixBalance: 0,
+      civixEarned: 0,
+      civixSpent: 0,
+      missionsCompleted: 0,
+      veillesCompleted: 0,
+      formationsCompleted: [],
+      transactions: [],
+      activities: [],
+      streak: 0,
+      lastVisit: null,
+      firstVisit: true
+    };
+
+    let state = loadState();
+
+    // Global stats (simulated community data)
+    const communityStats = {
+      members: 2847,
+      totalCivix: 847293,
+      totalVeilles: 1893,
+      impactScore: 4721
+    };
+
+    // Missions Database
+    const missions = [
+      {
+        id: 'formation-recrutement',
+        type: 'formation',
+        title: 'Décrypter les tests de recrutement',
+        description: 'Comprenez comment les entreprises vous évaluent. Matrices, personnalité, jugement situationnel : les mécanismes révélés.',
+        reward: 150,
+        difficulty: 2,
+        duration: '20 min',
+        category: 'formation'
+      },
+      {
+        id: 'formation-particratie',
+        type: 'formation',
+        title: 'La particratie belge expliquée',
+        description: 'Comment le système partisan a vidé le mandat parlementaire de sa substance. Analyse des mécanismes.',
+        reward: 200,
+        difficulty: 3,
+        duration: '30 min',
+        category: 'formation',
+        lilac: true
+      },
+      {
+        id: 'veille-commune',
+        type: 'veille',
+        title: 'Veille communale',
+        description: 'Documentez un problème local : infrastructure, service public, décision contestable. Chaque signalement enrichit la base.',
+        reward: 75,
+        difficulty: 1,
+        duration: '15 min',
+        category: 'veille'
+      },
+      {
+        id: 'enquete-lobbying',
+        type: 'enquete',
+        title: 'Cartographier le lobbying',
+        description: 'Investigation collaborative : identifier les liens entre décideurs et groupes d\'intérêts dans votre région.',
+        reward: 300,
+        difficulty: 3,
+        duration: '45 min',
+        category: 'enquete',
+        lilac: true
+      },
+      {
+        id: 'action-interpellation',
+        type: 'action',
+        title: 'Interpeller un élu',
+        description: 'Rédigez et envoyez une question citoyenne à un représentant. Template et guide fournis.',
+        reward: 200,
+        difficulty: 2,
+        duration: '30 min',
+        category: 'action'
+      },
+      {
+        id: 'formation-osint',
+        type: 'formation',
+        title: 'Introduction à l\'OSINT citoyen',
+        description: 'Techniques de recherche en sources ouvertes pour enquêter légalement et efficacement.',
+        reward: 175,
+        difficulty: 2,
+        duration: '25 min',
+        category: 'formation'
+      }
+    ];
+
+    // Formation modules
+    const formations = [
+      {
+        id: 'tests-recrutement',
+        icon: '🧠',
+        tag: 'Système',
+        title: 'Tests de Recrutement',
+        description: 'Matrices, personnalité, jugement situationnel. Décryptez les mécanismes de sélection.',
+        duration: '20 min',
+        questions: 15,
+        reward: 150,
+        lilac: false
+      },
+      {
+        id: 'particratie',
+        icon: '🏛️',
+        tag: 'Politique',
+        title: 'Particratie & Citoyenneté',
+        description: 'Comment le système partisan a confisqué la représentation démocratique.',
+        duration: '25 min',
+        questions: 12,
+        reward: 175,
+        lilac: true
+      },
+      {
+        id: 'veille-citoyenne',
+        icon: '🔍',
+        tag: 'Méthode',
+        title: 'Veille Citoyenne',
+        description: 'Méthodologie pour documenter, sourcer et partager efficacement.',
+        duration: '15 min',
+        questions: 10,
+        reward: 125,
+        lilac: false
+      },
+      {
+        id: 'osint-bases',
+        icon: '🕵️',
+        tag: 'Investigation',
+        title: 'OSINT : Les Bases',
+        description: 'Recherche en sources ouvertes. Techniques légales d\'investigation citoyenne.',
+        duration: '30 min',
+        questions: 18,
+        reward: 200,
+        lilac: true
+      },
+      {
+        id: 'economie-civix',
+        icon: '💎',
+        tag: 'Économie',
+        title: 'Économie du Civix',
+        description: 'Comprendre la monnaie citoyenne : création, circulation, gouvernance.',
+        duration: '20 min',
+        questions: 12,
+        reward: 150,
+        lilac: false
+      },
+      {
+        id: 'action-collective',
+        icon: '✊',
+        tag: 'Action',
+        title: 'Action Collective Efficace',
+        description: 'Stratégies d\'influence citoyenne : interpellation, mobilisation, plaidoyer.',
+        duration: '25 min',
+        questions: 14,
+        reward: 175,
+        lilac: true
+      }
+    ];
+
+    // Community feed (simulated)
+    const feedItems = [
+      {
+        user: 'MarieB',
+        avatar: 'MB',
+        type: 'veille',
+        title: 'Problème d\'accessibilité PMR à Liège',
+        content: 'Documenté l\'absence de rampe d\'accès à la nouvelle bibliothèque municipale. Photos et témoignages collectés.',
+        time: 'Il y a 2h',
+        likes: 24,
+        comments: 8
+      },
+      {
+        user: 'JeanPhi',
+        avatar: 'JP',
+        type: 'enquete',
+        title: 'Liens entre promoteur et conseil communal',
+        content: 'Investigation en cours sur l\'attribution du permis de construire Zone Nord. 3 contributeurs ont rejoint.',
+        time: 'Il y a 5h',
+        likes: 47,
+        comments: 15,
+        lilac: true
+      },
+      {
+        user: 'SophieL',
+        avatar: 'SL',
+        type: 'formation',
+        title: 'Module Particratie complété',
+        content: 'Score de 92% ! Les mécanismes de discipline partisane sont vraiment éclairants.',
+        time: 'Il y a 8h',
+        likes: 31,
+        comments: 4
+      }
+    ];
+
+    // Leaderboard
+    const leaderboard = [
+      { name: 'MarieB', score: 4820, avatar: 'MB' },
+      { name: 'JeanPhi', score: 4215, avatar: 'JP' },
+      { name: 'SophieL', score: 3890, avatar: 'SL' },
+      { name: 'YassineK', score: 3654, avatar: 'YK' },
+      { name: 'ClaireD', score: 3421, avatar: 'CD' }
+    ];
+
+    // Question banks
+    const questionBanks = {
+      'tests-recrutement': [
+        {
+          type: 'standard',
+          question: 'Quel est le but principal des tests de personnalité en recrutement ?',
+          options: [
+            'Mesurer l\'intelligence du candidat',
+            'Prédire les comportements professionnels',
+            'Vérifier les compétences techniques',
+            'Évaluer la culture générale'
+          ],
+          correct: 1,
+          explanation: 'Les tests de personnalité visent à prédire comment une personne se comportera en milieu professionnel, pas à mesurer son intelligence ou ses compétences.'
+        },
+        {
+          type: 'standard',
+          question: 'Dans un test de jugement situationnel (SJT), que mesure-t-on principalement ?',
+          options: [
+            'La rapidité de réflexion',
+            'La capacité de jugement en contexte professionnel',
+            'La mémoire à long terme',
+            'Les connaissances du secteur'
+          ],
+          correct: 1,
+          explanation: 'Les SJT évaluent la capacité à identifier les réponses appropriées dans des situations professionnelles réalistes.'
+        },
+        {
+          type: 'standard',
+          question: 'Qu\'est-ce que l\'échelle L (Lie Scale) dans un test de personnalité ?',
+          options: [
+            'Une mesure du niveau de langage',
+            'Un indicateur de désirabilité sociale',
+            'Une évaluation du leadership',
+            'Un test de logique'
+          ],
+          correct: 1,
+          explanation: 'L\'échelle L détecte les réponses socialement désirables. Des questions comme "Je ne me mets jamais en colère" permettent d\'identifier les candidats qui embellissent leurs réponses.'
+        },
+        {
+          type: 'matrix',
+          question: 'Quelle figure complète cette série ?',
+          matrix: ['🔵', '🔵🔵', '🔵🔵🔵', '🔴', '🔴🔴', '🔴🔴🔴', '🟢', '🟢🟢', '?'],
+          options: ['🟢🟢🟢', '🟢', '🔵🔵🔵', '🔴🔴🔴'],
+          correct: 0,
+          explanation: 'Règle : +1 élément par colonne, changement de couleur par ligne. La réponse est 3 cercles verts.'
+        },
+        {
+          type: 'standard',
+          question: 'Pourquoi les entreprises utilisent-elles des tests psychométriques ?',
+          options: [
+            'Pour réduire les coûts de recrutement uniquement',
+            'Pour prédire la performance et réduire les erreurs de recrutement',
+            'Par obligation légale',
+            'Pour éliminer les candidats sans diplôme'
+          ],
+          correct: 1,
+          explanation: 'Les tests ont une validité prédictive de 0.3 à 0.5 sur la performance professionnelle. Une erreur de recrutement coûte 15-20% du salaire annuel.'
+        },
+        {
+          type: 'verbal',
+          passage: 'Une étude interne montre que les candidats ayant pratiqué les tests avant l\'évaluation obtiennent des scores 40 à 80% plus élevés. La direction considère que cela fausse les résultats.',
+          question: 'La pratique préalable invalide complètement les résultats des tests.',
+          options: ['Vrai', 'Faux', 'Ne peut pas dire'],
+          correct: 2,
+          explanation: 'NE PEUT PAS DIRE - Le texte dit que la direction "considère" que cela fausse les résultats, mais ne confirme pas que c\'est le cas objectivement.'
+        },
+        {
+          type: 'standard',
+          question: 'Qu\'est-ce qu\'un test ipsatif ?',
+          options: [
+            'Un test chronométré',
+            'Un test où l\'on choisit entre plusieurs options toutes positives',
+            'Un test de personnalité classique',
+            'Un test adaptatif'
+          ],
+          correct: 1,
+          explanation: 'Dans un test ipsatif, on choisit entre des affirmations toutes positives (ex: "Je suis organisé" vs "Je suis créatif"), ce qui élimine le biais de désirabilité sociale.'
+        },
+        {
+          type: 'sequence',
+          question: 'Complétez : 2, 6, 12, 20, 30, ?',
+          options: ['40', '42', '44', '36'],
+          correct: 1,
+          explanation: 'Différences : 4, 6, 8, 10 (+2 à chaque fois). Prochaine différence : 12. Donc 30 + 12 = 42.'
+        }
+      ],
+      'particratie': [
+        {
+          type: 'standard',
+          question: 'Qu\'est-ce que la discipline de parti ?',
+          options: [
+            'La formation des nouveaux membres',
+            'L\'obligation de voter selon la ligne du parti',
+            'Les sanctions financières pour les partis',
+            'La gestion administrative des partis'
+          ],
+          correct: 1,
+          explanation: 'La discipline de parti est l\'obligation pour les élus de voter conformément aux décisions du groupe parlementaire, sous peine de sanctions.'
+        },
+        {
+          type: 'standard',
+          question: 'Selon la Constitution belge, de qui les parlementaires reçoivent-ils leur mandat ?',
+          options: [
+            'De leur parti politique',
+            'Du président de la Chambre',
+            'De la Nation',
+            'De leur circonscription électorale'
+          ],
+          correct: 2,
+          explanation: 'L\'article 42 de la Constitution stipule que "les membres des deux Chambres représentent la Nation et non uniquement ceux qui les ont élus."'
+        },
+        {
+          type: 'standard',
+          question: 'Qu\'est-ce que le "mandat impératif" ?',
+          options: [
+            'L\'obligation de siéger à toutes les séances',
+            'L\'obligation de voter selon les instructions reçues',
+            'Le mandat du Premier ministre',
+            'Le mandat des bourgmestres'
+          ],
+          correct: 1,
+          explanation: 'Le mandat impératif est l\'obligation de voter selon des instructions préétablies. Il est théoriquement interdit par la Constitution, mais la discipline partisane le réinstaure de facto.'
+        },
+        {
+          type: 'verbal',
+          passage: 'En Belgique, le taux de discipline de vote au sein des groupes parlementaires dépasse régulièrement les 95%. Les rares "votes de conscience" sont généralement autorisés par les présidents de groupe sur des questions éthiques.',
+          question: 'Les parlementaires belges votent librement selon leur conscience sur tous les sujets.',
+          options: ['Vrai', 'Faux', 'Ne peut pas dire'],
+          correct: 1,
+          explanation: 'FAUX - Le texte indique un taux de discipline de 95% et précise que les votes de conscience sont "autorisés" par les présidents de groupe, donc limités.'
+        },
+        {
+          type: 'standard',
+          question: 'Quelle est la conséquence principale de la particratie sur la représentation ?',
+          options: [
+            'Plus de stabilité gouvernementale',
+            'Meilleure représentation des citoyens',
+            'Transfert du pouvoir des élus vers les appareils partisans',
+            'Diminution des conflits politiques'
+          ],
+          correct: 2,
+          explanation: 'La particratie déplace le centre de décision des élus individuels vers les directions de partis, affaiblissant le lien de représentation entre élus et citoyens.'
+        }
+      ],
+      'veille-citoyenne': [
+        {
+          type: 'standard',
+          question: 'Quel est le premier principe d\'une veille citoyenne efficace ?',
+          options: [
+            'Publier le plus vite possible',
+            'Toujours vérifier et sourcer les informations',
+            'Utiliser uniquement les réseaux sociaux',
+            'Se concentrer sur les sujets polémiques'
+          ],
+          correct: 1,
+          explanation: 'La crédibilité d\'une veille repose sur la vérification des sources. Une information non sourcée ou mal vérifiée peut être contre-productive.'
+        },
+        {
+          type: 'standard',
+          question: 'Qu\'est-ce qu\'une source primaire ?',
+          options: [
+            'Un article de presse',
+            'Un document officiel original ou un témoignage direct',
+            'Une analyse d\'expert',
+            'Un post sur les réseaux sociaux'
+          ],
+          correct: 1,
+          explanation: 'Une source primaire est un document original (loi, rapport officiel, procès-verbal) ou un témoignage de première main, par opposition aux sources secondaires qui les commentent.'
+        },
+        {
+          type: 'standard',
+          question: 'Pourquoi documenter un problème local avec photos et dates précises ?',
+          options: [
+            'Pour avoir plus de likes sur les réseaux',
+            'Pour créer une preuve horodatée utilisable',
+            'Par habitude journalistique',
+            'Pour impressionner les autres citoyens'
+          ],
+          correct: 1,
+          explanation: 'Une documentation précise (photos géolocalisées, dates, témoins) crée une preuve qui peut être utilisée dans des démarches administratives ou judiciaires.'
+        }
+      ]
+    };
+
+    // Current test state
+    let currentTest = null;
+    let currentQuestionIndex = 0;
+    let answers = [];
+    let score = 0;
+    let timeRemaining = 300;
+    let timerInterval = null;
+    let testStartTime = null;
+
+    // ============================================
+    // STORAGE
+    // ============================================
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          return { ...defaultState, ...JSON.parse(saved) };
+        }
+      } catch (e) {
+        console.error('Load error:', e);
+      }
+      return { ...defaultState };
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.error('Save error:', e);
+      }
+    }
+
+    // ============================================
+    // NAVIGATION
+    // ============================================
+    function showScreen(screenName) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(`screen-${screenName}`).classList.add('active');
+
+      document.querySelectorAll('.nav-tab').forEach(t => {
+        t.classList.remove('active');
+        if (t.dataset.screen === screenName) t.classList.add('active');
+      });
+
+      document.querySelectorAll('.mobile-nav-item').forEach((item, i) => {
+        item.classList.remove('active');
+        const screens = ['home', 'formation', 'missions', 'wallet'];
+        if (screens[i] === screenName) item.classList.add('active');
+      });
+
+      if (screenName === 'home') renderHome();
+      if (screenName === 'wallet') renderWallet();
+      if (screenName === 'formation') renderFormations();
+      if (screenName === 'missions') renderMissions();
+      if (screenName === 'community') renderCommunity();
+    }
+
+    // ============================================
+    // RENDER FUNCTIONS
+    // ============================================
+    function renderHome() {
+      // Update stats
+      document.getElementById('statMissions').textContent = state.missionsCompleted.toLocaleString();
+      document.getElementById('statCivix').textContent = communityStats.totalCivix.toLocaleString();
+      document.getElementById('statVeilles').textContent = communityStats.totalVeilles.toLocaleString();
+      document.getElementById('statImpact').textContent = communityStats.impactScore.toLocaleString();
+
+      // Render priority missions
+      const container = document.getElementById('homeMissions');
+      container.innerHTML = missions.slice(0, 3).map(m => renderMissionCard(m)).join('');
+    }
+
+    function renderMissionCard(mission) {
+      return `
+        <div class="mission-card ${mission.lilac ? 'lilac' : ''}" onclick="showMissionDetail('${mission.id}')">
+          <div class="mission-header">
+            <span class="mission-type ${mission.type}">${mission.type}</span>
+            <div class="mission-reward">
+              <span class="civix-sm">Ȼ</span>
+              <span>${mission.reward}</span>
+            </div>
+          </div>
+          <h3>${mission.title}</h3>
+          <p>${mission.description}</p>
+          <div class="mission-meta">
+            <div class="mission-difficulty">
+              ${[1,2,3].map(i => `<span class="diff-bar ${i <= mission.difficulty ? 'filled' : ''}"></span>`).join('')}
+            </div>
+            <span class="mission-time">⏱️ ${mission.duration}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderWallet() {
+      document.getElementById('walletBalance').textContent = state.civixBalance.toLocaleString();
+      document.getElementById('walletHours').textContent = Math.floor(state.civixBalance / 50);
+      document.getElementById('walletEarned').textContent = state.civixEarned.toLocaleString();
+      document.getElementById('walletSpent').textContent = state.civixSpent.toLocaleString();
+      document.getElementById('walletDecay').textContent = `-${Math.floor(state.civixBalance * 0.02)}`;
+
+      const container = document.getElementById('transactionsList');
+      if (state.transactions.length === 0) {
+        container.innerHTML = `
+          <div class="transaction-item">
+            <div class="transaction-icon">📭</div>
+            <div class="transaction-info">
+              <div class="transaction-title">Aucune transaction</div>
+              <div class="transaction-date">Complétez des missions pour gagner des Civix</div>
+            </div>
+          </div>
+        `;
+      } else {
+        container.innerHTML = state.transactions.slice(0, 10).map(t => `
+          <div class="transaction-item">
+            <div class="transaction-icon ${t.amount > 0 ? 'earn' : 'spend'}">${t.amount > 0 ? '📥' : '📤'}</div>
+            <div class="transaction-info">
+              <div class="transaction-title">${t.label}</div>
+              <div class="transaction-date">${formatDate(t.date)}</div>
+            </div>
+            <div class="transaction-amount ${t.amount > 0 ? 'positive' : 'negative'}">
+              ${t.amount > 0 ? '+' : ''}${t.amount} Ȼ
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderFormations() {
+      const container = document.getElementById('formationGrid');
+      container.innerHTML = formations.map(f => {
+        const completed = state.formationsCompleted.includes(f.id);
+        return `
+          <div class="formation-card ${f.lilac ? 'lilac' : ''}" onclick="startFormation('${f.id}')">
+            <div class="formation-cover">${f.icon}</div>
+            <div class="formation-content">
+              <span class="formation-tag">${f.tag}</span>
+              <h3>${f.title}</h3>
+              <p>${f.description}</p>
+              <div class="formation-footer">
+                <div class="formation-meta">
+                  <span>⏱️ ${f.duration}</span>
+                  <span>📝 ${f.questions} questions</span>
+                </div>
+                <div class="formation-reward">
+                  <span class="civix-sm" style="width:16px;height:16px;font-size:0.55rem;">Ȼ</span>
+                  ${f.reward}
+                </div>
+              </div>
+              ${completed ? '<div class="formation-progress"><div class="formation-progress-fill" style="width:100%"></div></div>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderMissions() {
+      const container = document.getElementById('missionsGrid');
+      container.innerHTML = missions.map(m => renderMissionCard(m)).join('');
+    }
+
+    function renderCommunity() {
+      // Feed
+      const feedContainer = document.getElementById('communityFeed');
+      feedContainer.innerHTML = feedItems.map(item => `
+        <div class="feed-card">
+          <div class="feed-header">
+            <div class="feed-avatar ${item.lilac ? 'lilac' : ''}">${item.avatar}</div>
+            <div class="feed-user">
+              <div class="feed-username">${item.user}</div>
+              <div class="feed-time">${item.time}</div>
+            </div>
+            <span class="feed-type-badge ${item.type}">${item.type}</span>
+          </div>
+          <div class="feed-content">
+            <h4>${item.title}</h4>
+            <p>${item.content}</p>
+          </div>
+          <div class="feed-actions">
+            <button class="feed-action"><span>❤️</span> ${item.likes}</button>
+            <button class="feed-action"><span>💬</span> ${item.comments}</button>
+            <button class="feed-action"><span>🔗</span> Partager</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Leaderboard
+      const lbContainer = document.getElementById('leaderboard');
+      lbContainer.innerHTML = leaderboard.map((u, i) => `
+        <div class="leaderboard-item">
+          <span class="leaderboard-rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''}">${i + 1}</span>
+          <div class="leaderboard-avatar">${u.avatar}</div>
+          <span class="leaderboard-name">${u.name}</span>
+          <span class="leaderboard-score">${u.score.toLocaleString()} Ȼ</span>
+        </div>
+      `).join('');
+    }
+
+    function showMissionDetail(missionId) {
+      const mission = missions.find(m => m.id === missionId);
+      if (!mission) return;
+
+      const container = document.getElementById('missionDetail');
+      container.innerHTML = `
+        <div class="mission-detail-header">
+          <a href="#" class="back-link" onclick="showScreen('missions'); return false;">← Retour aux missions</a>
+          <h1>${mission.title}</h1>
+          <div class="mission-detail-meta">
+            <span class="mission-type ${mission.type}">${mission.type}</span>
+            <span class="mission-time">⏱️ ${mission.duration}</span>
+            <div class="mission-difficulty">
+              ${[1,2,3].map(i => `<span class="diff-bar ${i <= mission.difficulty ? 'filled' : ''}"></span>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <div class="mission-detail-content">
+          <h2>Description</h2>
+          <p>${mission.description}</p>
+
+          <h2>Objectifs</h2>
+          <ul>
+            <li>Comprendre les mécanismes présentés</li>
+            <li>Répondre correctement aux questions de validation</li>
+            <li>Appliquer les connaissances dans une mise en situation</li>
+          </ul>
+
+          <h2>Ce que vous allez apprendre</h2>
+          <p>Cette mission vous permettra de développer votre compréhension des systèmes qui structurent notre société, et de contribuer à l'intelligence collective de la communauté ePOP!up.</p>
+        </div>
+
+        <div class="mission-actions-bar">
+          <div class="mission-reward-display">
+            <span class="label">Récompense :</span>
+            <div class="value">
+              <span class="civix-icon" style="width:20px;height:20px;font-size:0.7rem;">Ȼ</span>
+              ${mission.reward} Civix
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg" onclick="startMission('${mission.id}')">
+            🚀 Commencer la mission
+          </button>
+        </div>
+      `;
+
+      showScreen('mission-detail');
+    }
+
+    // ============================================
+    // FORMATION / TEST
+    // ============================================
+    function startFormation(formationId) {
+      const formation = formations.find(f => f.id === formationId);
+      if (!formation) return;
+
+      currentTest = formationId;
+      currentQuestionIndex = 0;
+      answers = [];
+      score = 0;
+      testStartTime = Date.now();
+      timeRemaining = formation.questions * 30; // 30s per question
+
+      document.getElementById('testBadge').textContent = `📚 ${formation.title}`;
+      document.getElementById('totalQ').textContent = questionBanks[formationId]?.length || formation.questions;
+
+      showScreen('test');
+      renderQuestion();
+      startTimer();
+    }
+
+    function startMission(missionId) {
+      // For now, redirect formation missions to the formation system
+      if (missionId.startsWith('formation-')) {
+        const formationId = missionId.replace('formation-', '');
+        const matchingFormation = formations.find(f => f.id.includes(formationId) || formationId.includes(f.id.split('-')[0]));
+        if (matchingFormation) {
+          startFormation(matchingFormation.id);
+          return;
+        }
+      }
+      
+      // Default: show mission detail
+      showMissionDetail(missionId);
+    }
+
+    function renderQuestion() {
+      const questions = questionBanks[currentTest] || questionBanks['tests-recrutement'];
+      const q = questions[currentQuestionIndex];
+      const container = document.getElementById('questionCard');
+
+      document.getElementById('currentQ').textContent = currentQuestionIndex + 1;
+      document.getElementById('progressFill').style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+      document.getElementById('feedbackBox').classList.add('hidden');
+      document.getElementById('btnPrev').disabled = currentQuestionIndex === 0;
+      document.getElementById('btnNext').textContent = currentQuestionIndex === questions.length - 1 ? 'Terminer ✓' : 'Suivant →';
+
+      if (q.type === 'matrix') {
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <p class="question-text">${q.question}</p>
+          <div style="display:flex;justify-content:center;margin-bottom:1.5rem;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:1rem;background:var(--bg-primary);border-radius:var(--radius-lg);">
+              ${q.matrix.map(cell => `<div style="width:60px;height:60px;background:var(--bg-tertiary);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.25rem;${cell === '?' ? 'background:var(--gradient-mint);color:var(--text-inverse);font-weight:700;' : ''}">${cell}</div>`).join('')}
+            </div>
+          </div>
+          <div class="answers-grid">
+            ${q.options.map((opt, i) => `
+              <div class="answer-option" onclick="selectAnswer(${i})" data-idx="${i}">
+                <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+                <span class="answer-text">${opt}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (q.type === 'verbal') {
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <div class="scenario-box">
+            <span class="scenario-label">📄 Texte</span>
+            <p class="scenario-text">${q.passage}</p>
+          </div>
+          <p class="question-text">${q.question}</p>
+          <div class="answers-grid">
+            ${q.options.map((opt, i) => `
+              <div class="answer-option" onclick="selectAnswer(${i})" data-idx="${i}">
+                <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+                <span class="answer-text">${opt}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (q.type === 'sequence') {
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <p class="question-text">${q.question}</p>
+          <div class="answers-grid">
+            ${q.options.map((opt, i) => `
+              <div class="answer-option" onclick="selectAnswer(${i})" data-idx="${i}">
+                <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+                <span class="answer-text">${opt}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <span class="question-num">Question ${currentQuestionIndex + 1}</span>
+          <p class="question-text">${q.question}</p>
+          <div class="answers-grid">
+            ${q.options.map((opt, i) => `
+              <div class="answer-option" onclick="selectAnswer(${i})" data-idx="${i}">
+                <span class="answer-letter">${String.fromCharCode(65 + i)}</span>
+                <span class="answer-text">${opt}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    function selectAnswer(idx) {
+      const questions = questionBanks[currentTest] || questionBanks['tests-recrutement'];
+      const q = questions[currentQuestionIndex];
+      const options = document.querySelectorAll('.answer-option');
+
+      options.forEach(opt => opt.classList.remove('selected', 'correct', 'incorrect', 'disabled'));
+      options[idx].classList.add('selected');
+      answers[currentQuestionIndex] = idx;
+
+      setTimeout(() => {
+        const isCorrect = idx === q.correct;
+        options.forEach(opt => opt.classList.add('disabled'));
+        options[q.correct].classList.add('correct');
+        if (!isCorrect) options[idx].classList.add('incorrect');
+        if (isCorrect) score++;
+        showFeedback(isCorrect, q.explanation);
+      }, 300);
+    }
+
+    function showFeedback(isCorrect, explanation) {
+      const box = document.getElementById('feedbackBox');
+      box.className = `feedback-box ${isCorrect ? 'correct' : 'incorrect'}`;
+      box.innerHTML = `
+        <div class="feedback-header">
+          <span>${isCorrect ? '✓' : '✗'}</span>
+          <span class="feedback-title">${isCorrect ? 'Correct !' : 'Incorrect'}</span>
+        </div>
+        <p class="feedback-text">${explanation}</p>
+      `;
+      box.classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      const questions = questionBanks[currentTest] || questionBanks['tests-recrutement'];
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion();
+      } else {
+        finishTest();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion();
+      }
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          finishTest();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timeRemaining / 60);
+      const secs = timeRemaining % 60;
+      document.getElementById('timerDisplay').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+      const timer = document.getElementById('timer');
+      timer.classList.remove('warning', 'danger');
+      if (timeRemaining <= 30) timer.classList.add('danger');
+      else if (timeRemaining <= 60) timer.classList.add('warning');
+    }
+
+    function finishTest() {
+      clearInterval(timerInterval);
+      const questions = questionBanks[currentTest] || questionBanks['tests-recrutement'];
+      const totalTime = Math.round((Date.now() - testStartTime) / 1000);
+      const percentage = Math.round((score / questions.length) * 100);
+
+      // Find formation for reward
+      const formation = formations.find(f => f.id === currentTest);
+      const baseReward = formation ? formation.reward : 100;
+      const civixEarned = Math.round(baseReward * (percentage / 100));
+
+      // Update state
+      state.civixBalance += civixEarned;
+      state.civixEarned += civixEarned;
+      state.missionsCompleted++;
+      if (!state.formationsCompleted.includes(currentTest)) {
+        state.formationsCompleted.push(currentTest);
+      }
+      state.transactions.unshift({
+        label: `Formation : ${formation?.title || currentTest}`,
+        amount: civixEarned,
+        date: new Date().toISOString()
+      });
+      saveState();
+      updateNavBalance();
+
+      // Show results
+      document.getElementById('finalScore').textContent = `${percentage}%`;
+      document.getElementById('correctCount').textContent = score;
+      document.getElementById('wrongCount').textContent = questions.length - score;
+      document.getElementById('timeSpent').textContent = `${Math.floor(totalTime / 60)}m ${totalTime % 60}s`;
+      document.getElementById('civixEarned').textContent = `+${civixEarned} Civix`;
+
+      // Animate ring
+      const ring = document.getElementById('scoreRing');
+      const circumference = 2 * Math.PI * 60;
+      ring.style.strokeDasharray = circumference;
+      setTimeout(() => {
+        ring.style.strokeDashoffset = circumference - (circumference * percentage / 100);
+      }, 100);
+
+      showScreen('results');
+    }
+
+    function retryTest() {
+      if (currentTest) startFormation(currentTest);
+    }
+
+    // ============================================
+    // UTILITIES
+    // ============================================
+    function updateNavBalance() {
+      document.getElementById('navBalance').textContent = state.civixBalance.toLocaleString();
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 60) return `Il y a ${diffMins} min`;
+      if (diffHours < 24) return `Il y a ${diffHours}h`;
+      if (diffDays < 7) return `Il y a ${diffDays}j`;
+      return date.toLocaleDateString('fr-FR');
+    }
+
+    function generateUsername() {
+      const adjectives = ['Vigilant', 'Curieux', 'Engagé', 'Actif', 'Éveillé'];
+      const nouns = ['Citoyen', 'Veilleur', 'Enquêteur', 'Observateur', 'Contributeur'];
+      const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+      const noun = nouns[Math.floor(Math.random() * nouns.length)];
+      const num = Math.floor(Math.random() * 1000);
+      return `${adj}${noun}${num}`;
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Generate username if first visit
+      if (!state.username) {
+        state.username = generateUsername();
+        state.civixBalance = 50; // Welcome bonus
+        state.civixEarned = 50;
+        state.transactions.push({
+          label: 'Bonus de bienvenue',
+          amount: 50,
+          date: new Date().toISOString()
+        });
+        saveState();
+      }
+
+      // Set avatar
+      document.getElementById('userAvatar').textContent = state.username.substring(0, 2).toUpperCase();
+
+      updateNavBalance();
+      showScreen('home');
+    });
+  </script>
+</body>
+</html>
+ference = 2 * Math.PI * 55;
+      ring.style.strokeDasharray = circumference;
+      setTimeout(() => {
+        ring.style.strokeDashoffset = circumference - (circumference * finalScore / 100);
+      }, 100);
+
+      showScreen('results');
+    }
+
+    function retryTest() {
+      if (currentTest) startFormation(currentTest);
+    }
+
+    // ============================================
+    // UTILITIES
+    // ============================================
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 60) return `Il y a ${diffMins} min`;
+      if (diffHours < 24) return `Il y a ${diffHours}h`;
+      if (diffDays < 7) return `Il y a ${diffDays}j`;
+      return date.toLocaleDateString('fr-FR');
+    }
+
+    function generateUsername() {
+      const adj = ['Vigilant', 'Curieux', 'Engagé', 'Éveillé', 'Actif', 'Lucide'];
+      const noun = ['Citoyen', 'Veilleur', 'Enquêteur', 'Observateur', 'Analyste'];
+      return adj[Math.floor(Math.random() * adj.length)] + noun[Math.floor(Math.random() * noun.length)] + Math.floor(Math.random() * 1000);
+    }
+
+    // ============================================
+    // INIT
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!state.username) {
+        state.username = generateUsername();
+        state.civix = 50;
+        state.xp = 50;
+        state.activities.push({ title: 'Bienvenue !', icon: '🎉', civix: 50, date: new Date().toISOString() });
+        saveState();
+      }
+      
+      updateStreak();
+      checkBadges();
+      saveState();
+      updateNav();
+      showScreen('home');
+    });
+  </script>
+</body>
+</html>
