@@ -3,1421 +3,445 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ePOP!up — FlashForge // Système de Mémorisation</title>
+<title>FlashForge — ePOP!up</title>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 
-/* ============================================
-   CHARTE GRAPHIQUE ePOP!up — SUBLIMÉE
-   ============================================ */
-
 :root{
-  /* Fonds — Dégradé de profondeur */
   --bg-abyss:#010104;
   --bg-deep:#030308;
   --bg-dark:#080810;
   --bg-base:#0c0e1c;
   --bg-elevated:#12142a;
   --bg-surface:#181a32;
-  --bg-float:#1e2040;
-  
-  /* Panels Glass */
-  --panel:rgba(12,14,28,0.75);
+  --panel:rgba(12,14,28,0.8);
   --panel-solid:#0c0e1c;
-  --panel-hover:rgba(20,22,40,0.85);
-  --panel-active:rgba(28,30,52,0.9);
-  
-  /* Bordures */
   --border:#1e2040;
-  --border-dim:#151730;
-  --border-bright:#2a2d50;
   --border-glow:rgba(177,156,217,0.4);
-  --border-glow-green:rgba(0,255,136,0.4);
-  
-  /* Textes */
   --text:#e8eaf0;
-  --text-bright:#ffffff;
   --text-dim:#8892b0;
   --text-muted:#5a6080;
-  --text-ghost:#3a4060;
-  
-  /* Couleur signature — Lilac */
   --lilac:#b19cd9;
   --lilac-bright:#d4c4ff;
   --lilac-dim:#8b7aaf;
-  --lilac-dark:#6b5a8f;
-  --lilac-glow:rgba(177,156,217,0.6);
-  
-  /* Accent primaire — Green */
   --green:#00ff88;
-  --green-bright:#50ffaa;
   --green-dim:#00cc6a;
-  --green-dark:#009950;
-  --green-glow:rgba(0,255,136,0.6);
-  
-  /* Accent secondaire — Cyan */
   --cyan:#00f0ff;
-  --cyan-bright:#60f8ff;
-  --cyan-dim:#00c0cc;
-  --cyan-glow:rgba(0,240,255,0.5);
-  
-  /* Accent tertiaire — Magenta */
   --magenta:#ff00aa;
-  --magenta-bright:#ff50cc;
-  --magenta-dim:#cc0088;
-  --magenta-glow:rgba(255,0,170,0.5);
-  
-  /* Accent quaternaire — Purple */
   --purple:#8b5cf6;
-  --purple-bright:#a78bfa;
-  --purple-dim:#7c3aed;
-  
-  /* États sémantiques */
-  --success:#00ff88;
-  --warning:#ffa502;
   --danger:#ff4757;
-  --info:#00f0ff;
-  
-  /* Spaced Repetition Colors */
+  --warning:#ffa502;
   --sr-again:#ff4757;
   --sr-hard:#ffa502;
   --sr-good:#00ff88;
   --sr-easy:#00f0ff;
-  
-  /* Rayons */
-  --radius-sm:6px;
   --radius:10px;
   --radius-lg:14px;
   --radius-xl:20px;
-  --radius-full:9999px;
-  
-  /* Typographie */
   --font-mono:'Fira Code',monospace;
   --font-sans:'Space Grotesk',system-ui,sans-serif;
-  
-  /* Ombres */
-  --shadow-sm:0 2px 8px rgba(0,0,0,0.3);
-  --shadow-md:0 4px 20px rgba(0,0,0,0.4);
-  --shadow-lg:0 8px 40px rgba(0,0,0,0.5);
-  --shadow-glow-lilac:0 0 30px var(--lilac-glow);
-  --shadow-glow-green:0 0 30px var(--green-glow);
-  --shadow-glow-cyan:0 0 30px var(--cyan-glow);
-  
-  /* Transitions */
-  --transition-fast:0.15s cubic-bezier(0.4,0,0.2,1);
-  --transition-base:0.25s cubic-bezier(0.4,0,0.2,1);
-  --transition-slow:0.4s cubic-bezier(0.4,0,0.2,1);
-  --transition-bounce:0.5s cubic-bezier(0.68,-0.55,0.265,1.55);
+  --glow-lilac:0 0 30px rgba(177,156,217,0.5);
+  --glow-green:0 0 30px rgba(0,255,136,0.5);
+  --glow-cyan:0 0 25px rgba(0,240,255,0.4);
 }
 
-html,body{
-  height:100%;
-  overflow:hidden;
-}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-mono);background:var(--bg-deep);color:var(--text)}
 
-body{
-  font-family:var(--font-mono);
-  background:var(--bg-deep);
-  color:var(--text);
-  line-height:1.6;
-}
-
-/* ============================================
-   EFFETS DE FOND
-   ============================================ */
-
-/* Aurora — Gradient animé */
-.aurora{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  overflow:hidden;
-}
-
+/* === BACKGROUND === */
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .aurora::before{
-  content:'';
-  position:absolute;
-  width:250%;
-  height:250%;
-  top:-75%;
-  left:-75%;
+  content:'';position:absolute;width:250%;height:250%;top:-75%;left:-75%;
   background:
-    radial-gradient(ellipse 60% 40% at 25% 30%, rgba(177,156,217,0.15), transparent 50%),
-    radial-gradient(ellipse 50% 35% at 75% 70%, rgba(0,255,136,0.1), transparent 50%),
-    radial-gradient(ellipse 45% 30% at 50% 50%, rgba(0,240,255,0.08), transparent 50%),
-    radial-gradient(ellipse 70% 45% at 80% 20%, rgba(139,92,246,0.1), transparent 50%);
-  animation:auroraMove 30s ease-in-out infinite;
+    radial-gradient(ellipse 60% 40% at 25% 30%,rgba(177,156,217,0.12),transparent 50%),
+    radial-gradient(ellipse 50% 35% at 75% 70%,rgba(0,255,136,0.08),transparent 50%),
+    radial-gradient(ellipse 45% 30% at 50% 50%,rgba(0,240,255,0.06),transparent 50%);
+  animation:auroraDrift 30s ease-in-out infinite;
+}
+@keyframes auroraDrift{
+  0%,100%{transform:translate(0,0) rotate(0deg)}
+  50%{transform:translate(2%,3%) rotate(1deg)}
 }
 
-@keyframes auroraMove{
-  0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}
-  25%{transform:translate(3%,2%) rotate(1deg) scale(1.02)}
-  50%{transform:translate(-2%,4%) rotate(-1deg) scale(1.01)}
-  75%{transform:translate(2%,-2%) rotate(0.5deg) scale(1.03)}
-}
+.blob{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;mix-blend-mode:screen;opacity:0.4}
+.blob-1{width:500px;height:500px;background:radial-gradient(circle,rgba(177,156,217,0.3),transparent 70%);top:-150px;left:-150px;animation:blobA 25s ease-in-out infinite}
+.blob-2{width:400px;height:400px;background:radial-gradient(circle,rgba(0,255,136,0.25),transparent 70%);bottom:-100px;right:-100px;animation:blobB 30s ease-in-out infinite}
+.blob-3{width:300px;height:300px;background:radial-gradient(circle,rgba(0,240,255,0.2),transparent 70%);top:50%;left:60%;animation:blobC 20s ease-in-out infinite}
+@keyframes blobA{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+@keyframes blobB{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-50px)}}
+@keyframes blobC{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.2)}}
 
-/* Blobs flottants */
-.blob{
-  position:fixed;
-  border-radius:50%;
-  filter:blur(80px);
-  pointer-events:none;
-  z-index:0;
-  mix-blend-mode:screen;
-  opacity:0.5;
-}
-
-.blob-1{
-  width:600px;
-  height:600px;
-  background:radial-gradient(circle, rgba(177,156,217,0.3), transparent 70%);
-  top:-200px;
-  left:-200px;
-  animation:blobFloat1 25s ease-in-out infinite;
-}
-
-.blob-2{
-  width:500px;
-  height:500px;
-  background:radial-gradient(circle, rgba(0,255,136,0.25), transparent 70%);
-  bottom:-150px;
-  right:-150px;
-  animation:blobFloat2 30s ease-in-out infinite;
-}
-
-.blob-3{
-  width:400px;
-  height:400px;
-  background:radial-gradient(circle, rgba(0,240,255,0.2), transparent 70%);
-  top:40%;
-  left:60%;
-  animation:blobFloat3 20s ease-in-out infinite;
-}
-
-.blob-4{
-  width:350px;
-  height:350px;
-  background:radial-gradient(circle, rgba(255,0,170,0.15), transparent 70%);
-  bottom:20%;
-  left:10%;
-  animation:blobFloat4 35s ease-in-out infinite;
-}
-
-@keyframes blobFloat1{
-  0%,100%{transform:translate(0,0) scale(1)}
-  50%{transform:translate(100px,80px) scale(1.2)}
-}
-@keyframes blobFloat2{
-  0%,100%{transform:translate(0,0) scale(1)}
-  50%{transform:translate(-80px,-60px) scale(1.15)}
-}
-@keyframes blobFloat3{
-  0%,100%{transform:translate(-50%,-50%) scale(1)}
-  50%{transform:translate(-50%,-50%) scale(1.3)}
-}
-@keyframes blobFloat4{
-  0%,100%{transform:translate(0,0) scale(1)}
-  50%{transform:translate(60px,-40px) scale(1.1)}
-}
-
-/* Grid background */
 .grid-bg{
-  position:fixed;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-  background-image:
-    linear-gradient(rgba(177,156,217,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(177,156,217,0.03) 1px, transparent 1px);
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:linear-gradient(rgba(177,156,217,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(177,156,217,0.03) 1px,transparent 1px);
   background-size:60px 60px;
-  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);
 }
 
-/* Scanline */
 .scanline{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:3px;
-  background:linear-gradient(90deg, transparent, var(--lilac), var(--cyan), var(--green), var(--lilac), transparent);
-  animation:scanMove 6s linear infinite;
-  opacity:0.7;
-  pointer-events:none;
-  z-index:9998;
-  box-shadow:0 0 20px var(--lilac-glow), 0 0 40px var(--cyan-glow);
+  position:fixed;top:0;left:0;width:100%;height:3px;
+  background:linear-gradient(90deg,transparent,var(--lilac),var(--cyan),var(--green),var(--lilac),transparent);
+  animation:scanMove 6s linear infinite;opacity:0.6;pointer-events:none;z-index:9998;
+  box-shadow:0 0 20px rgba(177,156,217,0.5),0 0 40px rgba(0,240,255,0.3);
 }
+@keyframes scanMove{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
 
-@keyframes scanMove{
-  0%{transform:translateY(-100%)}
-  100%{transform:translateY(100vh)}
-}
+.crt{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);pointer-events:none;z-index:9997}
 
-/* CRT effect */
-.crt-lines{
-  position:fixed;
-  inset:0;
-  background:repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.03) 2px,
-    rgba(0,0,0,0.03) 4px
-  );
-  pointer-events:none;
-  z-index:9997;
-}
-
-/* Noise texture */
-.noise{
-  position:fixed;
-  inset:0;
-  z-index:9996;
-  pointer-events:none;
-  opacity:0.015;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-}
-
-/* ============================================
-   LAYOUT PRINCIPAL
-   ============================================ */
-
-.app{
-  position:relative;
-  z-index:10;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
+/* === APP LAYOUT === */
+.app{position:relative;z-index:10;height:100vh;display:flex;flex-direction:column}
 
 /* Header */
 .header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:1rem 1.5rem;
-  background:var(--panel);
-  backdrop-filter:blur(20px) saturate(180%);
-  border-bottom:1px solid var(--border);
-  position:relative;
+  display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;
+  background:var(--panel);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
 }
+.header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--lilac-dim),var(--green-dim),var(--lilac-dim),transparent)}
 
-.header::before{
-  content:'';
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  height:1px;
-  background:linear-gradient(90deg, transparent, var(--lilac-dim), var(--green-dim), var(--lilac-dim), transparent);
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:0.75rem;
-}
-
+.logo{display:flex;align-items:center;gap:0.75rem}
 .logo-icon{
-  width:44px;
-  height:44px;
-  background:linear-gradient(135deg, var(--lilac), var(--purple));
-  border-radius:var(--radius);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.5rem;
-  box-shadow:var(--shadow-glow-lilac);
+  width:42px;height:42px;background:linear-gradient(135deg,var(--lilac),var(--purple));
+  border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  box-shadow:var(--glow-lilac);
 }
-
 .logo-text{
-  font-family:var(--font-sans);
-  font-size:1.4rem;
-  font-weight:700;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  background:linear-gradient(135deg, var(--lilac-bright), var(--cyan), var(--green));
-  background-size:200% 200%;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  animation:gradientFlow 8s ease infinite;
+  font-family:var(--font-sans);font-size:1.3rem;font-weight:700;letter-spacing:0.1em;
+  background:linear-gradient(135deg,var(--lilac-bright),var(--cyan),var(--green));
+  background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:gradFlow 8s ease infinite;
 }
+@keyframes gradFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.logo-sub{font-size:0.65rem;color:var(--text-muted);letter-spacing:0.15em}
 
-@keyframes gradientFlow{
-  0%,100%{background-position:0% 50%}
-  50%{background-position:100% 50%}
+.nav{display:flex;gap:0.5rem}
+.nav-btn{
+  padding:0.55rem 1.1rem;background:transparent;border:1px solid transparent;border-radius:var(--radius);
+  color:var(--text-dim);font-family:var(--font-mono);font-size:0.8rem;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;gap:0.4rem;
 }
+.nav-btn:hover{color:var(--text);background:rgba(177,156,217,0.1);border-color:var(--border)}
+.nav-btn.active{color:var(--green);background:rgba(0,255,136,0.1);border-color:var(--green-dim);box-shadow:var(--glow-green)}
 
-.logo-sub{
-  font-size:0.7rem;
-  color:var(--text-dim);
-  letter-spacing:0.2em;
-}
-
-/* Nav Tabs */
-.nav-tabs{
-  display:flex;
-  gap:0.5rem;
-}
-
-.nav-tab{
-  padding:0.6rem 1.2rem;
-  background:transparent;
-  border:1px solid transparent;
-  border-radius:var(--radius);
-  color:var(--text-dim);
-  font-family:var(--font-mono);
-  font-size:0.85rem;
-  cursor:pointer;
-  transition:var(--transition-base);
-  display:flex;
-  align-items:center;
-  gap:0.5rem;
-}
-
-.nav-tab:hover{
-  color:var(--text);
-  background:var(--panel-hover);
-  border-color:var(--border);
-}
-
-.nav-tab.active{
-  color:var(--green);
-  background:rgba(0,255,136,0.1);
-  border-color:var(--green-dim);
-  box-shadow:var(--shadow-glow-green);
-}
-
-.nav-tab-icon{font-size:1.1rem}
-
-/* Header Actions */
-.header-actions{
-  display:flex;
-  gap:0.75rem;
-}
-
+.actions{display:flex;gap:0.6rem}
 .btn{
-  padding:0.6rem 1rem;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  color:var(--text);
-  font-family:var(--font-mono);
-  font-size:0.8rem;
-  cursor:pointer;
-  transition:var(--transition-base);
-  display:flex;
-  align-items:center;
-  gap:0.4rem;
+  padding:0.55rem 1rem;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:var(--font-mono);font-size:0.8rem;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;gap:0.4rem;
 }
+.btn:hover{background:rgba(177,156,217,0.15);border-color:var(--lilac-dim);transform:translateY(-2px);box-shadow:var(--glow-lilac)}
+.btn-primary{background:linear-gradient(135deg,var(--lilac-dim),var(--purple));border-color:var(--lilac);color:#fff}
+.btn-primary:hover{background:linear-gradient(135deg,var(--lilac),var(--purple))}
+.btn-success{background:rgba(0,255,136,0.15);border-color:var(--green-dim);color:var(--green)}
+.btn-success:hover{background:rgba(0,255,136,0.25);border-color:var(--green);box-shadow:var(--glow-green)}
 
-.btn:hover{
-  background:var(--panel-hover);
-  border-color:var(--lilac-dim);
-  transform:translateY(-2px);
-  box-shadow:var(--shadow-glow-lilac);
-}
-
-.btn-primary{
-  background:linear-gradient(135deg, var(--lilac-dim), var(--purple));
-  border-color:var(--lilac);
-  color:var(--text-bright);
-}
-
-.btn-primary:hover{
-  background:linear-gradient(135deg, var(--lilac), var(--purple-bright));
-  box-shadow:var(--shadow-glow-lilac);
-}
-
-.btn-success{
-  background:rgba(0,255,136,0.15);
-  border-color:var(--green-dim);
-  color:var(--green);
-}
-
-.btn-success:hover{
-  background:rgba(0,255,136,0.25);
-  border-color:var(--green);
-  box-shadow:var(--shadow-glow-green);
-}
-
-.btn-danger{
-  background:rgba(255,71,87,0.15);
-  border-color:rgba(255,71,87,0.3);
-  color:var(--danger);
-}
-
-.btn-danger:hover{
-  background:rgba(255,71,87,0.25);
-  border-color:var(--danger);
-}
-
-/* ============================================
-   MAIN CONTENT
-   ============================================ */
-
-.main{
-  flex:1;
-  display:flex;
-  overflow:hidden;
-}
+/* === MAIN === */
+.main{flex:1;display:flex;overflow:hidden}
 
 /* Sidebar */
 .sidebar{
-  width:280px;
-  background:var(--panel);
-  backdrop-filter:blur(20px);
-  border-right:1px solid var(--border);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
+  width:260px;background:var(--panel);backdrop-filter:blur(20px);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
 }
-
-.sidebar-header{
-  padding:1rem;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.sidebar-head{padding:1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sidebar-title{font-size:0.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.12em}
+.sidebar-add{
+  width:26px;height:26px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;
+  color:var(--lilac);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:0.9rem;
 }
+.sidebar-add:hover{background:var(--lilac);color:var(--bg-deep);border-color:var(--lilac)}
 
-.sidebar-title{
-  font-size:0.75rem;
-  font-weight:600;
-  color:var(--text-dim);
-  text-transform:uppercase;
-  letter-spacing:0.15em;
-}
-
-.sidebar-action{
-  width:28px;
-  height:28px;
-  background:var(--bg-elevated);
-  border:1px solid var(--border);
-  border-radius:var(--radius-sm);
-  color:var(--lilac);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:var(--transition-fast);
-}
-
-.sidebar-action:hover{
-  background:var(--panel-hover);
-  border-color:var(--lilac);
-  box-shadow:var(--shadow-glow-lilac);
-}
-
-/* Deck List */
-.deck-list{
-  flex:1;
-  overflow-y:auto;
-  padding:0.5rem;
-}
-
+.deck-list{flex:1;overflow-y:auto;padding:0.5rem}
 .deck-item{
-  padding:0.85rem 1rem;
-  background:transparent;
-  border:1px solid transparent;
-  border-radius:var(--radius);
-  margin-bottom:0.4rem;
-  cursor:pointer;
-  transition:var(--transition-base);
-  position:relative;
-  overflow:hidden;
+  padding:0.75rem 0.9rem;border-radius:var(--radius);margin-bottom:0.35rem;cursor:pointer;
+  border:1px solid transparent;transition:all 0.2s;position:relative;
 }
+.deck-item:hover{background:rgba(177,156,217,0.08);border-color:var(--border)}
+.deck-item.active{background:rgba(0,255,136,0.1);border-color:var(--green-dim)}
+.deck-item.active .deck-name{color:var(--green)}
+.deck-name{font-size:0.85rem;font-weight:500;margin-bottom:0.2rem}
+.deck-meta{font-size:0.7rem;color:var(--text-muted);display:flex;gap:0.6rem}
 
-.deck-item::before{
-  content:'';
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:3px;
-  background:var(--lilac);
-  opacity:0;
-  transition:var(--transition-fast);
+.stats-box{padding:1rem;border-top:1px solid var(--border);background:var(--bg-elevated)}
+.stats-title{font-size:0.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.6rem}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.4rem}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:0.5rem;text-align:center}
+.stat-val{font-family:var(--font-sans);font-size:1.1rem;font-weight:700;color:var(--lilac)}
+.stat-val.g{color:var(--green)}.stat-val.c{color:var(--cyan)}.stat-val.o{color:var(--warning)}
+.stat-lbl{font-size:0.55rem;color:var(--text-muted);text-transform:uppercase}
+
+/* === CONTENT === */
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.view{display:none;flex:1;flex-direction:column;overflow:hidden}
+.view.active{display:flex}
+
+/* Cards header */
+.cards-head{
+  padding:1rem 1.5rem;background:var(--panel);border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
 }
-
-.deck-item:hover{
-  background:var(--panel-hover);
-  border-color:var(--border);
-}
-
-.deck-item:hover::before{
-  opacity:0.5;
-}
-
-.deck-item.active{
-  background:rgba(0,255,136,0.1);
-  border-color:var(--green-dim);
-}
-
-.deck-item.active::before{
-  background:var(--green);
-  opacity:1;
-}
-
-.deck-name{
-  font-weight:500;
-  font-size:0.9rem;
-  margin-bottom:0.25rem;
-  display:flex;
-  align-items:center;
-  gap:0.5rem;
-}
-
-.deck-item.active .deck-name{
-  color:var(--green);
-}
-
-.deck-meta{
-  display:flex;
-  gap:0.75rem;
-  font-size:0.7rem;
-  color:var(--text-muted);
-}
-
-.deck-stat{
-  display:flex;
-  align-items:center;
-  gap:0.25rem;
-}
-
-/* Stats Panel */
-.stats-panel{
-  padding:1rem;
-  border-top:1px solid var(--border);
-  background:var(--bg-elevated);
-}
-
-.stats-title{
-  font-size:0.65rem;
-  color:var(--text-muted);
-  text-transform:uppercase;
-  letter-spacing:0.1em;
-  margin-bottom:0.75rem;
-}
-
-.stats-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:0.5rem;
-}
-
-.stat-box{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--radius-sm);
-  padding:0.6rem;
-  text-align:center;
-}
-
-.stat-value{
-  font-family:var(--font-sans);
-  font-size:1.25rem;
-  font-weight:700;
-  color:var(--lilac);
-}
-
-.stat-value.green{color:var(--green)}
-.stat-value.cyan{color:var(--cyan)}
-.stat-value.orange{color:var(--warning)}
-
-.stat-label{
-  font-size:0.6rem;
-  color:var(--text-muted);
-  text-transform:uppercase;
-  letter-spacing:0.05em;
-}
-
-/* ============================================
-   CONTENT AREA
-   ============================================ */
-
-.content{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  position:relative;
-}
-
-/* Content views */
-.view{
-  display:none;
-  flex:1;
-  flex-direction:column;
-  overflow:hidden;
-}
-
-.view.active{
-  display:flex;
-}
-
-/* ============================================
-   CARDS VIEW
-   ============================================ */
-
-.cards-header{
-  padding:1rem 1.5rem;
-  background:var(--panel);
-  border-bottom:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.cards-title{
-  font-family:var(--font-sans);
-  font-size:1.1rem;
-  font-weight:600;
-}
-
-.cards-count{
-  font-size:0.8rem;
-  color:var(--text-dim);
-}
-
-.cards-actions{
-  display:flex;
-  gap:0.5rem;
-}
-
+.cards-info h2{font-family:var(--font-sans);font-size:1.05rem;font-weight:600}
+.cards-info span{font-size:0.75rem;color:var(--text-muted)}
 .search-box{
-  display:flex;
-  align-items:center;
-  background:var(--bg-elevated);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:0 0.75rem;
-  transition:var(--transition-fast);
+  display:flex;align-items:center;background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:var(--radius);padding:0 0.7rem;transition:all 0.2s;
 }
-
-.search-box:focus-within{
-  border-color:var(--lilac);
-  box-shadow:var(--shadow-glow-lilac);
+.search-box:focus-within{border-color:var(--lilac);box-shadow:var(--glow-lilac)}
+.search-box span{color:var(--text-muted);margin-right:0.4rem}
+.search-box input{
+  background:none;border:none;color:var(--text);font-family:var(--font-mono);font-size:0.8rem;
+  padding:0.5rem 0;width:160px;
 }
+.search-box input:focus{outline:none}
+.search-box input::placeholder{color:var(--text-muted)}
 
-.search-icon{
-  color:var(--text-muted);
-  margin-right:0.5rem;
+/* Cards grid — QUESTIONS ONLY */
+.cards-scroll{flex:1;overflow-y:auto;padding:1.5rem}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+
+.card-tile{
+  background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:1.2rem;cursor:pointer;transition:all 0.25s;position:relative;min-height:120px;
+  display:flex;flex-direction:column;
 }
-
-.search-input{
-  background:none;
-  border:none;
-  color:var(--text);
-  font-family:var(--font-mono);
-  font-size:0.85rem;
-  padding:0.5rem 0;
-  width:180px;
+.card-tile::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+  background:linear-gradient(90deg,var(--lilac),var(--cyan));opacity:0;transition:opacity 0.2s;
 }
+.card-tile:hover{border-color:var(--lilac-dim);transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,0.3),var(--glow-lilac)}
+.card-tile:hover::before{opacity:1}
 
-.search-input:focus{outline:none}
-.search-input::placeholder{color:var(--text-muted)}
+.card-q{font-size:0.9rem;line-height:1.55;flex:1;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--border)}
+.card-level{display:flex;gap:3px}
+.lvl-dot{width:8px;height:8px;border-radius:50%;background:var(--border)}
+.lvl-dot.on{background:var(--green)}
+.card-hint{font-size:0.65rem;color:var(--text-muted)}
 
-/* Cards Grid */
-.cards-scroll{
-  flex:1;
-  overflow-y:auto;
-  padding:1.5rem;
+/* Empty */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;text-align:center}
+.empty-icon{font-size:3.5rem;margin-bottom:1rem;opacity:0.3}
+.empty-title{font-family:var(--font-sans);font-size:1.15rem;font-weight:600;color:var(--text-dim);margin-bottom:0.4rem}
+.empty-text{font-size:0.8rem;color:var(--text-muted);margin-bottom:1.5rem}
+
+/* === CARD VIEWER MODAL (FLIP) === */
+.card-viewer{
+  position:fixed;inset:0;background:rgba(1,1,4,0.92);backdrop-filter:blur(12px);
+  display:none;align-items:center;justify-content:center;z-index:1000;padding:2rem;
 }
+.card-viewer.open{display:flex}
 
-.cards-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
-  gap:1rem;
+.viewer-inner{width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center}
+
+.viewer-nav{display:flex;gap:0.5rem;margin-bottom:1.5rem}
+.viewer-nav-btn{
+  padding:0.5rem 1rem;background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text-dim);font-family:var(--font-mono);font-size:0.75rem;cursor:pointer;transition:all 0.2s;
 }
+.viewer-nav-btn:hover{color:var(--text);border-color:var(--lilac)}
+.viewer-nav-btn:disabled{opacity:0.3;cursor:not-allowed}
 
-.card-item{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:1.25rem;
-  cursor:pointer;
-  transition:var(--transition-base);
-  position:relative;
-  overflow:hidden;
-}
+.viewer-count{font-size:0.8rem;color:var(--text-muted);margin-bottom:1rem}
 
-.card-item::before{
-  content:'';
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:3px;
-  background:linear-gradient(90deg, var(--lilac), var(--cyan));
-  opacity:0;
-  transition:var(--transition-fast);
-}
-
-.card-item:hover{
-  border-color:var(--lilac-dim);
-  transform:translateY(-4px);
-  box-shadow:var(--shadow-md), var(--shadow-glow-lilac);
-}
-
-.card-item:hover::before{
-  opacity:1;
-}
-
-.card-question{
-  font-size:0.9rem;
-  color:var(--text);
-  margin-bottom:0.75rem;
-  line-height:1.5;
-  display:-webkit-box;
-  -webkit-line-clamp:3;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-
-.card-answer{
-  font-size:0.8rem;
-  color:var(--text-dim);
-  line-height:1.5;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  padding-top:0.75rem;
-  border-top:1px solid var(--border-dim);
-}
-
-.card-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:0.75rem;
-  padding-top:0.75rem;
-  border-top:1px solid var(--border-dim);
-}
-
-.card-level{
-  display:flex;
-  gap:3px;
-}
-
-.level-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--border);
-}
-
-.level-dot.filled{background:var(--green)}
-.level-dot.half{background:var(--warning)}
-
-.card-actions{
-  display:flex;
-  gap:0.35rem;
-  opacity:0;
-  transition:var(--transition-fast);
-}
-
-.card-item:hover .card-actions{
-  opacity:1;
-}
-
-.card-action{
-  width:28px;
-  height:28px;
-  background:var(--bg-elevated);
-  border:1px solid var(--border);
-  border-radius:var(--radius-sm);
-  color:var(--text-dim);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:0.8rem;
-  transition:var(--transition-fast);
-}
-
-.card-action:hover{
-  color:var(--lilac);
-  border-color:var(--lilac);
-}
-
-.card-action.delete:hover{
-  color:var(--danger);
-  border-color:var(--danger);
-}
-
-/* Empty state */
-.empty-state{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:4rem 2rem;
-  text-align:center;
-}
-
-.empty-icon{
-  font-size:4rem;
-  margin-bottom:1rem;
-  opacity:0.3;
-}
-
-.empty-title{
-  font-family:var(--font-sans);
-  font-size:1.25rem;
-  font-weight:600;
-  margin-bottom:0.5rem;
-  color:var(--text-dim);
-}
-
-.empty-text{
-  font-size:0.85rem;
-  color:var(--text-muted);
-  margin-bottom:1.5rem;
-}
-
-/* ============================================
-   STUDY VIEW
-   ============================================ */
-
-.study-container{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:2rem;
-}
-
-.study-progress{
-  width:100%;
-  max-width:600px;
-  margin-bottom:2rem;
-}
-
-.progress-bar{
-  height:6px;
-  background:var(--bg-elevated);
-  border-radius:var(--radius-full);
-  overflow:hidden;
-  margin-bottom:0.5rem;
-}
-
-.progress-fill{
-  height:100%;
-  background:linear-gradient(90deg, var(--lilac), var(--green));
-  border-radius:var(--radius-full);
-  transition:width var(--transition-base);
-}
-
-.progress-text{
-  display:flex;
-  justify-content:space-between;
-  font-size:0.75rem;
-  color:var(--text-muted);
-}
-
-/* Flashcard */
-.flashcard-container{
-  perspective:1500px;
-  width:100%;
-  max-width:600px;
-}
-
+/* Flashcard 3D — OPAQUE */
+.flashcard-wrap{perspective:1200px;width:100%}
 .flashcard{
-  width:100%;
-  min-height:350px;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);
-  cursor:pointer;
+  width:100%;min-height:320px;position:relative;transform-style:preserve-3d;
+  transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);cursor:pointer;
+}
+.flashcard.flipped{transform:rotateY(180deg)}
+
+.fc-face{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius-xl);
+  padding:2.5rem 2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
 }
 
-.flashcard.flipped{
+/* FRONT — OPAQUE SOLID */
+.fc-front{
+  background:linear-gradient(145deg,#12142a 0%,#0c0e1c 100%);
+  border:2px solid var(--lilac-dim);
+  box-shadow:0 10px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(177,156,217,0.1);
+}
+
+/* BACK — OPAQUE SOLID DIFFERENT COLOR */
+.fc-back{
   transform:rotateY(180deg);
+  background:linear-gradient(145deg,#0a1a12 0%,#081510 100%);
+  border:2px solid var(--green-dim);
+  box-shadow:0 10px 40px rgba(0,0,0,0.5),inset 0 1px 0 rgba(0,255,136,0.1);
 }
 
-.flashcard-face{
-  position:absolute;
-  inset:0;
-  backface-visibility:hidden;
-  background:var(--panel);
-  border:2px solid var(--border);
-  border-radius:var(--radius-xl);
-  padding:2rem;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  box-shadow:var(--shadow-lg);
-}
-
-.flashcard-face::before{
-  content:'';
-  position:absolute;
-  inset:-2px;
-  background:linear-gradient(135deg, var(--lilac-dim), var(--cyan-dim), var(--green-dim));
-  border-radius:var(--radius-xl);
-  z-index:-1;
-  opacity:0;
-  transition:var(--transition-base);
-}
-
-.flashcard:hover .flashcard-face::before{
-  opacity:1;
-}
-
-.flashcard-front{
-  background:linear-gradient(135deg, var(--panel), var(--bg-elevated));
-}
-
-.flashcard-back{
-  transform:rotateY(180deg);
-  background:linear-gradient(135deg, rgba(0,255,136,0.05), var(--panel));
-  border-color:var(--green-dim);
-}
-
-.flashcard-label{
-  font-size:0.7rem;
-  font-weight:600;
-  color:var(--text-muted);
-  text-transform:uppercase;
-  letter-spacing:0.15em;
+.fc-label{
+  font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.2em;
   margin-bottom:1.5rem;
 }
+.fc-front .fc-label{color:var(--lilac-dim)}
+.fc-back .fc-label{color:var(--green-dim)}
 
-.flashcard-back .flashcard-label{
-  color:var(--green-dim);
-}
+.fc-text{font-family:var(--font-sans);font-size:1.15rem;line-height:1.7}
+.fc-front .fc-text{color:var(--text)}
+.fc-back .fc-text{color:var(--green)}
 
-.flashcard-text{
-  font-family:var(--font-sans);
-  font-size:1.25rem;
-  line-height:1.6;
-  color:var(--text);
-}
+.fc-hint{position:absolute;bottom:1rem;font-size:0.65rem;color:var(--text-muted)}
 
-.flashcard-back .flashcard-text{
-  color:var(--green-bright);
+/* Viewer actions */
+.viewer-actions{display:flex;gap:0.6rem;margin-top:2rem;flex-wrap:wrap;justify-content:center}
+.rate-btn{
+  padding:0.7rem 1.3rem;background:var(--panel-solid);border:2px solid var(--border);border-radius:var(--radius);
+  font-family:var(--font-mono);font-size:0.85rem;cursor:pointer;transition:all 0.2s;
+  display:flex;flex-direction:column;align-items:center;min-width:90px;
 }
+.rate-btn:hover{transform:translateY(-3px)}
+.rate-btn.again{border-color:var(--sr-again);color:var(--sr-again)}
+.rate-btn.again:hover{background:rgba(255,71,87,0.15);box-shadow:0 0 20px rgba(255,71,87,0.3)}
+.rate-btn.hard{border-color:var(--sr-hard);color:var(--sr-hard)}
+.rate-btn.hard:hover{background:rgba(255,165,2,0.15);box-shadow:0 0 20px rgba(255,165,2,0.3)}
+.rate-btn.good{border-color:var(--sr-good);color:var(--sr-good)}
+.rate-btn.good:hover{background:rgba(0,255,136,0.15);box-shadow:0 0 20px rgba(0,255,136,0.3)}
+.rate-btn.easy{border-color:var(--sr-easy);color:var(--sr-easy)}
+.rate-btn.easy:hover{background:rgba(0,240,255,0.15);box-shadow:0 0 20px rgba(0,240,255,0.3)}
+.rate-btn span:last-child{font-size:0.6rem;color:var(--text-muted);margin-top:0.2rem}
 
-.flashcard-hint{
-  position:absolute;
-  bottom:1rem;
-  font-size:0.7rem;
-  color:var(--text-muted);
+.viewer-close{
+  position:absolute;top:1.5rem;right:1.5rem;width:40px;height:40px;
+  background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text-dim);font-size:1.3rem;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;
 }
+.viewer-close:hover{color:var(--danger);border-color:var(--danger)}
 
-/* Study Actions */
-.study-actions{
-  display:flex;
-  gap:0.75rem;
-  margin-top:2rem;
-  flex-wrap:wrap;
-  justify-content:center;
+.viewer-edit{
+  position:absolute;top:1.5rem;right:4.5rem;width:40px;height:40px;
+  background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text-dim);font-size:1rem;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;
 }
+.viewer-edit:hover{color:var(--lilac);border-color:var(--lilac)}
 
-.study-btn{
-  padding:0.85rem 1.5rem;
-  background:var(--panel);
-  border:2px solid var(--border);
-  border-radius:var(--radius);
-  color:var(--text);
-  font-family:var(--font-mono);
-  font-size:0.9rem;
-  font-weight:500;
-  cursor:pointer;
-  transition:var(--transition-base);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  min-width:100px;
+.viewer-delete{
+  position:absolute;top:1.5rem;right:7.5rem;width:40px;height:40px;
+  background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text-dim);font-size:1rem;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;
 }
+.viewer-delete:hover{color:var(--danger);border-color:var(--danger)}
 
-.study-btn:hover{
-  transform:translateY(-3px);
-}
+/* === STUDY VIEW === */
+.study-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+.study-progress{width:100%;max-width:550px;margin-bottom:2rem}
+.prog-bar{height:6px;background:var(--bg-elevated);border-radius:99px;overflow:hidden;margin-bottom:0.4rem}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--lilac),var(--green));transition:width 0.3s}
+.prog-text{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text-muted)}
 
-.study-btn.again{
-  border-color:var(--sr-again);
-  color:var(--sr-again);
+.study-card-wrap{perspective:1200px;width:100%;max-width:550px}
+.study-card{
+  width:100%;min-height:300px;position:relative;transform-style:preserve-3d;
+  transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);cursor:pointer;
 }
-.study-btn.again:hover{
-  background:rgba(255,71,87,0.15);
-  box-shadow:0 0 20px rgba(255,71,87,0.3);
-}
+.study-card.flipped{transform:rotateY(180deg)}
 
-.study-btn.hard{
-  border-color:var(--sr-hard);
-  color:var(--sr-hard);
-}
-.study-btn.hard:hover{
-  background:rgba(255,165,2,0.15);
-  box-shadow:0 0 20px rgba(255,165,2,0.3);
-}
+.study-actions{display:flex;gap:0.6rem;margin-top:2rem;flex-wrap:wrap;justify-content:center}
 
-.study-btn.good{
-  border-color:var(--sr-good);
-  color:var(--sr-good);
-}
-.study-btn.good:hover{
-  background:rgba(0,255,136,0.15);
-  box-shadow:0 0 20px rgba(0,255,136,0.3);
-}
+.study-complete{text-align:center;padding:3rem}
+.complete-icon{font-size:4rem;margin-bottom:1rem;animation:popIn 0.5s ease}
+@keyframes popIn{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+.complete-title{font-family:var(--font-sans);font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--green),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:0.4rem}
+.complete-sub{color:var(--text-dim);margin-bottom:2rem}
+.complete-stats{display:flex;gap:2rem;justify-content:center;margin-bottom:2rem}
+.cs{text-align:center}
+.cs-val{font-family:var(--font-sans);font-size:2rem;font-weight:700}
+.cs-val.g{color:var(--green)}.cs-val.o{color:var(--warning)}.cs-val.r{color:var(--danger)}
+.cs-lbl{font-size:0.7rem;color:var(--text-muted)}
 
-.study-btn.easy{
-  border-color:var(--sr-easy);
-  color:var(--sr-easy);
-}
-.study-btn.easy:hover{
-  background:rgba(0,240,255,0.15);
-  box-shadow:0 0 20px rgba(0,240,255,0.3);
-}
-
-.study-btn-label{
-  font-size:0.65rem;
-  color:var(--text-muted);
-  margin-top:0.25rem;
-}
-
-/* Study Complete */
-.study-complete{
-  text-align:center;
-  padding:3rem;
-}
-
-.complete-icon{
-  font-size:5rem;
-  margin-bottom:1.5rem;
-  animation:celebrateBounce 0.6s ease;
-}
-
-@keyframes celebrateBounce{
-  0%{transform:scale(0)}
-  50%{transform:scale(1.2)}
-  100%{transform:scale(1)}
-}
-
-.complete-title{
-  font-family:var(--font-sans);
-  font-size:2rem;
-  font-weight:700;
-  background:linear-gradient(135deg, var(--green), var(--cyan));
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  margin-bottom:0.5rem;
-}
-
-.complete-subtitle{
-  color:var(--text-dim);
-  margin-bottom:2rem;
-}
-
-.complete-stats{
-  display:flex;
-  gap:2rem;
-  justify-content:center;
-  margin-bottom:2rem;
-}
-
-.complete-stat{
-  text-align:center;
-}
-
-.complete-stat-value{
-  font-family:var(--font-sans);
-  font-size:2.5rem;
-  font-weight:700;
-}
-
-.complete-stat-value.green{color:var(--green)}
-.complete-stat-value.orange{color:var(--warning)}
-.complete-stat-value.red{color:var(--danger)}
-
-.complete-stat-label{
-  font-size:0.75rem;
-  color:var(--text-muted);
-}
-
-/* ============================================
-   MODALS
-   ============================================ */
-
+/* === MODALS === */
 .modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(3,3,8,0.9);
-  backdrop-filter:blur(8px);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
-  padding:2rem;
+  position:fixed;inset:0;background:rgba(1,1,4,0.9);backdrop-filter:blur(8px);
+  display:none;align-items:center;justify-content:center;z-index:1100;padding:2rem;
 }
-
-.modal-overlay.active{
-  display:flex;
-}
-
+.modal-overlay.open{display:flex}
 .modal{
-  background:var(--panel-solid);
-  border:1px solid var(--border);
-  border-radius:var(--radius-xl);
-  width:100%;
-  max-width:500px;
-  max-height:90vh;
-  overflow:hidden;
-  animation:modalIn 0.3s ease;
-  box-shadow:var(--shadow-lg), var(--shadow-glow-lilac);
+  background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius-xl);
+  width:100%;max-width:480px;animation:modalIn 0.25s ease;box-shadow:0 20px 60px rgba(0,0,0,0.5),var(--glow-lilac);
 }
-
-@keyframes modalIn{
-  from{opacity:0;transform:scale(0.95) translateY(20px)}
-  to{opacity:1;transform:scale(1) translateY(0)}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-head{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-family:var(--font-sans);font-size:1rem;font-weight:600}
+.modal-x{
+  width:30px;height:30px;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;
+  color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.2s;
 }
+.modal-x:hover{color:var(--danger);border-color:var(--danger)}
+.modal-body{padding:1.5rem;max-height:60vh;overflow-y:auto}
+.modal-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:0.6rem}
 
-.modal-header{
-  padding:1.25rem 1.5rem;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.form-group{margin-bottom:1.2rem}
+.form-label{display:block;font-size:0.75rem;font-weight:500;color:var(--text-dim);margin-bottom:0.4rem}
+.form-input,.form-textarea{
+  width:100%;padding:0.7rem 0.9rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);
+  color:var(--text);font-family:var(--font-mono);font-size:0.85rem;transition:all 0.2s;
 }
+.form-input:focus,.form-textarea:focus{outline:none;border-color:var(--lilac);box-shadow:var(--glow-lilac)}
+.form-textarea{min-height:100px;resize:vertical;line-height:1.6}
 
-.modal-title{
-  font-family:var(--font-sans);
-  font-size:1.1rem;
-  font-weight:600;
+/* Import */
+.import-zone{
+  border:2px dashed var(--border);border-radius:var(--radius-lg);padding:2rem;text-align:center;
+  cursor:pointer;transition:all 0.2s;background:var(--bg-dark);
 }
+.import-zone:hover{border-color:var(--lilac);background:rgba(177,156,217,0.05)}
+.import-zone.dragover{border-color:var(--green);background:rgba(0,255,136,0.05)}
+.import-icon{font-size:2.5rem;margin-bottom:0.8rem;color:var(--lilac-dim)}
+.import-text{color:var(--text-dim);margin-bottom:0.3rem}
+.import-hint{font-size:0.7rem;color:var(--text-muted)}
 
-.modal-close{
-  width:32px;
-  height:32px;
-  background:var(--bg-elevated);
-  border:1px solid var(--border);
-  border-radius:var(--radius-sm);
-  color:var(--text-dim);
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.2rem;
-  transition:var(--transition-fast);
-}
+.import-preview{margin-top:1.5rem;padding:1rem;background:var(--bg-elevated);border-radius:var(--radius);display:none}
+.import-preview.show{display:block}
+.import-preview-title{font-size:0.75rem;color:var(--text-dim);margin-bottom:0.6rem}
+.import-preview-list{max-height:150px;overflow-y:auto}
+.import-preview-item{padding:0.5rem;background:var(--panel);border-radius:6px;margin-bottom:0.4rem;font-size:0.8rem}
+.import-preview-q{color:var(--lilac)}
+.import-count{margin-top:0.8rem;font-size:0.8rem;color:var(--green)}
 
-.modal-close:hover{
-  color:var(--danger);
-  border-color:var(--danger);
-}
-
-.modal-body{
-  padding:1.5rem;
-  overflow-y:auto;
-  max-height:60vh;
-}
-
-.modal-footer{
-  padding:1rem 1.5rem;
-  border-top:1px solid var(--border);
-  display:flex;
-  justify-content:flex-end;
-  gap:0.75rem;
-}
-
-/* Form Elements */
-.form-group{
-  margin-bottom:1.25rem;
-}
-
-.form-label{
-  display:block;
-  font-size:0.8rem;
-  font-weight:500;
-  color:var(--text-dim);
-  margin-bottom:0.5rem;
-}
-
-.form-input,
-.form-textarea{
-  width:100%;
-  padding:0.75rem 1rem;
-  background:var(--bg-elevated);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  color:var(--text);
-  font-family:var(--font-mono);
-  font-size:0.9rem;
-  transition:var(--transition-fast);
-}
-
-.form-input:focus,
-.form-textarea:focus{
-  outline:none;
-  border-color:var(--lilac);
-  box-shadow:var(--shadow-glow-lilac);
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder{
-  color:var(--text-muted);
-}
-
-.form-textarea{
-  min-height:100px;
-  resize:vertical;
-  line-height:1.6;
-}
-
-/* ============================================
-   IMPORT/EXPORT
-   ============================================ */
-
-.import-area{
-  border:2px dashed var(--border);
-  border-radius:var(--radius-lg);
-  padding:2rem;
-  text-align:center;
-  cursor:pointer;
-  transition:var(--transition-base);
-  background:var(--bg-dark);
-}
-
-.import-area:hover{
-  border-color:var(--lilac);
-  background:rgba(177,156,217,0.05);
-}
-
-.import-area.dragover{
-  border-color:var(--green);
-  background:rgba(0,255,136,0.05);
-}
-
-.import-icon{
-  font-size:3rem;
-  margin-bottom:1rem;
-  color:var(--lilac-dim);
-}
-
-.import-text{
-  color:var(--text-dim);
-  margin-bottom:0.5rem;
-}
-
-.import-hint{
-  font-size:0.75rem;
-  color:var(--text-muted);
-}
-
-/* ============================================
-   TOAST NOTIFICATIONS
-   ============================================ */
-
-.toast-container{
-  position:fixed;
-  bottom:1.5rem;
-  right:1.5rem;
-  z-index:2000;
-  display:flex;
-  flex-direction:column;
-  gap:0.75rem;
-}
-
+/* === TOASTS === */
+.toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:2000;display:flex;flex-direction:column;gap:0.6rem}
 .toast{
-  padding:1rem 1.25rem;
-  background:var(--panel-solid);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  display:flex;
-  align-items:center;
-  gap:0.75rem;
-  animation:toastIn 0.3s ease;
-  box-shadow:var(--shadow-lg);
-  min-width:280px;
+  padding:0.9rem 1.1rem;background:var(--panel-solid);border:1px solid var(--border);border-radius:var(--radius);
+  display:flex;align-items:center;gap:0.6rem;animation:toastIn 0.3s ease;box-shadow:0 8px 30px rgba(0,0,0,0.4);min-width:250px;
 }
-
-@keyframes toastIn{
-  from{opacity:0;transform:translateX(100px)}
-  to{opacity:1;transform:translateX(0)}
-}
-
+@keyframes toastIn{from{opacity:0;transform:translateX(100px)}to{opacity:1;transform:translateX(0)}}
 .toast.success{border-color:var(--green-dim)}
 .toast.error{border-color:var(--danger)}
-.toast.info{border-color:var(--cyan-dim)}
-
-.toast-icon{
-  font-size:1.25rem;
-}
-
+.toast.info{border-color:var(--cyan)}
+.toast-icon{font-size:1.1rem}
 .toast.success .toast-icon{color:var(--green)}
 .toast.error .toast-icon{color:var(--danger)}
 .toast.info .toast-icon{color:var(--cyan)}
+.toast-msg{flex:1;font-size:0.8rem}
 
-.toast-message{
-  flex:1;
-  font-size:0.85rem;
-}
+/* === SCROLLBAR === */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg-base)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--lilac-dim)}
 
-/* ============================================
-   SCROLLBAR
-   ============================================ */
-
-::-webkit-scrollbar{
-  width:8px;
-  height:8px;
-}
-
-::-webkit-scrollbar-track{
-  background:var(--bg-base);
-}
-
-::-webkit-scrollbar-thumb{
-  background:var(--border);
-  border-radius:4px;
-}
-
-::-webkit-scrollbar-thumb:hover{
-  background:var(--lilac-dim);
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-
-@media(max-width:900px){
-  .sidebar{width:220px}
-  .cards-grid{grid-template-columns:1fr}
-}
-
-@media(max-width:700px){
+/* === RESPONSIVE === */
+@media(max-width:800px){
   .sidebar{display:none}
-  .header{flex-wrap:wrap;gap:1rem}
-  .nav-tabs{order:3;width:100%;justify-content:center}
+  .cards-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- Background Effects -->
 <div class="aurora"></div>
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
 <div class="blob blob-3"></div>
-<div class="blob blob-4"></div>
 <div class="grid-bg"></div>
 <div class="scanline"></div>
-<div class="crt-lines"></div>
-<div class="noise"></div>
+<div class="crt"></div>
 
-<!-- App -->
 <div class="app">
-  <!-- Header -->
   <header class="header">
     <div class="logo">
       <div class="logo-icon">⚡</div>
@@ -1426,909 +450,915 @@ body{
         <div class="logo-sub">Mémorisation Augmentée</div>
       </div>
     </div>
-    
-    <div class="nav-tabs">
-      <button class="nav-tab active" data-view="cards">
-        <span class="nav-tab-icon">📚</span>
-        <span>Cartes</span>
-      </button>
-      <button class="nav-tab" data-view="study">
-        <span class="nav-tab-icon">🎯</span>
-        <span>Étudier</span>
-      </button>
-    </div>
-    
-    <div class="header-actions">
-      <button class="btn" onclick="openImportModal()">
-        <span>📥</span> Import
-      </button>
-      <button class="btn" onclick="exportDeck()">
-        <span>📤</span> Export
-      </button>
-      <button class="btn btn-primary" onclick="openCardModal()">
-        <span>➕</span> Nouvelle carte
-      </button>
+    <nav class="nav">
+      <button class="nav-btn active" data-view="cards"><span>📚</span> Cartes</button>
+      <button class="nav-btn" data-view="study"><span>🎯</span> Étudier</button>
+    </nav>
+    <div class="actions">
+      <button class="btn" onclick="openImport()"><span>📥</span> Import</button>
+      <button class="btn" onclick="exportCSV()"><span>📤</span> Export</button>
+      <button class="btn btn-primary" onclick="openCardModal()"><span>➕</span> Nouvelle</button>
     </div>
   </header>
 
-  <!-- Main -->
   <main class="main">
-    <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar-header">
+      <div class="sidebar-head">
         <span class="sidebar-title">Mes Decks</span>
-        <button class="sidebar-action" onclick="openDeckModal()" title="Nouveau deck">➕</button>
+        <button class="sidebar-add" onclick="openDeckModal()">➕</button>
       </div>
-      
-      <div class="deck-list" id="deckList">
-        <!-- Populated by JS -->
-      </div>
-      
-      <div class="stats-panel">
-        <div class="stats-title">Statistiques globales</div>
+      <div class="deck-list" id="deckList"></div>
+      <div class="stats-box">
+        <div class="stats-title">Stats Globales</div>
         <div class="stats-grid">
-          <div class="stat-box">
-            <div class="stat-value" id="statTotal">0</div>
-            <div class="stat-label">Cartes</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value green" id="statMastered">0</div>
-            <div class="stat-label">Maîtrisées</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value cyan" id="statToReview">0</div>
-            <div class="stat-label">À revoir</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-value orange" id="statNew">0</div>
-            <div class="stat-label">Nouvelles</div>
-          </div>
+          <div class="stat"><div class="stat-val" id="sTotal">0</div><div class="stat-lbl">Cartes</div></div>
+          <div class="stat"><div class="stat-val g" id="sMaster">0</div><div class="stat-lbl">Maîtrisées</div></div>
+          <div class="stat"><div class="stat-val c" id="sReview">0</div><div class="stat-lbl">À revoir</div></div>
+          <div class="stat"><div class="stat-val o" id="sNew">0</div><div class="stat-lbl">Nouvelles</div></div>
         </div>
       </div>
     </aside>
 
-    <!-- Content -->
     <div class="content">
-      <!-- Cards View -->
+      <!-- CARDS VIEW -->
       <div class="view active" id="viewCards">
-        <div class="cards-header">
-          <div>
-            <h2 class="cards-title" id="currentDeckName">Toutes les cartes</h2>
-            <span class="cards-count" id="cardsCount">0 cartes</span>
+        <div class="cards-head">
+          <div class="cards-info">
+            <h2 id="deckTitle">Deck</h2>
+            <span id="cardCount">0 cartes</span>
           </div>
-          <div class="cards-actions">
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input type="text" class="search-input" id="searchInput" placeholder="Rechercher...">
-            </div>
+          <div class="search-box">
+            <span>🔍</span>
+            <input type="text" id="searchInput" placeholder="Rechercher...">
           </div>
         </div>
-        
         <div class="cards-scroll">
-          <div class="cards-grid" id="cardsGrid">
-            <!-- Populated by JS -->
-          </div>
+          <div class="cards-grid" id="cardsGrid"></div>
         </div>
       </div>
 
-      <!-- Study View -->
+      <!-- STUDY VIEW -->
       <div class="view" id="viewStudy">
-        <div class="study-container" id="studyContainer">
-          <!-- Populated by JS -->
-        </div>
+        <div class="study-wrap" id="studyWrap"></div>
       </div>
     </div>
   </main>
 </div>
 
-<!-- Modal: New/Edit Card -->
+<!-- CARD VIEWER -->
+<div class="card-viewer" id="cardViewer">
+  <button class="viewer-delete" onclick="deleteCurrentCard()" title="Supprimer">🗑️</button>
+  <button class="viewer-edit" onclick="editCurrentCard()" title="Modifier">✏️</button>
+  <button class="viewer-close" onclick="closeViewer()">×</button>
+  <div class="viewer-inner">
+    <div class="viewer-nav">
+      <button class="viewer-nav-btn" onclick="viewerPrev()">← Préc</button>
+      <button class="viewer-nav-btn" onclick="viewerNext()">Suiv →</button>
+    </div>
+    <div class="viewer-count" id="viewerCount">1 / 10</div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="viewerCard" onclick="flipViewer()">
+        <div class="fc-face fc-front">
+          <div class="fc-label">Question</div>
+          <div class="fc-text" id="viewerQ"></div>
+          <div class="fc-hint">Cliquez pour retourner</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">Réponse</div>
+          <div class="fc-text" id="viewerA"></div>
+        </div>
+      </div>
+    </div>
+    <div class="viewer-actions" id="viewerActions">
+      <button class="rate-btn again" onclick="rateViewer('again')"><span>😓</span><span>À revoir</span></button>
+      <button class="rate-btn hard" onclick="rateViewer('hard')"><span>🤔</span><span>Difficile</span></button>
+      <button class="rate-btn good" onclick="rateViewer('good')"><span>😊</span><span>Bien</span></button>
+      <button class="rate-btn easy" onclick="rateViewer('easy')"><span>🚀</span><span>Facile</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Card -->
 <div class="modal-overlay" id="cardModal">
   <div class="modal">
-    <div class="modal-header">
-      <h3 class="modal-title" id="cardModalTitle">Nouvelle carte</h3>
-      <button class="modal-close" onclick="closeCardModal()">×</button>
+    <div class="modal-head">
+      <span class="modal-title" id="cardModalTitle">Nouvelle carte</span>
+      <button class="modal-x" onclick="closeCardModal()">×</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label class="form-label">Question (recto)</label>
-        <textarea class="form-textarea" id="cardQuestion" placeholder="Entrez la question..."></textarea>
+        <label class="form-label">Question</label>
+        <textarea class="form-textarea" id="inputQ" placeholder="Entrez la question..."></textarea>
       </div>
       <div class="form-group">
-        <label class="form-label">Réponse (verso)</label>
-        <textarea class="form-textarea" id="cardAnswer" placeholder="Entrez la réponse..."></textarea>
+        <label class="form-label">Réponse</label>
+        <textarea class="form-textarea" id="inputA" placeholder="Entrez la réponse..."></textarea>
       </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-foot">
       <button class="btn" onclick="closeCardModal()">Annuler</button>
       <button class="btn btn-success" onclick="saveCard()">💾 Enregistrer</button>
     </div>
   </div>
 </div>
 
-<!-- Modal: New Deck -->
+<!-- MODAL: Deck -->
 <div class="modal-overlay" id="deckModal">
   <div class="modal">
-    <div class="modal-header">
-      <h3 class="modal-title">Nouveau deck</h3>
-      <button class="modal-close" onclick="closeDeckModal()">×</button>
+    <div class="modal-head">
+      <span class="modal-title">Nouveau deck</span>
+      <button class="modal-x" onclick="closeDeckModal()">×</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">Nom du deck</label>
-        <input type="text" class="form-input" id="deckName" placeholder="Ex: Particratie Belge">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Description (optionnel)</label>
-        <input type="text" class="form-input" id="deckDescription" placeholder="Ex: Concepts clés du système politique belge">
+        <input type="text" class="form-input" id="inputDeck" placeholder="Ex: Citoyenneté Belge">
       </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-foot">
       <button class="btn" onclick="closeDeckModal()">Annuler</button>
       <button class="btn btn-success" onclick="saveDeck()">💾 Créer</button>
     </div>
   </div>
 </div>
 
-<!-- Modal: Import -->
+<!-- MODAL: Import -->
 <div class="modal-overlay" id="importModal">
   <div class="modal">
-    <div class="modal-header">
-      <h3 class="modal-title">Importer des cartes</h3>
-      <button class="modal-close" onclick="closeImportModal()">×</button>
+    <div class="modal-head">
+      <span class="modal-title">Importer des cartes</span>
+      <button class="modal-x" onclick="closeImport()">×</button>
     </div>
     <div class="modal-body">
-      <div class="import-area" id="importArea" onclick="document.getElementById('importFile').click()">
+      <div class="import-zone" id="importZone">
         <div class="import-icon">📁</div>
         <div class="import-text">Glissez un fichier CSV ici</div>
         <div class="import-hint">ou cliquez pour sélectionner</div>
-        <input type="file" id="importFile" accept=".csv" style="display:none">
       </div>
-      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:1rem;text-align:center">
-        Format attendu : Question,Réponse (une carte par ligne)
-      </p>
+      <input type="file" id="importFile" accept=".csv" style="display:none">
+      <div class="import-preview" id="importPreview">
+        <div class="import-preview-title">Aperçu :</div>
+        <div class="import-preview-list" id="importList"></div>
+        <div class="import-count" id="importCount"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeImport()">Annuler</button>
+      <button class="btn btn-success" id="importConfirm" onclick="confirmImport()" style="display:none">✅ Importer</button>
     </div>
   </div>
 </div>
 
-<!-- Toast Container -->
-<div class="toast-container" id="toastContainer"></div>
+<div class="toasts" id="toasts"></div>
 
 <script>
 // ============================================
-// DATA STRUCTURE
+// DATA
 // ============================================
-
-const DEFAULT_DECK_ID = 'citoyennete-belge';
-
-const DEMO_DECK = {
-  id: DEFAULT_DECK_ID,
-  name: '🇧🇪 Citoyenneté Belge',
-  description: 'Comprendre le système politique belge',
-  cards: [
-    // Particratie
-    { id: 'p1', question: "Qu'est-ce que la particratie ?", answer: "Système où le pouvoir réel appartient aux états-majors des partis politiques plutôt qu'aux élus ou aux citoyens. En Belgique, les décisions sont souvent prises dans les bureaux de parti avant d'être validées au Parlement.", level: 0, lastReview: null, nextReview: null },
-    { id: 'p2', question: "Qu'est-ce que la 'lasagne institutionnelle' belge ?", answer: "Expression désignant la superposition des niveaux de pouvoir en Belgique : État fédéral, 3 Régions, 3 Communautés, 10 Provinces, 581 Communes. Cette complexité génère des coûts et de l'opacité.", level: 0, lastReview: null, nextReview: null },
-    { id: 'p3', question: "Que signifie l'effet dévolutif de la case de tête ?", answer: "Mécanisme électoral belge où cocher la case en tête de liste transfère une partie de votre vote aux candidats choisis par le parti, dans l'ordre de la liste. Renforce le pouvoir des partis sur la sélection des élus.", level: 0, lastReview: null, nextReview: null },
-    { id: 'p4', question: "Qu'est-ce que le KERN ?", answer: "Comité ministériel restreint réunissant le Premier Ministre et les Vice-Premiers Ministres de la coalition. C'est là que se prennent les vraies décisions gouvernementales, loin du Parlement.", level: 0, lastReview: null, nextReview: null },
-    { id: 'p5', question: "Qu'est-ce que le 'cordon sanitaire' en politique belge ?", answer: "Accord tacite entre partis traditionnels de ne pas gouverner avec l'extrême-droite (principalement le Vlaams Belang). Critiqué par certains comme anti-démocratique, défendu par d'autres comme protection contre l'extrémisme.", level: 0, lastReview: null, nextReview: null },
-    
-    // Financement & Coûts
-    { id: 'f1', question: "Combien coûte le Sénat belge par an ?", answer: "Plus de 44 millions d'euros (budget 2025), pour une chambre aux compétences très réduites depuis la 6ème réforme de l'État.", level: 0, lastReview: null, nextReview: null },
-    { id: 'f2', question: "Comment sont financés les partis politiques belges ?", answer: "Principalement par dotations publiques (argent des contribuables), calculées selon le nombre de voix et de sièges obtenus. Ce système avantage les partis établis et crée une barrière à l'entrée pour les nouveaux mouvements.", level: 0, lastReview: null, nextReview: null },
-    { id: 'f3', question: "Qu'est-ce que le seuil électoral de 5% ?", answer: "Barrière légale empêchant les partis recueillant moins de 5% des voix dans une circonscription d'obtenir des sièges. Critiqué car il élimine des courants d'opinion minoritaires mais significatifs.", level: 0, lastReview: null, nextReview: null },
-    
-    // Pilarisation
-    { id: 'pi1', question: "Qu'est-ce que la 'pilarisation' (verzuiling) en Belgique ?", answer: "Organisation historique de la société belge en 'piliers' (catholique, socialiste, libéral) qui encadraient la vie des citoyens de la naissance à la mort : écoles, mutuelles, syndicats, partis. Structure affaiblie sociologiquement mais politiquement persistante.", level: 0, lastReview: null, nextReview: null },
-    { id: 'pi2', question: "Quels sont les trois clivages historiques de la Belgique ?", answer: "1) Philosophique (Église vs État), 2) Socio-économique (Capital vs Travail), 3) Linguistique (Centre vs Périphérie / Flamands vs Francophones).", level: 0, lastReview: null, nextReview: null },
-    
-    // Intelligence citoyenne
-    { id: 'ic1', question: "Qu'est-ce que l'intelligence citoyenne ?", answer: "Transposition des méthodes de l'intelligence économique au service de la société civile : veille, analyse, influence, mais au profit des citoyens plutôt que des entreprises.", level: 0, lastReview: null, nextReview: null },
-    { id: 'ic2', question: "Que signifie OSINT ?", answer: "Open Source Intelligence — Renseignement obtenu à partir de sources ouvertes et publiques (médias, réseaux sociaux, documents officiels, etc.). Outil clé de la veille citoyenne.", level: 0, lastReview: null, nextReview: null },
-    { id: 'ic3', question: "Qu'est-ce que le pre-bunking ?", answer: "Technique de 'vaccination cognitive' consistant à exposer par avance les méthodes de manipulation pour immuniser contre la désinformation. Plus efficace que le debunking (démystification après coup).", level: 0, lastReview: null, nextReview: null },
-    { id: 'ic4', question: "Qu'est-ce que la loi de Brandolini ?", answer: "Principe selon lequel l'énergie nécessaire pour réfuter une connerie est supérieure d'un ordre de grandeur à celle nécessaire pour la produire. Justifie l'approche pre-bunking.", level: 0, lastReview: null, nextReview: null },
-    
-    // Outils & Concepts
-    { id: 'o1', question: "Que signifie le modèle DIKW ?", answer: "Data → Information → Knowledge → Wisdom. Modèle de transformation de la donnée brute en sagesse actionnable. Objectif : passer de la réaction émotionnelle à la décision stratégique.", level: 0, lastReview: null, nextReview: null },
-    { id: 'o2', question: "Qu'est-ce que l'Éducation Permanente en Belgique ?", answer: "Cadre légal (Décret de 2003) permettant à des associations de recevoir des subsides pour des activités d'analyse critique et de transformation sociale. Paradoxe : l'État finance l'analyse qui le critique.", level: 0, lastReview: null, nextReview: null },
-    { id: 'o3', question: "Qu'est-ce que l'Auftragstaktik ?", answer: "Doctrine militaire prussienne de 'commandement par mission' : l'intention est définie au sommet, mais l'exécution est laissée aux unités tactiques. Appliqué aux mouvements citoyens : autonomie d'action dans un cadre stratégique partagé.", level: 0, lastReview: null, nextReview: null },
-    
-    // Concepts avancés
-    { id: 'a1', question: "Qu'est-ce que 'The Stack' selon Benjamin Bratton ?", answer: "Modèle conceptuel décrivant l'infrastructure mondiale du numérique en couches (terre, cloud, ville, adresse, interface, utilisateur). La souveraineté numérique exige de contrôler ses propres couches.", level: 0, lastReview: null, nextReview: null },
-    { id: 'a2', question: "Que sont Solid et IPFS ?", answer: "Protocoles décentralisés pour l'indépendance vis-à-vis des GAFAM. Solid (Tim Berners-Lee) : données personnelles contrôlées par l'utilisateur. IPFS : stockage distribué sans serveur central.", level: 0, lastReview: null, nextReview: null },
-    { id: 'a3', question: "Qu'est-ce qu'une 'association de fait' en droit belge ?", answer: "Groupement sans personnalité juridique, très souple (pas de statuts obligatoires, pas de comptabilité formelle) mais avec responsabilité illimitée des membres. Structure 'pirate' pour l'action citoyenne agile.", level: 0, lastReview: null, nextReview: null },
-    
-    // Réforme & Action
-    { id: 'r1', question: "Pourquoi le référendum est-il quasi impossible en Belgique ?", answer: "La Constitution belge ne prévoit pas de référendum décisionnel au niveau fédéral, seulement des 'consultations populaires' non contraignantes au niveau local/régional. Les partis traditionnels s'y opposent pour maintenir leur contrôle.", level: 0, lastReview: null, nextReview: null },
-    { id: 'r2', question: "Qu'est-ce que le 'citoyen pigeon' ?", answer: "Expression populaire désignant le contribuable belge qui finance un système complexe et coûteux sans pouvoir réellement l'influencer : pression fiscale élevée, privilèges politiques, opacité décisionnelle.", level: 0, lastReview: null, nextReview: null },
-    { id: 'r3', question: "Quel est le ratio parlementaires/habitants en Belgique vs pays comparables ?", answer: "La Belgique a un des ratios les plus élevés d'Europe : ~1 parlementaire pour 18 000 habitants (tous niveaux confondus), contre ~1/40 000 aux Pays-Bas ou ~1/60 000 en France.", level: 0, lastReview: null, nextReview: null }
+const DEMO = {
+  id:'demo',
+  name:'🇧🇪 Citoyenneté Belge',
+  cards:[
+    {id:'d1',q:"Qu'est-ce que la particratie ?",a:"Système où le pouvoir réel appartient aux états-majors des partis plutôt qu'aux élus ou citoyens.",level:0},
+    {id:'d2',q:"Qu'est-ce que la 'lasagne institutionnelle' belge ?",a:"Superposition des niveaux de pouvoir : État fédéral, 3 Régions, 3 Communautés, 10 Provinces, 581 Communes.",level:0},
+    {id:'d3',q:"Que signifie l'effet dévolutif de la case de tête ?",a:"Cocher la case en tête de liste transfère une partie du vote aux candidats dans l'ordre choisi par le parti.",level:0},
+    {id:'d4',q:"Qu'est-ce que le KERN ?",a:"Comité ministériel restreint réunissant le Premier Ministre et les Vice-Premiers Ministres de la coalition.",level:0},
+    {id:'d5',q:"Qu'est-ce que le 'cordon sanitaire' ?",a:"Accord tacite entre partis traditionnels de ne pas gouverner avec l'extrême-droite (Vlaams Belang).",level:0},
+    {id:'d6',q:"Qu'est-ce que le pre-bunking ?",a:"Technique de 'vaccination cognitive' : exposer par avance les méthodes de manipulation pour immuniser contre la désinformation.",level:0},
+    {id:'d7',q:"Qu'est-ce que la loi de Brandolini ?",a:"L'énergie pour réfuter une connerie est supérieure d'un ordre de grandeur à celle pour la produire.",level:0},
+    {id:'d8',q:"Que signifie OSINT ?",a:"Open Source Intelligence — Renseignement obtenu à partir de sources ouvertes et publiques.",level:0},
+    {id:'d9',q:"Qu'est-ce que le modèle DIKW ?",a:"Data → Information → Knowledge → Wisdom. Transformation de la donnée brute en sagesse actionnable.",level:0},
+    {id:'d10',q:"Qu'est-ce que l'Éducation Permanente (décret 2003) ?",a:"Cadre légal permettant aux associations de recevoir des subsides pour des activités d'analyse critique et transformation sociale.",level:0}
   ]
 };
 
-// ============================================
-// STATE
-// ============================================
-
-let state = {
-  decks: [],
-  currentDeckId: null,
-  editingCardId: null,
-  studyQueue: [],
-  studyIndex: 0,
-  studyFlipped: false,
-  studyStats: { again: 0, hard: 0, good: 0, easy: 0 }
-};
+let data = {decks:[],currentDeck:null};
+let viewerIndex = 0;
+let viewerFlipped = false;
+let editingId = null;
+let pendingImport = [];
 
 // ============================================
 // STORAGE
 // ============================================
-
-function loadState() {
-  try {
-    const saved = localStorage.getItem('flashforge_data');
-    if (saved) {
-      const data = JSON.parse(saved);
-      state.decks = data.decks || [];
-      state.currentDeckId = data.currentDeckId || null;
+function load(){
+  try{
+    const s = localStorage.getItem('flashforge');
+    if(s){
+      data = JSON.parse(s);
     }
+    if(!data.decks.length){
+      data.decks = [DEMO];
+      data.currentDeck = DEMO.id;
+      save();
+    }
+    if(!data.currentDeck) data.currentDeck = data.decks[0]?.id;
+  }catch(e){
+    data = {decks:[DEMO],currentDeck:DEMO.id};
+  }
+}
+
+function save(){
+  localStorage.setItem('flashforge',JSON.stringify(data));
+}
+
+function getDeck(){
+  return data.decks.find(d=>d.id===data.currentDeck);
+}
+
+// ============================================
+// CSV PARSER (ROBUST)
+// ============================================
+function parseCSV(text){
+  const results = [];
+  const lines = text.split(/\r?\n/);
+  
+  for(let line of lines){
+    line = line.trim();
+    if(!line) continue;
     
-    // Add demo deck if no decks exist
-    if (state.decks.length === 0) {
-      state.decks.push(DEMO_DECK);
-      state.currentDeckId = DEMO_DECK.id;
-      saveState();
-    }
+    let q = '', a = '', inQuote = false, field = 0, current = '';
     
-    if (!state.currentDeckId && state.decks.length > 0) {
-      state.currentDeckId = state.decks[0].id;
-    }
-  } catch (e) {
-    console.error('Error loading state:', e);
-    state.decks = [DEMO_DECK];
-    state.currentDeckId = DEMO_DECK.id;
-  }
-}
-
-function saveState() {
-  try {
-    localStorage.setItem('flashforge_data', JSON.stringify({
-      decks: state.decks,
-      currentDeckId: state.currentDeckId
-    }));
-  } catch (e) {
-    console.error('Error saving state:', e);
-    showToast('Erreur de sauvegarde', 'error');
-  }
-}
-
-// ============================================
-// DECK MANAGEMENT
-// ============================================
-
-function getCurrentDeck() {
-  return state.decks.find(d => d.id === state.currentDeckId);
-}
-
-function selectDeck(deckId) {
-  state.currentDeckId = deckId;
-  saveState();
-  renderAll();
-}
-
-function openDeckModal() {
-  document.getElementById('deckName').value = '';
-  document.getElementById('deckDescription').value = '';
-  document.getElementById('deckModal').classList.add('active');
-}
-
-function closeDeckModal() {
-  document.getElementById('deckModal').classList.remove('active');
-}
-
-function saveDeck() {
-  const name = document.getElementById('deckName').value.trim();
-  const description = document.getElementById('deckDescription').value.trim();
-  
-  if (!name) {
-    showToast('Le nom est requis', 'error');
-    return;
-  }
-  
-  const newDeck = {
-    id: 'deck-' + Date.now(),
-    name: name,
-    description: description,
-    cards: []
-  };
-  
-  state.decks.push(newDeck);
-  state.currentDeckId = newDeck.id;
-  saveState();
-  closeDeckModal();
-  renderAll();
-  showToast('Deck créé !', 'success');
-}
-
-function deleteDeck(deckId) {
-  if (state.decks.length <= 1) {
-    showToast('Impossible de supprimer le dernier deck', 'error');
-    return;
-  }
-  
-  if (!confirm('Supprimer ce deck et toutes ses cartes ?')) return;
-  
-  state.decks = state.decks.filter(d => d.id !== deckId);
-  if (state.currentDeckId === deckId) {
-    state.currentDeckId = state.decks[0]?.id;
-  }
-  saveState();
-  renderAll();
-  showToast('Deck supprimé', 'info');
-}
-
-// ============================================
-// CARD MANAGEMENT
-// ============================================
-
-function openCardModal(cardId = null) {
-  state.editingCardId = cardId;
-  
-  const modal = document.getElementById('cardModal');
-  const title = document.getElementById('cardModalTitle');
-  const questionInput = document.getElementById('cardQuestion');
-  const answerInput = document.getElementById('cardAnswer');
-  
-  if (cardId) {
-    title.textContent = 'Modifier la carte';
-    const deck = getCurrentDeck();
-    const card = deck?.cards.find(c => c.id === cardId);
-    if (card) {
-      questionInput.value = card.question;
-      answerInput.value = card.answer;
-    }
-  } else {
-    title.textContent = 'Nouvelle carte';
-    questionInput.value = '';
-    answerInput.value = '';
-  }
-  
-  modal.classList.add('active');
-  questionInput.focus();
-}
-
-function closeCardModal() {
-  document.getElementById('cardModal').classList.remove('active');
-  state.editingCardId = null;
-}
-
-function saveCard() {
-  const question = document.getElementById('cardQuestion').value.trim();
-  const answer = document.getElementById('cardAnswer').value.trim();
-  
-  if (!question || !answer) {
-    showToast('Question et réponse requises', 'error');
-    return;
-  }
-  
-  const deck = getCurrentDeck();
-  if (!deck) {
-    showToast('Sélectionnez un deck', 'error');
-    return;
-  }
-  
-  if (state.editingCardId) {
-    // Edit existing
-    const card = deck.cards.find(c => c.id === state.editingCardId);
-    if (card) {
-      card.question = question;
-      card.answer = answer;
-    }
-    showToast('Carte modifiée !', 'success');
-  } else {
-    // Create new
-    deck.cards.push({
-      id: 'card-' + Date.now(),
-      question: question,
-      answer: answer,
-      level: 0,
-      lastReview: null,
-      nextReview: null
-    });
-    showToast('Carte créée !', 'success');
-  }
-  
-  saveState();
-  closeCardModal();
-  renderAll();
-}
-
-function deleteCard(cardId) {
-  if (!confirm('Supprimer cette carte ?')) return;
-  
-  const deck = getCurrentDeck();
-  if (deck) {
-    deck.cards = deck.cards.filter(c => c.id !== cardId);
-    saveState();
-    renderAll();
-    showToast('Carte supprimée', 'info');
-  }
-}
-
-// ============================================
-// IMPORT / EXPORT
-// ============================================
-
-function openImportModal() {
-  document.getElementById('importModal').classList.add('active');
-}
-
-function closeImportModal() {
-  document.getElementById('importModal').classList.remove('active');
-}
-
-function handleImport(file) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const text = e.target.result;
-      const lines = text.split('\n').filter(l => l.trim());
+    for(let i = 0; i < line.length; i++){
+      const c = line[i];
+      const next = line[i+1];
       
-      const deck = getCurrentDeck();
-      if (!deck) {
-        showToast('Sélectionnez un deck', 'error');
-        return;
-      }
-      
-      let imported = 0;
-      lines.forEach(line => {
-        // Parse CSV (handle quoted fields)
-        const match = line.match(/^"?([^"]*)"?,\s*"?([^"]*)"?$/);
-        if (match) {
-          const question = match[1].trim();
-          const answer = match[2].trim();
-          if (question && answer) {
-            deck.cards.push({
-              id: 'card-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-              question: question,
-              answer: answer,
-              level: 0,
-              lastReview: null,
-              nextReview: null
-            });
-            imported++;
-          }
+      if(c === '"' && !inQuote){
+        inQuote = true;
+      } else if(c === '"' && inQuote){
+        if(next === '"'){
+          current += '"';
+          i++;
+        } else {
+          inQuote = false;
         }
-      });
-      
-      saveState();
-      closeImportModal();
-      renderAll();
-      showToast(`${imported} cartes importées !`, 'success');
-    } catch (err) {
-      console.error(err);
-      showToast('Erreur d\'import', 'error');
-    }
-  };
-  reader.readAsText(file);
-}
-
-function exportDeck() {
-  const deck = getCurrentDeck();
-  if (!deck || deck.cards.length === 0) {
-    showToast('Aucune carte à exporter', 'error');
-    return;
-  }
-  
-  const csv = deck.cards.map(c => {
-    const q = c.question.replace(/"/g, '""');
-    const a = c.answer.replace(/"/g, '""');
-    return `"${q}","${a}"`;
-  }).join('\n');
-  
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${deck.name.replace(/[^a-z0-9]/gi, '_')}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  
-  showToast('Deck exporté !', 'success');
-}
-
-// ============================================
-// STUDY MODE
-// ============================================
-
-function startStudy() {
-  const deck = getCurrentDeck();
-  if (!deck || deck.cards.length === 0) {
-    showToast('Aucune carte à étudier', 'error');
-    return;
-  }
-  
-  // Build study queue (prioritize low level cards)
-  state.studyQueue = [...deck.cards].sort((a, b) => a.level - b.level);
-  state.studyIndex = 0;
-  state.studyFlipped = false;
-  state.studyStats = { again: 0, hard: 0, good: 0, easy: 0 };
-  
-  renderStudy();
-}
-
-function flipCard() {
-  state.studyFlipped = !state.studyFlipped;
-  const card = document.querySelector('.flashcard');
-  if (card) {
-    card.classList.toggle('flipped', state.studyFlipped);
-  }
-}
-
-function rateCard(rating) {
-  const deck = getCurrentDeck();
-  const studyCard = state.studyQueue[state.studyIndex];
-  const card = deck?.cards.find(c => c.id === studyCard.id);
-  
-  if (card) {
-    // Update level based on rating
-    switch (rating) {
-      case 'again':
-        card.level = Math.max(0, card.level - 1);
-        state.studyStats.again++;
-        break;
-      case 'hard':
-        // Keep same level
-        state.studyStats.hard++;
-        break;
-      case 'good':
-        card.level = Math.min(5, card.level + 1);
-        state.studyStats.good++;
-        break;
-      case 'easy':
-        card.level = Math.min(5, card.level + 2);
-        state.studyStats.easy++;
-        break;
+      } else if(c === ',' && !inQuote){
+        if(field === 0) q = current;
+        else a = current;
+        current = '';
+        field++;
+      } else {
+        current += c;
+      }
     }
     
-    card.lastReview = Date.now();
-    saveState();
-  }
-  
-  // Next card
-  state.studyIndex++;
-  state.studyFlipped = false;
-  
-  renderStudy();
-}
-
-function renderStudy() {
-  const container = document.getElementById('studyContainer');
-  const deck = getCurrentDeck();
-  
-  if (!deck || state.studyQueue.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📚</div>
-        <div class="empty-title">Prêt à étudier ?</div>
-        <div class="empty-text">Sélectionnez un deck et commencez votre session</div>
-        <button class="btn btn-success" onclick="startStudy()">🎯 Commencer</button>
-      </div>
-    `;
-    return;
-  }
-  
-  if (state.studyIndex >= state.studyQueue.length) {
-    // Study complete
-    const total = state.studyStats.again + state.studyStats.hard + state.studyStats.good + state.studyStats.easy;
-    container.innerHTML = `
-      <div class="study-complete">
-        <div class="complete-icon">🎉</div>
-        <div class="complete-title">Session terminée !</div>
-        <div class="complete-subtitle">${total} cartes révisées</div>
-        <div class="complete-stats">
-          <div class="complete-stat">
-            <div class="complete-stat-value green">${state.studyStats.good + state.studyStats.easy}</div>
-            <div class="complete-stat-label">Réussies</div>
-          </div>
-          <div class="complete-stat">
-            <div class="complete-stat-value orange">${state.studyStats.hard}</div>
-            <div class="complete-stat-label">Difficiles</div>
-          </div>
-          <div class="complete-stat">
-            <div class="complete-stat-value red">${state.studyStats.again}</div>
-            <div class="complete-stat-label">À revoir</div>
-          </div>
-        </div>
-        <button class="btn btn-primary" onclick="startStudy()">🔄 Recommencer</button>
-      </div>
-    `;
-    return;
-  }
-  
-  const card = state.studyQueue[state.studyIndex];
-  const progress = ((state.studyIndex) / state.studyQueue.length) * 100;
-  
-  container.innerHTML = `
-    <div class="study-progress">
-      <div class="progress-bar">
-        <div class="progress-fill" style="width:${progress}%"></div>
-      </div>
-      <div class="progress-text">
-        <span>${state.studyIndex + 1} / ${state.studyQueue.length}</span>
-        <span>Niveau actuel : ${card.level}/5</span>
-      </div>
-    </div>
+    if(field === 0) q = current;
+    else a = current;
     
-    <div class="flashcard-container">
-      <div class="flashcard ${state.studyFlipped ? 'flipped' : ''}" onclick="flipCard()">
-        <div class="flashcard-face flashcard-front">
-          <div class="flashcard-label">Question</div>
-          <div class="flashcard-text">${escapeHtml(card.question)}</div>
-          <div class="flashcard-hint">Cliquez pour retourner</div>
-        </div>
-        <div class="flashcard-face flashcard-back">
-          <div class="flashcard-label">Réponse</div>
-          <div class="flashcard-text">${escapeHtml(card.answer)}</div>
-        </div>
-      </div>
-    </div>
+    q = q.trim();
+    a = a.trim();
     
-    ${state.studyFlipped ? `
-      <div class="study-actions">
-        <button class="study-btn again" onclick="rateCard('again')">
-          <span>😓</span>
-          <span class="study-btn-label">À revoir</span>
-        </button>
-        <button class="study-btn hard" onclick="rateCard('hard')">
-          <span>🤔</span>
-          <span class="study-btn-label">Difficile</span>
-        </button>
-        <button class="study-btn good" onclick="rateCard('good')">
-          <span>😊</span>
-          <span class="study-btn-label">Bien</span>
-        </button>
-        <button class="study-btn easy" onclick="rateCard('easy')">
-          <span>🚀</span>
-          <span class="study-btn-label">Facile</span>
-        </button>
-      </div>
-    ` : ''}
-  `;
+    if(q && a){
+      results.push({q, a});
+    }
+  }
+  
+  return results;
 }
 
 // ============================================
-// RENDERING
+// RENDER
 // ============================================
-
-function renderAll() {
-  renderDeckList();
+function render(){
+  renderDecks();
   renderCards();
   renderStats();
 }
 
-function renderDeckList() {
-  const list = document.getElementById('deckList');
-  
-  list.innerHTML = state.decks.map(deck => {
-    const isActive = deck.id === state.currentDeckId;
-    const cardCount = deck.cards.length;
-    const masteredCount = deck.cards.filter(c => c.level >= 4).length;
-    
-    return `
-      <div class="deck-item ${isActive ? 'active' : ''}" onclick="selectDeck('${deck.id}')">
-        <div class="deck-name">
-          <span>${deck.name}</span>
-        </div>
-        <div class="deck-meta">
-          <span class="deck-stat">📚 ${cardCount}</span>
-          <span class="deck-stat">✅ ${masteredCount}</span>
-        </div>
-      </div>
-    `;
+function renderDecks(){
+  const el = document.getElementById('deckList');
+  el.innerHTML = data.decks.map(d=>{
+    const active = d.id === data.currentDeck ? 'active' : '';
+    const n = d.cards.length;
+    const m = d.cards.filter(c=>c.level>=4).length;
+    return `<div class="deck-item ${active}" onclick="selectDeck('${d.id}')">
+      <div class="deck-name">${esc(d.name)}</div>
+      <div class="deck-meta"><span>📚 ${n}</span><span>✅ ${m}</span></div>
+    </div>`;
   }).join('');
 }
 
-function renderCards() {
-  const deck = getCurrentDeck();
+function renderCards(){
+  const deck = getDeck();
   const grid = document.getElementById('cardsGrid');
-  const title = document.getElementById('currentDeckName');
-  const count = document.getElementById('cardsCount');
-  const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+  const title = document.getElementById('deckTitle');
+  const count = document.getElementById('cardCount');
+  const search = document.getElementById('searchInput').value.toLowerCase();
   
-  if (!deck) {
-    title.textContent = 'Aucun deck sélectionné';
+  if(!deck){
+    title.textContent = 'Aucun deck';
     count.textContent = '';
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📁</div>
-        <div class="empty-title">Aucun deck</div>
-        <div class="empty-text">Créez votre premier deck pour commencer</div>
-      </div>
-    `;
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">📁</div><div class="empty-title">Aucun deck</div></div>';
     return;
   }
   
   title.textContent = deck.name;
   
   let cards = deck.cards;
-  if (searchTerm) {
-    cards = cards.filter(c => 
-      c.question.toLowerCase().includes(searchTerm) || 
-      c.answer.toLowerCase().includes(searchTerm)
-    );
+  if(search){
+    cards = cards.filter(c=>c.q.toLowerCase().includes(search)||c.a.toLowerCase().includes(search));
   }
   
-  count.textContent = `${cards.length} carte${cards.length !== 1 ? 's' : ''}`;
+  count.textContent = `${cards.length} carte${cards.length!==1?'s':''}`;
   
-  if (cards.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">${searchTerm ? '🔍' : '📝'}</div>
-        <div class="empty-title">${searchTerm ? 'Aucun résultat' : 'Deck vide'}</div>
-        <div class="empty-text">${searchTerm ? 'Essayez d\'autres termes' : 'Ajoutez votre première carte'}</div>
-        ${!searchTerm ? '<button class="btn btn-success" onclick="openCardModal()">➕ Nouvelle carte</button>' : ''}
-      </div>
-    `;
+  if(!cards.length){
+    grid.innerHTML = `<div class="empty">
+      <div class="empty-icon">${search?'🔍':'📝'}</div>
+      <div class="empty-title">${search?'Aucun résultat':'Deck vide'}</div>
+      <div class="empty-text">${search?'Essayez d\'autres termes':'Ajoutez votre première carte'}</div>
+      ${!search?'<button class="btn btn-success" onclick="openCardModal()">➕ Nouvelle carte</button>':''}
+    </div>`;
     return;
   }
   
-  grid.innerHTML = cards.map(card => {
-    const levelDots = Array(5).fill(0).map((_, i) => 
-      `<div class="level-dot ${i < card.level ? 'filled' : ''}"></div>`
-    ).join('');
-    
-    return `
-      <div class="card-item" ondblclick="openCardModal('${card.id}')">
-        <div class="card-question">${escapeHtml(card.question)}</div>
-        <div class="card-answer">${escapeHtml(card.answer)}</div>
-        <div class="card-footer">
-          <div class="card-level">${levelDots}</div>
-          <div class="card-actions">
-            <button class="card-action" onclick="event.stopPropagation();openCardModal('${card.id}')" title="Modifier">✏️</button>
-            <button class="card-action delete" onclick="event.stopPropagation();deleteCard('${card.id}')" title="Supprimer">🗑️</button>
-          </div>
-        </div>
+  // QUESTIONS ONLY - NO ANSWERS VISIBLE
+  grid.innerHTML = cards.map((c,i)=>{
+    const dots = Array(5).fill(0).map((_,j)=>`<div class="lvl-dot ${j<c.level?'on':''}"></div>`).join('');
+    return `<div class="card-tile" onclick="openViewer(${i})">
+      <div class="card-q">${esc(c.q)}</div>
+      <div class="card-foot">
+        <div class="card-level">${dots}</div>
+        <div class="card-hint">Cliquez pour voir</div>
       </div>
-    `;
+    </div>`;
   }).join('');
 }
 
-function renderStats() {
-  let totalCards = 0;
-  let masteredCards = 0;
-  let toReviewCards = 0;
-  let newCards = 0;
-  
-  state.decks.forEach(deck => {
-    deck.cards.forEach(card => {
-      totalCards++;
-      if (card.level >= 4) masteredCards++;
-      else if (card.level === 0 && !card.lastReview) newCards++;
-      else toReviewCards++;
+function renderStats(){
+  let total=0,master=0,review=0,newC=0;
+  data.decks.forEach(d=>{
+    d.cards.forEach(c=>{
+      total++;
+      if(c.level>=4) master++;
+      else if(c.level===0) newC++;
+      else review++;
     });
   });
-  
-  document.getElementById('statTotal').textContent = totalCards;
-  document.getElementById('statMastered').textContent = masteredCards;
-  document.getElementById('statToReview').textContent = toReviewCards;
-  document.getElementById('statNew').textContent = newCards;
+  document.getElementById('sTotal').textContent = total;
+  document.getElementById('sMaster').textContent = master;
+  document.getElementById('sReview').textContent = review;
+  document.getElementById('sNew').textContent = newC;
 }
 
 // ============================================
-// VIEW SWITCHING
+// VIEWER (FLIP CARD MODAL)
 // ============================================
+function openViewer(index){
+  const deck = getDeck();
+  if(!deck || !deck.cards.length) return;
+  
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let cards = deck.cards;
+  if(search){
+    cards = cards.filter(c=>c.q.toLowerCase().includes(search)||c.a.toLowerCase().includes(search));
+  }
+  
+  viewerIndex = index;
+  viewerFlipped = false;
+  
+  updateViewer(cards);
+  document.getElementById('cardViewer').classList.add('open');
+}
 
-function switchView(viewId) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  
-  document.getElementById('view' + viewId.charAt(0).toUpperCase() + viewId.slice(1)).classList.add('active');
-  document.querySelector(`[data-view="${viewId}"]`).classList.add('active');
-  
-  if (viewId === 'study') {
-    if (state.studyQueue.length === 0) {
-      startStudy();
-    } else {
-      renderStudy();
+function updateViewer(cards){
+  if(!cards) {
+    const deck = getDeck();
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    cards = deck.cards;
+    if(search){
+      cards = cards.filter(c=>c.q.toLowerCase().includes(search)||c.a.toLowerCase().includes(search));
     }
+  }
+  
+  const card = cards[viewerIndex];
+  if(!card) return;
+  
+  document.getElementById('viewerQ').textContent = card.q;
+  document.getElementById('viewerA').textContent = card.a;
+  document.getElementById('viewerCount').textContent = `${viewerIndex+1} / ${cards.length}`;
+  
+  const fc = document.getElementById('viewerCard');
+  fc.classList.toggle('flipped', viewerFlipped);
+  
+  document.getElementById('viewerActions').style.display = viewerFlipped ? 'flex' : 'none';
+}
+
+function flipViewer(){
+  viewerFlipped = !viewerFlipped;
+  document.getElementById('viewerCard').classList.toggle('flipped', viewerFlipped);
+  document.getElementById('viewerActions').style.display = viewerFlipped ? 'flex' : 'none';
+}
+
+function viewerPrev(){
+  const deck = getDeck();
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let cards = deck.cards;
+  if(search) cards = cards.filter(c=>c.q.toLowerCase().includes(search)||c.a.toLowerCase().includes(search));
+  
+  if(viewerIndex > 0){
+    viewerIndex--;
+    viewerFlipped = false;
+    updateViewer(cards);
+  }
+}
+
+function viewerNext(){
+  const deck = getDeck();
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let cards = deck.cards;
+  if(search) cards = cards.filter(c=>c.q.toLowerCase().includes(search)||c.a.toLowerCase().includes(search));
+  
+  if(viewerIndex < cards.length - 1){
+    viewerIndex++;
+    viewerFlipped = false;
+    updateViewer(cards);
+  }
+}
+
+function rateViewer(rating){
+  const deck = getDeck();
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let cards = deck.cards;
+  if(search) cards = cards.filter(c=>c.q.toLowerCase().includes(search)||c.a.toLowerCase().includes(search));
+  
+  const card = cards[viewerIndex];
+  const realCard = deck.cards.find(c=>c.id===card.id);
+  
+  if(realCard){
+    switch(rating){
+      case 'again': realCard.level = Math.max(0, realCard.level - 1); break;
+      case 'hard': break;
+      case 'good': realCard.level = Math.min(5, realCard.level + 1); break;
+      case 'easy': realCard.level = Math.min(5, realCard.level + 2); break;
+    }
+    save();
+    render();
+  }
+  
+  // Next card
+  if(viewerIndex < cards.length - 1){
+    viewerIndex++;
+    viewerFlipped = false;
+    updateViewer(cards);
+  } else {
+    closeViewer();
+    toast('Session terminée !', 'success');
+  }
+}
+
+function closeViewer(){
+  document.getElementById('cardViewer').classList.remove('open');
+  viewerFlipped = false;
+}
+
+function editCurrentCard(){
+  const deck = getDeck();
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let cards = deck.cards;
+  if(search) cards = cards.filter(c=>c.q.toLowerCase().includes(search)||c.a.toLowerCase().includes(search));
+  
+  const card = cards[viewerIndex];
+  if(card){
+    closeViewer();
+    openCardModal(card.id);
+  }
+}
+
+function deleteCurrentCard(){
+  const deck = getDeck();
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let cards = deck.cards;
+  if(search) cards = cards.filter(c=>c.q.toLowerCase().includes(search)||c.a.toLowerCase().includes(search));
+  
+  const card = cards[viewerIndex];
+  if(card && confirm('Supprimer cette carte ?')){
+    deck.cards = deck.cards.filter(c=>c.id !== card.id);
+    save();
+    closeViewer();
+    render();
+    toast('Carte supprimée', 'info');
   }
 }
 
 // ============================================
-// UTILITIES
+// STUDY MODE
 // ============================================
+let studyQueue = [];
+let studyIndex = 0;
+let studyFlipped = false;
+let studyStats = {again:0,hard:0,good:0,easy:0};
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+function startStudy(){
+  const deck = getDeck();
+  if(!deck || !deck.cards.length){
+    toast('Aucune carte', 'error');
+    return;
+  }
+  
+  studyQueue = [...deck.cards].sort((a,b)=>a.level-b.level);
+  studyIndex = 0;
+  studyFlipped = false;
+  studyStats = {again:0,hard:0,good:0,easy:0};
+  
+  renderStudy();
 }
 
-function showToast(message, type = 'info') {
-  const container = document.getElementById('toastContainer');
-  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+function renderStudy(){
+  const wrap = document.getElementById('studyWrap');
+  const deck = getDeck();
   
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `
-    <span class="toast-icon">${icons[type]}</span>
-    <span class="toast-message">${message}</span>
+  if(!studyQueue.length){
+    wrap.innerHTML = `<div class="empty">
+      <div class="empty-icon">🎯</div>
+      <div class="empty-title">Prêt à étudier ?</div>
+      <div class="empty-text">Lancez une session pour réviser vos cartes</div>
+      <button class="btn btn-success" onclick="startStudy()">🚀 Commencer</button>
+    </div>`;
+    return;
+  }
+  
+  if(studyIndex >= studyQueue.length){
+    const total = studyStats.again+studyStats.hard+studyStats.good+studyStats.easy;
+    wrap.innerHTML = `<div class="study-complete">
+      <div class="complete-icon">🎉</div>
+      <div class="complete-title">Session terminée !</div>
+      <div class="complete-sub">${total} cartes révisées</div>
+      <div class="complete-stats">
+        <div class="cs"><div class="cs-val g">${studyStats.good+studyStats.easy}</div><div class="cs-lbl">Réussies</div></div>
+        <div class="cs"><div class="cs-val o">${studyStats.hard}</div><div class="cs-lbl">Difficiles</div></div>
+        <div class="cs"><div class="cs-val r">${studyStats.again}</div><div class="cs-lbl">À revoir</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="startStudy()">🔄 Recommencer</button>
+    </div>`;
+    return;
+  }
+  
+  const card = studyQueue[studyIndex];
+  const pct = (studyIndex/studyQueue.length)*100;
+  
+  wrap.innerHTML = `
+    <div class="study-progress">
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+      <div class="prog-text"><span>${studyIndex+1} / ${studyQueue.length}</span><span>Niveau: ${card.level}/5</span></div>
+    </div>
+    <div class="study-card-wrap">
+      <div class="study-card ${studyFlipped?'flipped':''}" onclick="flipStudy()">
+        <div class="fc-face fc-front">
+          <div class="fc-label">Question</div>
+          <div class="fc-text">${esc(card.q)}</div>
+          <div class="fc-hint">Cliquez pour retourner</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">Réponse</div>
+          <div class="fc-text">${esc(card.a)}</div>
+        </div>
+      </div>
+    </div>
+    ${studyFlipped?`<div class="study-actions">
+      <button class="rate-btn again" onclick="rateStudy('again')"><span>😓</span><span>À revoir</span></button>
+      <button class="rate-btn hard" onclick="rateStudy('hard')"><span>🤔</span><span>Difficile</span></button>
+      <button class="rate-btn good" onclick="rateStudy('good')"><span>😊</span><span>Bien</span></button>
+      <button class="rate-btn easy" onclick="rateStudy('easy')"><span>🚀</span><span>Facile</span></button>
+    </div>`:''}
   `;
+}
+
+function flipStudy(){
+  studyFlipped = !studyFlipped;
+  renderStudy();
+}
+
+function rateStudy(rating){
+  const card = studyQueue[studyIndex];
+  const deck = getDeck();
+  const realCard = deck.cards.find(c=>c.id===card.id);
   
-  container.appendChild(toast);
+  if(realCard){
+    switch(rating){
+      case 'again': realCard.level = Math.max(0, realCard.level-1); studyStats.again++; break;
+      case 'hard': studyStats.hard++; break;
+      case 'good': realCard.level = Math.min(5, realCard.level+1); studyStats.good++; break;
+      case 'easy': realCard.level = Math.min(5, realCard.level+2); studyStats.easy++; break;
+    }
+    save();
+    render();
+  }
   
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateX(100px)';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
+  studyIndex++;
+  studyFlipped = false;
+  renderStudy();
 }
 
 // ============================================
-// EVENT LISTENERS
+// DECK CRUD
 // ============================================
+function selectDeck(id){
+  data.currentDeck = id;
+  save();
+  render();
+}
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadState();
-  renderAll();
+function openDeckModal(){
+  document.getElementById('inputDeck').value = '';
+  document.getElementById('deckModal').classList.add('open');
+}
+
+function closeDeckModal(){
+  document.getElementById('deckModal').classList.remove('open');
+}
+
+function saveDeck(){
+  const name = document.getElementById('inputDeck').value.trim();
+  if(!name){
+    toast('Nom requis', 'error');
+    return;
+  }
   
-  // Nav tabs
-  document.querySelectorAll('.nav-tab').forEach(tab => {
-    tab.addEventListener('click', () => switchView(tab.dataset.view));
+  const newDeck = {
+    id: 'deck-'+Date.now(),
+    name: name,
+    cards: []
+  };
+  
+  data.decks.push(newDeck);
+  data.currentDeck = newDeck.id;
+  save();
+  closeDeckModal();
+  render();
+  toast('Deck créé !', 'success');
+}
+
+// ============================================
+// CARD CRUD
+// ============================================
+function openCardModal(cardId = null){
+  editingId = cardId;
+  const modal = document.getElementById('cardModal');
+  const title = document.getElementById('cardModalTitle');
+  const qInput = document.getElementById('inputQ');
+  const aInput = document.getElementById('inputA');
+  
+  if(cardId){
+    title.textContent = 'Modifier la carte';
+    const deck = getDeck();
+    const card = deck?.cards.find(c=>c.id===cardId);
+    if(card){
+      qInput.value = card.q;
+      aInput.value = card.a;
+    }
+  } else {
+    title.textContent = 'Nouvelle carte';
+    qInput.value = '';
+    aInput.value = '';
+  }
+  
+  modal.classList.add('open');
+  qInput.focus();
+}
+
+function closeCardModal(){
+  document.getElementById('cardModal').classList.remove('open');
+  editingId = null;
+}
+
+function saveCard(){
+  const q = document.getElementById('inputQ').value.trim();
+  const a = document.getElementById('inputA').value.trim();
+  
+  if(!q || !a){
+    toast('Question et réponse requises', 'error');
+    return;
+  }
+  
+  const deck = getDeck();
+  if(!deck){
+    toast('Sélectionnez un deck', 'error');
+    return;
+  }
+  
+  if(editingId){
+    const card = deck.cards.find(c=>c.id===editingId);
+    if(card){
+      card.q = q;
+      card.a = a;
+    }
+    toast('Carte modifiée !', 'success');
+  } else {
+    deck.cards.push({
+      id: 'card-'+Date.now(),
+      q: q,
+      a: a,
+      level: 0
+    });
+    toast('Carte créée !', 'success');
+  }
+  
+  save();
+  closeCardModal();
+  render();
+}
+
+// ============================================
+// IMPORT
+// ============================================
+function openImport(){
+  pendingImport = [];
+  document.getElementById('importPreview').classList.remove('show');
+  document.getElementById('importConfirm').style.display = 'none';
+  document.getElementById('importModal').classList.add('open');
+}
+
+function closeImport(){
+  document.getElementById('importModal').classList.remove('open');
+}
+
+function handleImportFile(file){
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const text = e.target.result;
+      pendingImport = parseCSV(text);
+      
+      if(pendingImport.length === 0){
+        toast('Aucune carte trouvée dans le fichier', 'error');
+        return;
+      }
+      
+      // Show preview
+      const preview = document.getElementById('importPreview');
+      const list = document.getElementById('importList');
+      const count = document.getElementById('importCount');
+      
+      list.innerHTML = pendingImport.slice(0,5).map(c=>`
+        <div class="import-preview-item">
+          <span class="import-preview-q">Q:</span> ${esc(c.q.substring(0,60))}${c.q.length>60?'...':''}
+        </div>
+      `).join('');
+      
+      count.textContent = `${pendingImport.length} cartes détectées`;
+      preview.classList.add('show');
+      document.getElementById('importConfirm').style.display = 'block';
+      
+    } catch(err) {
+      console.error(err);
+      toast('Erreur de lecture du fichier', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function confirmImport(){
+  const deck = getDeck();
+  if(!deck){
+    toast('Sélectionnez un deck', 'error');
+    return;
+  }
+  
+  let imported = 0;
+  pendingImport.forEach(c=>{
+    deck.cards.push({
+      id: 'card-'+Date.now()+'-'+Math.random().toString(36).substr(2,6),
+      q: c.q,
+      a: c.a,
+      level: 0
+    });
+    imported++;
+  });
+  
+  save();
+  closeImport();
+  render();
+  toast(`${imported} cartes importées !`, 'success');
+}
+
+// ============================================
+// EXPORT
+// ============================================
+function exportCSV(){
+  const deck = getDeck();
+  if(!deck || !deck.cards.length){
+    toast('Aucune carte à exporter', 'error');
+    return;
+  }
+  
+  const csv = deck.cards.map(c=>{
+    const q = c.q.replace(/"/g,'""');
+    const a = c.a.replace(/"/g,'""');
+    return `"${q}","${a}"`;
+  }).join('\n');
+  
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${deck.name.replace(/[^a-z0-9]/gi,'_')}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+  
+  toast('Deck exporté !', 'success');
+}
+
+// ============================================
+// UTILS
+// ============================================
+function esc(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function toast(msg, type='info'){
+  const container = document.getElementById('toasts');
+  const icons = {success:'✅',error:'❌',info:'ℹ️'};
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-msg">${msg}</span>`;
+  container.appendChild(t);
+  setTimeout(()=>{
+    t.style.opacity='0';
+    t.style.transform='translateX(100px)';
+    setTimeout(()=>t.remove(),300);
+  },3000);
+}
+
+function switchView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view'+v.charAt(0).toUpperCase()+v.slice(1)).classList.add('active');
+  document.querySelector(`[data-view="${v}"]`).classList.add('active');
+  
+  if(v==='study'){
+    if(!studyQueue.length) startStudy();
+    else renderStudy();
+  }
+}
+
+// ============================================
+// INIT
+// ============================================
+document.addEventListener('DOMContentLoaded',()=>{
+  load();
+  render();
+  
+  // Nav
+  document.querySelectorAll('.nav-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>switchView(btn.dataset.view));
   });
   
   // Search
   document.getElementById('searchInput').addEventListener('input', renderCards);
   
-  // Import file
-  const importFile = document.getElementById('importFile');
-  importFile.addEventListener('change', (e) => {
-    if (e.target.files[0]) {
-      handleImport(e.target.files[0]);
-    }
+  // Import zone
+  const zone = document.getElementById('importZone');
+  const fileInput = document.getElementById('importFile');
+  
+  zone.addEventListener('click',()=>fileInput.click());
+  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('dragover')});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('dragover'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    if(e.dataTransfer.files[0]) handleImportFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change',e=>{
+    if(e.target.files[0]) handleImportFile(e.target.files[0]);
   });
   
-  // Drag & drop
-  const importArea = document.getElementById('importArea');
-  importArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    importArea.classList.add('dragover');
-  });
-  importArea.addEventListener('dragleave', () => {
-    importArea.classList.remove('dragover');
-  });
-  importArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    importArea.classList.remove('dragover');
-    if (e.dataTransfer.files[0]) {
-      handleImport(e.dataTransfer.files[0]);
-    }
-  });
-  
-  // Keyboard shortcuts
-  document.addEventListener('keydown', (e) => {
-    // Space to flip in study mode
-    if (e.code === 'Space' && document.getElementById('viewStudy').classList.contains('active')) {
-      e.preventDefault();
-      flipCard();
+  // Keyboard
+  document.addEventListener('keydown',e=>{
+    // Viewer open
+    if(document.getElementById('cardViewer').classList.contains('open')){
+      if(e.code==='Space'){e.preventDefault();flipViewer()}
+      if(e.key==='ArrowLeft') viewerPrev();
+      if(e.key==='ArrowRight') viewerNext();
+      if(e.key==='Escape') closeViewer();
+      if(viewerFlipped){
+        if(e.key==='1') rateViewer('again');
+        if(e.key==='2') rateViewer('hard');
+        if(e.key==='3') rateViewer('good');
+        if(e.key==='4') rateViewer('easy');
+      }
+      return;
     }
     
-    // 1-4 to rate in study mode
-    if (state.studyFlipped && document.getElementById('viewStudy').classList.contains('active')) {
-      if (e.key === '1') rateCard('again');
-      if (e.key === '2') rateCard('hard');
-      if (e.key === '3') rateCard('good');
-      if (e.key === '4') rateCard('easy');
+    // Study view
+    if(document.getElementById('viewStudy').classList.contains('active')){
+      if(e.code==='Space'){e.preventDefault();flipStudy()}
+      if(studyFlipped){
+        if(e.key==='1') rateStudy('again');
+        if(e.key==='2') rateStudy('hard');
+        if(e.key==='3') rateStudy('good');
+        if(e.key==='4') rateStudy('easy');
+      }
     }
     
-    // Escape to close modals
-    if (e.key === 'Escape') {
+    // General
+    if(e.key==='Escape'){
       closeCardModal();
       closeDeckModal();
-      closeImportModal();
+      closeImport();
     }
-    
-    // Ctrl+N for new card
-    if (e.ctrlKey && e.key === 'n') {
+    if(e.ctrlKey && e.key==='n'){
       e.preventDefault();
       openCardModal();
     }
