@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur & Guide de Préparation au Recrutement</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- Tailwind Config for Warm Neutrals Palette -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neutral-warm': '#FDFBF7',
+                        'neutral-dark': '#1C1917',
+                        'accent-primary': '#D97706', // Amber 600
+                        'accent-secondary': '#78716C', // Stone 500
+                        'soft-surface': '#F5F5F4', // Stone 100
+                        'border-warm': '#E7E5E4',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for Chart Containers and Specific UI Elements -->
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1C1917;
+        }
+        
+        /* Chart Container Styling per Requirements */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Hide scrollbar for clean UI but allow scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Transitions */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-active {
+            border-bottom: 2px solid #D97706;
+            color: #D97706;
+            font-weight: 600;
+        }
+    </style>
+
+    <!-- 
+    Placeholder Comments Required by Prompt:
+    
+    <!-- Chosen Palette: Warm Neutrals (Stone/Amber) - Focused on calm, professional, and trustworthy aesthetics. Background: #FDFBF7, Accent: #D97706. -->
+    
+    <!-- Application Structure Plan: 
+         Structure: Dashboard-style Single Page Application with Tabbed Navigation.
+         1. Dashboard (Accueil): Overview statistics and intent of the guide.
+         2. Knowledge Base (Comprendre): Interactive cards detailing test types (Psychometric, Logic, etc.).
+         3. Strategy (Stratégies): Vertical timeline/stepper for "Before, During, After" preparation steps.
+         4. Simulation (S'entraîner): The core interactive engine. Sub-modules for Logic Quiz, Personality Slider, and Situational Judgment.
+         5. Analytics (Analyse): Visualizes the user's simulation data using Radar and Bar charts.
+         Rationale: This structure separates "Theory" from "Practice". Users first learn *what* they are facing, then learn *how* to handle it, then *do* it, and finally *review* it. This mimics the learning cycle: Knowledge -> Strategy -> Application -> Feedback.
+    -->
+    
+    <!-- Visualization & Content Choices:
+         1. Dashboard Stats (Chart.js Doughnut): Goal: Inform user about market trends (e.g., % companies using tests).
+         2. Personality Radar (Chart.js Radar): Goal: Relationship/Profile. Visualizes the "Big 5" traits based on user input in the simulation.
+         3. Logic Score (Chart.js Bar): Goal: Inform/Compare. Shows user performance vs "Average Candidate".
+         4. Interactive Timeline (HTML/CSS/JS): Goal: Inform/Process. Breaks down preparation into digestible steps.
+         5. Simulation Engine (JS/HTML): Goal: Engagement/Training. Replaces static text with active learning.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All icons are Unicode or CSS shapes. Charts are Canvas-based.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    -->
+
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-border-warm sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🎯</span>
+                    <h1 class="text-xl font-bold text-neutral-dark tracking-tight">PrépaRecrutement <span class="text-accent-primary font-light">| Simulateur</span></h1>
+                </div>
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-8">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-active text-sm uppercase tracking-wide px-1 py-2 hover:text-accent-primary transition-colors">Accueil</button>
+                    <button onclick="navigate('learn')" id="nav-learn" class="text-neutral-500 text-sm uppercase tracking-wide px-1 py-2 hover:text-accent-primary transition-colors">Comprendre</button>
+                    <button onclick="navigate('strategy')" id="nav-strategy" class="text-neutral-500 text-sm uppercase tracking-wide px-1 py-2 hover:text-accent-primary transition-colors">Stratégies</button>
+                    <button onclick="navigate('simulation')" id="nav-simulation" class="text-neutral-500 text-sm uppercase tracking-wide px-1 py-2 hover:text-accent-primary transition-colors">S'entraîner</button>
+                    <button onclick="navigate('analysis')" id="nav-analysis" class="text-neutral-500 text-sm uppercase tracking-wide px-1 py-2 hover:text-accent-primary transition-colors">Résultats</button>
+                </nav>
+                <!-- Mobile Menu Button (Simple implementation) -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-neutral-dark focus:outline-none">
+                        ☰
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-soft-surface border-t border-border-warm">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <button onclick="navigate('dashboard'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-dark hover:bg-white">Accueil</button>
+                <button onclick="navigate('learn'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-dark hover:bg-white">Comprendre</button>
+                <button onclick="navigate('strategy'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-dark hover:bg-white">Stratégies</button>
+                <button onclick="navigate('simulation'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-dark hover:bg-white">S'entraîner</button>
+                <button onclick="navigate('analysis'); toggleMobileMenu()" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-neutral-dark hover:bg-white">Résultats</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <!-- VIEW: DASHBOARD -->
+        <section id="view-dashboard" class="fade-in">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-neutral-dark mb-4">Maîtrisez l'Art du Recrutement</h2>
+                <p class="text-lg text-gray-600 max-w-3xl">
+                    Bienvenue dans votre espace de préparation. Les processus de recrutement modernes ne se limitent plus au CV.
+                    Tests psychométriques, logique cognitive et mises en situation sont devenus la norme.
+                    Ce simulateur vous aide à comprendre les attentes, à développer vos stratégies et à tester vos réflexes en conditions réelles.
+                </p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Stat Card 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-border-warm">
+                    <h3 class="text-sm font-semibold text-accent-secondary uppercase mb-2">Adoption des Tests</h3>
+                    <div class="flex items-end items-baseline">
+                        <span class="text-4xl font-bold text-neutral-dark">75%</span>
+                        <span class="text-sm text-green-600 ml-2">des Fortune 500</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Utilisent des tests psychométriques lors du recrutement.</p>
+                </div>
+                
+                <!-- Stat Card 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-border-warm">
+                    <h3 class="text-sm font-semibold text-accent-secondary uppercase mb-2">Taux d'Échec Moyen</h3>
+                    <div class="flex items-end items-baseline">
+                        <span class="text-4xl font-bold text-neutral-dark">30%</span>
+                        <span class="text-sm text-red-500 ml-2">Phase de test</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Des candidats sont éliminés avant même l'entretien RH.</p>
+                </div>
+
+                <!-- Stat Card 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-border-warm">
+                    <h3 class="text-sm font-semibold text-accent-secondary uppercase mb-2">Temps de Préparation</h3>
+                    <div class="flex items-end items-baseline">
+                        <span class="text-4xl font-bold text-neutral-dark">10h</span>
+                        <span class="text-sm text-accent-primary ml-2">recommandées</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-2">Pour maîtriser les formats de tests cognitifs standards.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Chart 1: Market Trends -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-border-warm">
+                    <h3 class="text-lg font-bold mb-4">Types de Tests les plus Fréquents</h3>
+                    <p class="text-sm text-gray-500 mb-4">Répartition des tests rencontrés lors des candidatures cadres et non-cadres.</p>
+                    <div class="chart-container">
+                        <canvas id="marketChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="bg-soft-surface p-6 rounded-lg border border-border-warm flex flex-col justify-center">
+                    <h3 class="text-xl font-bold mb-4">Prêt à vous tester ?</h3>
+                    <p class="text-gray-600 mb-6">
+                        Ne laissez pas l'inconnu vous déstabiliser. Accédez à notre simulateur pour découvrir votre profil de personnalité et exercer votre logique.
+                    </p>
+                    <button onclick="navigate('simulation')" class="bg-accent-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-yellow-700 transition shadow-md w-max">
+                        Lancer la Simulation
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: LEARN (COMPRENDRE) -->
+        <section id="view-learn" class="hidden fade-in">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-neutral-dark mb-2">Comprendre les Outils des Recruteurs</h2>
+                <p class="text-gray-600">
+                    Pour réussir, il faut comprendre ce qui est mesuré. Explorez les différentes familles de tests ci-dessous.
+                    Cliquez sur une carte pour voir les détails.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Navigation for Knowledge Base -->
+                <div class="col-span-1 space-y-2">
+                    <button onclick="showInfo('cognitive')" class="info-btn w-full text-left p-4 rounded-lg bg-white border border-border-warm hover:border-accent-primary transition focus:outline-none ring-2 ring-transparent focus:ring-accent-primary shadow-sm active-info">
+                        <span class="text-xl block mb-1">🧠 Tests Cognitifs</span>
+                        <span class="text-sm text-gray-500">QI, Logique, Raisonnement</span>
+                    </button>
+                    <button onclick="showInfo('personality')" class="info-btn w-full text-left p-4 rounded-lg bg-white border border-border-warm hover:border-accent-primary transition focus:outline-none ring-2 ring-transparent focus:ring-accent-primary shadow-sm">
+                        <span class="text-xl block mb-1">🎭 Tests de Personnalité</span>
+                        <span class="text-sm text-gray-500">Big Five, MBTI, PAPI</span>
+                    </button>
+                    <button onclick="showInfo('situational')" class="info-btn w-full text-left p-4 rounded-lg bg-white border border-border-warm hover:border-accent-primary transition focus:outline-none ring-2 ring-transparent focus:ring-accent-primary shadow-sm">
+                        <span class="text-xl block mb-1">👔 Jugement Situationnel</span>
+                        <span class="text-sm text-gray-500">Culture fit, Prise de décision</span>
+                    </button>
+                    <button onclick="showInfo('technical')" class="info-btn w-full text-left p-4 rounded-lg bg-white border border-border-warm hover:border-accent-primary transition focus:outline-none ring-2 ring-transparent focus:ring-accent-primary shadow-sm">
+                        <span class="text-xl block mb-1">💻 Tests Techniques</span>
+                        <span class="text-sm text-gray-500">Coding, Études de cas</span>
+                    </button>
+                </div>
+
+                <!-- Content Display Area -->
+                <div class="col-span-1 md:col-span-2 bg-white p-6 rounded-lg border border-border-warm shadow-sm min-h-[400px]">
+                    <div id="info-content-cognitive" class="info-content">
+                        <h3 class="text-xl font-bold text-accent-primary mb-4">Tests d'Aptitudes Cognitives</h3>
+                        <p class="mb-4 text-gray-700">Ces tests mesurent votre capacité à raisonner, à apprendre et à résoudre des problèmes complexes. Ils sont souvent chronométrés pour tester votre gestion du stress.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                            <div class="bg-soft-surface p-4 rounded">
+                                <h4 class="font-bold text-neutral-dark mb-2">Raisonnement Verbal</h4>
+                                <p class="text-sm text-gray-600">Analyser un texte complexe et en déduire si des affirmations sont vraies, fausses ou indéterminées.</p>
+                            </div>
+                            <div class="bg-soft-surface p-4 rounded">
+                                <h4 class="font-bold text-neutral-dark mb-2">Raisonnement Numérique</h4>
+                                <p class="text-sm text-gray-600">Interpréter des données chiffrées (tableaux, graphiques) pour calculer des pourcentages, ratios ou tendances.</p>
+                            </div>
+                            <div class="bg-soft-surface p-4 rounded">
+                                <h4 class="font-bold text-neutral-dark mb-2">Raisonnement Abstrait</h4>
+                                <p class="text-sm text-gray-600">Identifier des motifs logiques dans des séquences de formes. Ne dépend pas de la langue ou de la culture.</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 border-l-4 border-accent-primary pl-4 italic text-gray-600">
+                            "Le but n'est pas de finir toutes les questions, mais d'avoir un maximum de réponses justes dans le temps imparti."
+                        </div>
+                    </div>
+
+                    <div id="info-content-personality" class="info-content hidden">
+                        <h3 class="text-xl font-bold text-accent-primary mb-4">Tests de Personnalité</h3>
+                        <p class="mb-4 text-gray-700">Il n'y a pas de "bonnes" ou "mauvaises" réponses. Ces tests visent à cerner vos traits dominants et vos motivations pour voir s'ils correspondent au poste et à l'équipe.</p>
+                        <h4 class="font-bold mt-4 mb-2">Le Modèle "Big Five" (OCEAN)</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                            <li><strong>Ouverture :</strong> Curiosité, créativité, appréciation de l'art.</li>
+                            <li><strong>Conscience :</strong> Organisation, fiabilité, discipline.</li>
+                            <li><strong>Extraversion :</strong> Énergie sociale, affirmation de soi.</li>
+                            <li><strong>Agréabilité :</strong> Compassion, coopération, confiance.</li>
+                            <li><strong>Névrosisme (Stabilité Émotionnelle) :</strong> Gestion du stress et des émotions négatives.</li>
+                        </ul>
+                        <div class="mt-6 border-l-4 border-accent-primary pl-4 italic text-gray-600">
+                            "Soyez honnête, mais professionnel. Les tests détectent les incohérences et la désirabilité sociale (mentir pour plaire)."
+                        </div>
+                    </div>
+
+                    <div id="info-content-situational" class="info-content hidden">
+                        <h3 class="text-xl font-bold text-accent-primary mb-4">Tests de Jugement Situationnel (SJT)</h3>
+                        <p class="mb-4 text-gray-700">On vous présente des scénarios hypothétiques liés au travail. Vous devez choisir la réaction la plus (et parfois la moins) appropriée.</p>
+                        <h4 class="font-bold mt-4 mb-2">Ce qui est évalué :</h4>
+                        <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                            <li>Capacité de prise de décision.</li>
+                            <li>Priorisation des tâches.</li>
+                            <li>Communication et diplomatie.</li>
+                            <li>Adhésion aux valeurs de l'entreprise (Culture Fit).</li>
+                        </ul>
+                        <div class="mt-6 bg-yellow-50 p-4 rounded border border-yellow-200 text-sm text-yellow-800">
+                            <strong>Conseil :</strong> Renseignez-vous sur les valeurs de l'entreprise avant le test. Si l'entreprise valorise l'innovation, choisissez des réponses audacieuses. Si elle valorise la sécurité, soyez prudent.
+                        </div>
+                    </div>
+
+                    <div id="info-content-technical" class="info-content hidden">
+                        <h3 class="text-xl font-bold text-accent-primary mb-4">Tests Techniques & Études de Cas</h3>
+                        <p class="mb-4 text-gray-700">Spécifiques au métier. Ils valident vos "Hard Skills".</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-bold text-neutral-dark">Études de Cas (Consulting/Marketing)</h4>
+                                <p class="text-sm text-gray-600">On vous donne un problème business ("Le chiffre d'affaires baisse, pourquoi ?"). Vous devez structurer votre analyse, faire des hypothèses et proposer une solution chiffrée.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-neutral-dark">Tests de Code (IT)</h4>
+                                <p class="text-sm text-gray-600">Algorithmes à résoudre sur des plateformes comme HackerRank ou CodinGame. L'efficacité du code et les cas limites sont évalués.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: STRATEGY -->
+        <section id="view-strategy" class="hidden fade-in">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-neutral-dark mb-2">Votre Plan de Bataille</h2>
+                <p class="text-gray-600">Une préparation méthodique est la clé du succès. Suivez ces étapes pour maximiser vos chances.</p>
+            </div>
+
+            <div class="relative border-l-4 border-gray-200 ml-4 md:ml-6 space-y-12">
+                <!-- Step 1 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 bg-accent-primary h-6 w-6 rounded-full border-4 border-white shadow"></div>
+                    <h3 class="text-xl font-bold text-neutral-dark">Avant le Test : Entraînement Ciblé</h3>
+                    <p class="text-gray-500 text-sm mb-2">J-7 à J-1</p>
+                    <div class="bg-white p-4 rounded border border-border-warm shadow-sm">
+                        <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                            <li><strong>Identifiez le fournisseur :</strong> Demandez aux RH quel éditeur de test est utilisé (SHL, GMAT, AssessFirst, etc.) pour vous entraîner sur le bon format.</li>
+                            <li><strong>Révision des bases :</strong> Pourcentages, règle de trois, lecture de graphiques.</li>
+                            <li><strong>Conditions réelles :</strong> Faites des tests blancs chronométrés. Habituez votre cerveau à aller vite.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 bg-accent-primary h-6 w-6 rounded-full border-4 border-white shadow"></div>
+                    <h3 class="text-xl font-bold text-neutral-dark">Pendant le Test : Gestion et Tactique</h3>
+                    <p class="text-gray-500 text-sm mb-2">Le jour J</p>
+                    <div class="bg-white p-4 rounded border border-border-warm shadow-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="font-bold text-accent-secondary mb-1">Logique & Cognitif</h4>
+                                <p class="text-sm text-gray-600">Ne bloquez pas. Si une question prend plus de 60s, passez ou répondez au hasard (si pas de points négatifs). Lisez bien les instructions.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-accent-secondary mb-1">Personnalité</h4>
+                                <p class="text-sm text-gray-600">Ne sur-analysez pas. Répondez spontanément mais gardez votre contexte professionnel en tête. Évitez trop de réponses "Neutre".</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative pl-8 md:pl-12">
+                    <div class="absolute -left-3 bg-accent-primary h-6 w-6 rounded-full border-4 border-white shadow"></div>
+                    <h3 class="text-xl font-bold text-neutral-dark">L'Entretien : La Méthode STAR</h3>
+                    <p class="text-gray-500 text-sm mb-2">Pour répondre aux questions comportementales</p>
+                    <div class="bg-white p-4 rounded border border-border-warm shadow-sm">
+                        <p class="text-gray-700 mb-3">Pour structurer vos réponses aux questions "Parlez-moi d'une fois où..." :</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2 text-center">
+                            <div class="bg-blue-50 p-2 rounded border border-blue-100">
+                                <span class="block font-bold text-blue-800">S</span>
+                                <span class="text-xs text-blue-600">Situation</span>
+                            </div>
+                            <div class="bg-blue-50 p-2 rounded border border-blue-100">
+                                <span class="block font-bold text-blue-800">T</span>
+                                <span class="text-xs text-blue-600">Tâche</span>
+                            </div>
+                            <div class="bg-blue-50 p-2 rounded border border-blue-100">
+                                <span class="block font-bold text-blue-800">A</span>
+                                <span class="text-xs text-blue-600">Action</span>
+                            </div>
+                            <div class="bg-blue-50 p-2 rounded border border-blue-100">
+                                <span class="block font-bold text-blue-800">R</span>
+                                <span class="text-xs text-blue-600">Résultat</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2 italic">Ex: "Le contexte était (S), je devais (T). J'ai fait X et Y (A), ce qui a permis d'augmenter les ventes de 10% (R)."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: SIMULATION -->
+        <section id="view-simulation" class="hidden fade-in">
+            <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-neutral-dark">Zone de Simulation</h2>
+                    <p class="text-gray-600">Testez-vous sans risque. Vos résultats seront analysés dans l'onglet "Résultats".</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex space-x-2">
+                    <button onclick="setSimModule('personality')" class="px-4 py-2 text-sm bg-white border border-border-warm rounded hover:bg-gray-50 focus:ring-2 ring-accent-primary" id="btn-mod-perso">Personnalité</button>
+                    <button onclick="setSimModule('logic')" class="px-4 py-2 text-sm bg-white border border-border-warm rounded hover:bg-gray-50 focus:ring-2 ring-accent-primary" id="btn-mod-logic">Logique</button>
+                    <button onclick="setSimModule('situation')" class="px-4 py-2 text-sm bg-white border border-border-warm rounded hover:bg-gray-50 focus:ring-2 ring-accent-primary" id="btn-mod-situ">Situation</button>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg border border-border-warm min-h-[400px] relative">
+                
+                <!-- Intro State for Simulation -->
+                <div id="sim-intro" class="text-center py-10">
+                    <div class="text-5xl mb-4">🚀</div>
+                    <h3 class="text-xl font-bold mb-2">Choisissez un module ci-dessus</h3>
+                    <p class="text-gray-500 max-w-md mx-auto">
+                        Nous vous recommandons de commencer par le test de <strong>Personnalité</strong> pour calibrer votre profil, puis de passer aux épreuves de <strong>Logique</strong>.
+                    </p>
+                </div>
+
+                <!-- Personality Module -->
+                <div id="sim-personality" class="hidden">
+                    <h3 class="font-bold text-lg mb-4 text-accent-primary">Profilage : Évaluez vos traits dominants</h3>
+                    <p class="text-sm text-gray-500 mb-6">Indiquez votre niveau d'accord avec les affirmations suivantes (1 = Pas d'accord, 5 = Tout à fait d'accord).</p>
+                    
+                    <div id="personality-questions" class="space-y-6">
+                        <!-- Questions injected by JS -->
+                    </div>
+                    <button onclick="submitPersonality()" class="mt-8 bg-neutral-dark text-white px-6 py-2 rounded hover:bg-gray-800 transition">Valider le Profil</button>
+                </div>
+
+                <!-- Logic Module -->
+                <div id="sim-logic" class="hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg text-accent-primary">Test de Logique & Raisonnement</h3>
+                        <span id="logic-timer" class="font-mono text-red-500 font-bold hidden">00:00</span>
+                    </div>
+                    
+                    <div id="logic-container" class="space-y-6">
+                        <!-- Questions injected by JS -->
+                    </div>
+                    <div id="logic-feedback" class="mt-4 hidden p-4 bg-blue-50 text-blue-800 rounded"></div>
+                    <button id="btn-logic-next" onclick="nextLogicQuestion()" class="mt-6 bg-neutral-dark text-white px-6 py-2 rounded hover:bg-gray-800 transition">Commencer</button>
+                </div>
+
+                <!-- Situational Module -->
+                <div id="sim-situation" class="hidden">
+                    <h3 class="font-bold text-lg mb-4 text-accent-primary">Mise en Situation Professionnelle</h3>
+                    <p class="text-sm text-gray-500 mb-6">Lisez le scénario et choisissez l'action la plus appropriée.</p>
+                    
+                    <div id="situation-container">
+                        <!-- Scenario injected by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- VIEW: ANALYSIS -->
+        <section id="view-analysis" class="hidden fade-in">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-neutral-dark mb-2">Analyse de vos Résultats</h2>
+                <p class="text-gray-600">
+                    Voici une visualisation de votre profil basée sur les données de simulation. 
+                    <span id="no-data-warning" class="text-accent-primary font-bold hidden"> (Aucune donnée disponible, complétez la simulation d'abord !)</span>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Radar Chart: Soft Skills -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-border-warm flex flex-col">
+                    <h3 class="text-lg font-bold mb-2">Profil "Soft Skills" (Big 5)</h3>
+                    <p class="text-xs text-gray-500 mb-4">Basé sur vos réponses au module Personnalité.</p>
+                    <div class="chart-container flex-grow">
+                        <canvas id="personalityChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 bg-soft-surface rounded text-sm text-gray-700 h-24 overflow-y-auto" id="personality-insight">
+                        Complétez le test de personnalité pour voir votre analyse ici.
+                    </div>
+                </div>
+
+                <!-- Bar Chart: Performance -->
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-border-warm flex flex-col">
+                    <h3 class="text-lg font-bold mb-2">Performance Cognitive & Situationnelle</h3>
+                    <p class="text-xs text-gray-500 mb-4">Votre score vs Moyenne des candidats (simulée).</p>
+                    <div class="chart-container flex-grow">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                    <div class="mt-4 p-3 bg-soft-surface rounded text-sm text-gray-700 h-24 overflow-y-auto" id="performance-insight">
+                        Complétez les tests de logique et de situation pour voir votre score.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-white p-6 rounded-lg border border-border-warm">
+                <h3 class="font-bold text-lg mb-2">Recommandations Personnalisées</h3>
+                <ul id="recommendation-list" class="list-disc pl-5 text-gray-700 space-y-2">
+                    <li>En attente de données... Commencez par l'onglet "S'entraîner".</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-neutral-dark text-white py-8 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="mb-2">Simulateur de Préparation au Recrutement</p>
+            <p class="text-xs text-gray-400">Généré par AI pour l'entraînement des candidats. Les résultats sont indicatifs.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA STORE ---
+        const appState = {
+            currentView: 'dashboard',
+            personalityScores: { O: 0, C: 0, E: 0, A: 0, N: 0 }, // OCEAN model
+            logicScore: 0,
+            logicQuestionsTotal: 0,
+            situationScore: 0,
+            hasRunPersonality: false,
+            hasRunLogic: false,
+            hasRunSituation: false
+        };
+
+        // --- QUESTIONS DATA ---
+        
+        // Personality (Big 5 short version)
+        const personalityQuestions = [
+            { id: 'O', text: "J'ai une imagination débordante et j'aime les idées nouvelles.", trait: 'Ouverture' },
+            { id: 'C', text: "Je suis toujours préparé(e) et j'aime l'ordre.", trait: 'Conscience' },
+            { id: 'E', text: "Je me sens à l'aise avec les autres et j'aime parler.", trait: 'Extraversion' },
+            { id: 'A', text: "Je m'intéresse aux gens et je compatis à leurs problèmes.", trait: 'Agréabilité' },
+            { id: 'N', text: "Je change d'humeur souvent et je stresse facilement.", trait: 'Névrosisme' } // High score = Low stability usually, we will invert for 'Stability'
+        ];
+
+        // Logic (Simple Cognitive)
+        const logicQuestions = [
+            {
+                q: "Quel nombre complète la suite : 2, 4, 8, 16, ... ?",
+                options: ["18", "24", "32", "64"],
+                correct: 2 // Index of '32'
+            },
+            {
+                q: "Pierre est plus grand que Paul. Jean est plus petit que Paul. Qui est le plus grand ?",
+                options: ["Pierre", "Paul", "Jean", "Impossible à dire"],
+                correct: 0
+            },
+            {
+                q: "Si tous les Bloops sont des Zorgs et que certains Zorgs sont rouges, alors...",
+                options: ["Tous les Bloops sont rouges", "Certains Bloops sont rouges", "Aucun Bloop n'est rouge", "On ne peut pas savoir"],
+                correct: 3
+            }
+        ];
+
+        // Situational
+        const situationalScenarios = [
+            {
+                id: 1,
+                context: "Vous êtes en retard sur un projet important à cause d'un collègue qui n'a pas envoyé sa partie. Votre manager vous demande un point d'avancement.",
+                options: [
+                    { text: "Vous dites que tout va bien et vous faites le travail du collègue ce soir.", score: 1 }, // Trop passif
+                    { text: "Vous expliquez la situation factuellement au manager et proposez un nouveau délai.", score: 3 }, // Idéal (Assertif + Solution)
+                    { text: "Vous dénoncez le collègue immédiatement pour ne pas être blâmé.", score: 0 } // Toxique
+                ]
+            }
+        ];
+
+        // --- NAVIGATION & UI ---
+
+        function navigate(viewId) {
+            // Update State
+            appState.currentView = viewId;
+
+            // Hide all sections
+            document.querySelectorAll('main > section').forEach(el => el.classList.add('hidden'));
+            
+            // Show target section
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // Update Nav Styling
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('nav-active', 'text-neutral-dark', 'font-bold');
+                btn.classList.add('text-neutral-500');
+            });
+            const activeBtn = document.getElementById(`nav-${viewId}`);
+            if(activeBtn) {
+                activeBtn.classList.add('nav-active', 'text-neutral-dark');
+                activeBtn.classList.remove('text-neutral-500');
+            }
+
+            // Specific logic on view enter
+            if (viewId === 'dashboard') renderMarketChart();
+            if (viewId === 'analysis') updateAnalysisCharts();
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Info Tabs in "Learn" section
+        function showInfo(type) {
+            // Reset buttons
+            document.querySelectorAll('.info-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-accent-primary', 'bg-yellow-50');
+                btn.classList.add('bg-white');
+            });
+            // Highlight active
+            event.currentTarget.classList.add('ring-2', 'ring-accent-primary', 'bg-yellow-50');
+            event.currentTarget.classList.remove('bg-white');
+
+            // Show content
+            document.querySelectorAll('.info-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`info-content-${type}`).classList.remove('hidden');
+        }
+
+        // --- SIMULATION LOGIC ---
+
+        function setSimModule(mod) {
+            // Hide intro and all modules
+            document.getElementById('sim-intro').classList.add('hidden');
+            ['personality', 'logic', 'situation'].forEach(m => document.getElementById(`sim-${m}`).classList.add('hidden'));
+            
+            // Show selected
+            document.getElementById(`sim-${mod}`).classList.remove('hidden');
+
+            // Highlights button
+            ['personality', 'logic', 'situation'].forEach(m => {
+                const btn = document.getElementById(`btn-mod-${m === 'personality' ? 'perso' : m === 'situation' ? 'situ' : m}`);
+                btn.classList.remove('bg-accent-primary', 'text-white');
+                btn.classList.add('bg-white', 'text-black');
+            });
+            const activeBtn = document.getElementById(`btn-mod-${mod === 'personality' ? 'perso' : mod === 'situation' ? 'situ' : mod}`);
+            activeBtn.classList.remove('bg-white', 'text-black');
+            activeBtn.classList.add('bg-accent-primary', 'text-white');
+
+            // Initialize module if needed
+            if(mod === 'personality' && document.getElementById('personality-questions').innerHTML === "") initPersonality();
+            if(mod === 'logic' && currentLogicIndex === -1) initLogic();
+            if(mod === 'situation' && document.getElementById('situation-container').innerHTML === "") initSituation();
+        }
+
+        // 1. Personality Engine
+        function initPersonality() {
+            const container = document.getElementById('personality-questions');
+            container.innerHTML = personalityQuestions.map((q, index) => `
+                <div class="bg-soft-surface p-4 rounded border border-border-warm">
+                    <p class="font-medium text-neutral-dark mb-3">${q.text}</p>
+                    <div class="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>Pas du tout</span>
+                        <span>Tout à fait</span>
+                    </div>
+                    <input type="range" min="1" max="5" value="3" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-accent-primary" data-trait="${q.id}" id="p-q-${index}">
+                </div>
+            `).join('');
+        }
+
+        function submitPersonality() {
+            const inputs = document.querySelectorAll('#personality-questions input');
+            inputs.forEach(input => {
+                const trait = input.dataset.trait;
+                const val = parseInt(input.value);
+                // Simple mapping: Store raw value
+                appState.personalityScores[trait] = val;
+            });
+            
+            appState.hasRunPersonality = true;
+            alert("Profil enregistré ! Consultez l'onglet 'Résultats' pour voir votre radar de compétences.");
+        }
+
+        // 2. Logic Engine
+        let currentLogicIndex = -1;
+        let logicScoreCurrent = 0;
+
+        function initLogic() {
+            currentLogicIndex = -1;
+            logicScoreCurrent = 0;
+            appState.logicQuestionsTotal = logicQuestions.length;
+            document.getElementById('btn-logic-next').innerText = "Commencer le Test";
+            document.getElementById('logic-container').innerHTML = `<p class="text-center text-gray-500">3 questions de logique. Prenez votre temps.</p>`;
+        }
+
+        function nextLogicQuestion() {
+            currentLogicIndex++;
+            const container = document.getElementById('logic-container');
+            const feedback = document.getElementById('logic-feedback');
+            const btn = document.getElementById('btn-logic-next');
+            
+            feedback.classList.add('hidden'); // hide feedback from prev question
+
+            if (currentLogicIndex < logicQuestions.length) {
+                const q = logicQuestions[currentLogicIndex];
+                btn.innerText = "Valider & Suivant";
+                
+                // Render Question
+                container.innerHTML = `
+                    <div class="bg-white p-4 border border-border-warm rounded">
+                        <p class="font-bold text-lg mb-4">Question ${currentLogicIndex + 1}/${logicQuestions.length}</p>
+                        <p class="mb-4">${q.q}</p>
+                        <div class="space-y-2">
+                            ${q.options.map((opt, idx) => `
+                                <button onclick="selectLogicAnswer(${idx}, ${q.correct})" class="logic-opt block w-full text-left p-3 rounded border border-gray-200 hover:bg-gray-50 transition">${opt}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                // Disable next button until selection
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            } else {
+                // End of test
+                finishLogic();
+            }
+        }
+
+        function selectLogicAnswer(selected, correct) {
+            const opts = document.querySelectorAll('.logic-opt');
+            opts.forEach((b, idx) => {
+                b.disabled = true;
+                if(idx === correct) b.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                if(idx === selected && idx !== correct) b.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+            });
+
+            if(selected === correct) logicScoreCurrent++;
+
+            // Enable Next
+            const btn = document.getElementById('btn-logic-next');
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function finishLogic() {
+            appState.logicScore = logicScoreCurrent;
+            appState.hasRunLogic = true;
+            document.getElementById('logic-container').innerHTML = `
+                <div class="text-center py-8">
+                    <span class="text-4xl">🏁</span>
+                    <h4 class="text-xl font-bold mt-2">Test Terminé</h4>
+                    <p>Score : ${logicScoreCurrent} / ${logicQuestions.length}</p>
+                    <p class="text-sm text-gray-500 mt-2">Voir l'analyse complète dans l'onglet Résultats.</p>
+                </div>
+            `;
+            document.getElementById('btn-logic-next').classList.add('hidden');
+        }
+
+        // 3. Situational Engine
+        function initSituation() {
+            const container = document.getElementById('situation-container');
+            const scenario = situationalScenarios[0]; // Just 1 for demo
+            
+            container.innerHTML = `
+                <div class="bg-white p-5 rounded border border-border-warm">
+                    <span class="text-xs font-bold text-accent-primary uppercase tracking-wide">Scénario 1</span>
+                    <p class="mt-2 mb-6 font-medium text-lg text-neutral-dark">${scenario.context}</p>
+                    <div class="space-y-3">
+                        ${scenario.options.map((opt, idx) => `
+                            <button onclick="handleSituation(${idx}, ${scenario.id})" class="block w-full text-left p-4 rounded border border-gray-200 hover:border-accent-primary hover:shadow-sm transition group">
+                                <span class="group-hover:text-accent-primary transition-colors">${opt.text}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleSituation(optIndex, scenId) {
+            const score = situationalScenarios.find(s => s.id === scenId).options[optIndex].score;
+            appState.situationScore = score; // max 3
+            appState.hasRunSituation = true;
+            
+            document.getElementById('situation-container').innerHTML = `
+                 <div class="bg-green-50 p-6 rounded border border-green-200 text-center">
+                    <h4 class="text-green-800 font-bold mb-2">Réponse Enregistrée</h4>
+                    <p class="text-green-700">Votre choix a été analysé en fonction de l'assertivité et de l'esprit d'équipe.</p>
+                    <p class="mt-4 text-sm text-gray-500">Allez voir vos résultats !</p>
+                </div>
+            `;
+        }
+
+        // --- CHARTS & VISUALIZATION ---
+
+        let marketChartInstance = null;
+        let personalityChartInstance = null;
+        let performanceChartInstance = null;
+
+        function renderMarketChart() {
+            const ctx = document.getElementById('marketChart').getContext('2d');
+            if (marketChartInstance) return; // already rendered
+
+            marketChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Personnalité', 'Logique/Cognitif', 'Technique', 'Situationnel'],
+                    datasets: [{
+                        label: '% Entreprises',
+                        data: [62, 48, 35, 29],
+                        backgroundColor: ['#D97706', '#78716C', '#A8A29E', '#E7E5E4'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    }
+                }
+            });
+        }
+
+        function updateAnalysisCharts() {
+            // Check data presence
+            if(!appState.hasRunPersonality && !appState.hasRunLogic && !appState.hasRunSituation) {
+                document.getElementById('no-data-warning').classList.remove('hidden');
+            } else {
+                document.getElementById('no-data-warning').classList.add('hidden');
+            }
+
+            // 1. Radar Chart (Personality)
+            const ctxPerso = document.getElementById('personalityChart').getContext('2d');
+            
+            // Normalize inputs (1-5) to 0-100 scale roughly for display
+            // N (Neuroticism) is inverted to "Stabilité" for better chart reading
+            const dataPerso = [
+                appState.personalityScores.O * 20,
+                appState.personalityScores.C * 20,
+                appState.personalityScores.E * 20,
+                appState.personalityScores.A * 20,
+                (6 - appState.personalityScores.N) * 20 // Invert
+            ];
+
+            if (personalityChartInstance) personalityChartInstance.destroy();
+
+            personalityChartInstance = new Chart(ctxPerso, {
+                type: 'radar',
+                data: {
+                    labels: ['Ouverture', 'Conscience', 'Extraversion', 'Agréabilité', 'Stabilité'],
+                    datasets: [{
+                        label: 'Votre Profil',
+                        data: appState.hasRunPersonality ? dataPerso : [0,0,0,0,0],
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                        borderColor: '#D97706',
+                        pointBackgroundColor: '#D97706',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E7E5E4' },
+                            grid: { color: '#E7E5E4' },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+
+            // Update Text Insight for Personality
+            const insightDiv = document.getElementById('personality-insight');
+            if(appState.hasRunPersonality) {
+                insightDiv.innerHTML = `<strong>Analyse :</strong> Votre score de Conscience (${dataPerso[1]}%) indique votre niveau d'organisation. Une Stabilité de ${dataPerso[4]}% suggère une ${dataPerso[4] > 60 ? 'bonne' : 'moyen'} gestion du stress.`;
+            }
+
+            // 2. Bar Chart (Performance)
+            const ctxPerf = document.getElementById('performanceChart').getContext('2d');
+            
+            // Calc percentages
+            const logicPct = appState.logicQuestionsTotal > 0 ? (appState.logicScore / appState.logicQuestionsTotal) * 100 : 0;
+            const sitPct = (appState.situationScore / 3) * 100; // max score 3
+
+            if (performanceChartInstance) performanceChartInstance.destroy();
+
+            performanceChartInstance = new Chart(ctxPerf, {
+                type: 'bar',
+                data: {
+                    labels: ['Logique', 'Situationnel'],
+                    datasets: [
+                        {
+                            label: 'Votre Score',
+                            data: [
+                                appState.hasRunLogic ? logicPct : 0, 
+                                appState.hasRunSituation ? sitPct : 0
+                            ],
+                            backgroundColor: '#1C1917',
+                            barPercentage: 0.5
+                        },
+                        {
+                            label: 'Moyenne Candidats',
+                            data: [65, 70], // Hardcoded baseline
+                            backgroundColor: '#E7E5E4',
+                            barPercentage: 0.5
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    }
+                }
+            });
+
+            // Update Text Insight for Performance
+            const perfDiv = document.getElementById('performance-insight');
+            let recs = [];
+            if(appState.hasRunLogic) {
+                if(logicPct > 70) recs.push("Logique : Excellent. Continuez à pratiquer la rapidité.");
+                else recs.push("Logique : Score moyen. Révisez les suites numériques et le raisonnement verbal.");
+            }
+            if(appState.hasRunSituation) {
+                if(sitPct === 100) recs.push("Situationnel : Parfait. Vous avez les bons réflexes corporate.");
+                else if(sitPct === 0) recs.push("Situationnel : Attention, évitez les comportements toxiques.");
+                else recs.push("Situationnel : Vous êtes trop passif, osez prendre des initiatives.");
+            }
+            
+            if(recs.length > 0) {
+                perfDiv.innerHTML = recs.join("<br>");
+                document.getElementById('recommendation-list').innerHTML = recs.map(r => `<li>${r}</li>`).join('');
+            }
+        }
+
+        // Init
+        window.addEventListener('load', () => {
+            renderMarketChart();
+        });
+
+    </script>
+</body>
+</html>
