@@ -192,3 +192,13 @@ Et bonne continuation d'ici là
     1. traget _blank sur les liens
     2. ... la flemme de peaufiner
 * *À suivre...*
+
+* > À bientôt si affinité
+* [Terrier du Lapin](https://yannkeep.github.io/test/room/1/index.html)
+* [Mange moi](https://dl.ouaisfi.eu/usba/)
+* [Bois moi](https://dl.ouaisfi.eu/usba/1/2/3/9/9/9/)
+
+## BIENVENUE
+
+<embed src="https://dl.ouaisfi.eu/usba/1/2/3/9/9/9/" style="width:90%; height: 1500px;">
+
